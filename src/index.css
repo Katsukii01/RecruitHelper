@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+.hash-span {
+  margin-top: -100px;
+  padding-bottom: 100px;
+  display: block;
+}
+/*-------------------------------------------*/
+/* Gradients */
+.snow-night-gradient {
+  background: linear-gradient(45deg, #FFFFFF 0%, #061526 100%); /* Śnieżnobiały do Nocny morski */
+  background: -webkit-linear-gradient(45deg, #FFFFFF 0%, #061526 100%);
+}
+
+.night-navy-gradient {
+  background: linear-gradient(45deg, #0D223A 0%, #061526 100%); /* Śnieżnobiały do Nocny morski */
+  background: -webkit-linear-gradient(45deg, #0D223A 0%, #061526 100%);
+}
+.breeze-navy-gradient {
+  background: linear-gradient(90deg, #F0FFFF 0%, #0D223A 100%); /* Świeży błękit do Granatowy */
+  background: -webkit-linear-gradient(90deg, #F0FFFF 0%, #0D223A 100%);
+}
+
+
+.sky-mint-gradient {
+  background: linear-gradient(135deg, #87CEEB 0%, #B5EAD7 100%); /* Niebieskie niebo do Miętowy */
+  background: -webkit-linear-gradient(135deg, #87CEEB 0%, #B5EAD7 100%);
+}
+
+
+.deepSea-breeze-gradient {
+  background: linear-gradient(180deg, #1E3A8A 0%, #F0FFFF 100%); /* Głęboka woda do Świeży błękit */
+  background: -webkit-linear-gradient(180deg, #1E3A8A 0%, #F0FFFF 100%);
+}
+
+
+.snow-sky-gradient {
+  background: linear-gradient(45deg, #FFFFFF 0%, #87CEEB 100%); /* Śnieżnobiały do Niebieskie niebo */
+  background: -webkit-linear-gradient(45deg, #FFFFFF 0%, #87CEEB 100%);
+}
+
+/* textborders */
+.border-text {
+  color: transparent;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}
+/*-------------------------------------------*/
+/* backround glass */
+.bg-glass{
+  background-color: rgba( 0, 0, 0, 0.25 );
+  backdrop-filter: blur( 10px );
+  -webkit-backdrop-filter: blur( 2px );
+}
+/* ------------------------------------------- */
+/* burger menu */
+#checkbox2 {
+  display: none;
+}
+
+.toggle2 {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition-duration: .5s;
+}
+
+.bars {
+  width: 100%;
+  height: 6px;
+  background-color: #B5EAD7;
+  border-radius: 6px;
+}
+
+#bar5 {
+  transition-duration: .8s;
+}
+
+#bar4,#bar6 {
+  width: 80%;
+}
+
+#checkbox2:checked + .toggle2 .bars {
+  position: absolute;
+  transition-duration: .5s;
+}
+
+#checkbox2:checked + .toggle2 #bar5 {
+  transform: scaleX(0);
+  transition-duration: .5s;
+}
+
+#checkbox2:checked + .toggle2 #bar4 {
+  width: 100%;
+  transform: rotate(45deg);
+  transition-duration: .5s;
+}
+
+#checkbox2:checked + .toggle2 #bar6 {
+  width: 100%;
+  transform: rotate(-45deg);
+  transition-duration: .5s;
+}
+
+#checkbox2:checked + .toggle2 {
+  transition-duration: .5s;
+  transform: rotate(180deg);
+}
+/* ------------------------------------------- */
+/* Underline for navbar links */
+.nav-menu {
+  position: relative;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-menu li {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background-color: white;
+  width: 0;
+  transition: all 0.3s ease-in-out;
+}
+/* ------------------------------------------- */
