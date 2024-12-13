@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Check if the user is authenticated (user is not null)
   if (!user) {
-    return <Navigate to="/RecruitHelper/signin" replace />;
+    return <Navigate to="/RecruitHelper/signin#SignIn" replace />;
   }
 
   // If the user is authenticated, render the children

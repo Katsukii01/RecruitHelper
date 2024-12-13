@@ -3,6 +3,7 @@ import { Link , useNavigate } from 'react-router-dom';
 import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
+import { use } from 'react';
 
 const Navbar = () => {
   const { user, signOut } = useContext(AuthContext);
@@ -34,19 +35,40 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const onLoad = () => {
-      const hash = window.location.hash.slice(1); // Get the hash part of the URL
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1); 
+      console.log(hash);
       if (hash) {
         setActive(hash);
-        document.getElementById(hash).classList.add('text-white');
         setUnderline(hash);
+
+        
+        const targetElement = document.getElementById(hash);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
       } else {
         setUnderlineToNone();
       }
     };
+
+    handleHashChange();
+   
+    window.addEventListener('hashchange', handleHashChange);
   
-    onLoad(); // Execute only once when the component mounts
-  }, []);
+  
+    if (user) {
+      handleHashChange();
+    }
+  
+ 
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [user]); 
+  
+  
   
   useEffect(() => {
     const handleResize = (e) => {
@@ -79,7 +101,7 @@ const Navbar = () => {
       handleLogout();
     }
     else {
-      navigate("/RecruitHelper");
+      navigate("/RecruitHelper/");
       setActive(link.title);
       setUnderline(link.id);
     }
@@ -113,7 +135,6 @@ const Navbar = () => {
           {NavLinks.map((link) => (
             <li
               key={link.id}
-              id={link.id}
               className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                 active === link.title ? 'text-white' : 'text-[#a8a8a8]'
               }`}
@@ -129,7 +150,6 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    id={"SignIn"}
                     className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                       active === "SignIn" ? 'text-white' : 'text-[#a8a8a8]'
                     }`}
@@ -141,7 +161,6 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"signUp"}
-                    id={"SignUp"}
                     className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                       active === "SignUp" ? 'text-white' : 'text-[#a8a8a8]'
                     }`}
@@ -156,7 +175,6 @@ const Navbar = () => {
                   <>
                   <li
                     key={"Home"}
-                    id={"Home"}
                     className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                       active === "Home" ? 'text-white' : 'text-[#a8a8a8]'
                     }`}
@@ -168,7 +186,6 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"Logout"}
-                    id={"Logout"}
                     className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                       active === "Logout" ? 'text-white' : 'text-[#a8a8a8]'
                     }`}
@@ -211,7 +228,6 @@ const Navbar = () => {
               {NavLinks.map((link) => (
                 <li
                   key={link.id}
-                  id={link.id}
                   className={`${
                     active === link.title ? 'text-white' : 'text-[#323232]'
                   } font-medium cursor-pointer text-[16px]`}
@@ -227,7 +243,6 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    id={"SignIn"}
                     className={`font-medium cursor-pointer text-[16px] ${
                       active === "SignIn" ? 'text-white' : 'text-[#323232]'
                     }`}
@@ -239,7 +254,6 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"signUp"}
-                    id={"SignUp"}
                     className={`font-medium cursor-pointer text-[16px] ${
                       active === "SignUp" ? 'text-white' : 'text-[#323232]'
                     }`}
@@ -254,7 +268,6 @@ const Navbar = () => {
                   <>
                   <li
                     key={"Home"}
-                    id={"Home"}
                     className={`font-medium cursor-pointer text-[16px] ${
                       active === "Home" ? 'text-white' : 'text-[#323232]'
                     }`}
@@ -266,7 +279,6 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"Logout"}
-                    id={"Logout"}
                     className={`font-medium cursor-pointer text-[16px] ${
                       active === "Logout" ? 'text-white' : 'text-[#323232]'
                     }`}
