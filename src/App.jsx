@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas} from "./components";
+import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas, ProtectedRoute} from "./components";
+import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
   return (
@@ -8,11 +9,27 @@ const App = () => {
       <div className="relative z-0 night-navy-gradient">
         <StarsCanvas />
         <Navbar />
-        <Hero />
-        <About/>
-        <KnowHow/>
-        <Recruitment/>
-        <Contact/>
+        <Routes>
+        <Route 
+            path="/RecruitHelper/home" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/RecruitHelper/signin" element={<SignIn />} />
+          <Route path="/RecruitHelper/signup" element={<SignUp />} />
+          <Route path="/RecruitHelper" element={
+            <>
+              <Hero />
+              <About/>
+              <KnowHow/>
+              <Recruitment/>
+              <Contact/>
+            </>
+            } />
+        </Routes>
       </div>
     </BrowserRouter>
   );

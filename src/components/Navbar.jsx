@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link , useNavigate } from 'react-router-dom';
 import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
+import { AuthContext } from '../store/AuthContext';
 
 const Navbar = () => {
+  const { user, signOut } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
 
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
+
 
   const setUnderline = (linkId) => {
     const underline = document.getElementById('underline');
@@ -30,9 +34,24 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    const onLoad = () => {
+      const hash = window.location.hash.slice(1); // Get the hash part of the URL
+      if (hash) {
+        setActive(hash);
+        document.getElementById(hash).classList.add('text-white');
+        setUnderline(hash);
+      } else {
+        setUnderlineToNone();
+      }
+    };
+  
+    onLoad(); // Execute only once when the component mounts
+  }, []);
+  
+  useEffect(() => {
     const handleResize = (e) => {
       if (e.matches && active) {
-        setUnderline(active.toLowerCase());
+        setUnderline(active);
       }
     };
 
@@ -40,10 +59,36 @@ const Navbar = () => {
     return () => mdToLgQuery.removeEventListener('change', handleResize);
   }, [active]);
 
+
   const handleActive = (link) => {
-    setActive(link.title);
-    setUnderline(link.id);
+    if (link === "SignIn") {
+      setActive("SignIn");
+      setUnderline("SignIn");
+      navigate("/RecruitHelper/signin");
+    } else if (link === "SignUp") {
+      setActive("SignUp");
+      setUnderline("SignUp");
+      navigate("/RecruitHelper/signup");
+    }else if (link === "Home") {
+      setActive("Home");
+      setUnderline("Home");
+      navigate("/RecruitHelper/home");
+    }else if (link === "Logout") {
+      setUnderlineToNone();
+      setActive("");
+      handleLogout();
+    }
+    else {
+      navigate("/RecruitHelper");
+      setActive(link.title);
+      setUnderline(link.id);
+    }
     if (toggle) setToggle(false); // Close mobile menu
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/RecruitHelper/signin#SignIn");
   };
 
   return (
@@ -68,6 +113,7 @@ const Navbar = () => {
           {NavLinks.map((link) => (
             <li
               key={link.id}
+              id={link.id}
               className={`relative text-[18px] font-medium cursor-pointer m-2 ${
                 active === link.title ? 'text-white' : 'text-[#a8a8a8]'
               }`}
@@ -79,9 +125,63 @@ const Navbar = () => {
             </li>
           ))}
             <li className=' relative text-[18px] font-medium cursor-pointer m-2'>|</li>
-            <li className='text-[#a8a8a8] relative text-[18px] font-medium cursor-pointer m-2'>Login</li>
-          <div id="underline" className="underline absolute bottom-0 h-[2px] bg-mint transition-all duration-300"></div>
+            {!user ? (
+               <>
+                  <li
+                    key={"signIn"}
+                    id={"SignIn"}
+                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
+                      active === "SignIn" ? 'text-white' : 'text-[#a8a8a8]'
+                    }`}
+                    onClick={() => handleActive("SignIn")}
+                  >
+                    <a className="block w-full h-full" href={`#${"SignIn"}`}>
+                      {"SignIn"}
+                    </a>
+                  </li>
+                  <li
+                    key={"signUp"}
+                    id={"SignUp"}
+                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
+                      active === "SignUp" ? 'text-white' : 'text-[#a8a8a8]'
+                    }`}
+                    onClick={() => handleActive("SignUp")}
+                  >
+                    <a className="block w-full h-full" href={`#${"SignUp"}`}>
+                      {"SignUp"}
+                    </a>
+                  </li>
+                </>
+                ) : ( 
+                  <>
+                  <li
+                    key={"Home"}
+                    id={"Home"}
+                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
+                      active === "Home" ? 'text-white' : 'text-[#a8a8a8]'
+                    }`}
+                    onClick={() => handleActive("Home")}
+                  >
+                    <a className="block w-full h-full" href={`#${"Home"}`}>
+                      {"Home"}
+                    </a>
+                  </li>
+                  <li
+                    key={"Logout"}
+                    id={"Logout"}
+                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
+                      active === "Logout" ? 'text-white' : 'text-[#a8a8a8]'
+                    }`}
+                    onClick={() => handleActive("Logout")}
+                  >
+                    <a className="block w-full h-full">
+                      {"Logout"}
+                    </a>
+                  </li>
+                </>
+                )}
 
+          <div id="underline" className="underline absolute bottom-0 h-[2px] bg-mint transition-all duration-300"></div>
         </ul>
 
         {/* Mobile Menu */}
@@ -111,6 +211,7 @@ const Navbar = () => {
               {NavLinks.map((link) => (
                 <li
                   key={link.id}
+                  id={link.id}
                   className={`${
                     active === link.title ? 'text-white' : 'text-[#323232]'
                   } font-medium cursor-pointer text-[16px]`}
@@ -119,8 +220,65 @@ const Navbar = () => {
                   <a href={`#${link.id}`}>{link.title}</a>
                 </li>
               ))}
+    
+              <hr className='border-s-[80px] border-white w-max h-max'/>
+
+              {!user ? (
+               <>
+                  <li
+                    key={"signIn"}
+                    id={"SignIn"}
+                    className={`font-medium cursor-pointer text-[16px] ${
+                      active === "SignIn" ? 'text-white' : 'text-[#323232]'
+                    }`}
+                    onClick={() => handleActive("SignIn")}
+                  >
+                    <a  href={`#${"SignIn"}`}>
+                      {"SignIn"}
+                    </a>
+                  </li>
+                  <li
+                    key={"signUp"}
+                    id={"SignUp"}
+                    className={`font-medium cursor-pointer text-[16px] ${
+                      active === "SignUp" ? 'text-white' : 'text-[#323232]'
+                    }`}
+                    onClick={() => handleActive("SignUp")}
+                  >
+                    <a  href={`#${"SignUp"}`}>
+                      {"SignUp"}
+                    </a>
+                  </li>
+                </>
+                ) : ( 
+                  <>
+                  <li
+                    key={"Home"}
+                    id={"Home"}
+                    className={`font-medium cursor-pointer text-[16px] ${
+                      active === "Home" ? 'text-white' : 'text-[#323232]'
+                    }`}
+                    onClick={() => handleActive("Home")}
+                  >
+                    <a  href={`#${"Home"}`}>
+                      {"Home"}
+                    </a>
+                  </li>
+                  <li
+                    key={"Logout"}
+                    id={"Logout"}
+                    className={`font-medium cursor-pointer text-[16px] ${
+                      active === "Logout" ? 'text-white' : 'text-[#323232]'
+                    }`}
+                    onClick={() => handleActive("Logout")}
+                  >
+                    <a  href={`#${"Logout"}`}>
+                      {"Logout"}
+                    </a>
+                  </li>
+                </>
+                )}
               
-              <li className='text-[#323232] font-medium cursor-pointer text-[16px]'>Login</li>
             </ul>
           </div>
         </div>

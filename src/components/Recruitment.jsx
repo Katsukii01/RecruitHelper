@@ -22,4 +22,4 @@ const Recruitment= () => {
   );
 };
 
-export default  SectionWrapper(Recruitment, 'recruitment');
+export default  SectionWrapper(Recruitment, 'Recruitment');

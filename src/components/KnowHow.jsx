@@ -22,4 +22,4 @@ const KnowHow = () => {
   );
 };
 
-export default  SectionWrapper(KnowHow, 'knowhow');
+export default  SectionWrapper(KnowHow, 'Know-how');
