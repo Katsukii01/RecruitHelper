@@ -54,16 +54,26 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Email/Password SignUp function
-  const signUp = async (email, password) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      setCurrentUser(userCredential.user);
-    } catch (error) {
-      console.error('Error during sign-up:', error.message);
-      throw new Error(error.message); // Propagate the error
-    }
-  };
+// Email/Password SignUp function
+const signUp = async (email, password, username) => {
+  try {
+    // Create user with email and password
+    const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    const user = userCredential.user;
+
+    // Update the user profile with the username
+    await updateProfile(user, {
+      displayName: username,
+    });
+
+    // Set the current user in the application context
+    setCurrentUser(user);
+  } catch (error) {
+    console.error('Error during sign-up:', error.message);
+    throw new Error(error.message); // Propagate the error
+  }
+};
+
 
   // Sign Out function
   const signOut = async () => {

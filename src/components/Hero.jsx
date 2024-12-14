@@ -7,7 +7,7 @@ const Hero = () => {
     <section className='relative w-full h-screen mx-auto'>
 
       <div className={`${styles.paddingX} absolute inset-0 top-[120px] max-w-7xl mx-auto flex flex-row items-start gap-5`}>
-        <div className='flex flex-col justify-center items-center card'> 
+        <div className='flex flex-col justify-center items-center '> 
           <h1 className={`${styles.heroHeadText} text-snow`}>
             Welcome to <span className='bg-clip-text bg-gradient-to-br from-teal-200 to-cyan-600 border-text'>RecruitHelper</span>
           </h1>

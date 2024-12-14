@@ -18,6 +18,15 @@
   padding-bottom: 100px;
   display: block;
 }
+
+/*-------------------------------------------*/
+/* Cards */
+@layer components {
+  .card {
+    @apply flex flex-col space-y-4 border-4 border-gray-400 p-4 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900;
+  }
+}
+
 /*-------------------------------------------*/
 /* Gradients */
 .snow-night-gradient {

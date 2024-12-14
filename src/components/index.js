@@ -6,6 +6,7 @@ import Recruitment from './Recruitment';
 import Contact from './Contact';
 import StarsCanvas from './Stars';
 import ProtectedRoute from './ProtectedRoute';
+import Terms from './Terms';
 
 export {
     Hero,
@@ -15,5 +16,6 @@ export {
     Recruitment,
     Contact,
     StarsCanvas,
-    ProtectedRoute
+    ProtectedRoute,
+    Terms
 }

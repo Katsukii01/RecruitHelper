@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas, ProtectedRoute} from "./components";
+import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas, ProtectedRoute, Terms} from "./components";
 import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
@@ -29,6 +29,7 @@ const App = () => {
               <Contact/>
             </>
             } />
+            <Route path="/RecruitHelper/terms" element={<Terms />} />
         </Routes>
       </div>
     </BrowserRouter>
