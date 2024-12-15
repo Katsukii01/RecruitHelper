@@ -5,12 +5,18 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
-  updateEmail,
   deleteUser,
   updateProfile,
   onAuthStateChanged,
+  sendEmailVerification,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  GoogleAuthProvider, 
+  signInWithPopup,
+   reauthenticateWithPopup,
+   updatePassword as firebaseUpdatePassword,
 } from 'firebase/auth';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
 
 // Create AuthContext
 export const AuthContext = createContext({
@@ -21,7 +27,6 @@ export const AuthContext = createContext({
   signOut: () => {},
   forgotPassword: () => {},
   deleteAccount: () => {},
-  updateEmail: () => {},
   updateName: () => {},
   googleSignIn: () => {},
 });
@@ -57,23 +62,25 @@ const AuthProvider = ({ children }) => {
 // Email/Password SignUp function
 const signUp = async (email, password, username) => {
   try {
-    // Create user with email and password
+    // Tworzenie użytkownika za pomocą e-mail i hasła
     const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
     const user = userCredential.user;
 
-    // Update the user profile with the username
+    // Aktualizacja profilu użytkownika z podanym username
     await updateProfile(user, {
       displayName: username,
     });
 
-    // Set the current user in the application context
-    setCurrentUser(user);
+    // Wysyłanie e-maila weryfikacyjnego
+    await sendEmailVerification(user); // Sprawdź czy user jest prawidłowy
+
+    console.log('E-mail weryfikacyjny został wysłany');
+    setCurrentUser(user); // Ustawienie użytkownika w stanie kontekstu aplikacji
   } catch (error) {
-    console.error('Error during sign-up:', error.message);
-    throw new Error(error.message); // Propagate the error
+    console.error('Błąd podczas rejestracji:', error.message);
+    throw error; // Propagacja błędu
   }
 };
-
 
   // Sign Out function
   const signOut = async () => {
@@ -103,43 +110,37 @@ const signUp = async (email, password, username) => {
     }
   };
 
-  // Delete Account function
   const deleteAccount = async () => {
     setIsLoading(true);
     try {
       if (currentUser) {
+        // Check if the user logged in with Google
+        const isGoogleAccount = currentUser.providerData?.some(
+          (provider) => provider.providerId === "google.com"
+        );
+  
+        if (isGoogleAccount) {
+          // Reauthenticate the user using a Google sign-in popup
+          const provider = new GoogleAuthProvider();
+          await reauthenticateWithPopup(currentUser, provider);
+          console.log("Reauthentication successful");
+        }
+  
+        // Proceed to delete the account
         await deleteUser(currentUser);
-        setCurrentUser(null); // Clear current user after deletion
-        console.log('Account deleted successfully.');
+        setCurrentUser(null); // Clear the current user after deletion
+        console.log("Account deleted successfully.");
       } else {
-        throw new Error('No user is logged in.');
+        throw new Error("No user is logged in.");
       }
     } catch (error) {
-      console.error('Error during account deletion:', error);
-      throw error;
+      console.error("Error during account deletion:", error);
+      alert("Wystąpił błąd podczas usuwania konta."); // Inform the user of the error
     } finally {
       setIsLoading(false);
     }
   };
-
-  // Update Email function
-  const updateEmailAddress = async (newEmail) => {
-    setIsLoading(true);
-    try {
-      if (currentUser) {
-        await updateEmail(currentUser, newEmail);
-        console.log('Email updated successfully.');
-      } else {
-        throw new Error('No user is logged in.');
-      }
-    } catch (error) {
-      console.error('Error during email update:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  
 // Update Display Name function
 const updateDisplayName = async (newName) => {
     setIsLoading(true);
@@ -169,6 +170,23 @@ const updateDisplayName = async (newName) => {
     }
   };
 
+// Update Password function
+  const updatePassword = async (oldPassword, newPassword) => {
+    try {
+      if (currentUser) {
+        const credential = EmailAuthProvider.credential(currentUser.email, oldPassword);
+        await reauthenticateWithCredential(currentUser, credential);
+        await firebaseUpdatePassword(currentUser, newPassword);
+        console.log('Password updated successfully.');
+      } else {
+        throw new Error('No user is logged in.');
+      }
+    } catch (error) {
+      console.error('Password update error:', error.message);
+      throw error;
+    }
+  };
+
   // Monitor Authentication State
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
@@ -188,8 +206,8 @@ const updateDisplayName = async (newName) => {
     signOut,
     forgotPassword,
     deleteAccount,
-    updateEmail: updateEmailAddress,
     updateName: updateDisplayName, // Add the updateName function
+    updatePassword, // Add the updatePassword function
     googleSignIn,
   };
 

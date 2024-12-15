@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { google } from '../assets';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const SignUp = () => {
   const { signUp, googleSignIn } = useContext(AuthContext);
@@ -14,30 +15,42 @@ const SignUp = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (email !== confirmEmail) {
       setError("Emails do not match.");
       return;
     }
+  
     if (!termsAccepted) {
       setError("You must accept the terms and conditions.");
       return;
     }
   
+    if (!recaptchaToken) {
+      setError("Please verify that you are a human.");
+      return;
+    }
     setIsLoading(true);
+  
     try {
+      // Call your back-end to validate the reCAPTCHA token
+      // For now, let's assume it's passed correctly.
       await signUp(email, password, username); // Include username
-      navigate('/RecruitHelper/home#Home');
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
+  
+    // Force reload of the page to ensure you are on Home with the correct state
+    navigate('/RecruitHelper/home#Home');
+    window.location.reload(); // This line will force the page to reload after navigation.
   };
   
-
   const handleGoogleSignUp = async () => {
     try {
       await googleSignIn(); // Google sign-up
@@ -45,6 +58,10 @@ const SignUp = () => {
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaToken(value);
   };
 
   return (
@@ -100,6 +117,15 @@ const SignUp = () => {
             I accept the <a href="/RecruitHelper/terms" className="text-blue-500 ">terms and conditions</a>
           </label>
         </div>
+
+        {/* reCAPTCHA widget */}
+        <div className="flex items-center justify-center">
+          <ReCAPTCHA
+            sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
+            onChange={handleRecaptchaChange}
+          />
+        </div>
+
         <div className='flex flex-col items-center'>
           <button
             type="submit"
