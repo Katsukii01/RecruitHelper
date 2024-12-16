@@ -64,6 +64,11 @@ const SignUp = () => {
     setRecaptchaToken(value);
   };
 
+  const handleNavigate = (event) => {
+    event.preventDefault(); // Prevent default anchor behavior
+    navigate('/RecruitHelper/terms');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <form onSubmit={handleSubmit} className="p-6 bg-glass rounded-lg card sm:w-1/2 w-5/6">
@@ -113,9 +118,15 @@ const SignUp = () => {
             checked={termsAccepted}
             onChange={(e) => setTermsAccepted(e.target.checked)}
           />
-          <label htmlFor="terms" className="text-sm">
-            I accept the <a href="/RecruitHelper/terms" className="text-blue-500 ">terms and conditions</a>
-          </label>
+              <label htmlFor="terms" className="text-sm">
+                I accept the{' '}
+                <span
+                  onClick={handleNavigate}
+                  className="text-blue-500 cursor-pointer underline"
+                >
+                  terms and conditions
+                </span>
+              </label>
         </div>
 
         {/* reCAPTCHA widget */}
