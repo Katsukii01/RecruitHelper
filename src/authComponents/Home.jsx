@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { defaultPfp } from '../assets';
 import { useNavigate } from 'react-router-dom';
+import { ManageRecruitments } from '../RecruitmentComponents';
 
 const Home = () => {
   const { user, updateName, deleteAccount, updatePassword } = useContext(AuthContext);
@@ -62,6 +63,7 @@ const Home = () => {
     }
   };
   
+  
 
   const confirmDelete = async () => {
     const confirmation = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
@@ -70,7 +72,6 @@ const Home = () => {
         await deleteAccount();
         alert('The account has been deleted');
         navigate('/RecruitHelper/signin#SignIn'); // Redirect to Sign In page
-
       } catch (error) {
         console.error('Error while deleting the account:', error);
         alert('An error occurred while deleting the account.');
@@ -84,7 +85,7 @@ const Home = () => {
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-glass pt-32">
       <h1 className="text-4xl font-bold text-sky">Welcome to your homepage, {user?.displayName || user?.email}</h1>
 
-      <div className="space-y-4 mt-6 w-full max-w-2xl text-md">
+      <div className="space-y-4 m-6 w-full max-w-5xl text-md p-5">
         {/* User Info Card */}
         <div className="card">
           <div className="flex flex-row space-x-4">
@@ -103,6 +104,13 @@ const Home = () => {
           ) : (
             <p className="text-red-500">Email Not Verified</p>
           )}
+        </div>
+        {/* Manage your recruitments */}
+        <div className="border-b-2 border-gray-400">Manage your recruitments</div>
+
+        <div className="items-center card">
+          <label>Recruitments</label>
+          <ManageRecruitments />
         </div>
 
         {/* Account Management */}

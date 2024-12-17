@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas, ProtectedRoute, Terms} from "./components";
+import { CreateRecruitment, AddApplicants, ManageApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
@@ -9,8 +10,9 @@ const App = () => {
       <div className="relative z-0 night-navy-gradient">
         <StarsCanvas />
         <Navbar />
+
         <Routes>
-        <Route 
+          <Route 
             path="/RecruitHelper/home" 
             element={
               <ProtectedRoute>
@@ -20,6 +22,8 @@ const App = () => {
           />
           <Route path="/RecruitHelper/signin" element={<SignIn />} />
           <Route path="/RecruitHelper/signup" element={<SignUp />} />
+
+          {/*HomePage elements*/}
           <Route path="/RecruitHelper" element={
             <>
               <Hero />
@@ -30,6 +34,16 @@ const App = () => {
             </>
             } />
             <Route path="/RecruitHelper/terms" element={<Terms />} />
+RecruitmentCreate
+
+          {/*Recruitment elements*/}
+          <Route path="/RecruitHelper/RecruitmentCreate" element={<CreateRecruitment/>} />
+          <Route path="/RecruitHelper/RecruitmentAddApplicants" element={<AddApplicants/>} />
+          <Route path="/RecruitHelper/RecruitmentAddApplicantsWithHelp" element={<AddApplicantsWithHelp/>} />
+          <Route path="/RecruitHelper/RecruitmentManageApplicants" element={<ManageApplicants/>} />
+          <Route path="/RecruitHelper/RecruitmentDashboard" element={<RecruitmentDashboard/>} />
+          <Route path="/RecruitHelper/ChooseMethod" element={<ChooseMethod />} />
+
         </Routes>
       </div>
     </BrowserRouter>
