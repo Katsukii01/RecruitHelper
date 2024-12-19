@@ -156,7 +156,7 @@ const Navbar = () => {
                     onClick={() => handleActive("SignIn")}
                   >
                     <a className="block w-full h-full" href={`#${"SignIn"}`}>
-                      {"SignIn"}
+                      {"Sign In"}
                     </a>
                   </li>
                   <li
@@ -167,7 +167,7 @@ const Navbar = () => {
                     onClick={() => handleActive("SignUp")}
                   >
                     <a className="block w-full h-full" href={`#${"SignUp"}`}>
-                      {"SignUp"}
+                      {"Sign Up"}
                     </a>
                   </li>
                 </>
@@ -249,7 +249,7 @@ const Navbar = () => {
                     onClick={() => handleActive("SignIn")}
                   >
                     <a  href={`#${"SignIn"}`}>
-                      {"SignIn"}
+                      {"Sign In"}
                     </a>
                   </li>
                   <li
@@ -260,7 +260,7 @@ const Navbar = () => {
                     onClick={() => handleActive("SignUp")}
                   >
                     <a  href={`#${"SignUp"}`}>
-                      {"SignUp"}
+                      {"Sign Up"}
                     </a>
                   </li>
                 </>

@@ -81,13 +81,20 @@ const SignIn = () => {
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
-
+          <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)} // Otwórz modal
+              className=" text-sm text-blue-600 hover:text-blue-800 flex items-center justify-center mt-2 "
+          >
+            Forgot Password?
+          </button>
+          <div className="pt-4 border-b-2 border-gray-400 w-1/3 text-center">Sign in with</div>
           <button
             type="button"
             className="flex items-center justify-center py-2 mt-4 rounded-lg bg-blue-700 text-white font-medium border border-white shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 w-1/2"
             onClick={handleGoogleSignIn}
           >
-            <label className="mr-2">Sign in with </label>
+            <label className="mr-2"> </label>
             <span className="flex items-center">
               <span className="text-red-500">G</span>
               <span className="text-blue-500">o</span>
@@ -98,13 +105,7 @@ const SignIn = () => {
             </span>
             <img src={google} alt="Google Logo" className="w-5 h-5 ml-2" />
           </button>
-          <button
-              type="button"
-              onClick={() => setShowForgotPassword(true)} // Otwórz modal
-              className=" text-sm text-blue-600 hover:text-blue-800 flex items-center justify-center  2 mt-4  "
-          >
-            Forgot Password?
-          </button>
+
 
         </div>
       </form>

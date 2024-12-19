@@ -118,15 +118,18 @@ const SignUp = () => {
           </label>
         </div>
 
-        {/* reCAPTCHA widget */}
-        <div className="flex items-center justify-center">
-          <ReCAPTCHA
-            sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
-            onChange={handleRecaptchaChange}
-          />
-        </div>
+         
+
 
         <div className='flex flex-col items-center'>
+        {/* reCAPTCHA widget */}
+        <div className="flex items-center justify-center">
+              <ReCAPTCHA
+                sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
+                onChange={handleRecaptchaChange}
+                className=""
+              />
+            </div>
           <button
             type="submit"
             className="flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
@@ -134,12 +137,12 @@ const SignUp = () => {
           >
             {isLoading ? 'Signing Up...' : 'Sign Up'}
           </button>
+          <div className="pt-10 border-b-2 border-gray-400 w-1/3 text-center">Sign up with</div>
           <button
             type="button"
             className="flex items-center justify-center py-2 mt-4 rounded-lg bg-blue-700 text-white font-medium border border-white shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 w-1/2"
             onClick={handleGoogleSignUp}
           >
-            <label className='mr-2' >Sign up with </label>
             <span className="flex items-center">
               <span className="text-red-500">G</span>
               <span className="text-blue-500">o</span>

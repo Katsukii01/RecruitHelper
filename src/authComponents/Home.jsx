@@ -83,7 +83,7 @@ const Home = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-glass pt-32">
-      <h1 className="text-4xl font-bold text-sky">Welcome to your homepage, {user?.displayName || user?.email}</h1>
+      <h1 className="text-4xl font-bold text-white ">Welcome to your homepage, {user?.displayName || user?.email}</h1>
 
       <div className="space-y-4 m-6 w-full max-w-5xl text-md p-5">
         {/* User Info Card */}
@@ -125,7 +125,7 @@ const Home = () => {
             onChange={(e) => setName(e.target.value)}
             className="input bg-glass rounded-lg w-1/2 p-2"
           />
-          <button onClick={handleUpdateName} className="btn bg-sky p-1 rounded-lg">Update Name</button>
+          <button onClick={handleUpdateName} className="btn p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">Update Name</button>
         </div>
 
         {/* Change Password */}
@@ -152,7 +152,7 @@ const Home = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="input bg-glass rounded-lg w-1/2 p-2"
             />
-            <button onClick={handleUpdatePassword} className="btn bg-sky p-1 rounded-lg">Update Password</button>
+            <button onClick={handleUpdatePassword} className="btn  p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">Update Password</button>
           </div>
         )}
         
@@ -168,19 +168,19 @@ const Home = () => {
                 onChange={(e) => setUsernameInput(e.target.value)}
                 className="input bg-glass rounded-lg w-1/2 p-2"
               />
-              <button onClick={handleDeleteAccount} className="btn bg-red-500 p-1 mb-6 rounded-lg flex justify-center w-1/2">Delete Account</button>
+              <button onClick={handleDeleteAccount} className="btn bg-red-500 p-1 mb-6 rounded-lg flex justify-center w-1/2 hoverr:bg-red-700 hover:bg-red-800 border border-white hover:text-white">Delete Account</button>
             </>
           ) : (
             <>
               <button
                 onClick={confirmDelete}
-                className="btn bg-red-600 p-1 mb-6 rounded-lg flex justify-center w-1/2"
+                className="btn bg-red-600 p-1 mb-6 rounded-lg flex justify-center w-1/2 hoverr:bg-red-700 hover:bg-red-800 hover:text-white border  border-white"
               >
                 Yes, Delete Account
               </button>
               <button
                 onClick={() => setIsConfirming(false)}
-                className="btn bg-gray-500 p-1 mb-6 rounded-lg flex justify-center w-1/2"
+                className="btn bg-gray-500 p-1 mb-6 rounded-lg flex justify-center w-1/2 hoverr:bg-gray-700 hover:bg-gray-800 hover:text-white border border-white"
               >
                 Cancel
               </button>

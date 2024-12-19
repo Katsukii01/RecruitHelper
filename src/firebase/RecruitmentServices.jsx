@@ -38,24 +38,32 @@ export const addRecruitment = async (recruitmentData) => {
   };
   
 
-// **2. Get all recruitments (with sorting)**
-export const getRecruitments = async () => {
+// **2. Get all recruitments (with filtering)**
+export const getRecruitments = async (searchTerm = '') => {
   try {
-    checkAuth();
-    const userId = firebaseAuth.currentUser.uid; // Get current user's ID
-    console.log('Current User ID:', userId);  // Logowanie userId
+    checkAuth(); // Ensure the user is authenticated
+    const userId = firebaseAuth.currentUser.uid; // Get the current user's ID
+    console.log('Current User ID:', userId); // Log userId
 
-    const q = query(recruitmentCollection); // Usunięcie sortowania
+    const q = query(recruitmentCollection); // Fetch all documents from the collection
     const snapshot = await getDocs(q);
 
     console.log('Snapshot:', snapshot.docs);
 
+    // Map and filter recruitments
     return snapshot.docs
       .map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }))
-      .filter((recruitment) => recruitment.userId === userId); // Filtruj na podstawie userId
+      .filter(
+        (recruitment) =>
+          recruitment.userId === userId && // Filter by userId
+          Object.values(recruitment)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) // Filter by search term
+      );
   } catch (error) {
     console.error('Error fetching recruitments:', error.message);
     throw error;
