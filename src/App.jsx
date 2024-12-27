@@ -34,7 +34,7 @@ const App = () => {
             </>
             } />
             <Route path="/RecruitHelper/terms" element={<Terms />} />
-RecruitmentCreate
+
 
           {/*Recruitment elements*/}
           <Route path="/RecruitHelper/RecruitmentCreate" element={<CreateRecruitment/>} />

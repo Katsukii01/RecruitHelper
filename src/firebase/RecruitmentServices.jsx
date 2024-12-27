@@ -8,17 +8,31 @@ import {
   deleteDoc,
   updateDoc,
   query,
-  orderBy,
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Check if the user is authenticated
-const checkAuth = () => {
-  const user = firebaseAuth.currentUser;
-  if (!user) throw new Error('User is not authenticated!');
-  return user;
+const checkAuth = async () => {
+  return new Promise((resolve, reject) => {
+    const user = firebaseAuth.currentUser;
+    if (user) {
+      resolve(user); // If user is already authenticated
+    } else {
+      // If user is not authenticated, check via onAuthStateChanged
+      const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
+        if (user) {
+          resolve(user); // If the user is authenticated, resolve
+        } else {
+          reject(new Error('User is not authenticated!')); // Reject if no user
+        }
+        unsubscribe(); // Unsubscribe from the listener after it's triggered
+      });
+    }
+  });
 };
+
+
 
 // Reference to the recruitment collection
 const recruitmentCollection = collection(db, 'recruitments');
@@ -156,4 +170,34 @@ export const uploadCVFile = async (file, applicantName) => {
     console.error('Error uploading CV file:', error.message);
     throw error;
   }
+  
 };
+
+// **7. Get a single recruitment by ID**
+export const getRecruitmentById = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId); // Reference to the specific recruitment document
+    const recruitmentSnapshot = await getDoc(recruitmentDoc); // Fetch the document
+    
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    // Ensure the current user is the owner of the recruitment
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    return {
+      id: recruitmentSnapshot.id,
+      ...recruitmentData,
+    };
+  } catch (error) {
+    console.error('Error fetching recruitment by ID:', error.message);
+    throw error;
+  }
+};
+

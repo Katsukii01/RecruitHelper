@@ -36,23 +36,29 @@ const ManageRecruitments = () => {
   };
 
   const skillColors = [
-    'bg-red-500',
-    'bg-yellow-500',
-    'bg-green-500',
-    'bg-blue-500',
-    'bg-purple-500',
-    'bg-pink-500',
-    'bg-orange-500',
-    'bg-teal-500',
-    'bg-indigo-500',
-    'bg-gray-500',
+    'bg-blue-500',    
+    'bg-green-500',   
+    'bg-teal-500',    
+    'bg-indigo-500',  
+    'bg-purple-500',  
+    'bg-cyan-500',   
+    'bg-lime-500',    
+    'bg-emerald-500', 
+    'bg-yellow-500',  
+    'bg-amber-500',   
+    'bg-blue-600',    
+    'bg-violet-500',  
   ];
+
+  const goToRecruitmentDashboard = (id) => {
+    navigate(`/RecruitHelper/RecruitmentDashboard`, { state: { id } });
+  };
 
   const getRandomColor = () => {
     return skillColors[Math.floor(Math.random() * skillColors.length)];
   };
   return (
-    <div className="min-h-[500px] overflow-y-auto px-4 sm:px-6 lg:px-8">
+    <div className="px-4 sm:px-6 lg:px-8 w-full">
       {loading ? (
         <div className="text-center text-gray-500">Loading...</div>
       ) : (
@@ -70,7 +76,7 @@ const ManageRecruitments = () => {
             <div className="flex flex-col items-center justify-center mt-2">
               <button
                 onClick={goToCreateRecruitment}
-                className="flex items-center justify-center w-24 h-24 rounded-full bg-sky text-white text-4xl hover:bg-deepSea transition "
+                className="flex items-center justify-center w-24 h-24 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition "
               >
                 +
               </button>
@@ -79,30 +85,33 @@ const ManageRecruitments = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-[800px] overflow-y-auto w-full p-4">
               {filteredRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
-                    className="min-h-[400px] relative p-3 border-2 rounded-lg shadow-md group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
-                              hover:scale-105 hover:shadow-[0px_10px_20px_rgba(0,0,0,0.5)] skew-x-3 hover:skew-x-0 "
+                    className="h-[400px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
+                    
                   >
-                  <h3 className="mb-4 border border-white text-center font-bold text-lg rounded-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
+                  <h3 className="mb-4 border-b-2 p-4 border-b-white text-center font-bold text- rounded-t-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
                     {recruitment.name}
                   </h3>
                   
-                  <p className="text-sm text-white mt-1 font-semibold">Job Title:
-                    <span className='text-white font-normal'> {recruitment.jobTittle}</span>
+                  <p className="text-sm text-white mt-1 font-semibold m-4">Job Title:
+                    <span className='text-teal-400 font-normal'> {recruitment.jobTittle}</span>
                   </p>
-                  <div className="mt-2">
+                  <div className="mt-2 m-4">
                     <h4 className="text-sm font-semibold text-white">
                       Skills Needed:
                     </h4>
-                    <div className='h-[220px] overflow-y-auto '>
+                    <div className='h-[200px] overflow-y-auto  p-4'>
                       <div className="flex flex-wrap gap-2 m-2">
                         {recruitment.skills.map((skill, index) => (
                           <span
                             key={index}
-                            className={`px-2 py-1 text-sm rounded-lg text-white h-[30px] ${getRandomColor()}`}
+                            className={`px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words ${getRandomColor()}`}
+
+
                           >
                             {skill}
                           </span>
@@ -111,7 +120,7 @@ const ManageRecruitments = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => alert('Manage functionality coming soon!')}
+                    onClick={() => goToRecruitmentDashboard(recruitment.id)}
                     className=" absolute bottom-4  left-12 right-12   py-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                   >
                     Manage

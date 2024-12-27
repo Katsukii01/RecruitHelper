@@ -10,6 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
+  const allowedHashes = NavLinks.map(link => link.id).concat(['SignIn', 'SignUp', 'Home']);
 
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
 
@@ -37,11 +38,15 @@ const Navbar = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1); 
-      console.log(hash);
       if (hash) {
+
+        if (allowedHashes.includes(hash)) {
         setActive(hash);
         setUnderline(hash);
-
+        }else{
+            setActive('Home');
+            setUnderline('Home');
+        }
         
         const targetElement = document.getElementById(hash);
         if (targetElement) {

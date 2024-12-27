@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addRecruitment } from '../firebase/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const CreateRecruitment = () => {
   const navigate = useNavigate();
@@ -19,15 +20,52 @@ const CreateRecruitment = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.jobTittle) newErrors.jobTittle = 'Job Tittle is required';
-    if (!formData.experienceNeeded) newErrors.experienceNeeded = 'Experience is required';
-    if (!formData.skills) newErrors.skills = 'Skills are required';
-    if (!formData.weightOfExperience) newErrors.weightOfExperience = 'Weight of experience is required';
-    if (!formData.weightOfSkills) newErrors.weightOfSkills = 'Weight of skills is required';
+    if (!formData.name) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.length > 25) {
+      newErrors.name = 'Name cannot exceed 25 characters';
+    }
+
+    if (!formData.jobTittle) {
+      newErrors.jobTittle = 'Job Title is required';
+    } else if (formData.jobTittle.length > 30) {
+      newErrors.jobTittle = 'Job Title cannot exceed 30 characters';
+    }
+
+    if (!formData.experienceNeeded) {
+      newErrors.experienceNeeded = 'Experience is required';
+    }else if (
+        Number(formData.experienceNeeded) < 0 ||
+        Number(formData.experienceNeeded) > 30
+      ) {
+        newErrors.experienceNeeded = 'Experience needed must be between 0 and 30';
+      }
+
+    if (!formData.skills) {
+      newErrors.skills = 'Skills are required';
+    }
+
+    if (!formData.weightOfExperience) {
+      newErrors.weightOfExperience = 'Weight of experience is required';
+    } else if (
+      Number(formData.weightOfExperience) < 1 ||
+      Number(formData.weightOfExperience) > 10
+    ) {
+      newErrors.weightOfExperience = 'Weight of experience must be between 1 and 10';
+    }
+
+    if (!formData.weightOfSkills) {
+      newErrors.weightOfSkills = 'Weight of skills is required';
+    } else if (
+      Number(formData.weightOfSkills) < 1 ||
+      Number(formData.weightOfSkills) > 10
+    ) {
+      newErrors.weightOfSkills = 'Weight of skills must be between 1 and 10';
+    }
+
     return newErrors;
   };
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -48,7 +86,10 @@ const CreateRecruitment = () => {
         name: formData.name,
         jobTittle: formData.jobTittle,
         experienceNeeded: formData.experienceNeeded,
-        skills: formData.skills.split(',').map((skill) => skill.trim()), // Zapisz listę umiejętności
+        skills: formData.skills
+        .split(',')
+        .map((skill) => skill.trim())
+        .filter((skill) => skill), 
         weightOfExperience: formData.weightOfExperience,
         weightOfSkills: formData.weightOfSkills,
       };
@@ -99,7 +140,6 @@ const CreateRecruitment = () => {
         <div className="items-center card">
           <label className="font-semibold">Experience Needed(In years)</label>
           <input
-            min={0}
             type="number"
             name="experienceNeeded"
             value={formData.experienceNeeded}
@@ -151,11 +191,16 @@ const CreateRecruitment = () => {
         <div className="items-center flex">
           <button
             type="submit"
-            className="btn bg-sky p-2 rounded-lg w-1/2 mx-auto hover:bg-sky-700"
+            className="btn bg-sky p-2 rounded-lg w-1/2 mx-auto hover:bg-sky-700 text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600" 
             disabled={loading}
           >
             {loading ? 'Submitting...' : 'Create Recruitment'}
           </button>
+        </div>
+        <div className="items-center flex justify-center">
+          <Link to="/RecruitHelper/home#Home" className="btn bg-red-500 p-2 mb-6 rounded-lg flex justify-center w-1/2 hoverr:bg-red-700 hover:bg-red-800 border border-white hover:text-white">
+              Cancel
+          </Link>
         </div>
       </form>
     </div>

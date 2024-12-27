@@ -17,12 +17,12 @@ const ChooseMethod = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center  bg-glass pt-32">
+    <div className="w-full min-h-screen flex flex-col items-center bg-glass pt-32">
       <h2 className="text-2xl font-bold mb-4">Choose Method for Adding Applicants</h2>
-      <div className="flex space-x-6 flex-wrap justify-center">
+      <div className="flex space-x-12 flex-wrap justify-center">
         {/* Card 1: Add Applicants Manually */}
         <div
-          className="card w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 text-white p-6 cursor-pointer transition-all duration-300 hover:scale-105 hover:border-2 hover:border-blue-500 hover:bg-blue-600"
+          className="card w-1/3 text-white p-6 cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-blue-500 hover:bg-blue-600"
           onClick={handleManualApplicants}
         >
           <h3 className="text-xl font-semibold mb-4">Add Applicants Manually</h3>
@@ -31,7 +31,7 @@ const ChooseMethod = () => {
 
         {/* Card 2: Add Applicants Using CV with Help of Regex, NLP, and LLM */}
         <div
-          className="card w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 text-white p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:border-2 hover:border-green-500 hover:bg-green-700"
+          className="card w-1/3  text-white p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-green-500 hover:bg-green-700"
           onClick={handleCVApplicants}
         >
           <h3 className="text-xl font-semibold mb-4">Add Applicants Using CV</h3>
