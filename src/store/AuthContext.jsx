@@ -16,7 +16,7 @@ import {
    reauthenticateWithPopup,
    updatePassword as firebaseUpdatePassword,
 } from 'firebase/auth';
-
+import { getRecruitmentsByUserId, deleteRecruitment } from '../firebase/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
 
 // Create AuthContext
 export const AuthContext = createContext({
@@ -126,7 +126,20 @@ const signUp = async (email, password, username) => {
           console.log("Reauthentication successful");
         }
   
-        // Proceed to delete the account
+        // 1. Pobranie wszystkich rekrutacji użytkownika
+        const recruitments = await getRecruitmentsByUserId(currentUser.uid);
+        
+        // 2. Usunięcie każdej rekrutacji
+        for (const recruitment of recruitments) {
+          try {
+            await deleteRecruitment(recruitment.id); // Usunięcie pojedynczej rekrutacji
+            console.log(`Recruitment ${recruitment.name} deleted successfully.`);
+          } catch (err) {
+            console.error(`Error deleting recruitment ${recruitment.name}:`, err);
+          }
+        }
+  
+        // 3. Usunięcie konta użytkownika po usunięciu rekrutacji
         await deleteUser(currentUser);
         setCurrentUser(null); // Clear the current user after deletion
         console.log("Account deleted successfully.");
@@ -140,7 +153,6 @@ const signUp = async (email, password, username) => {
       setIsLoading(false);
     }
   };
-  
 // Update Display Name function
 const updateDisplayName = async (newName) => {
     setIsLoading(true);

@@ -83,7 +83,7 @@ const Home = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-glass pt-32">
-      <h1 className="text-4xl font-bold text-white ">Welcome to your homepage, {user?.displayName || user?.email}</h1>
+      <h1 className="text-4xl font-bold text-white ">Welcome to your homepage</h1>
 
       <div className="space-y-4 m-6 w-full max-w-5xl text-md p-5">
         {/* User Info Card */}
@@ -109,7 +109,7 @@ const Home = () => {
         <div className="border-b-2 border-gray-400">Manage your recruitments</div>
 
         <div className="items-center card">
-          <label>Recruitments</label>
+     
           <ManageRecruitments />
         </div>
 
@@ -159,6 +159,8 @@ const Home = () => {
         {/* Account Deletion */}
         <div className="flex flex-col space-y-4 items-center card">
           <label>Delete Account</label>
+          <p className='text-red-500 text-md'>This action will delete your account and cannot be undone.</p>
+          <p className='text-red-500 text-md'> And all your recruitment data will be deleted. Do you want to proceed?</p>
           {!isConfirming ? (
             <>
               <input

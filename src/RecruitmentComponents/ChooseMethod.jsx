@@ -8,7 +8,7 @@ const ChooseMethod = () => {
 
   const handleManualApplicants = () => {
     // Przekierowanie do zarządzania aplikantami, przekazując recruitmentId
-    navigate('/RecruitHelper/RecruitmentManageApplicants', { state: { recruitmentId } });
+    navigate('/RecruitHelper/RecruitmentAddApplicants', { state: { recruitmentId } });
   };
 
   const handleCVApplicants = () => {
@@ -22,20 +22,20 @@ const ChooseMethod = () => {
       <div className="flex space-x-12 flex-wrap justify-center">
         {/* Card 1: Add Applicants Manually */}
         <div
-          className="card w-1/3 text-white p-6 cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-blue-500 hover:bg-blue-600"
+          className="card w-1/3 text-white p-1 cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-blue-500 hover:bg-blue-600"
           onClick={handleManualApplicants}
         >
           <h3 className="text-xl font-semibold mb-4">Add Applicants Manually</h3>
-          <p className="text-sm">Choose this option to add applicants manually to the recruitment process.</p>
+          <p className="text-md">Choose this option to add applicants manually to the recruitment process.</p>
         </div>
 
         {/* Card 2: Add Applicants Using CV with Help of Regex, NLP, and LLM */}
         <div
-          className="card w-1/3  text-white p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-green-500 hover:bg-green-700"
+          className="card w-1/3  text-white p-1 rounded-lg cursor-pointer transition-all duration-300 hover:scale-110 hover:border-2 hover:border-green-500 hover:bg-green-700"
           onClick={handleCVApplicants}
         >
           <h3 className="text-xl font-semibold mb-4">Add Applicants Using CV</h3>
-          <p className="text-sm">Choose this option to add applicants with the help of CV analysis using Regex, NLP, and LLM technologies.</p>
+          <p className="text-md">Choose this option to add applicants with the help of CV analysis using Regex, NLP, and LLM technologies.</p>
         </div>
       </div>
     </div>

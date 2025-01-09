@@ -5,11 +5,22 @@ const Navbar = () => {
   const [active, setActive] = useState(RecruitmentDashboardLinks[0]?.title || ''); // Domyślnie pierwszy element
 
   useEffect(() => {
+    window.scrollTo(0, 0); 
+
     const updateActiveFromHash = () => {
-      const currentHash = window.location.hash.replace('#', ''); // Pobiera hash bez `#`
+      const currentHash = window.location.hash.replace('#', '');
       const matchingLink = RecruitmentDashboardLinks.find((link) => link.id === currentHash);
-      setActive(matchingLink ? matchingLink.title : RecruitmentDashboardLinks[0]?.title); // Domyślnie pierwszy
+      setActive(matchingLink ? matchingLink.title : RecruitmentDashboardLinks[0]?.title);
+    
+      // Opóźnione przewijanie
+      setTimeout(() => {
+        const element = document.getElementById(currentHash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500); // Opóźnienie w milisekundach
     };
+    
 
     // Aktualizuj aktywny link przy pierwszym renderze
     updateActiveFromHash();
