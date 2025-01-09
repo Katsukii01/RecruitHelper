@@ -7,6 +7,7 @@ import Contact from './Contact';
 import StarsCanvas from './Stars';
 import ProtectedRoute from './ProtectedRoute';
 import Terms from './Terms';;
+import Loader from './loader';
 
 export {
     Hero,
@@ -18,4 +19,5 @@ export {
     StarsCanvas,
     ProtectedRoute,
     Terms,
+    Loader,
 }

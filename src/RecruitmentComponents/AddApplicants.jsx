@@ -4,7 +4,7 @@ import axios from "axios"; // For HTTP requests
 import { addApplicant } from '../firebase/RecruitmentServices';
 import { existingLanguages } from "../constants";
 import usePreventPageReload from './usePreventPageReload';
-import { a } from "framer-motion/client";
+import { Loader } from '../components';
 
 const AddApplicants = () => {
   useEffect(() => {
@@ -21,6 +21,8 @@ const AddApplicants = () => {
   const [CoveringLetterPreviews, setCoveringLetterPreviews] = useState(""); 
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);  // Stan do kontrolowania przycisku
+  const [isLoadingCv, setIsLoadingCv] = useState(false);  // Stan do kontrolowania podglądów CV 
+  const [isLoadingCoveringLetter, setIsLoadingCoveringLetter] = useState(false);  // Stan do kontrolowania podglądu covering letter
   const [buttonText, setButtonText] = useState("Finish Adding Applicants");  // Tekst na przycisku
   const [NumberOfSavedApplicants, setNumberOfSavedApplicants] = useState(0);  // licznik zapisanych aplikantów
   const [NumberOfApplicantsToSave, setNumberOfApplicantsToSave] = useState(0);  // Liczba aplikantów do zapisania
@@ -428,6 +430,13 @@ const handleInputBlur = (e) => {
   };
   
   const uploadFile = (file, fileType) => {
+    if(fileType === "cv"){
+      setIsLoadingCv(true);
+    }
+
+    if(fileType === "coveringLetter"){
+      setIsLoadingCoveringLetter(true);
+    }
     const formData = new FormData();
     formData.append("file", file);
   
@@ -468,6 +477,16 @@ const handleInputBlur = (e) => {
       .catch((err) => {
         console.error("Error uploading file:", err);
         alert("Error uploading file. Please try again.");
+        
+      })    
+      .finally(() => {
+        if(fileType === "cv"){
+          setIsLoadingCv(false);
+        }
+
+        if(fileType === "coveringLetter"){
+          setIsLoadingCoveringLetter(false);
+        }
       });
   };
 
@@ -796,7 +815,13 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                   ))}
                 </div>
               ) : (
-                <p>Document preview not available.</p>
+                <>
+                {isLoadingCoveringLetter ? (
+                  <p><Loader /></p>  // Show Loading message when the file is being processed
+                ) : (
+                  <p>Cv preview not available.</p>  // Default message if no preview is available
+                )}
+                </>
               )}
             </div>
 
@@ -824,7 +849,13 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
           ))}
         </div>
       ) : (
-        <p>Document preview not available.</p>
+        <>
+          {isLoadingCv ? (
+            <p><Loader /></p>  // Show Loading message when the file is being processed
+          ) : (
+            <p>Covering letter preview not available.</p>  // Default message if no preview is available
+          )}
+        </>
       )}
 
             </div>

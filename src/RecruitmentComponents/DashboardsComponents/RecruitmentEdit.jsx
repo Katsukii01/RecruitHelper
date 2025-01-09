@@ -3,6 +3,7 @@ import { getRecruitmentById, updateRecruitment, addRecruitment } from '../../fir
 import { DsectionWrapper } from '../../hoc';
 import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLanguage, removeLanguage } from '../Validations';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../../components';
 
 const RecruitmentEdit = ({ id }) => {
   const [recruitment, setRecruitment] = useState(null);
@@ -119,7 +120,7 @@ const RecruitmentEdit = ({ id }) => {
     }
   };
 
-  if (loading) return <div className="relative w-full h-screen mx-auto">Loading...</div>;
+  if (loading) return <div className="relative w-full h-screen mx-auto flex justify-center items-center"><Loader /></div>;
 
   return (
     <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getRecruitments } from '../firebase/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from '../components';
 
 const ManageRecruitments = () => {
   const [recruitments, setRecruitments] = useState([]);
@@ -64,7 +65,7 @@ const ManageRecruitments = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-8 w-full">
       {loading ? (
-        <div className="text-center text-gray-500">Loading...</div>
+        <div className="t flex justify-center items-center"><Loader /></div>
       ) : (
         <>
           <div className="mb-4 flex flex-row items-center justify-center ">

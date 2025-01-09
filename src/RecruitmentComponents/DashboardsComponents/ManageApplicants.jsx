@@ -3,6 +3,7 @@ import { getApplicants, deleteApplicant } from '../../firebase/RecruitmentServic
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
+import { Loader } from '../../components';
 
 const ManageApplicants = ({ id }) => {
   const [recruitmentId, setRecruitmentId] = useState(id);
@@ -125,7 +126,7 @@ const ManageApplicants = ({ id }) => {
 
   if(recruitmentId === undefined) return <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">No recruitment found</section>;
 
-  if (loading) return <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">Loading...</section>;
+ if (loading) return <div className="relative w-full h-screen mx-auto flex justify-center items-center"><Loader /></div>;
 
   if (!applicants.length) return <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
     <h1 className="text-2xl font-bold text-white mb-4">Applicants</h1>
@@ -144,7 +145,7 @@ const ManageApplicants = ({ id }) => {
     </section>;
 
   return (
-    <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
+    <section className=" overflow-auto relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
       <h1 className="text-2xl font-bold text-white mb-4">Manage Applicants</h1>
 
       {/* Add Applicant Button */}
@@ -158,7 +159,7 @@ const ManageApplicants = ({ id }) => {
       </div>
 
       {/* Applicants Table */}
-      <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+      <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-4">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white ">
           <thead className="bg-gray-900 text-white ">
             <tr>
@@ -221,21 +222,23 @@ const ManageApplicants = ({ id }) => {
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
-                  <div className='h-[120px] overflow-y-auto px-4'>
-                    <div className="flex flex-wrap gap-2 m-1 ">
-                      {applicant.languages && applicant.languages.length > 0 ? (
-                        applicant.languages.map(({ language, level }, index) => (
+                  <div className='max-h-[120px] overflow-y-auto px-4'>
+                    {applicant.languages && applicant.languages.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 m-1">
+                        {applicant.languages.map(({ language, level }, index) => (
                           <span
                             key={index}
-                            className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300  hover:scale-110 hover:shadow-customover`}
+                            className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 hover:scale-110 hover:shadow-customover`}
                           >
                             {language} - {level}
                           </span>
-                        ))
-                      ) : (
-                        <span className="mt-7 text-gray-400">Not provided</span>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 ">
+                        Not provided
+                      </span>
+                    )}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700 ">
@@ -244,41 +247,42 @@ const ManageApplicants = ({ id }) => {
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
-                <div className='h-[120px] overflow-y-auto px-4 '>
+                  <div className="max-h-[120px] overflow-y-auto px-4">
+                    {applicant.skills && applicant.skills.length > 0 ? (
                       <div className="flex flex-wrap gap-2 m-2">
-                        {applicant.skills && applicant.skills.length > 0 ? (
-                          applicant.skills.map((skill, index) => (
-                            <span
-                              key={index}
-                              className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300  hover:scale-110 hover:shadow-customover `}
-                            >
-                              {skill}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="mt-7 text-gray-400">Not provided</span>
-                        )}
-                      </div>
-                    </div>
-                </td>
-                <td className="px-4 py-2 border border-gray-700">
-                  <div className="h-[120px] overflow-y-auto px-4">
-                    <div className="flex flex-wrap gap-2 m-2">
-                      {applicant.courses && applicant.courses.length > 0 ? (
-                        applicant.courses.map((course, index) => (
+                        {applicant.skills.map((skill, index) => (
                           <span
                             key={index}
-                            className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300  hover:scale-110 hover:shadow-customover`}
+                            className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 hover:scale-110 hover:shadow-customover`}
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">Not provided</span>
+                    )}
+                  </div>
+                </td>
+                <td className="px-4 py-2 border border-gray-700">
+                  <div className="max-h-[120px] overflow-y-auto px-4">
+                    {applicant.courses && applicant.courses.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 m-2">
+                        {applicant.courses.map((course, index) => (
+                          <span
+                            key={index}
+                            className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 hover:scale-110 hover:shadow-customover`}
                           >
                             {course}
                           </span>
-                        ))
-                      ) : (
-                        <span className="mt-7 text-gray-400">Not Provided</span>
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">Not Provided</span>
+                    )}
                   </div>
                 </td>
+
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
                     {applicant.additionalInformation || <span className="text-gray-400">Not provided</span>}
