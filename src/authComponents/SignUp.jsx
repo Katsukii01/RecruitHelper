@@ -47,14 +47,14 @@ const SignUp = () => {
     }
   
     // Force reload of the page to ensure you are on Home with the correct state
-    navigate('/RecruitHelper/home#Home');
+    navigate('/home#Home');
     window.location.reload(); // This line will force the page to reload after navigation.
   };
   
   const handleGoogleSignUp = async () => {
     try {
       await googleSignIn(); // Google sign-up
-      navigate('/RecruitHelper/home#Home');
+      navigate('/home#Home');
     } catch (err) {
       setError(err.message);
     }
@@ -114,7 +114,7 @@ const SignUp = () => {
             onChange={(e) => setTermsAccepted(e.target.checked)}
           />
         <label htmlFor="terms" className="text-sm">
-            I accept the <a href="/RecruitHelper/terms" className="text-blue-500 ">terms and conditions</a>
+            I accept the <a href="/terms" className="text-blue-500 ">terms and conditions</a>
           </label>
         </div>
 

@@ -404,7 +404,7 @@ const handleInputBlur = (e) => {
   
       // Nawigacja do kolejnego kroku
       setTimeout(() => {
-        navigate(`/RecruitHelper/RecruitmentDashboard#ManageApplicants`, { 
+        navigate(`/RecruitmentDashboard#ManageApplicants`, { 
           state: { 
             id: recruitmentId, 
             currentPage: page,
@@ -422,7 +422,7 @@ const handleInputBlur = (e) => {
   };
   
   const handleComeBack = () => {
-    navigate(`/RecruitHelper/RecruitmentDashboard#ManageApplicants`, { state: { id: recruitmentId, currentPage: page, } });
+    navigate(`/RecruitmentDashboard#ManageApplicants`, { state: { id: recruitmentId, currentPage: page, } });
   };
 
   const handleRemoveCoverLetter =() => {

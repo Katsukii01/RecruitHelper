@@ -91,22 +91,22 @@ const Navbar = () => {
     if (link === "SignIn") {
       setActive("SignIn");
       setUnderline("SignIn");
-      navigate("/RecruitHelper/signin");
+      navigate("/signin");
     } else if (link === "SignUp") {
       setActive("SignUp");
       setUnderline("SignUp");
-      navigate("/RecruitHelper/signup");
+      navigate("/signup");
     }else if (link === "Home") {
       setActive("Home");
       setUnderline("Home");
-      navigate("/RecruitHelper/home");
+      navigate("/home");
     }else if (link === "Logout") {
       setUnderlineToNone();
       setActive("");
       handleLogout();
     }
     else {
-      navigate("/RecruitHelper/");
+      navigate("/");
       setActive(link.title);
       setUnderline(link.id);
     }
@@ -115,7 +115,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/RecruitHelper/signin#SignIn");
+    navigate("/signin#SignIn");
   };
 
   return (
@@ -123,7 +123,7 @@ const Navbar = () => {
       <div className="navbar w-full flex justify-between items-center max-w-7xl mx-auto m-1 p-4 bg-glass rounded-3xl">
         {/* Logo */}
         <Link
-          to="/RecruitHelper/"
+          to="/"
           className="flex items-center gap-2"
           onClick={() => {
             setActive('');

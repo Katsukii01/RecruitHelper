@@ -71,7 +71,7 @@ const Home = () => {
       try {
         await deleteAccount();
         alert('The account has been deleted');
-        navigate('/RecruitHelper/signin#SignIn'); // Redirect to Sign In page
+        navigate('/signin#SignIn'); // Redirect to Sign In page
       } catch (error) {
         console.error('Error while deleting the account:', error);
         alert('An error occurred while deleting the account.');

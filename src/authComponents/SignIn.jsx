@@ -18,7 +18,7 @@ const SignIn = () => {
     setIsLoading(true);
     try {
       await signIn(email, password); // Email/Password sign-in
-      navigate('/RecruitHelper/home#Home');
+      navigate('/home#Home');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -29,7 +29,7 @@ const SignIn = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn(); // Google sign-in
-      navigate('/RecruitHelper/home#Home');
+      navigate('/home#Home');
     } catch (err) {
       setError(err.message);
     }

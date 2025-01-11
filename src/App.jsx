@@ -13,18 +13,18 @@ const App = () => {
 
         <Routes>
           <Route 
-            path="/RecruitHelper/home" 
+            path="/home" 
             element={
               <ProtectedRoute>
                 <Home />
               </ProtectedRoute>
             } 
           />
-          <Route path="/RecruitHelper/signin" element={<SignIn />} />
-          <Route path="/RecruitHelper/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
           {/*HomePage elements*/}
-          <Route path="/RecruitHelper" element={
+          <Route path="" element={
             <>
               <Hero />
               <About/>
@@ -33,15 +33,15 @@ const App = () => {
               <Contact/>
             </>
             } />
-            <Route path="/RecruitHelper/terms" element={<Terms />} />
+            <Route path="/terms" element={<Terms />} />
 
 
           {/*Recruitment elements*/}
-          <Route path="/RecruitHelper/RecruitmentCreate" element={<CreateRecruitment/>} />
-          <Route path="/RecruitHelper/RecruitmentAddApplicants" element={<AddApplicants/>} />
-          <Route path="/RecruitHelper/RecruitmentAddApplicantsWithHelp" element={<AddApplicantsWithHelp/>} />
-          <Route path="/RecruitHelper/RecruitmentDashboard" element={<RecruitmentDashboard/>} />
-          <Route path="/RecruitHelper/ChooseMethod" element={<ChooseMethod />} />
+          <Route path="/RecruitmentCreate" element={<CreateRecruitment/>} />
+          <Route path="/RecruitmentAddApplicants" element={<AddApplicants/>} />
+          <Route path="/RecruitmentAddApplicantsWithHelp" element={<AddApplicantsWithHelp/>} />
+          <Route path="/RecruitmentDashboard" element={<RecruitmentDashboard/>} />
+          <Route path="/ChooseMethod" element={<ChooseMethod />} />
 
         </Routes>
       </div>

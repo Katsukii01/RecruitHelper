@@ -110,7 +110,7 @@ const RecruitmentEdit = ({ id }) => {
         // Dodanie nowej rekrutacji
         const recruitmentId = await addRecruitment(updatedData);
         alert('Recruitment added successfully!');
-        navigate('/RecruitHelper/ChooseMethod', { state: { recruitmentId } });
+        navigate('/ChooseMethod', { state: { recruitmentId } });
       }
       setErrors({});
       setErrorMessage('');

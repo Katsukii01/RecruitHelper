@@ -37,7 +37,7 @@ const ManageRecruitments = () => {
   
 
   const goToCreateRecruitment = () => {
-    navigate('/RecruitHelper/RecruitmentCreate');
+    navigate('/RecruitmentCreate');
   };
 
   const skillColors = [
@@ -56,7 +56,7 @@ const ManageRecruitments = () => {
   ];
 
   const goToRecruitmentDashboard = (id) => {
-    navigate(`/RecruitHelper/RecruitmentDashboard`, { state: { id } });
+    navigate(`/RecruitmentDashboard`, { state: { id } });
   };
 
   const getRandomColor = () => {

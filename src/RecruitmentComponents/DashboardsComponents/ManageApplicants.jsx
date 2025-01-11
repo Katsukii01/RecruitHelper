@@ -51,7 +51,7 @@ const ManageApplicants = ({ id }) => {
   }, [id, currentPage]);
 
   const handleManualApplicants = () => {
-    navigate('/RecruitHelper/RecruitmentAddApplicants', {
+    navigate('/RecruitmentAddApplicants', {
       state: {
         recruitmentId: id,
         highestId: highestId, // Pass the highest ID
@@ -61,7 +61,7 @@ const ManageApplicants = ({ id }) => {
 
   const handleEditApplicant = (applicantId) => {
     const applicantToEdit = applicants.find(applicant => applicant.id === applicantId);
-    navigate('/RecruitHelper/RecruitmentAddApplicants', {
+    navigate('/RecruitmentAddApplicants', {
       state: {
         recruitmentId: id,
         applicant: applicantToEdit, // Pass the selected applicant
