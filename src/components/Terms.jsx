@@ -15,15 +15,15 @@ const Terms = () => {
             </li>
             <li>
                 <strong>Eligibility: </strong>
-                To use the Service, you must be at least 18 years old.
+                To use the Service, you must be at least 18 years old and have legal capacity to enter into binding agreements according to Polish law.
             </li>
             <li>
                 <strong>Prohibited Uses: </strong>
-                You may not use the Service for any illegal or unauthorized purpose. You may not use the Service to engage in any activity that violates any applicable local, state, or federal law or regulation.
+                You may not use the Service for any illegal or unauthorized purpose. You may not use the Service to engage in any activity that violates any applicable local, state, national, or international law or regulation, including but not limited to Polish laws.
             </li>
             <li>
                 <strong>Intellectual Property: </strong>
-                The Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of RecruitHelper and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Your access to the Service and Content is subject to these Terms and Conditions.
+                The Service and its original content (excluding Content provided by users), features, and functionality are and will remain the exclusive property of RecruitHelper and its licensors. The Service is protected by copyright, trademark, and other laws of both the Republic of Poland and foreign countries. Your access to the Service and Content is subject to these Terms and Conditions.
             </li>
             <li>
                 <strong>Termination: </strong>
@@ -35,7 +35,7 @@ const Terms = () => {
             </li>
             <li>
                 <strong>Limitation of Liability: </strong>
-                In no event shall RecruitHelper or its suppliers be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) arising out of or in connection with the use or inability to use the Service, even if RecruitHelper has been advised of the possibility of such damages.
+                In no event shall RecruitHelper or its suppliers be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) arising out of or in connection with the use or inability to use the Service, even if RecruitHelper has been advised of the possibility of such damages. RecruitHelper shall not be liable for any failure of the Service to work as expected, including service interruptions or errors.
             </li>
             <li>
                 <strong>Indemnification: </strong>
@@ -43,7 +43,7 @@ const Terms = () => {
             </li>
             <li>
                 <strong>Governing Law: </strong>
-                These Terms and Conditions shall be governed by and construed in accordance with the laws of the State of New York, without regard to its conflict of law provisions.
+                These Terms and Conditions shall be governed by and construed in accordance with the laws of the Republic of Poland, without regard to its conflict of law provisions.
             </li>
             <li>
                 <strong>Entire Agreement: </strong>
