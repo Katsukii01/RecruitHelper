@@ -453,7 +453,7 @@ const handleInputBlur = (e) => {
         const endpoint = file.type === "application/pdf" ? "/api/upload_pdf" : 
                  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
                  ? "/api/upload_docx"  // Use docx2pdf locally
-                 : "/api/upload_docx_libra";  // Use LibreOffice in production
+                 : "/api/upload_docx_pandoc";  // Use LibreOffice in production
 
         // Dynamic backend URL setup
         const backendUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
