@@ -2,7 +2,7 @@ import Navbar from './Navbar';
 import Hero from './Hero';
 import About from './About';
 import KnowHow from './KnowHow';
-import Recruitment from './Recruitment';
+import Recruitments from './Recruitments';
 import Contact from './Contact';
 import StarsCanvas from './Stars';
 import ProtectedRoute from './ProtectedRoute';
@@ -14,7 +14,7 @@ export {
     Navbar,
     About,
     KnowHow,
-    Recruitment,
+    Recruitments,
     Contact,
     StarsCanvas,
     ProtectedRoute,

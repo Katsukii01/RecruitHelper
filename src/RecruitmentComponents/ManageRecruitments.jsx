@@ -98,7 +98,7 @@ const ManageRecruitments = () => {
               {filteredRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
-                    className="h-[604px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="h-[627px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
@@ -109,14 +109,37 @@ const ManageRecruitments = () => {
                         </h3>
         
                   
-                  <div className='h-[480px] overflow-auto '>
-                  
+                  <div className='h-[505px] overflow-auto '>
+
+                  <p className="text-sm text-white mt-1 font-semibold m-4">
+                  Status:
+                  <span 
+                    className={`font-normal px-2 py-1 rounded-full m-1 ${
+                      recruitment.status === 'Private' 
+                        ? 'bg-red-500 text-white' 
+                        : 'bg-green-500 text-white'
+                    }`}
+                  >
+                    {recruitment.status}
+                  </span>
+                  </p>
+
+
                   <p className="text-sm text-white mt-1 font-semibold m-4  ">Job Title:
                     <span className='text-teal-400 font-normal'> {recruitment.jobTittle}</span>
                   </p>
 
-                  <p className="text-sm text-white mt-1 font-semibold m-4">Education Level:
-                    <span className='text-teal-400 font-normal'> {recruitment.educationLevel || <span class="text-gray-400">Not provided</span>}</span>
+                  <p className="text-sm text-white mt-1 font-semibold m-4">
+                    Education Level: 
+                    <span className="text-teal-400 font-normal pl-1">
+                      {recruitment.educationLevel ? (
+                        <>
+                          {recruitment.educationLevel} - {recruitment.educationField || <span className="text-gray-400">Not provided</span>}
+                        </>
+                      ) : (
+                        <span className="text-gray-400">Not provided</span>
+                      )}
+                    </span>
                   </p>
 
                   <div className="mt-2 m-4 ">

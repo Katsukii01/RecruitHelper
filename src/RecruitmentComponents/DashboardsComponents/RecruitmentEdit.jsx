@@ -9,6 +9,7 @@ const RecruitmentEdit = ({ id }) => {
   const [recruitment, setRecruitment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
+    status: '',
     name: '',
     jobTittle: '',
     skills: [],
@@ -21,7 +22,9 @@ const RecruitmentEdit = ({ id }) => {
     weightOfExperience: '',
     educationLevel: '',
     weightOfEducationLevel: '',
+    educationField: '',
   });
+
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
@@ -33,6 +36,7 @@ const RecruitmentEdit = ({ id }) => {
         try {
           const data = await getRecruitmentById(id);
           setFormData({
+            status: data.status || '',
             name: data.name || '',
             jobTittle: data.jobTittle || '',
             skills: data.skills || [],
@@ -40,6 +44,7 @@ const RecruitmentEdit = ({ id }) => {
             experienceNeeded: data.experienceNeeded || '',
             weightOfExperience: data.weightOfExperience || 0,
             educationLevel: data.educationLevel || '',
+            educationField: data.educationField || '',
             weightOfEducationLevel: data.weightOfEducationLevel || 0,
             languages: data.languages || [{ language: '', level: '' }],
             weightOfLanguages: data.weightOfLanguages || 0,
@@ -126,8 +131,32 @@ const RecruitmentEdit = ({ id }) => {
     <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold mb-4">Recruitment</h1>
       <form className="space-y-4 overflow-auto p-4">
-        {/* Name */}
-        <div>
+        {/* Status Toggle */}
+        <div className="flex items-center gap-4">
+          <p className="text-sm font-medium text-gray-300">Status:</p>
+          <div
+            className={`relative w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
+              formData.status === 'Public' ? 'bg-green-500' : 'bg-red-500'
+            }`}
+            onClick={() =>
+              setFormData((prevData) => ({
+                ...prevData,
+                status: prevData.status === 'Public' ? 'Private' : 'Public',
+              }))
+            }
+          >
+            <div
+              className={`w-6 h-6 bg-white rounded-full shadow-md transform duration-300 ${
+                formData.status === 'Public' ? 'translate-x-8' : ''
+              }`}
+            ></div>
+          </div>
+          <span className="text-sm font-medium">
+            {formData.status === 'Public' ? 'Public' : 'Private'}
+          </span>
+        </div>
+
+        <div className=''>
           <label className="block text-sm font-medium text-gray-300">Name</label>
           <input
             type="text"
@@ -169,10 +198,9 @@ const RecruitmentEdit = ({ id }) => {
               {errors.weightOfEducationLevel && <p className="text-red-500 text-sm">{errors.weightOfEducationLevel}</p>}
             </div>
 
-        {/* Education level*/}
-    
-        <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-300">
+            {/* Education Level */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300">
                 Education Level
               </label>
               <select
@@ -180,7 +208,7 @@ const RecruitmentEdit = ({ id }) => {
                 name="educationLevel"
                 value={formData.educationLevel}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
               >
                 <option value="">Select Level</option>
                 <option value="Technician">Technician</option>
@@ -188,11 +216,49 @@ const RecruitmentEdit = ({ id }) => {
                 <option value="Master">Master</option>
                 <option value="Doctor">Doctor</option>
                 <option value="Specialist">Specialist</option>
-  
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Postgraduate">Postgraduate</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Certificate">Certificate</option>
               </select>
-              {errors.educationLevel && <p className="text-red-500 text-sm">{errors.educationLevel}</p>}
-        </div>
-        </div>
+              {errors.educationLevel && (
+                <p className="text-red-500 text-sm">{errors.educationLevel}</p>
+              )}
+            </div>
+
+           {/* Education Field */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300">
+                Education Field
+              </label>
+              <select
+                id="educationField"
+                name="educationField"
+                value={formData.educationField}
+                onChange={handleChange}
+                className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
+              >
+                <option value="">Select education field</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biology">Biology</option>
+                <option value="Economics">Economics</option>
+                <option value="History">History</option>
+                <option value="Political Science">Political Science</option>
+                <option value="Geography">Geography</option>
+                <option value="Art and Design">Art and Design</option>
+                <option value="Business Administration">Business Administration</option>
+                <option value="Law">Law</option>
+                <option value="Medicine">Medicine</option>
+                <option value="Psychology">Psychology</option>
+              </select>
+              {errors.educationField && (
+                <p className="text-red-500 text-sm">{errors.educationField}</p>
+              )}
+            </div>
+            </div>
 
         <div className='border-2 border-gray-500 rounded-md p-2'>
         {/* Weight of Experience */}

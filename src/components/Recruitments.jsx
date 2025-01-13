@@ -4,7 +4,7 @@ import { SectionWrapper } from '../hoc';
 import { motion } from 'framer-motion';
 import { fadeIn, textVariant } from '../utils/motion';
 
-const Recruitment= () => {
+const Recruitments= () => {
   return (
     <section className='relative w-full h-screen mx-auto '>
     <motion.div variants={textVariant()}>  
@@ -22,4 +22,4 @@ const Recruitment= () => {
   );
 };
 
-export default  SectionWrapper(Recruitment, 'Recruitment');
+export default  SectionWrapper(Recruitments, 'Recruitments');

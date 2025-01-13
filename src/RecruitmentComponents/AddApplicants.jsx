@@ -39,6 +39,7 @@ const [formData, setFormData] = useState({
   email: applicant ? applicant.email : "",
   phone: applicant ? applicant.phone : "",
   educationLevel: applicant ? applicant.educationLevel : "",
+  educationField: applicant ? applicant.educationField : "",
   institutionName: applicant ? applicant.institutionName : "",
   languages: applicant ? applicant.languages : [{ language: "", level: "" }],
   experience: applicant ? applicant.experience : "",
@@ -58,6 +59,7 @@ useEffect(() => {
   if(highestId!== undefined){ setCurrentId(highestId+1)}
   else{setCurrentId(0)}
 }, [applicant]); 
+
 
 // Funkcja scrollująca wszystkie elementy na stronie do góry
 const scrollToTop = () => {
@@ -167,16 +169,21 @@ const handleInputBlur = (e) => {
       newErrors.CvfilePreviews = 'CV file is required';
     }
 
-
-    
-
-      
+  
     if (!formData.educationLevel) {
-      
-    }else if  (!formData.institutionName) {
-      newErrors.institutionName = "Institution name is required";
-    } else if (formData.institutionName.length > 100) {
-      newErrors.institutionName = "Institution name cannot exceed 100 characters";
+    }
+    else if  
+    (!formData.institutionName) {
+      if(!formData.institutionName){
+        newErrors.institutionName = "Institution name is required";
+      }else if (formData.institutionName.length > 100) {
+        newErrors.institutionName = "Institution name cannot exceed 100 characters";
+      } 
+
+      if(!formData.educationField){
+        newErrors.educationField = 'Education field is required';
+      }
+
     }
 
     if (!formData.experience) {
@@ -259,6 +266,7 @@ const handleInputBlur = (e) => {
         skills: [],
         courses: [],
         additionalInformation: "",
+        educationField: "",
       });
       setCvfilePreviews("");
       setCoveringLetterPreviews("");
@@ -338,6 +346,7 @@ const handleInputBlur = (e) => {
         skills: [],
         courses: [],
         additionalInformation: "",
+        educationField: "",
       });
       setCurrentIndex(0);
       setCoveringLetterPreviews("");
@@ -525,7 +534,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                   }}
                 ></div>
               </div>
-
+               <Loader/>         
               {/* Number of Applicants */}
               <p className="text-white text-lg font-bold mt-2">
                 <span className="text-sky">{NumberOfSavedApplicants}</span>/
@@ -629,7 +638,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 name="educationLevel"
                 value={formData.educationLevel}
                 onChange={handleInputChange}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 mb-4"
               >
                 <option value="">Select Level</option>
                 <option value="Technician">Technician</option>
@@ -637,9 +646,46 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 <option value="Master">Master</option>
                 <option value="Doctor">Doctor</option>
                 <option value="Specialist">Specialist</option>
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Postgraduate">Postgraduate</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Certificate">Certificate</option>
   
               </select>
               {errors.educationLevel && <p className="text-red-500 text-sm">{errors.educationLevel}</p>}
+
+            {/* Education Field */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Education Field
+              </label>
+              <select
+                id="educationField"
+                name="educationField"
+                value={formData.educationField}
+                onChange={handleInputChange}
+                className="w-full border rounded-md p-2"
+              >
+                <option value="">Select education field</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biology">Biology</option>
+                <option value="Economics">Economics</option>
+                <option value="History">History</option>
+                <option value="Political Science">Political Science</option>
+                <option value="Geography">Geography</option>
+                <option value="Art and Design">Art and Design</option>
+                <option value="Business Administration">Business Administration</option>
+                <option value="Law">Law</option>
+                <option value="Medicine">Medicine</option>
+                <option value="Psychology">Psychology</option>
+              </select>
+              {errors.educationField && (
+                <p className="text-red-500 text-sm">{errors.educationField}</p>
+              )}
+            </div>
 
               <label className="block text-sm font-medium mb-2 mt-4" htmlFor="institutionName">
                 Institution Name

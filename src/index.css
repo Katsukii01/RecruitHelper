@@ -175,3 +175,51 @@
   transition: all 0.3s ease-in-out;
 }
 /* ------------------------------------------- */
+/* -------------hero animations-------------*/
+@keyframes moveRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(15%);
+    opacity: 0;
+  }
+}
+
+.animate-moveRight-1,
+.animate-moveRight-2 {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; /* Animacja w pętli */
+  animation-duration: 1.5s; /* Czas trwania animacji */
+}
+
+.animate-moveRight-1 {
+  animation: moveRight 1.5s ease-in-out infinite;
+  animation-delay: 0s; /* Pierwsza animacja zaczyna się natychmiast */
+}
+
+.animate-moveRight-2 {
+  animation: moveRight 1.5s ease-in-out infinite;
+  animation-delay: 1.75s; /* Druga animacja zaczyna się po zakończeniu pierwszej */
+}
+
+
+
+
+
+
+
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spinSlow {
+  animation: spinSlow 3s linear infinite;
+}
+/* ------------------------------------------- */

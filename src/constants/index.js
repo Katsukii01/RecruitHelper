@@ -10,13 +10,14 @@ export const NavLinks = [
       title: "Know-how",
     },
     {
-        id: "Recruitment",
-        title: "Recruitment",
-      },
+      id: "Recruitments",
+      title: "Recruitments",
+    },
     {
       id: "Contact",
       title: "Contact",
     },
+
   ];
 
   export const RecruitmentDashboardLinks = [

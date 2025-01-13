@@ -8,12 +8,12 @@ const ChooseMethod = () => {
 
   const handleManualApplicants = () => {
     // Przekierowanie do zarządzania aplikantami, przekazując recruitmentId
-    navigate('//RecruitmentAddApplicants', { state: { recruitmentId } });
+    navigate('/RecruitmentAddApplicants', { state: { recruitmentId } });
   };
 
   const handleCVApplicants = () => {
     // Przekierowanie do dodawania aplikantów z pomocą CV, przekazując recruitmentId
-    navigate('//RecruitmentAddApplicantsWithHelp', { state: { recruitmentId } });
+    navigate('/RecruitmentAddApplicantsWithHelp', { state: { recruitmentId } });
   };
 
   return (

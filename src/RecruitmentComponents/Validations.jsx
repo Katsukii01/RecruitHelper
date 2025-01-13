@@ -21,7 +21,13 @@ export const RecruitmentValidateForm = (formData) => {
     } else if (Number(formData.experienceNeeded) < 0 || Number(formData.experienceNeeded) > 60) {
       newErrors.experienceNeeded = 'Experience needed must be between 0 and 60 years';
     }
-
+    
+    if(formData.educationLevel){
+      if(!formData.educationField){
+        newErrors.educationField = 'Education field is required';
+      }
+      }
+    
 
     if (!formData.weightOfExperience) {
       newErrors.weightOfExperience = 'Weight of experience is required';

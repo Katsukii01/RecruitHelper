@@ -27,7 +27,8 @@ const ManageApplicants = ({ id }) => {
         const { applicants, totalApplicants, highestId: fetchedHighestId } = await getApplicants(id, currentPage, limit);
         setApplicants(applicants);
         setTotalApplicants(totalApplicants); // Set the total number of applicants
-        setHighestId(fetchedHighestId || undefined);
+      
+        setHighestId(fetchedHighestId || 0); // Ensure a fallback value (e.g., 0) if undefined
       } catch (error) {
         console.error('Error fetching applicants:', error);
       } finally {
@@ -35,6 +36,7 @@ const ManageApplicants = ({ id }) => {
       }
     }
   };
+  
 
   
   useEffect(() => {
@@ -49,7 +51,6 @@ const ManageApplicants = ({ id }) => {
 
     fetchApplicants(); // Initial fetch of applicants
   }, [id, currentPage]);
-
   const handleManualApplicants = () => {
     navigate('/RecruitmentAddApplicants', {
       state: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitment, Contact, StarsCanvas, ProtectedRoute, Terms} from "./components";
+import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms} from "./components";
 import { CreateRecruitment, AddApplicants,  RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
@@ -29,7 +29,7 @@ const App = () => {
               <Hero />
               <About/>
               <KnowHow/>
-              <Recruitment/>
+              <Recruitments/>
               <Contact/>
             </>
             } />
