@@ -181,33 +181,36 @@
     transform: translateX(0);
     opacity: 1;
   }
-  100% {
+  50% {
     transform: translateX(15%);
     opacity: 0;
+  }
+  75% {
+    transform: translateX(-15%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
 .animate-moveRight-1,
 .animate-moveRight-2 {
   animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite; /* Animacja w pętli */
-  animation-duration: 1.5s; /* Czas trwania animacji */
+  animation-iteration-count: infinite; 
+  animation-duration: 3s; 
 }
 
 .animate-moveRight-1 {
-  animation: moveRight 1.5s ease-in-out infinite;
-  animation-delay: 0s; /* Pierwsza animacja zaczyna się natychmiast */
+  animation: moveRight 3s ease-in-out infinite;
+  animation-delay: 0s; 
 }
 
 .animate-moveRight-2 {
-  animation: moveRight 1.5s ease-in-out infinite;
-  animation-delay: 1.75s; /* Druga animacja zaczyna się po zakończeniu pierwszej */
+  animation: moveRight 3s ease-in-out infinite;
+  animation-delay: 3.5s; 
 }
-
-
-
-
-
 
 
 @keyframes spinSlow {
@@ -220,6 +223,6 @@
 }
 
 .animate-spinSlow {
-  animation: spinSlow 3s linear infinite;
+  animation: spinSlow 6s linear infinite;
 }
 /* ------------------------------------------- */
