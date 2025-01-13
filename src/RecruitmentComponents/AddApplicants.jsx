@@ -449,15 +449,21 @@ const handleInputBlur = (e) => {
     const formData = new FormData();
     formData.append("file", file);
   
-    // Determine the endpoint based on the file type
-    const endpoint = file.type === "application/pdf" ? "/api/upload_pdf" : "/api/upload_docx";
-  
-    // Use the full URL for the backend
+        // Determine the endpoint based on the file type
+        const endpoint = file.type === "application/pdf" ? "/api/upload_pdf" : 
+                 (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
+                 ? "/api/upload_docx"  // Use docx2pdf locally
+                 : "/api/upload_docx_libra";  // Use LibreOffice in production
 
-    // Dynamic backend URL setup
-      const backendUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-      ? "http://127.0.0.1:8000"  // Local development URL
-      : "https://recruithelperbackend.onrender.com";  // Deployed URL on Render
+        // Dynamic backend URL setup
+        const backendUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://127.0.0.1:8000"  // Local development URL
+          : "https://recruithelperbackend.onrender.com";  // Deployed URL on Render
+
+const url = backendUrl + endpoint;
+
+// Proceed with the file upload logic...
+
 
       console.log("Backend URL:", backendUrl);
   
