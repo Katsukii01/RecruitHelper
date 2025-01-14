@@ -5,7 +5,7 @@ import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLang
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../../components';
 
-const RecruitmentEdit = ({ id }) => {
+const RecruitmentEdit = ({ id, onRefresh }) => {
   const [recruitment, setRecruitment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -111,6 +111,7 @@ const RecruitmentEdit = ({ id }) => {
         // Aktualizacja istniejącej rekrutacji
         await updateRecruitment(id, updatedData);
         alert('Recruitment updated successfully!');
+        onRefresh();
       } else {
         // Dodanie nowej rekrutacji
         const recruitmentId = await addRecruitment(updatedData);

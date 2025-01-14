@@ -4,6 +4,9 @@ import AddApplicants from './AddApplicants';
 import RecruitmentDashboard from './RecruitmentDashboard';
 import AddApplicantsWithHelp from './AddApplicantsWithHelp';
 import ChooseMethod from './ChooseMethod';
+import PublicRecruitments from './PublicRecruitments';
+import ManageApplications from './ManageApplications';
+
 
 export {
     CreateRecruitment,
@@ -11,5 +14,7 @@ export {
     AddApplicants,
     RecruitmentDashboard,
     ChooseMethod,
-    AddApplicantsWithHelp
+    AddApplicantsWithHelp,
+    PublicRecruitments,
+    ManageApplications,
 }

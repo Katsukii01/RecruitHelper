@@ -5,7 +5,7 @@ import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
 import { Loader } from '../../components';
 
-const ManageApplicants = ({ id }) => {
+const ManageApplicants = ({ id, refresh }) => {
   const [recruitmentId, setRecruitmentId] = useState(id);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +15,7 @@ const ManageApplicants = ({ id }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // Track the current page
   const [totalApplicants, setTotalApplicants] = useState(0); // Total number of applicants
+  const [recruitmentStatus, setRecruitmentStatus] = useState("");
   const [limit] = useState(4); // Set a fixed limit per page
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -24,10 +25,10 @@ const ManageApplicants = ({ id }) => {
     if (id) {
       setLoading(true);
       try {
-        const { applicants, totalApplicants, highestId: fetchedHighestId } = await getApplicants(id, currentPage, limit);
+        const { applicants, totalApplicants, highestId: fetchedHighestId, recruitmentStatus } = await getApplicants(id, currentPage, limit);
         setApplicants(applicants);
         setTotalApplicants(totalApplicants); // Set the total number of applicants
-      
+        setRecruitmentStatus(recruitmentStatus);
         setHighestId(fetchedHighestId || 0); // Ensure a fallback value (e.g., 0) if undefined
       } catch (error) {
         console.error('Error fetching applicants:', error);
@@ -51,13 +52,24 @@ const ManageApplicants = ({ id }) => {
 
     fetchApplicants(); // Initial fetch of applicants
   }, [id, currentPage]);
+
+    // Add another useEffect to trigger a re-fetch when `refresh` prop changes
+    useEffect(() => {
+      fetchApplicants(); // Re-fetch applicants whenever `refresh` changes
+    }, [refresh]);
+    
   const handleManualApplicants = () => {
-    navigate('/RecruitmentAddApplicants', {
-      state: {
-        recruitmentId: id,
-        highestId: highestId, // Pass the highest ID
-      }
-    });
+    if(recruitmentStatus == "Private"){
+      navigate('/RecruitmentAddApplicants', {
+        state: {
+          recruitmentId: id,
+          highestId: highestId, // Pass the highest ID
+        }
+      });
+    }else{
+      alert("You can't add applicants to this recruitment unitl it's Private");
+    }
+
   };
 
   const handleEditApplicant = (applicantId) => {

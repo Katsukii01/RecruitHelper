@@ -5,16 +5,20 @@ import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meet
 const RecruitmentDashboard = () => {
   const location = useLocation();
   const [id, setId] = useState(() => {
-    // Priorytet: sprawdzenie localStorage, jeśli nic nie ma, sprawdź location.state
     const savedId = localStorage.getItem('recruitmentId');
     return location.state?.id || savedId || null;
   });
+  const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
 
   useEffect(() => {
     if (id) {
-      localStorage.setItem('recruitmentId', id); // Zapisz `id` w localStorage
+      localStorage.setItem('recruitmentId', id);
     }
   }, [id]);
+
+  const handleRefresh = () => {
+    setRefresh(prev => !prev); // Toggle to trigger re-fetch in children
+  };
 
   if (!id) {
     return (
@@ -33,9 +37,9 @@ const RecruitmentDashboard = () => {
 
       {/* Main content */}
       <div className="w-full pt-12 overflow-y-auto pl-28 md:pl-96 pr-2 md:pr-20">
-        <div className="flex flex-col items-start space-y-6 ">
-          <RecruitmentEdit id={id} />
-          <ManageApplicants id={id} />
+        <div className="flex flex-col items-start space-y-6">
+          <RecruitmentEdit id={id} onRefresh={handleRefresh} /> {/* Trigger refresh */}
+          <ManageApplicants id={id} refresh={refresh} /> {/* Pass the refresh trigger */}
           <ApplicantsOfferRanking id={id} />
           <Meetings id={id} />
           <YourOwnScore id={id} />
@@ -47,5 +51,6 @@ const RecruitmentDashboard = () => {
     </div>
   );
 };
+
 
 export default RecruitmentDashboard;

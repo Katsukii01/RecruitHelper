@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms} from "./components";
-import { CreateRecruitment, AddApplicants,  RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp } from "./RecruitmentComponents";
+import { CreateRecruitment, AddApplicants,  RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
@@ -42,7 +42,7 @@ const App = () => {
           <Route path="/RecruitmentAddApplicantsWithHelp" element={<AddApplicantsWithHelp/>} />
           <Route path="/RecruitmentDashboard" element={<RecruitmentDashboard/>} />
           <Route path="/ChooseMethod" element={<ChooseMethod />} />
-
+          <Route path="/PublicRecruitments" element={<PublicRecruitments />} />
         </Routes>
       </div>
     </BrowserRouter>

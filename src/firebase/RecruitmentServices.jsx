@@ -1,4 +1,4 @@
-import { db, storage } from '../firebase/baseconfig';
+import app, { db, storage } from '../firebase/baseconfig';
 import {
   collection,
   addDoc,
@@ -100,6 +100,116 @@ export const getRecruitments = async (searchTerm = '') => {
     throw error;
   }
 };
+
+// **2.1 Get all public recruitments (with filtering and highest ID)**
+export const getPublicRecruitments = async (searchTerm = '') => {
+  try {
+    // Ensure the user is authenticated
+    const user = await checkAuth();
+    
+    if (!user?.uid) {
+      throw new Error('User ID is undefined.');
+    }
+
+    const userId = user.uid;
+    console.log('Current User ID:', userId);
+
+    const recruitmentCollection = collection(db, 'recruitments');
+    const q = query(recruitmentCollection);
+    const snapshot = await getDocs(q);
+
+    // Map and filter recruitments
+    return snapshot.docs
+      .map((doc) => {
+        const recruitmentData = doc.data();
+        const applicants = recruitmentData.Applicants || [];
+
+        // Get highest ID from applicants
+        const highestId = applicants.reduce((maxId, applicant) => {
+          return applicant.id > maxId ? applicant.id : maxId;
+        }, 0);
+
+        // Check if the current user is already an applicant
+        const isAlreadyApplicant = applicants.some((applicant) => applicant.userUid === userId);
+
+        return {
+          id: doc.id,
+          highestId,
+          isAlreadyApplicant, // Add a flag indicating if the user is already an applicant
+          ...recruitmentData,
+        };
+      })
+      .filter(
+        (recruitment) =>
+          recruitment.status === 'Public' &&
+          recruitment.userId !== userId && // Ensure the recruitment is not owned by the current user
+          !recruitment.isAlreadyApplicant && // Ensure the current user is not already an applicant
+          Object.values(recruitment)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) // Filter by search term
+      );
+  } catch (error) {
+    console.error('Error fetching recruitments:', error.message);
+    throw error;
+  }
+};
+
+// **2.2 Get all user applications(with filtering )**
+export const getUserApplications = async (searchTerm = '') => {
+  try {
+    // Ensure the user is authenticated
+    const user = await checkAuth();
+    
+    if (!user?.uid) {
+      throw new Error('User ID is undefined.');
+    }
+
+    const userId = user.uid;
+    console.log('Current User ID:', userId);
+
+    const recruitmentCollection = collection(db, 'recruitments');
+    const q = query(recruitmentCollection);
+    const snapshot = await getDocs(q);
+
+    // Map and filter recruitments where the user is an applicant
+    const userApplications = snapshot.docs
+      .map((doc) => {
+        const recruitmentData = doc.data();
+        const applicants = recruitmentData.Applicants || [];
+
+        // Find the applicant data for the current user
+        const applicant = applicants.find((applicant) => applicant.userUid === userId);
+
+        if (applicant) {
+          return {
+            id: doc.id,
+            recruitmentData,
+            applicantData: applicant, // Include applicant's data
+          };
+        }
+        return null; // If the user is not an applicant, return null
+      })
+      .filter((recruitment) => recruitment !== null) // Remove null values where the user is not an applicant
+      .filter(
+        (recruitment) =>
+          Object.values(recruitment.recruitmentData)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) || // Filter by recruitment data
+          Object.values(recruitment.applicantData)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) // Filter by applicant data
+      );
+
+    return userApplications;
+  } catch (error) {
+    console.error('Error fetching user applications:', error.message);
+    throw error;
+  }
+};
+
   
 // **3. Delete a recruitment (with all applicants, their CV files, and optional Covering Letters)**
 export const deleteRecruitment = async (recruitmentId) => {
@@ -169,9 +279,23 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
 
     // Ensure the user is the owner of the recruitment
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error('You are not authorized to add applicants to this recruitment');
+    if(applicantData.userUid){
+      if(recruitmentData.status == "Private"){
+        throw new Error('This recruitment is private, you cant apply');
+      }
+    }else{
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error('You are not authorized to add applicants to this recruitment');
+      }
+      if(recruitmentData.status == "Public"){
+        throw new Error('You need to cahnge recruitment toprivate  to add applicants by yourself');
+      }
     }
+
+
+
+
+
 
     // Update the applicants list: check if the applicant with the same ID already exists
     const currentApplicants = recruitmentData.Applicants || [];
@@ -358,6 +482,7 @@ export const getApplicants = async (recruitmentId, page, limit) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
+    const recruitmentStatus = recruitmentData.status;
     const applicants = recruitmentData.Applicants || [];
 
     // Get total applicants count
@@ -405,7 +530,7 @@ export const getApplicants = async (recruitmentId, page, limit) => {
     );
 
     // Return both applicants, total count for pagination, and the highest applicant id
-    return { applicants: applicantsWithPreviews, totalApplicants, highestId };
+    return { applicants: applicantsWithPreviews, totalApplicants, highestId, recruitmentStatus };
   } catch (error) {
     console.error('Error getting applicants:', error.message);
     throw error;

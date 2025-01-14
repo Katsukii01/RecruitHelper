@@ -5,7 +5,7 @@ import { addApplicant } from '../firebase/RecruitmentServices';
 import { existingLanguages } from "../constants";
 import usePreventPageReload from './usePreventPageReload';
 import { Loader } from '../components';
-
+import { firebaseAuth } from '../firebase/baseconfig';
 const AddApplicants = () => {
   useEffect(() => {
     scrollToTop();
@@ -13,7 +13,7 @@ const AddApplicants = () => {
 
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { recruitmentId, highestId, applicant, currentPage } = state || {};
+  const { recruitmentId, highestId, applicant, currentPage, userApply } = state || {};
   const [applicants, setApplicants] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentId, setCurrentId] = useState(0);
@@ -26,10 +26,12 @@ const AddApplicants = () => {
   const [buttonText, setButtonText] = useState("Finish Adding Applicants");  // Tekst na przycisku
   const [NumberOfSavedApplicants, setNumberOfSavedApplicants] = useState(0);  // licznik zapisanych aplikantów
   const [NumberOfApplicantsToSave, setNumberOfApplicantsToSave] = useState(0);  // Liczba aplikantów do zapisania
-  
+
+
   usePreventPageReload(true);
 // If currentPage is undefined, set it to 1
 const page = currentPage ?? 1;
+
 
 // Jeśli aplikant do edycji został przekazany, ustawiamy dane w formularzu
 const [formData, setFormData] = useState({
@@ -55,6 +57,9 @@ useEffect(() => {
     setCvfilePreviews(applicant.cvFileUrls || "");  // Jeśli aplikant ma plik CV, ustawiamy go
     setCoveringLetterPreviews(applicant.coverLetterFileUrls || "");  // Jeśli aplikant ma plik Listu Motywacyjnego, ustawiamy go
     setButtonText("Finish Editing Applicant");  // Ustawiamy tekst przycisku
+  }
+  if(userApply){
+    setButtonText("Finish application ");  // Ustawiamy tekst przycisku
   }
   if(highestId!== undefined){ setCurrentId(highestId+1)}
   else{setCurrentId(0)}
@@ -113,12 +118,12 @@ const handleInputBlur = (e) => {
     if (!file) return;
 
     const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (fileExtension === "pdf" || fileExtension === "docx") {
+    if (fileExtension === "pdf" ) {
       document.getElementById('cv').value = ""; 
       setCvfilePreviews(""); // Clear previous preview when a new file is selected
       uploadFile(file, 'cv'); // Upload the selected file
     } else {
-      alert("Only PDF and DOCX files are allowed.");
+      alert("Only PDF files are allowed.");
       return;
     }
   };
@@ -128,11 +133,11 @@ const handleInputBlur = (e) => {
     if (!file) return;
   
     const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (fileExtension === "pdf" || fileExtension === "docx") {
+    if (fileExtension === "pdf") {
       document.getElementById('coveringLetter').value = ""; 
       uploadFile(file, 'coveringLetter'); // Upload the covering letter
     } else {
-      alert("Only PDF and DOCX files are allowed for the covering letter.");
+      alert("Only PDF files are allowed for the covering letter.");
       return;
     }
   };
@@ -306,7 +311,12 @@ const handleInputBlur = (e) => {
      setErrors(errors); // Ustaw błędy w stanie, aby wyświetlić je w formularzu
      return false; // Zatrzymaj dalsze działanie
    }
-  
+   
+   if (userApply) {
+    formData.userUid = firebaseAuth.currentUser.uid; // Dodaj UID użytkownika, jeśli jest aplikantem
+    
+  }
+  console.log(formData);
     const updatedApplicants = [...applicants];
     updatedApplicants[currentIndex] = {
       ...formData,
@@ -412,14 +422,20 @@ const handleInputBlur = (e) => {
       setButtonText("Applicants saved successfully!"); // Opcjonalnie, informacja o sukcesie
   
       // Nawigacja do kolejnego kroku
-      setTimeout(() => {
-        navigate(`/RecruitmentDashboard#ManageApplicants`, { 
-          state: { 
-            id: recruitmentId, 
-            currentPage: page,
-          } 
-        });
-      }, 1000);
+      if(userApply){
+        setTimeout(() => {
+              navigate(`/Home`);
+          }, 1000);
+      }else{
+        setTimeout(() => {
+          navigate(`/RecruitmentDashboard#ManageApplicants`, { 
+            state: { 
+              id: recruitmentId, 
+              currentPage: page,
+            } 
+          });
+        }, 1000);
+    }
 
     } catch (error) {
       console.error("Error while saving applicants:", error);
@@ -431,7 +447,11 @@ const handleInputBlur = (e) => {
   };
   
   const handleComeBack = () => {
-    navigate(`/RecruitmentDashboard#ManageApplicants`, { state: { id: recruitmentId, currentPage: page, } });
+    if(userApply){
+      navigate(`/PublicRecruitments`);
+    }else{
+      navigate(`/RecruitmentDashboard#ManageApplicants`, { state: { id: recruitmentId, currentPage: page, } });
+    }
   };
 
   const handleRemoveCoverLetter =() => {
@@ -450,10 +470,8 @@ const handleInputBlur = (e) => {
     formData.append("file", file);
   
         // Determine the endpoint based on the file type
-        const endpoint = file.type === "application/pdf" ? "/api/upload_pdf" : 
-                 (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
-                 ? "/api/upload_docx"  // Use docx2pdf locally
-                 : "/api/upload_docx_pandoc";  // Use LibreOffice in production
+        const endpoint =  "/api/upload_pdf";
+                
 
         // Dynamic backend URL setup
         const backendUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -566,7 +584,6 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
   )}
 
     <div className="w-full min-h-screen flex flex-col items-center bg-glass pt-32">
-      <h2 className="text-2xl font-bold mb-4">Manually Add Applicants</h2>
       <div className="flex flex-wrap justify-center w-full">
         <div className="w-full md:w-1/2 p-2 pt-0">
           <form className="mx-auto bg-glass card rounded-lg p-6 h-screen overflow-auto">
@@ -847,6 +864,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 name="coveringLetter"
                 className="hidden"
                 onChange={handleCoveringLetterChange}
+                accept=".pdf"
                 />
               </label>
               {CoveringLetterPreviews && CoveringLetterPreviews.length > 0 ? (
@@ -871,7 +889,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 {isLoadingCoveringLetter ? (
                   <p><Loader /></p>  // Show Loading message when the file is being processed
                 ) : (
-                  <p>Cv preview not available.</p>  // Default message if no preview is available
+                  <p>Cover Letter preview not available.</p>  // Default message if no preview is available
                 )}
                 </>
               )}
@@ -881,11 +899,11 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
         </div>
         <div className="w-full md:w-1/2 p-2 pt-0 h-screen">
             <div className="flex flex-col items-center bg-glass card rounded-lg p-6 h-screen">
-            <h3 className="text-lg font-semibold mb-1">Upload CV file (PDF or DOCX)</h3>
+            <h3 className="text-lg font-semibold mb-1">Upload CV file (PDF only)</h3>
               {errors.CvfilePreviews && <p className="text-red-500 text-sm">{errors.CvfilePreviews}</p>}
               <label className="w-16 h-16 p-2   bg-sky font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none  focus:ring-cyan-600 text-white rounded-full flex items-center justify-center cursor-pointer mb-4 ">
                 +
-                <input type="file" className="hidden" id="cv" onChange={handleFileChange} />
+                <input type="file" className="hidden" id="cv"   accept=".pdf" onChange={handleFileChange}  />
               </label>
                   
       {/* Display file previews received from the backend */}
@@ -905,7 +923,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
           {isLoadingCv ? (
             <p><Loader /></p>  // Show Loading message when the file is being processed
           ) : (
-            <p>Covering letter preview not available.</p>  // Default message if no preview is available
+            <p>Cv preview not available.</p>  // Default message if no preview is available
           )}
         </>
       )}
@@ -915,7 +933,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
       </div>
 
       <div className="flex justify-center w-full md:w-1/2 mt-4 p-4 ju">
-      {!applicant  && (
+      {!applicant && !userApply  && (
         <>
         <button
           onClick={handlePreviousApplicant}
@@ -943,7 +961,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
         >
           {buttonText}
         </button>
-        {!applicant  && (
+        {!applicant && !userApply && (
         <button
           onClick={handleNextApplicant}
           className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 m-2"

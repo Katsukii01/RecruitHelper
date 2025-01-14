@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { defaultPfp } from '../assets';
 import { useNavigate } from 'react-router-dom';
-import { ManageRecruitments } from '../RecruitmentComponents';
+import { ManageRecruitments, ManageApplications } from '../RecruitmentComponents';
 
 const Home = () => {
   const { user, updateName, deleteAccount, updatePassword } = useContext(AuthContext);
@@ -111,6 +111,13 @@ const Home = () => {
         <div className="items-center card">
      
           <ManageRecruitments />
+        </div>
+        
+        {/* Manage your applications */}
+        <div className="border-b-2 border-gray-400">Manage your applications</div>
+        <div className="items-center card">
+          
+          <ManageApplications />
         </div>
 
         {/* Account Management */}
