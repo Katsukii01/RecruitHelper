@@ -7,7 +7,7 @@ import RecruitmentList from './RecruitmentsList';
 
 const PublicRecruitments= () => {
   return (
-    <section className='relative w-full h-auto mx-auto min-h-screen'>
+    <section className='relative w-full h-auto mx-auto min-h-screen pt-8'>
     <motion.div variants={textVariant()}>  
       <h2 className={styles.sectionHeadText}>
        Open Recruitments
@@ -24,7 +24,10 @@ const PublicRecruitments= () => {
         <br className='sm:block hidden' />
     </motion.p>
     <br className='sm:block hidden' />
-    <RecruitmentList />
+    <div className=' border-2 border-gray-300 rounded-lg '>
+      <RecruitmentList />
+    </div>
+   
     </section>
   );
 };

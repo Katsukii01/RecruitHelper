@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { a } from 'framer-motion/client';
 
 // Check if the user is authenticated
 const checkAuth = async () => {
@@ -160,7 +161,7 @@ export const getUserApplications = async (searchTerm = '') => {
   try {
     // Ensure the user is authenticated
     const user = await checkAuth();
-    
+
     if (!user?.uid) {
       throw new Error('User ID is undefined.');
     }
@@ -182,9 +183,12 @@ export const getUserApplications = async (searchTerm = '') => {
         const applicant = applicants.find((applicant) => applicant.userUid === userId);
 
         if (applicant) {
+          // Exclude other applicants from recruitmentData
+          const { Applicants, ...filteredRecruitmentData } = recruitmentData;
+
           return {
             id: doc.id,
-            recruitmentData,
+            recruitmentData: filteredRecruitmentData, // Recruitment data without other applicants
             applicantData: applicant, // Include applicant's data
           };
         }
@@ -209,6 +213,7 @@ export const getUserApplications = async (searchTerm = '') => {
     throw error;
   }
 };
+
 
   
 // **3. Delete a recruitment (with all applicants, their CV files, and optional Covering Letters)**
@@ -427,16 +432,22 @@ export const deleteApplicant = async (recruitmentId, applicantId) => {
 
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
-
-    // Ensure the user is the owner of the recruitment
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error('You are not authorized to delete applicants from this recruitment');
-    }
 
     // Find the applicant to delete
     const currentApplicants = recruitmentData.Applicants || [];
     const applicantToDelete = currentApplicants.find(applicant => applicant.id === applicantId);
+
+
+    // Ensure the user is the owner of the recruitment
+   
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid ) {
+      if (applicantToDelete.userUid!== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to delete applicants from this recruitment');
+    }
+  }
+
+
 
     if (!applicantToDelete) {
       throw new Error('Applicant not found');

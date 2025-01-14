@@ -98,7 +98,7 @@ const ManageRecruitments = () => {
               {filteredRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
-                    className="h-[627px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="h-[628.5px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
@@ -210,6 +210,7 @@ const ManageRecruitments = () => {
                     </div>
                   </div>
                   </div>
+
                   <button
                           onClick={() => goToRecruitmentDashboard(recruitment.id)}
                           className="mt-1 border-t-white border-t-2 p-2 text-center font-bold justify-center flex-col rounded-b-md w-full  bg-sky text-white   shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
