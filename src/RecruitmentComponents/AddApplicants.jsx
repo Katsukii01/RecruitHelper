@@ -545,7 +545,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
     {isSaving && ( 
       <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-50">
         <div className="flex items-center justify-center w-full h-full">
-          <div className="bg-black p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
+        <div className="bg-gradient-to-tl  from-teal-600 to-cyan-700 p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
             <h2 className="text-2xl font-bold text-white mb-6">{buttonText}</h2>
 
             <div className="flex flex-col items-center mb-6">
@@ -561,8 +561,8 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                <Loader/>         
               {/* Number of Applicants */}
               <p className="text-white text-lg font-bold mt-2">
-                <span className="text-sky">{NumberOfSavedApplicants}</span>/
-                <span className="text-blue-500">{NumberOfApplicantsToSave}</span>
+                <span className="text-white">{NumberOfSavedApplicants}</span>/
+                <span className="text-sky">{NumberOfApplicantsToSave}</span>
               </p>
             </div>
 
@@ -575,13 +575,13 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
             <p className="text-white mb-3">
               Please do not interrupt the process. If interrupted, the unsaved applicants will not be saved, and you will need to start over.
             </p>
-            <p className="text-red-500 font-bold mt-4">
+            <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
               Warning: Do not interrupt the process!
             </p>
           </div>
         </div>
       </div>
-  )}
+    )}
 
     <div className="w-full min-h-screen flex flex-col items-center bg-glass pt-32">
       <div className="flex flex-wrap justify-center w-full">
@@ -601,7 +601,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+              {errors.name && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.name}</p>}
             </div>
             {/* Surname */}
             <div className="mb-4">
@@ -616,7 +616,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               />
-              {errors.surname && <p className="text-red-500 text-sm">{errors.surname}</p>}
+              {errors.surname && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.surname}</p>}
             </div>
             {/* Email */}
             <div className="mb-4">
@@ -631,7 +631,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="w-full border rounded-md p-2"
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.email && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.email}</p>}
             </div>
             {/* Phone */}
             <div className="mb-4">
@@ -646,7 +646,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="w-full border rounded-md p-2"
               />
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+              {errors.phone && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.phone}</p>}
             </div>
             {/* Education */}
             <label className="block text-sm font-medium mb-2" htmlFor="educationLevel">
@@ -675,7 +675,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 <option value="Certificate">Certificate</option>
   
               </select>
-              {errors.educationLevel && <p className="text-red-500 text-sm">{errors.educationLevel}</p>}
+              {errors.educationLevel && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationLevel}</p>}
 
             {/* Education Field */}
             <div className="mb-4">
@@ -706,7 +706,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 <option value="Psychology">Psychology</option>
               </select>
               {errors.educationField && (
-                <p className="text-red-500 text-sm">{errors.educationField}</p>
+                <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationField}</p>
               )}
             </div>
 
@@ -721,7 +721,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="w-full border rounded-md p-2"
               />
-              {errors.institutionName && <p className="text-red-500 text-sm">{errors.institutionName}</p>}
+              {errors.institutionName && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.institutionName}</p>}
             </div>
             {/* Experience */}
             <div className="mb-4">
@@ -736,7 +736,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 onChange={handleInputChange}
                 className="w-full border rounded-md p-2"
               />
-              {errors.experience && <p className="text-red-500 text-sm">{errors.experience}</p>}
+              {errors.experience && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.experience}</p>}
             </div>
             
             {/* Languages */}
@@ -780,10 +780,10 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
 
                   </div>
                   {errors[`languages-${index}-language`] && (
-                    <p className="text-red-500 text-sm">{errors[`languages-${index}-language`]}</p>
+                    <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors[`languages-${index}-language`]}</p>
                   )}
                   {errors[`languages-${index}-level`] && (
-                    <p className="text-red-500 text-sm">{errors[`languages-${index}-level`]}</p>
+                    <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors[`languages-${index}-level`]}</p>
                   )}
                 </div>
               ))}
@@ -846,7 +846,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                 rows="4"
               />
               {errors.additionalInformation && (
-                <p className="text-red-500 text-sm">{errors.additionalInformation}</p>
+                <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.additionalInformation}</p>
               )}
             </div>
 
@@ -900,7 +900,7 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
         <div className="w-full md:w-1/2 p-2 pt-0 h-screen">
             <div className="flex flex-col items-center bg-glass card rounded-lg p-6 h-screen">
             <h3 className="text-lg font-semibold mb-1">Upload CV file (PDF only)</h3>
-              {errors.CvfilePreviews && <p className="text-red-500 text-sm">{errors.CvfilePreviews}</p>}
+              {errors.CvfilePreviews && <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.CvfilePreviews}</p>}
               <label className="w-16 h-16 p-2   bg-sky font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none  focus:ring-cyan-600 text-white rounded-full flex items-center justify-center cursor-pointer mb-4 ">
                 +
                 <input type="file" className="hidden" id="cv"   accept=".pdf" onChange={handleFileChange}  />

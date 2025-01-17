@@ -7,8 +7,13 @@ const RecruitmentList = () => {
   const [recruitments, setRecruitments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 4; // Number of items to display per page
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
+
+  
   // Fetch recruitments on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -25,16 +30,35 @@ const RecruitmentList = () => {
     fetchData();
   }, []);
 
-  const filteredRecruitments = recruitments.filter((recruitment) =>
-    Object.values(recruitment)
-      .join(' ')
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()) ||
-    (recruitment.languages && recruitment.languages.some((lang) =>
-      `${lang.language} ${lang.level}`.toLowerCase().includes(searchTerm.toLowerCase())
-    ))
-  );
-  
+  const handleLoadMore = () => {
+    setIsLoading(true); // Pokazujemy loader
+    setTimeout(() => {
+      setPage((prevPage) => prevPage + 1); // Zwiększamy stronę
+      setIsLoading(false); // Ukrywamy loader po 1 sekundzie
+    }, 1000); // Czas trwania loadera (1 sekunda)
+  };
+
+  // Funkcja do filtrowania danych
+  const getFilteredRecruitments = () => {
+    return recruitments.filter((recruitment) =>
+      Object.values(recruitment)
+        .join(' ')
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (recruitment.languages && recruitment.languages.some((lang) =>
+        `${lang.language} ${lang.level}`.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
+    );
+  };
+
+  const getPaginatedRecruitments = (filteredRecruitments) => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredRecruitments.slice(0, endIndex);
+  };
+
+  const filteredRecruitments = getFilteredRecruitments();
+  const paginatedRecruitments = getPaginatedRecruitments(filteredRecruitments);
 
   const goToCreateRecruitment = () => {
     navigate('/RecruitmentCreate');
@@ -74,7 +98,7 @@ const RecruitmentList = () => {
         <div className="t flex justify-center items-center"><Loader /></div>
       ) : (
         <>
-          <div className="mb-4 flex flex-row items-center justify-center ">
+          <div className="mb-4 flex flex-row items-center justify-center max-w-7xl mx-auto">
             <input
               type="text"
               placeholder="Search recruitments..."
@@ -85,7 +109,7 @@ const RecruitmentList = () => {
             <div className="ml-2 flex items-center justify-center">
               <button
                 onClick={goToCreateRecruitment}
-                className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition "
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition border-2 border-white"
               >
                 +
               </button>
@@ -93,18 +117,18 @@ const RecruitmentList = () => {
               </p>
             </div>
           </div>
-          {filteredRecruitments.length === 0 ? (
+          {paginatedRecruitments.length === 0 ? (
             <div className=" flex flex-col items-center justify-center mt-2">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[900px] overflow-y-auto w-full px-4 py-4">
-              {filteredRecruitments.map((recruitment) => (
+            <div className="flex flex-wrap justify-center  gap-8 h-auto w-full px-16 py-4">
+              {paginatedRecruitments.map((recruitment, index) => (
                 <div
                     key={recruitment.id}
-                    className="h-[627px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="h-[627px] w-[400px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
@@ -228,6 +252,22 @@ const RecruitmentList = () => {
           )}
         </>
       )}
+            <div className="flex justify-center items-center mt-4 pb-4">
+              {isLoading ? (
+                <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
+              ) : (
+                page * itemsPerPage < filteredRecruitments.length && (
+       
+                    <button
+                      onClick={handleLoadMore} // Funkcja wywołująca ładowanie
+                      className="m-5 border-sky border-2 p-2 text-center font-bold justify-center flex-col rounded-md w-1/2 text-sky shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 hover:text-white"
+                    >
+                      Load more
+                    </button>
+                 
+                )
+              )}
+             </div>
     </div>
   );
 };

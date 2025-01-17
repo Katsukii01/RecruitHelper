@@ -8,11 +8,87 @@ import {
   deleteDoc,
   updateDoc,
   query,
-  where
+  where,
+  setDoc,
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { a } from 'framer-motion/client';
+
+//fetch all emails with  signInMethod
+export const fetchAllEmails = async () => {
+  const emailsCollection = collection(db, 'emails');
+  const q = query(emailsCollection);
+  const snapshot = await getDocs(q);
+  const emails = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return emails;
+};
+
+//add email to firestore
+export const addEmail = async (email, signInMethod) => {
+  try {
+    console.log('Fetching all emails from Firestore...');
+    const emails = await fetchAllEmails(); // Fetch all emails from Firestore
+    console.log('Fetched emails:', emails);
+
+    // Check if email already exists
+    console.log(`Checking if email (${email}) already exists...`);
+    const existingEmail = emails.find((emailData) => emailData.email === email);
+
+    if (existingEmail) {
+      console.log('Existing email found:', existingEmail);
+    } else {
+      console.log('No existing email found for:', email);
+    }
+
+    // If email exists and has a Google sign-in method, don't add it
+    if (existingEmail && existingEmail.signInMethod === 'google') {
+      console.log('This email is already associated with a Google account. No action taken.');
+      return;
+    }
+
+    // If email exists and has an email/password sign-in method, update to Google
+    if (existingEmail && existingEmail.signInMethod === 'email/password') {
+      console.log('Updating sign-in method from email/password to Google for:', email);
+      const docRef = doc(db, 'emails', email); // Reference to the email document
+      await setDoc(docRef, { email, signInMethod: 'google' }); // Update to Google sign-in
+      console.log('Sign-in method updated successfully.');
+      return;
+    }
+
+    // If email doesn't exist, create a new document
+    console.log('Creating a new email document for:', email);
+    const docRef = doc(db, 'emails', email); // Correctly set a unique ID for the document
+    await setDoc(docRef, { email, signInMethod });
+    console.log('Email added to Firestore with sign-in method:', signInMethod);
+  } catch (error) {
+    console.error('Error in addEmail function:', error);
+  }
+};
+
+
+//delete email from firestore
+export const deleteEmail = async (email) => {
+  // Get reference to the emails collection
+  const emailsCollection = collection(db, 'emails');
+
+  // Create a query to find the document based on the email field
+  const q = query(emailsCollection, where('email', '==', email));
+
+  // Fetch the documents that match the query
+  const querySnapshot = await getDocs(q);
+
+  // Check if the document exists
+  if (!querySnapshot.empty) {
+    // Get the first matching document (assuming email is unique)
+    const docRef = doc(db, 'emails', querySnapshot.docs[0].id);
+    
+    // Delete the document
+    await deleteDoc(docRef);
+    console.log('Email document deleted.');
+  } else {
+    console.log('No document found with this email.');
+  }
+};
 
 // Check if the user is authenticated
 const checkAuth = async () => {
@@ -296,12 +372,7 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
         throw new Error('You need to cahnge recruitment toprivate  to add applicants by yourself');
       }
     }
-
-
-
-
-
-
+    
     // Update the applicants list: check if the applicant with the same ID already exists
     const currentApplicants = recruitmentData.Applicants || [];
     const applicantIndex = currentApplicants.findIndex(applicant => applicant.id === applicantData.id);

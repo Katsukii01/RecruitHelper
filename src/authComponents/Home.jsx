@@ -8,14 +8,18 @@ const Home = () => {
   const { user, updateName, deleteAccount, updatePassword } = useContext(AuthContext);
   const [email, setEmail] = useState(user?.email || '');
   const [name, setName] = useState(user?.displayName || '');
+  const [passwordInput, setPasswordInput] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [usernameInput, setUsernameInput] = useState('');
   const [isConfirming, setIsConfirming] = useState(false);
   const [isGoogleAccount, setIsGoogleAccount] = useState(false);
+  const [error, setError] = useState('');
+  const [errorDelete, setErrorDelete] = useState('');
   const navigate = useNavigate();
 
+  
   // Check if the account is from Google
   useEffect(() => {
     if (user?.providerData && user.providerData[0].providerId === 'google.com') {
@@ -35,31 +39,38 @@ const Home = () => {
   
   const handleUpdatePassword = async () => {
     if (newPassword !== confirmPassword) {
-      alert('The new passwords do not match.');
+      setError('The new passwords do not match.');
       return;
     }
   
     try {
       if (password && newPassword) {
+        try {
         await updatePassword(password, newPassword); // Ensure this function does not call itself
-        alert('The password has been updated');
         setPassword('');
         setNewPassword('');
         setConfirmPassword('');
+        alert('The password has been updated');
+        setError('');
+        } catch (error) {
+          console.error('Error while updating the password:', error);
+          setError(error.message);
+        }
       } else {
-        alert('Please provide all required details.');
+        setError('Please provide all required details.');
       }
     } catch (error) {
       console.error('Error while updating the password:', error);
-      alert('An error occurred while updating the password.');
+      setError(error.message);
     }
   };
   
   const handleDeleteAccount = () => {
     if (usernameInput === user?.displayName) {
       setIsConfirming(true);
+      setErrorDelete('');
     } else {
-      alert('The provided account name is incorrect.');
+      setErrorDelete('The provided account name is incorrect.');
     }
   };
   
@@ -69,16 +80,18 @@ const Home = () => {
     const confirmation = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
     if (confirmation && user) {
       try {
-        await deleteAccount();
+        await deleteAccount(passwordInput);
         alert('The account has been deleted');
-        navigate('/signin#SignIn'); // Redirect to Sign In page
+        navigate('/signup#SignUp'); 
+        window.location.reload();
       } catch (error) {
         console.error('Error while deleting the account:', error);
-        alert('An error occurred while deleting the account.');
+        setErrorDelete(error.message); // Display the error message
       }
     }
     setIsConfirming(false);
   };
+  
   
 
   return (
@@ -159,6 +172,7 @@ const Home = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="input bg-glass rounded-lg w-1/2 p-2"
             />
+            {error &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{error}</p>}
             <button onClick={handleUpdatePassword} className="btn  p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">Update Password</button>
           </div>
         )}
@@ -166,6 +180,7 @@ const Home = () => {
         {/* Account Deletion */}
         <div className="flex flex-col space-y-4 items-center card">
           <label>Delete Account</label>
+          {errorDelete &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errorDelete}</p>}
           <p className='text-red-500 text-md'>This action will delete your account and cannot be undone.</p>
           <p className='text-red-500 text-md'> And all your recruitment data will be deleted. Do you want to proceed?</p>
           {!isConfirming ? (
@@ -177,6 +192,14 @@ const Home = () => {
                 onChange={(e) => setUsernameInput(e.target.value)}
                 className="input bg-glass rounded-lg w-1/2 p-2"
               />
+              {!isGoogleAccount && (
+              < input  
+              type="password"
+               placeholder="Enter your password to confirm" 
+               value={passwordInput} 
+               onChange={(e) => setPasswordInput(e.target.value)} 
+               className="input bg-glass rounded-lg w-1/2 p-2" />
+               )}
               <button onClick={handleDeleteAccount} className="btn bg-red-500 p-1 mb-6 rounded-lg flex justify-center w-1/2 hoverr:bg-red-700 hover:bg-red-800 border border-white hover:text-white">Delete Account</button>
             </>
           ) : (

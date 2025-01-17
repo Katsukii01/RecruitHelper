@@ -9,7 +9,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
   const [recruitment, setRecruitment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    status: '',
+    status: 'Private',
     name: '',
     jobTittle: '',
     skills: [],
@@ -36,7 +36,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         try {
           const data = await getRecruitmentById(id);
           setFormData({
-            status: data.status || '',
+            status: data.status || 'Private',
             name: data.name || '',
             jobTittle: data.jobTittle || '',
             skills: data.skills || [],
@@ -113,10 +113,18 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         alert('Recruitment updated successfully!');
         onRefresh();
       } else {
+         console.log(updatedData);
+        if(updatedData.status === "Public") {
+          // Dodanie nowej rekrutacji
+          const recruitmentId = await addRecruitment(updatedData);
+          alert('Recruitment added successfully!');
+          navigate('/RecruitmentDashboard', { state: { recruitmentId } });
+        } else {
         // Dodanie nowej rekrutacji
         const recruitmentId = await addRecruitment(updatedData);
         alert('Recruitment added successfully!');
         navigate('/ChooseMethod', { state: { recruitmentId } });
+        }
       }
       setErrors({});
       setErrorMessage('');
@@ -167,7 +175,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="up to 25 signs"  
           />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+          {errors.name &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.name}</p>}
         </div>
 
         {/* Job Title */}
@@ -181,7 +189,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="up to 30 signs"
           />
-          {errors.jobTittle && <p className="text-red-500 text-sm">{errors.jobTittle}</p>}
+          {errors.jobTittle &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.jobTittle}</p>}
         </div>
 
         <div className='border-2 border-gray-500 rounded-md p-2'>
@@ -196,7 +204,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 placeholder="from 0 to 100"  
                 className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
               />
-              {errors.weightOfEducationLevel && <p className="text-red-500 text-sm">{errors.weightOfEducationLevel}</p>}
+              {errors.weightOfEducationLevel &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfEducationLevel}</p>}
             </div>
 
             {/* Education Level */}
@@ -223,7 +231,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 <option value="Certificate">Certificate</option>
               </select>
               {errors.educationLevel && (
-                <p className="text-red-500 text-sm">{errors.educationLevel}</p>
+                  <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationLevel}</p>
               )}
             </div>
 
@@ -256,7 +264,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 <option value="Psychology">Psychology</option>
               </select>
               {errors.educationField && (
-                <p className="text-red-500 text-sm">{errors.educationField}</p>
+                  <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationField}</p>
               )}
             </div>
             </div>
@@ -273,7 +281,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             onChange={handleChange}
             className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
           />
-          {errors.weightOfExperience && <p className="text-red-500 text-sm">{errors.weightOfExperience}</p>}
+          {errors.weightOfExperience &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfExperience}</p>}
         </div>
         {/* Experience Needed */}
         <div className='mb-4'>
@@ -285,7 +293,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
-          {errors.experienceNeeded && <p className="text-red-500 text-sm">{errors.experienceNeeded}</p>}
+          {errors.experienceNeeded &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.experienceNeeded}</p>}
         </div>
         </div>
 
@@ -301,7 +309,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             placeholder="from 0 to 100"  
             className="mt-1 block w-1/2 px-3 py-2 border border-sky  rounded-md shadow-sm bg-blue-50 text-blue-400"
           />
-          {errors.weightOfSkills && <p className="text-red-500 text-sm">{errors.weightOfSkills}</p>}
+          {errors.weightOfSkills &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfSkills}</p>}
         </div>
 
         {/* Skills */}
@@ -351,7 +359,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
                 placeholder="from 0 to 100"  
               />
-              {errors.weightOfLanguages && <p className="text-red-500 text-sm">{errors.weightOfLanguages}</p>}          
+              {errors.weightOfLanguages &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfLanguages}</p>}          
             </div>
 
         {/* Languages */}
@@ -394,10 +402,10 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                     </button>
                   </div>
                   {errors[`languages-${index}-language`] && (
-                    <p className="text-red-500 text-sm">{errors[`languages-${index}-language`]}</p>
+                      <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors[`languages-${index}-language`]}</p>
                   )}
                   {errors[`languages-${index}-level`] && (
-                    <p className="text-red-500 text-sm">{errors[`languages-${index}-level`]}</p>
+                      <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors[`languages-${index}-level`]}</p>
                   )}
                 </div>
               ))}
@@ -425,7 +433,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
             placeholder="from 0 to 100"  
           />
-          {errors.weightOfCourses && <p className="text-red-500 text-sm">{errors.weightOfCourses}</p>}
+          {errors.weightOfCourses &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfCourses}</p>}
         </div>
 
 

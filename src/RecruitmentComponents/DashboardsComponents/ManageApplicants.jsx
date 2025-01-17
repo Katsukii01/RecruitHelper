@@ -60,7 +60,7 @@ const ManageApplicants = ({ id, refresh }) => {
     
   const handleManualApplicants = () => {
     if(recruitmentStatus == "Private"){
-      navigate('/RecruitmentAddApplicants', {
+      navigate('/chooseMethod', {
         state: {
           recruitmentId: id,
           highestId: highestId, // Pass the highest ID

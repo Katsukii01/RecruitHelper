@@ -9,29 +9,36 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [errorForgot, setErrorForgot] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false); // Stan do obsługi modalu "Zapomniałem hasła"
   const [resetEmail, setResetEmail] = useState(''); // E-mail do resetu hasła
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+
     setIsLoading(true);
     try {
       await signIn(email, password); // Email/Password sign-in
       navigate('/home#Home');
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
+
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn(); // Google sign-in
+      await googleSignIn(); // Google sign-in;
       navigate('/home#Home');
+      window.location.reload();
     } catch (err) {
       setError(err.message);
+    }finally {
+      setIsLoading(false);
+
     }
   };
 
@@ -41,8 +48,10 @@ const SignIn = () => {
       await forgotPassword(resetEmail);
       alert('E-mail do resetowania hasła został wysłany.');
       setShowForgotPassword(false); // Zamknij modal
+                      setErrorForgot(); // Resetuj komunikat błędu
+                setResetEmail(''); // Usuń wpisany tekst
     } catch (err) {
-      setError(err.message);
+      setErrorForgot(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -112,8 +121,13 @@ const SignIn = () => {
 
       {showForgotPassword && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg shadow-lg mx-10">
             <h2 className="text-xl font-bold mb-4">Reset Password</h2>
+                  {errorForgot && (
+                <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
+                  {errorForgot}
+                </p>
+              )}
             <input
               type="email"
               placeholder="Enter your email"
@@ -124,17 +138,21 @@ const SignIn = () => {
             />
             <div className="flex justify-between mt-4">
               <button
-                onClick={handleForgotPassword}
-                className="btn bg-sky text-white rounded-lg p-2"
+                 onClick={handleForgotPassword}
+                className="m-2 px-4 py-2 bg-sky text-white rounded-md hover:bg-cyan-600 transition border-white border"
                 disabled={isLoading}
               >
                 {isLoading ? 'Sending...' : 'Send Reset Link'}
               </button>
               <button
-                onClick={() => setShowForgotPassword(false)} // Zamknij modal
-                className="btn bg-red-500 text-white rounded-lg p-2"
+              onClick={() => {
+                setShowForgotPassword(false); // Zamknij modal
+                setErrorForgot(); // Resetuj komunikat błędu
+                setResetEmail(''); // Usuń wpisany tekst
+              }}
+              className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
               >
-                Cancel
+              Cancel
               </button>
             </div>
           </div>

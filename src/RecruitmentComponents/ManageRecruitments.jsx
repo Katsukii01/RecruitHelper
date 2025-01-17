@@ -79,7 +79,7 @@ const ManageRecruitments = () => {
             <div className="ml-2 flex items-center justify-center">
               <button
                 onClick={goToCreateRecruitment}
-                className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition "
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition border-2 border-white"
               >
                 +
               </button>

@@ -11,12 +11,14 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [password, setPassword] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -24,7 +26,12 @@ const SignUp = () => {
       setError("Emails do not match.");
       return;
     }
-  
+    
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     if (!termsAccepted) {
       setError("You must accept the terms and conditions.");
       return;
@@ -34,29 +41,44 @@ const SignUp = () => {
       setError("Please verify that you are a human.");
       return;
     }
+  
     setIsLoading(true);
   
     try {
-      // Call your back-end to validate the reCAPTCHA token
-      // For now, let's assume it's passed correctly.
+      // Call the signUp function to create the user
       await signUp(email, password, username); // Include username
+      alert('Sign up successful!');
+      
+      // Force reload of the page to ensure you are on Home with the correct state
+      navigate('/home#Home');
+      window.location.reload(); // This line will force the page to reload after navigation.
     } catch (err) {
-      setError(err.message);
+      // Handle different errors based on Firebase's error codes
+      if (err.code === 'auth/email-already-in-use') {
+        setError('The email address is already in use by another account.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('The password is too weak.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('The email address is not valid.');
+      } else {
+        setError(err.message); // Generic error handling
+      }
     } finally {
       setIsLoading(false);
     }
-  
-    // Force reload of the page to ensure you are on Home with the correct state
-    navigate('/home#Home');
-    window.location.reload(); // This line will force the page to reload after navigation.
   };
+  
+  
   
   const handleGoogleSignUp = async () => {
     try {
       await googleSignIn(); // Google sign-up
       navigate('/home#Home');
+      window.location.reload();
     } catch (err) {
       setError(err.message);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,6 +125,14 @@ const SignUp = () => {
           className="input bg-glass rounded-lg p-2 mb-4 w-full"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input 
+          type="password"
+          placeholder="Confirm Password"
+          className="input bg-glass rounded-lg p-2 mb-4 w-full"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
         <div className="flex items-center mb-4">

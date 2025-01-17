@@ -155,8 +155,8 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
-                      active === "SignIn" ? 'text-white' : 'text-[#a8a8a8]'
+                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
+                      active === "SignIn" ? 'text-white ' : 'text-teal-500'
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
@@ -166,8 +166,8 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"signUp"}
-                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
-                      active === "SignUp" ? 'text-white' : 'text-[#a8a8a8]'
+                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
+                      active === "SignUp" ? 'text-white ' : 'text-teal-500'
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
@@ -180,8 +180,8 @@ const Navbar = () => {
                   <>
                   <li
                     key={"Home"}
-                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
-                      active === "Home" ? 'text-white' : 'text-[#a8a8a8]'
+                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-sky px-2 m-2 rounded-2xl hover:bg-sky hover:text-white ${
+                      active === "Home" ? 'text-white ' : 'text-sky'
                     }`}
                     onClick={() => handleActive("Home")}
                   >
@@ -191,7 +191,7 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"Logout"}
-                    className={`relative text-[18px] font-medium cursor-pointer m-2 ${
+                    className={`relative text-[18px] font-medium cursor-pointer px-2 m-2 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition border-white border  ${
                       active === "Logout" ? 'text-white' : 'text-[#a8a8a8]'
                     }`}
                     onClick={() => handleActive("Logout")}
@@ -234,7 +234,7 @@ const Navbar = () => {
                 <li
                   key={link.id}
                   className={`${
-                    active === link.title ? 'text-white' : 'text-[#323232]'
+                    active === link.title ? 'text-white bg-sky bg-opacity-75 rounded-md' : 'text-[#323232]'
                   } font-medium cursor-pointer text-[16px]`}
                   onClick={() => handleActive(link)}
                 >
@@ -248,8 +248,8 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    className={`font-medium cursor-pointer text-[16px] ${
-                      active === "SignIn" ? 'text-white' : 'text-[#323232]'
+                    className={`font-medium cursor-pointer text-[16px] border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
+                      active === "SignIn" ? 'text-white bg-teal-200 bg-opacity-75' : 'text-[#323232]'
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
@@ -259,8 +259,8 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"signUp"}
-                    className={`font-medium cursor-pointer text-[16px] ${
-                      active === "SignUp" ? 'text-white' : 'text-[#323232]'
+                    className={`font-medium cursor-pointer text-[16px] border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
+                      active === "SignUp" ? 'text-white bg-teal-200 bg-opacity-75' : 'text-[#323232]'
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
@@ -273,8 +273,8 @@ const Navbar = () => {
                   <>
                   <li
                     key={"Home"}
-                    className={`font-medium cursor-pointer text-[16px] ${
-                      active === "Home" ? 'text-white' : 'text-[#323232]'
+                    className={`font-medium cursor-pointer text-[16px] border-2 border-sky px-2 m-2 rounded-2xl hover:bg-sky hover:text-white ${
+                      active === "Home" ? 'text-white bg-sky bg-opacity-75' : 'text-sky'
                     }`}
                     onClick={() => handleActive("Home")}
                   >
@@ -284,7 +284,7 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"Logout"}
-                    className={`font-medium cursor-pointer text-[16px] ${
+                    className={`font-medium cursor-pointer text-[16px] px-2 m-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border ${
                       active === "Logout" ? 'text-white' : 'text-[#323232]'
                     }`}
                     onClick={() => handleActive("Logout")}
