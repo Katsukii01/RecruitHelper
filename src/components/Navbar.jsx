@@ -3,14 +3,13 @@ import { Link , useNavigate } from 'react-router-dom';
 import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
-import { use } from 'react';
 
 const Navbar = () => {
   const { user, signOut } = useContext(AuthContext);
   const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
-  const allowedHashes = NavLinks.map(link => link.id).concat(['SignIn', 'SignUp', 'Home']);
+  const allowedHashes = NavLinks.map(link => link.id).concat(['SignIn', 'SignUp', 'Home', 'Dashboard']);
 
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
 
@@ -40,13 +39,20 @@ const Navbar = () => {
       const hash = window.location.hash.slice(1); 
       if (hash) {
 
-        if (allowedHashes.includes(hash)) {
-        setActive(hash);
-        setUnderline(hash);
+        if(hash === "Dashboard" || hash === "Home" ||  hash === "SignIn" || hash === "SignUp"){
+          setActive(hash);
+          setUnderlineToNone();
         }else{
-            setActive('Home');
-            setUnderline('Home');
+          if (allowedHashes.includes(hash)) {
+            setActive(hash);
+            setUnderline(hash);
+            }else{
+                setActive('Dashboard');
+                setUnderlineToNone();
+            }
         }
+
+        
         
         const targetElement = document.getElementById(hash);
         if (targetElement) {
@@ -78,7 +84,11 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = (e) => {
       if (e.matches && active) {
-        setUnderline(active);
+        if(active === "Dashboard" || active === "Home" || active === "SignIn" || active === "SignUp"){
+          setUnderlineToNone();
+        }else{
+          setUnderline(active);
+        }
       }
     };
 
@@ -90,17 +100,22 @@ const Navbar = () => {
   const handleActive = (link) => {
     if (link === "SignIn") {
       setActive("SignIn");
-      setUnderline("SignIn");
+      setUnderlineToNone();
       navigate("/signin");
     } else if (link === "SignUp") {
       setActive("SignUp");
-      setUnderline("SignUp");
+      setUnderlineToNone();
       navigate("/signup");
     }else if (link === "Home") {
       setActive("Home");
-      setUnderline("Home");
-      navigate("/home");
-    }else if (link === "Logout") {
+      setUnderlineToNone();
+      navigate("/home#Home");
+    }else if (link === "Dashboard") {
+      setActive("Dashboard");
+      setUnderlineToNone();
+      navigate("/Dashboard#Dashboard");
+    }
+    else if (link === "Logout") {
       setUnderlineToNone();
       setActive("");
       handleLogout();
@@ -155,55 +170,114 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
-                      active === "SignIn" ? 'text-white ' : 'text-teal-500'
+                    className={`cursor-pointer border-2 border-sky p-2 rounded-full hover:bg-green-500 hover:text-white ${
+                      active === "SignIn" ? "text-white border-white bg-green-500" : "text-[#a8a8a8] border-[#a8a8a8]"
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
                     <a className="block w-full h-full" href={`#${"SignIn"}`}>
-                      {"Sign In"}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                    </svg>
                     </a>
                   </li>
                   <li
                     key={"signUp"}
-                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
-                      active === "SignUp" ? 'text-white ' : 'text-teal-500'
+                    className={`cursor-pointer border-2 border-sky p-2 rounded-full hover:bg-orange-500 hover:text-white ${
+                      active === "SignUp" ? "text-white border-white bg-orange-500" : "text-[#a8a8a8] border-[#a8a8a8]"
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
                     <a className="block w-full h-full" href={`#${"SignUp"}`}>
-                      {"Sign Up"}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
                     </a>
                   </li>
                 </>
                 ) : ( 
                   <>
-                  <li
-                    key={"Home"}
-                    className={`relative text-[18px] font-medium cursor-pointer border-2 border-sky px-2 m-2 rounded-2xl hover:bg-sky hover:text-white ${
-                      active === "Home" ? 'text-white ' : 'text-sky'
-                    }`}
-                    onClick={() => handleActive("Home")}
-                  >
-                    <a className="block w-full h-full" href={`#${"Home"}`}>
-                      {"Home"}
-                    </a>
-                  </li>
-                  <li
-                    key={"Logout"}
-                    className={`relative text-[18px] font-medium cursor-pointer px-2 m-2 bg-red-600 text-white rounded-2xl hover:bg-red-700 transition border-white border  ${
-                      active === "Logout" ? 'text-white' : 'text-[#a8a8a8]'
-                    }`}
-                    onClick={() => handleActive("Logout")}
-                  >
-                    <a className="block w-full h-full">
-                      {"Logout"}
-                    </a>
-                  </li>
+                    <li
+                      key={"Home"}
+                      className={`cursor-pointer border-2 p-2 rounded-full hover:bg-sky hover:text-white ${
+                        active === "Home" ? "text-white border-white bg-sky" : "text-[#a8a8a8] border-[#a8a8a8]"
+                      }`}
+                      onClick={() => handleActive("Home")}
+                    >
+                      <a className="flex items-center justify-center w-full h-full" href={`#${"Home"}`}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                          />
+                        </svg>
+                      </a>
+                    </li>
+
+                    <li
+                      key={"Dashboard"}
+                      className={`cursor-pointer border-2  p-2 rounded-full hover:bg-sky hover:text-white ${
+                        active === "Dashboard" ? "text-white border-white bg-sky" : "text-[#a8a8a8] border-[#a8a8a8]"
+                      }`}
+                      onClick={() => handleActive("Dashboard")}
+                    >
+                      <a className="flex items-center justify-center w-full h-full" href={`#${"Dashboard"}`}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+                          />
+                        </svg>
+                      </a>
+                    </li>
+
+                    <li
+                      key={"Logout"}
+                      className={`cursor-pointer bg-red-600 text-white p-2 rounded-full hover:bg-red-700 border-white border-2 ${
+                        active === "Logout" ? "text-white" : "text-[#a8a8a8]"
+                      }`}
+                      onClick={() => handleActive("Logout")}
+                    >
+                      <a className="flex items-center justify-center w-full h-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                          />
+                        </svg>
+                      </a>
+                    </li>
+
+
+
                 </>
                 )}
 
-          <div id="underline" className="underline absolute bottom-0 h-[2px] bg-mint transition-all duration-300"></div>
+          <div id="underline" className="mt-1 underline absolute bottom-0 h-[2px] bg-mint transition-all duration-300"></div>
         </ul>
 
         {/* Mobile Menu */}
@@ -245,58 +319,116 @@ const Navbar = () => {
               <hr className='border-s-[80px] border-white w-max h-max'/>
 
               {!user ? (
-               <>
-                  <li
+               <div className="grid grid-cols-2 gap-2 p-1">
+                  <div
                     key={"signIn"}
-                    className={`font-medium cursor-pointer text-[16px] border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
-                      active === "SignIn" ? 'text-white bg-teal-200 bg-opacity-75' : 'text-[#323232]'
+                    className={`cursor-pointer border-2 border-sky p-2 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white ${
+                      active === "SignIn" ? "text-white border-white bg-green-500" : "text-[#323232] border-[#323232]"
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
-                    <a  href={`#${"SignIn"}`}>
-                      {"Sign In"}
+                    <a className="flex items-center justify-center w-full h-full" href={`#${"SignIn"}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                    </svg>
                     </a>
-                  </li>
-                  <li
+                  </div>
+                  <div
                     key={"signUp"}
-                    className={`font-medium cursor-pointer text-[16px] border-2 border-teal-500 px-2 m-2 rounded-2xl hover:bg-teal-500 hover:text-white ${
-                      active === "SignUp" ? 'text-white bg-teal-200 bg-opacity-75' : 'text-[#323232]'
+                    className={`cursor-pointer border-2 border-sky p-2 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white ${
+                      active === "SignUp" ? "text-white border-white bg-orange-500" : "text-[#323232] border-[#323232]"
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
-                    <a  href={`#${"SignUp"}`}>
-                      {"Sign Up"}
+                       <a className="flex items-center justify-center w-full h-full" href={`#${"SignUp"}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
                     </a>
-                  </li>
-                </>
+                    </div>
+                  
+                </div>
                 ) : ( 
-                  <>
-                  <li
+                  <div className="grid grid-cols-2 gap-2 p-1">
+                  <div
                     key={"Home"}
-                    className={`font-medium cursor-pointer text-[16px] border-2 border-sky px-2 m-2 rounded-2xl hover:bg-sky hover:text-white ${
-                      active === "Home" ? 'text-white bg-sky bg-opacity-75' : 'text-sky'
+                    className={`cursor-pointer border-2  p-2 rounded-full flex items-center justify-center hover:bg-sky hover:text-white ${
+                      active === "Home" ? "text-white bg-sky border-white" : "text-[#323232] border-[#323232]"
                     }`}
                     onClick={() => handleActive("Home")}
                   >
-                    <a  href={`#${"Home"}`}>
-                      {"Home"}
+                    <a href={`#${"Home"}`} className="flex items-center justify-center w-full h-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                        />
+                      </svg>
                     </a>
-                  </li>
-                  <li
+                  </div>
+                
+                  <div
+                    key={"Dashboard"}
+                    className={`cursor-pointer border-2 p-2 rounded-full flex items-center justify-center hover:bg-sky hover:text-white ${
+                      active === "Dashboard" ? "text-white bg-sky border-white" : "text-[#323232] border-[#323232]"
+                    }`}
+                    onClick={() => handleActive("Dashboard")}
+                  >
+                    <a href={`#${"Dashboard"}`} className="flex items-center justify-center w-full h-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                
+                  <div
                     key={"Logout"}
-                    className={`font-medium cursor-pointer text-[16px] px-2 m-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border ${
-                      active === "Logout" ? 'text-white' : 'text-[#323232]'
+                    className={`cursor-pointer bg-red-600 text-white p-2 rounded-full flex items-center justify-center hover:bg-red-700 border-white border-2 ${
+                      active === "Logout" ? "text-white" : "text-[#323232]"
                     }`}
                     onClick={() => handleActive("Logout")}
                   >
-                    <a  href={`#${"Logout"}`}>
-                      {"Logout"}
+                    <a href={`#${"Logout"}`} className="flex items-center justify-center w-full h-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H3"
+                        />
+                      </svg>
                     </a>
-                  </li>
-                </>
+                  </div>
+                </div>
+                
                 )}
               
-            </ul>
+              </ul>
           </div>
         </div>
       </div>

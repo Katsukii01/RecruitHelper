@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { google } from '../assets';
 
 const SignIn = () => {
@@ -13,13 +13,17 @@ const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false); // Stan do obsługi modalu "Zapomniałem hasła"
   const [resetEmail, setResetEmail] = useState(''); // E-mail do resetu hasła
-
+  const location = useLocation();
+  
+  const from = location.state?.from?.pathname || "/home"; 
+  const fragment = location.state?.from?.hash || "Home";  
+  
   const handleSubmit = async (e) => {
 
     setIsLoading(true);
     try {
       await signIn(email, password); // Email/Password sign-in
-      navigate('/home#Home');
+      navigate(from + fragment, { replace: true });
       window.location.reload();
     } catch (err) {
       setError(err.message);
@@ -32,7 +36,7 @@ const SignIn = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn(); // Google sign-in;
-      navigate('/home#Home');
+      navigate(from +'#'+ fragment, { replace: true });
       window.location.reload();
     } catch (err) {
       setError(err.message);

@@ -1,23 +1,27 @@
 import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../store/AuthContext';
 import Loader from './loader';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
+  const location = useLocation();
 
   if (loading) {
-    return  <div className='flex w-full h-screen justify-center items-center bg-glass'>
-      <Loader />
-    </div>;
+    return (
+      <div className='flex w-full h-screen justify-center items-center bg-glass'>
+        <Loader />
+      </div>
+    );
   }
 
-  // Check if the user is authenticated (user is not null)
+  // Sprawdź, czy użytkownik jest zalogowany
   if (!user) {
-    return <Navigate to="/signin#SignIn" replace />;
+    // Zachowaj fragment URL, jeśli istnieje, w stanie
+    return <Navigate to="/signin#SignIn" replace state={{ from: location }} />;
   }
 
-  // If the user is authenticated, render the children
+  // Jeśli użytkownik jest zalogowany, renderuj dzieci
   return children;
 };
 

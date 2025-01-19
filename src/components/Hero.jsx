@@ -14,7 +14,7 @@ const Hero = () => {
       </h1>
       <p className={`${styles.heroSubText} mt-4 text-breeze`}>
         Empowering you to navigate your recruitment process with our innovative 
-        <span className="text-cyan-400"> solutions</span>. My platform is designed to simplify every aspect of the recruitment journey,
+        <span className="text-cyan-400"> solutions</span>. Our platform is designed to simplify every aspect of the recruitment journey,
         from attracting the best talent to making seamless hiring decisions. 
         <br className="sm:block hidden" />
       </p>

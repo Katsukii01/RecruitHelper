@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { fadeIn, textVariant } from '../utils/motion';
 import RecruitmentList from './RecruitmentsList';
 
+
 const PublicRecruitments= () => {
   return (
     <section className='relative w-full h-auto min-h-screen pt-24 px-18'>
@@ -26,6 +27,7 @@ const PublicRecruitments= () => {
         </motion.p>
         <br className='sm:block hidden' />
     </div>
+    <br className='sm:block hidden' />
     <div>
       <RecruitmentList />
     </div>

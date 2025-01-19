@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { getRecruitments } from '../firebase/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components';
+import { p } from 'framer-motion/client';
 
 const ManageRecruitments = () => {
   const [recruitments, setRecruitments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 4; // Number of items to display per page
   const navigate = useNavigate();
 
   // Fetch recruitments on component mount
@@ -25,16 +29,35 @@ const ManageRecruitments = () => {
     fetchData();
   }, []);
 
-  const filteredRecruitments = recruitments.filter((recruitment) =>
-    Object.values(recruitment)
-      .join(' ')
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()) ||
-    (recruitment.languages && recruitment.languages.some((lang) =>
-      `${lang.language} ${lang.level}`.toLowerCase().includes(searchTerm.toLowerCase())
-    ))
-  );
-  
+  const handleLoadMore = () => {
+    setIsLoading(true); // Pokazujemy loader
+    setTimeout(() => {
+      setPage((prevPage) => prevPage + 1); // Zwiększamy stronę
+      setIsLoading(false); // Ukrywamy loader po 1 sekundzie
+    }, 1000); // Czas trwania loadera (1 sekunda)
+  };
+
+  // Funkcja do filtrowania danych
+  const getFilteredRecruitments = () => {
+    return recruitments.filter((recruitment) =>
+      Object.values(recruitment)
+        .join(' ')
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (recruitment.languages && recruitment.languages.some((lang) =>
+        `${lang.language} ${lang.level}`.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
+    );
+  };
+
+  const getPaginatedRecruitments = (filteredRecruitments) => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredRecruitments.slice(0, endIndex);
+  };
+
+  const filteredRecruitments = getFilteredRecruitments();
+  const paginatedRecruitments = getPaginatedRecruitments(filteredRecruitments);
 
   const goToCreateRecruitment = () => {
     navigate('/RecruitmentCreate');
@@ -81,21 +104,22 @@ const ManageRecruitments = () => {
                 onClick={goToCreateRecruitment}
                 className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition border-2 border-white"
               >
-                +
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+
               </button>
-              <p className="mt-4 text-gray-600 font-semibold text-lg">
-              </p>
             </div>
           </div>
-          {filteredRecruitments.length === 0 ? (
-            <div className=" flex flex-col items-center justify-center mt-2">
-              <p className="mt-4 text-gray-600 font-semibold text-lg">
+          {paginatedRecruitments.length === 0 ? (
+            <div className=" flex flex-col items-center justify-center h-[650px] ">
+              <p className=" text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[900px] overflow-y-auto w-full px-4 py-4">
-              {filteredRecruitments.map((recruitment) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[650px] overflow-y-auto w-full px-4 py-4">
+              {paginatedRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
                     className="h-[628.5px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
@@ -221,6 +245,22 @@ const ManageRecruitments = () => {
               ))}
             </div>
           )}
+                      <div className="flex justify-center items-center mt-4 pb-4 h-20">
+                        {isLoading ? (
+                          <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
+                        ) : (
+                          page * itemsPerPage < filteredRecruitments.length && (
+                 
+                              <button
+                                onClick={handleLoadMore} // Funkcja wywołująca ładowanie
+                                className="m-5 border-sky border-2 p-2 text-center font-bold justify-center flex-col rounded-md w-1/2 text-sky shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 hover:text-white"
+                              >
+                                Load more
+                              </button>
+                           
+                          )
+                        )}
+                       </div>
         </>
       )}
     </div>

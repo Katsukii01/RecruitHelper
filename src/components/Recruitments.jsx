@@ -17,7 +17,7 @@ const Recruitments = () => {
         variants={fadeIn("", "", 0.3, 2)}
         className='mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]'
       >
-        Apply for the latest job openings and recruitment opportunities. Find your dream job with our comprehensive recruitment services. After you apply, you will be able to see the status of your application on your home page.
+        Apply for the latest job openings and recruitment opportunities. Find your dream job with our comprehensive recruitment services.
       </motion.p>
 
       {/* Button with border animation */}

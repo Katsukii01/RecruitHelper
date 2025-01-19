@@ -6,6 +6,8 @@ import AddApplicantsWithHelp from './AddApplicantsWithHelp';
 import ChooseMethod from './ChooseMethod';
 import PublicRecruitments from './PublicRecruitments';
 import ManageApplications from './ManageApplications';
+import Calendar from './Calendar';
+import RecruitmentList from './RecruitmentsList';
 
 
 export {
@@ -17,4 +19,6 @@ export {
     AddApplicantsWithHelp,
     PublicRecruitments,
     ManageApplications,
+    Calendar,
+    RecruitmentList,
 }

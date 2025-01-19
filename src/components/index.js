@@ -8,6 +8,8 @@ import StarsCanvas from './Stars';
 import ProtectedRoute from './ProtectedRoute';
 import Terms from './Terms';;
 import Loader from './loader';
+import Dashboard from './Dashboard';
+
 
 export {
     Hero,
@@ -20,4 +22,5 @@ export {
     ProtectedRoute,
     Terms,
     Loader,
+    Dashboard,
 }

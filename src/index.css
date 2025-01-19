@@ -52,9 +52,20 @@
 }
 
 .night-navy-gradient {
-  background: linear-gradient(45deg, #0D223A 0%, #061526 100%); /* Śnieżnobiały do Nocny morski */
+  background: linear-gradient(45deg, #0D223A 0%, #061526 100%);
   background: -webkit-linear-gradient(45deg, #0D223A 0%, #061526 100%);
+  /* Rozmycie całego gradientu */
 }
+
+/* Jeśli chcesz użyć rozmycia dla półprzezroczystego tła */
+.night-navy-gradient-blur {
+  background: linear-gradient(45deg, rgba(13, 34, 58, 0.8) 0%, rgba(6, 21, 38, 0.8) 100%);
+  backdrop-filter: blur(8px); /* Rozmycie tła za elementem */
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px; /* Dodanie zaokrąglonych krawędzi */
+}
+
+
 .breeze-navy-gradient {
   background: linear-gradient(90deg, #F0FFFF 0%, #0D223A 100%); /* Świeży błękit do Granatowy */
   background: -webkit-linear-gradient(90deg, #F0FFFF 0%, #0D223A 100%);

@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms } from "./components";
+import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard } from "./components";
 import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="relative z-0 night-navy-gradient">
+      <div className="relative z-0 night-navy-gradient ">
         <StarsCanvas />
         <Navbar />
 
@@ -20,6 +20,15 @@ const App = () => {
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
