@@ -170,7 +170,7 @@ const Navbar = () => {
                <>
                   <li
                     key={"signIn"}
-                    className={`cursor-pointer border-2 border-sky p-2 rounded-full hover:bg-green-500 hover:text-white ${
+                    className={`cursor-pointer border-2  p-2 rounded-full hover:bg-green-500 hover:text-white ${
                       active === "SignIn" ? "text-white border-white bg-green-500" : "text-[#a8a8a8] border-[#a8a8a8]"
                     }`}
                     onClick={() => handleActive("SignIn")}
@@ -183,7 +183,7 @@ const Navbar = () => {
                   </li>
                   <li
                     key={"signUp"}
-                    className={`cursor-pointer border-2 border-sky p-2 rounded-full hover:bg-orange-500 hover:text-white ${
+                    className={`cursor-pointer border-2  p-2 rounded-full hover:bg-orange-500 hover:text-white ${
                       active === "SignUp" ? "text-white border-white bg-orange-500" : "text-[#a8a8a8] border-[#a8a8a8]"
                     }`}
                     onClick={() => handleActive("SignUp")}
@@ -322,7 +322,7 @@ const Navbar = () => {
                <div className="grid grid-cols-2 gap-2 p-1">
                   <div
                     key={"signIn"}
-                    className={`cursor-pointer border-2 border-sky p-2 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white ${
+                    className={`cursor-pointer border-2  p-2 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white ${
                       active === "SignIn" ? "text-white border-white bg-green-500" : "text-[#323232] border-[#323232]"
                     }`}
                     onClick={() => handleActive("SignIn")}
@@ -335,7 +335,7 @@ const Navbar = () => {
                   </div>
                   <div
                     key={"signUp"}
-                    className={`cursor-pointer border-2 border-sky p-2 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white ${
+                    className={`cursor-pointer border-2  p-2 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white ${
                       active === "SignUp" ? "text-white border-white bg-orange-500" : "text-[#323232] border-[#323232]"
                     }`}
                     onClick={() => handleActive("SignUp")}
