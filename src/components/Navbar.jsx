@@ -37,16 +37,18 @@ const Navbar = () => {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1); 
+      
       if (hash) {
-
         if(hash === "Dashboard" || hash === "Home" ||  hash === "SignIn" || hash === "SignUp"){
           setActive(hash);
           setUnderlineToNone();
-        }else{
+     
+        }else{ console.log("not allowed");
           if (allowedHashes.includes(hash)) {
             setActive(hash);
             setUnderline(hash);
             }else{
+              
                 setActive('Dashboard');
                 setUnderlineToNone();
             }
@@ -60,6 +62,7 @@ const Navbar = () => {
         }
 
       } else {
+        setActive('Dashboard');
         setUnderlineToNone();
       }
     };
