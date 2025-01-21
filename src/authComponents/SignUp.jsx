@@ -87,7 +87,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center pt-32">
       <form onSubmit={handleSubmit} className="p-6 bg-glass rounded-lg card sm:w-1/2 w-5/6">
         <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
         {error && (

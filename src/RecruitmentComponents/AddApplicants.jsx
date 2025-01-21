@@ -367,7 +367,14 @@ const handleInputBlur = (e) => {
   
   const handleFinishAdding = async () => {
     const updatedApplicants = saveCurrentApplicant(); // Pobierz zaktualizowaną listę aplikantów
-  
+
+    if(userApply){
+      const confirmation = window.confirm("Are you sure you want to finish application? You cannot edit applicantion after this point.");
+      if (!confirmation) {
+        return;
+      }
+    }
+
     if (!updatedApplicants) {
       alert("Please correct the errors in the form before proceeding.");
       return;
@@ -424,7 +431,7 @@ const handleInputBlur = (e) => {
       // Nawigacja do kolejnego kroku
       if(userApply){
         setTimeout(() => {
-              navigate(`/Home`);
+              navigate(`/Dashboard#Dashboard`);
           }, 1000);
       }else{
         setTimeout(() => {

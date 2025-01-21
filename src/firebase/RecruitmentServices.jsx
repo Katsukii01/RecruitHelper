@@ -360,6 +360,12 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
 
     // Ensure the user is the owner of the recruitment
     const recruitmentData = recruitmentSnapshot.data();
+
+    // Update the applicants list: check if the applicant with the same ID already exists
+    const currentApplicants = recruitmentData.Applicants || [];
+    const applicantIndex = currentApplicants.findIndex(applicant => applicant.id === applicantData.id);
+
+
     if(applicantData.userUid){
       if(recruitmentData.status == "Private"){
         throw new Error('This recruitment is private, you cant apply');
@@ -368,14 +374,14 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
         throw new Error('You are not authorized to add applicants to this recruitment');
       }
-      if(recruitmentData.status == "Public"){
-        throw new Error('You need to cahnge recruitment toprivate  to add applicants by yourself');
+      if (applicantIndex === -1) {
+        if(recruitmentData.status == "Public"){
+          throw new Error('You need to cahnge recruitment to private  to add applicants by yourself');
+        }
       }
     }
     
-    // Update the applicants list: check if the applicant with the same ID already exists
-    const currentApplicants = recruitmentData.Applicants || [];
-    const applicantIndex = currentApplicants.findIndex(applicant => applicant.id === applicantData.id);
+
 
     // Convert cvFiles to an array if it's not already
     const cvFilesArray = Array.isArray(cvFiles) ? cvFiles : Array.from(cvFiles);
