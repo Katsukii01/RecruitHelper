@@ -137,11 +137,11 @@ const ManageApplicants = ({ id, refresh }) => {
 
   const totalPages = Math.ceil(totalApplicants / limit); // Calculate total pages
 
-  if(recruitmentId === undefined) return <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">No recruitment found</section>;
+  if(recruitmentId === undefined) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">No recruitment found</section>;
 
  if (loading) return <div className="relative w-full h-screen mx-auto flex justify-center items-center"><Loader /></div>;
 
-  if (!applicants.length) return <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
+  if (!applicants.length) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-4">Applicants</h1>
           {/* Add Applicant Button */}
           <div className="flex justify-end mb-4">
@@ -158,7 +158,7 @@ const ManageApplicants = ({ id, refresh }) => {
     </section>;
 
   return (
-    <section className=" overflow-auto relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
+    <section className=" overflow-auto relative w-full h-screen mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold text-white mb-4">Manage Applicants</h1>
 
       {/* Add Applicant Button */}
@@ -182,6 +182,7 @@ const ManageApplicants = ({ id, refresh }) => {
                 'Email',
                 'Phone',
                 'Education Level',
+                'Field of Study',
                 'Institution Name',
                 'Languages',
                 'Experience',
@@ -227,6 +228,11 @@ const ManageApplicants = ({ id, refresh }) => {
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
                     {applicant.educationLevel || <span className="text-gray-400">Not provided</span>}
+                  </div>
+                </td>
+                <td className="px-4 py-2 border border-gray-700">
+                  <div className="max-h-[120px] overflow-y-auto">
+                    {applicant.educationField || <span className="text-gray-400">Not provided</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">

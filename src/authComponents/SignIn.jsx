@@ -15,8 +15,8 @@ const SignIn = () => {
   const [resetEmail, setResetEmail] = useState(''); // E-mail do resetu hasła
   const location = useLocation();
   
-  const from = location.state?.from?.pathname || "/home"; 
-  const fragment = location.state?.from?.hash || "Home";  
+  const from = location.state?.from?.pathname || "/Home"; 
+  const fragment = location.state?.from?.hash || "";  
   
   const handleSubmit = async (e) => {
 
@@ -24,7 +24,6 @@ const SignIn = () => {
     try {
       await signIn(email, password); // Email/Password sign-in
       navigate(from + fragment, { replace: true });
-      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -37,7 +36,6 @@ const SignIn = () => {
     try {
       await googleSignIn(); // Google sign-in;
       navigate(from +'#'+ fragment, { replace: true });
-      window.location.reload();
     } catch (err) {
       setError(err.message);
     }finally {

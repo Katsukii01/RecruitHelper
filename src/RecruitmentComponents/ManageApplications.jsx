@@ -82,7 +82,7 @@ const ManageApplications = () => {
   const paginatedApplications = getPaginatedApplications(filteredApplications);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 w-full ">
+    <div className="w-full">
       {loading ? (
         <div className="flex justify-center items-center"><Loader /></div>
       ) : (
@@ -108,13 +108,13 @@ const ManageApplications = () => {
               </div>
           </div>
           {paginatedApplications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center mt-2 h-[650px]">
+            <div className="flex flex-col items-center justify-center mt-2 h-[655px]">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
                 No applications found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[650px] overflow-y-auto w-full px-4 py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[655px] overflow-y-auto w-full px-4 py-4 inner-shadow">
               {paginatedApplications.map((application) => (
                 <div
                   key={application.id}

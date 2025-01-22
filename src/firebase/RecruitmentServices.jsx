@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { a } from 'framer-motion/client';
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -694,3 +695,145 @@ export const getRecruitmentsByUserId = async (userId) => {
     throw error; // Propagate the error for handling in the caller
   }
 };
+
+
+// **10. get applicants ranking by score
+export const getApplicantsRanking = async (recruitmentId) => {
+  const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+  const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+  if (!recruitmentSnapshot.exists()) {
+    throw new Error('Recruitment not found');
+  }
+
+  const recruitmentData = recruitmentSnapshot.data();
+  const applicants = recruitmentData.Applicants || [];
+
+  const levelOrder = {
+    "A1 (Beginner)": 1,
+    "A2 (Elementary)": 2,
+    "B1 (Intermediate)": 3,
+    "B2 (Upper Intermediate)": 4,
+    "C1 (Advanced)": 5,
+    "C2 (Proficient)": 6,
+    "Technician": 1,
+    "Engineer": 2,
+    "Master": 3,
+    "Doctor": 4,
+    "Specialist": 5,
+    "Undergraduate": 1,
+    "Postgraduate": 2,
+    "Diploma": 1,
+    "Certificate": 1
+  };
+
+  const calculateScore = (applicant) => {
+    let totalScore = 0;
+
+    // Courses
+    const matchedCourses = applicant.courses.filter(course =>
+      recruitmentData.courses.includes(course)
+    ).length;
+    const coursesScore = (matchedCourses / recruitmentData.courses.length) * recruitmentData.weightOfCourses;
+    totalScore += coursesScore;
+  
+
+    // Skills
+    const matchedSkills = applicant.skills.filter(skill =>
+      recruitmentData.skills.includes(skill)
+    ).length;
+    const skillsScore = (matchedSkills / recruitmentData.skills.length) * recruitmentData.weightOfSkills;
+    totalScore += skillsScore;
+  
+
+    // Languages
+    const matchedLanguages = applicant.languages.filter(appLang => {
+      const reqLang = recruitmentData.languages.find(reqLang =>
+        reqLang.language === appLang.language
+      );
+
+      if (reqLang) {
+        const applicantLevel = levelOrder[appLang.level];
+        const requiredLevel = levelOrder[reqLang.level];
+
+        let languageScore = 0;
+        if (applicantLevel >= requiredLevel) {
+          languageScore = 1;  // Full score for matching or exceeding required level
+        } else {
+          languageScore = applicantLevel / requiredLevel;  // Proportional score for lower level
+        }
+
+        return true; // Language matched, whether the level is sufficient or not
+      }
+
+      return false;
+    }).length;
+
+    const languagesScore = (matchedLanguages / recruitmentData.languages.length) * recruitmentData.weightOfLanguages;
+    totalScore += languagesScore;
+
+    // Experience
+    const applicantExperience = parseFloat(applicant.experience || "0");
+    const requiredExperience = parseFloat(recruitmentData.experienceNeeded);
+
+    let experienceScore = 0;
+
+    if (applicantExperience >= requiredExperience) {
+      experienceScore = recruitmentData.weightOfExperience;
+    } else if (applicantExperience > 0) {
+      experienceScore = (applicantExperience / requiredExperience) * recruitmentData.weightOfExperience;
+    }
+
+    totalScore += experienceScore;
+
+
+
+    // Education Field & Level
+    const applicantEducationField = applicant.educationField;
+    const requiredEducationField = recruitmentData.educationField;
+
+    // First check if the education fields match
+    let educationScore = 0;
+    if (applicantEducationField === requiredEducationField) {
+      const applicantEducationLevel = applicant.educationLevel;
+      const requiredEducationLevel = recruitmentData.educationLevel;
+
+      const applicantEducationLevelValue = levelOrder[applicantEducationLevel];
+      const requiredEducationLevelValue = levelOrder[requiredEducationLevel];
+
+      if (applicantEducationLevelValue >= requiredEducationLevelValue) {
+        educationScore = 1; // Full score if education level is sufficient or higher
+      } else {
+        educationScore = applicantEducationLevelValue / requiredEducationLevelValue; // Proportional score if lower
+      }
+      educationScore *= recruitmentData.weightOfEducationLevel;
+    }
+
+    totalScore += educationScore;
+    
+    // Return the individual scores for each category along with the final score
+    return {
+      ...applicant,
+      score: parseFloat(totalScore).toFixed(4),
+      scores: {
+        courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(4)),
+        skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(4)),
+        languages: parseFloat(((languagesScore * 100) / recruitmentData.weightOfLanguages).toFixed(4)),
+        experience: parseFloat(((experienceScore * 100) / recruitmentData.weightOfExperience).toFixed(4)),
+        education: parseFloat(((educationScore * 100) / recruitmentData.weightOfEducationLevel).toFixed(4)),
+      }
+    };
+    
+  };
+
+  // Map applicants and calculate scores
+  const applicantsWithScores = applicants.map(applicant => calculateScore(applicant));
+
+  // Sort applicants by score in descending order
+  const rankedApplicants = applicantsWithScores.sort((a, b) => b.score - a.score);
+
+  return rankedApplicants;
+};
+
+
+  

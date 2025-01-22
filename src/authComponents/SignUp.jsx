@@ -50,8 +50,8 @@ const SignUp = () => {
       alert('Sign up successful!');
       
       // Force reload of the page to ensure you are on Home with the correct state
-      navigate('/home#Home');
-      window.location.reload(); // This line will force the page to reload after navigation.
+      navigate('/Home');
+     
     } catch (err) {
       // Handle different errors based on Firebase's error codes
       if (err.code === 'auth/email-already-in-use') {
@@ -73,8 +73,7 @@ const SignUp = () => {
   const handleGoogleSignUp = async () => {
     try {
       await googleSignIn(); // Google sign-up
-      navigate('/home#Home');
-      window.location.reload();
+      navigate('/Home');
     } catch (err) {
       setError(err.message);
     }finally {

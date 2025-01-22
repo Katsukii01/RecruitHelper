@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
   // Sprawdź, czy użytkownik jest zalogowany
   if (!user) {
     // Zachowaj fragment URL, jeśli istnieje, w stanie
-    return <Navigate to="/signin#SignIn" replace state={{ from: location }} />;
+    return <Navigate to="/SignIn" replace state={{ from: location }} />;
   }
 
   // Jeśli użytkownik jest zalogowany, renderuj dzieci

@@ -431,7 +431,7 @@ const handleInputBlur = (e) => {
       // Nawigacja do kolejnego kroku
       if(userApply){
         setTimeout(() => {
-              navigate(`/Dashboard#Dashboard`);
+              navigate(`/Dashboard`);
           }, 1000);
       }else{
         setTimeout(() => {

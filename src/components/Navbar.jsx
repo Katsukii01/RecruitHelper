@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useContext } from 'react';
-import { Link , useNavigate } from 'react-router-dom';
+import { Link , useNavigate, useLocation } from 'react-router-dom';
 import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
@@ -9,8 +10,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
-  const allowedHashes = NavLinks.map(link => link.id).concat(['SignIn', 'SignUp', 'Home', 'Dashboard']);
-
+  const allowedHashes = NavLinks.map(link => link.id);
+  const location = useLocation();
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
 
 
@@ -33,54 +34,45 @@ const Navbar = () => {
       underline.style.left = '0px';
     }
   };
+  
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.slice(1); 
-      
-      if (hash) {
-        if(hash === "Dashboard" || hash === "Home" ||  hash === "SignIn" || hash === "SignUp"){
-          setActive(hash);
-          setUnderlineToNone();
+    const handleLocationChange = () => {
      
-        }else{ console.log("not allowed");
-          if (allowedHashes.includes(hash)) {
-            setActive(hash);
-            setUnderline(hash);
-            }else{
-              
-                setActive('Dashboard');
-                setUnderlineToNone();
-            }
+      const hash = window.location.hash.slice(1); // Get hash without the '#' character
+  
+      if (hash) {
+        if (allowedHashes.includes(hash)) {
+          setActive(hash);
+          setUnderline(hash);
+        } else {
+          setActive('Dashboard');
+          setUnderlineToNone();
         }
-
-        
-        
+  
         const targetElement = document.getElementById(hash);
         if (targetElement) {
           targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-
       } else {
-        setActive('Dashboard');
-        setUnderlineToNone();
+        const pathname = location.pathname;
+        const validPaths = ['/SignIn', '/SignUp', '/Home', '/Dashboard','/'];
+    
+        if (!validPaths.includes(pathname)) {
+          setActive('Dashboard');
+          setUnderlineToNone();
+        }else{
+          console.log(pathname);
+          setActive(pathname.slice(1));
+          setUnderlineToNone();
+        }
       }
     };
+  
+    handleLocationChange();
+  }, [location]);
+  
 
-    handleHashChange();
-   
-    window.addEventListener('hashchange', handleHashChange);
-  
-  
-    if (user) {
-      handleHashChange();
-    }
-  
- 
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [user]); 
   
   
   
@@ -104,19 +96,19 @@ const Navbar = () => {
     if (link === "SignIn") {
       setActive("SignIn");
       setUnderlineToNone();
-      navigate("/signin");
+      navigate("/SignIn");
     } else if (link === "SignUp") {
       setActive("SignUp");
       setUnderlineToNone();
-      navigate("/signup");
+      navigate("/SignUp");
     }else if (link === "Home") {
       setActive("Home");
       setUnderlineToNone();
-      navigate("/home#Home");
+      navigate("/Home");
     }else if (link === "Dashboard") {
       setActive("Dashboard");
       setUnderlineToNone();
-      navigate("/Dashboard#Dashboard");
+      navigate("/Dashboard");
     }
     else if (link === "Logout") {
       setUnderlineToNone();
@@ -133,7 +125,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate("/signin#SignIn");
+    navigate("/SignIn");
   };
 
   return (
@@ -178,7 +170,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
-                    <a className="block w-full h-full" href={`#${"SignIn"}`}>
+                    <a className="block w-full h-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
                     </svg>
@@ -191,7 +183,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
-                    <a className="block w-full h-full" href={`#${"SignUp"}`}>
+                    <a className="block w-full h-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
@@ -207,7 +199,7 @@ const Navbar = () => {
                       }`}
                       onClick={() => handleActive("Home")}
                     >
-                      <a className="flex items-center justify-center w-full h-full" href={`#${"Home"}`}>
+                      <a className="flex items-center justify-center w-full h-full">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -232,7 +224,7 @@ const Navbar = () => {
                       }`}
                       onClick={() => handleActive("Dashboard")}
                     >
-                      <a className="flex items-center justify-center w-full h-full" href={`#${"Dashboard"}`}>
+                      <a className="flex items-center justify-center w-full h-full" >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -330,7 +322,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("SignIn")}
                   >
-                    <a className="flex items-center justify-center w-full h-full" href={`#${"SignIn"}`}>
+                    <a className="flex items-center justify-center w-full h-full" >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
                     </svg>
@@ -343,7 +335,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("SignUp")}
                   >
-                       <a className="flex items-center justify-center w-full h-full" href={`#${"SignUp"}`}>
+                       <a className="flex items-center justify-center w-full h-full" >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
@@ -360,7 +352,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("Home")}
                   >
-                    <a href={`#${"Home"}`} className="flex items-center justify-center w-full h-full">
+                    <a  className="flex items-center justify-center w-full h-full">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -385,7 +377,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("Dashboard")}
                   >
-                    <a href={`#${"Dashboard"}`} className="flex items-center justify-center w-full h-full">
+                    <a  className="flex items-center justify-center w-full h-full">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -410,7 +402,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => handleActive("Logout")}
                   >
-                    <a href={`#${"Logout"}`} className="flex items-center justify-center w-full h-full">
+                    <a  className="flex items-center justify-center w-full h-full">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

@@ -86,7 +86,7 @@ const ManageRecruitments = () => {
     return skillColors[Math.floor(Math.random() * skillColors.length)];
   };
   return (
-    <div className="px-4 sm:px-6 lg:px-8 w-full">
+    <div className=" w-full">
       {loading ? (
         <div className="t flex justify-center items-center"><Loader /></div>
       ) : (
@@ -112,13 +112,13 @@ const ManageRecruitments = () => {
             </div>
           </div>
           {paginatedRecruitments.length === 0 ? (
-            <div className=" flex flex-col items-center justify-center h-[650px] ">
+            <div className=" flex flex-col items-center justify-center h-[655px] ">
               <p className=" text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[650px] overflow-y-auto w-full px-4 py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[655px] overflow-y-auto w-full px-6 py-4 inner-shadow">
               {paginatedRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
