@@ -332,7 +332,8 @@ const handleInputBlur = (e) => {
     const updatedApplicants = [...applicants];
     updatedApplicants.splice(currentIndex, 1); // Usuwanie obecnego aplikanta
     setApplicants(updatedApplicants);
-  
+    setErrors({}); // Wyczyszczenie błędów
+
     if (updatedApplicants.length > 0) {
       // Jeśli są jeszcze aplikanci, przechodzimy do poprzedniego aplikanta
       const previousApplicant = updatedApplicants[Math.max(0, currentIndex - 1)];
@@ -364,7 +365,7 @@ const handleInputBlur = (e) => {
     }
   };
   
-  
+
   const handleFinishAdding = async () => {
     const updatedApplicants = saveCurrentApplicant(); // Pobierz zaktualizowaną listę aplikantów
 

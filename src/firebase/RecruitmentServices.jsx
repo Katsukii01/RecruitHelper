@@ -815,6 +815,7 @@ export const getApplicantsRanking = async (recruitmentId) => {
     return {
       ...applicant,
       score: parseFloat(totalScore).toFixed(4),
+      stage: applicant.stage || 'To be checked',
       scores: {
         courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(4)),
         skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(4)),
@@ -835,5 +836,37 @@ export const getApplicantsRanking = async (recruitmentId) => {
   return rankedApplicants;
 };
 
+// 11.**change applicant stage
+export const changeApplicantStage = async (recruitmentId, applicantId, newStage) => {
+  try {
+    await checkAuth();
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to change applicant stage');
+    }
+
+    const updatedApplicants = recruitmentData.Applicants.map((applicant) => {
+      if (applicant.id === applicantId) {
+        return { ...applicant, stage: newStage };
+      }
+      return applicant;
+    });
+
+    await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
+
+    console.log('Applicant stage updated:', applicantId);
+    return { message: 'Applicant stage updated successfully' };
+  } catch (error) {
+    console.error('Error changing applicant stage:', error.message);
+    throw error;
+  }
+};
   

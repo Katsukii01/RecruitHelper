@@ -7,5 +7,6 @@ import YourOwnScore from "./YourOwnScore";
 import FinalRanking from "./FinalRanking";
 import FinishRecruitment from "./FinishRecruitment";
 import DeleteRecruitment from "./DeleteRecruitment";
+import Pagination from "./Pagination";
 
-export { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, YourOwnScore, FinalRanking, FinishRecruitment, DeleteRecruitment };
+export { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, YourOwnScore, FinalRanking, FinishRecruitment, DeleteRecruitment, Pagination };

@@ -15,8 +15,9 @@ module.exports = {
       },
       boxShadow: {
         card: "0px 35px 120px -15px #87CEEB", // Lekki, niebieski cień
-        customDefault: "0 15px 30px rgba(0, 0, 0, 0.5), 0 5px 10px rgba(0, 0, 0, 0.2)",
+        customDefault: "0 20px 40px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.3)",
         customHover: "0 25px 50px rgba(0, 0, 0, 0.7), 0 10px 20px rgba(0, 0, 0, 0.3)",
+        inset: "inset 0 -1px 3px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.8)",
       },
       screens: {
         xs: "450px",

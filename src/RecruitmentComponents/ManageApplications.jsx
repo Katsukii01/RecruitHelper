@@ -151,9 +151,9 @@ const ManageApplications = () => {
                     <p className="text-sm text-white mt-1 font-semibold m-4">Your current stage: 
                     <p className='p-1'/>
                     <span 
-                        className={`font-normal px-2 py-0.5  rounded-full m-2 ${application.recruitmentData.stage === 'To be checked' ? 'bg-fuchsia-500 text-white' : 'bg-gray-500 text-white'}`}
+                        className={`font-normal px-2 py-0.5  rounded-full m-2 ${application.applicantData.stage === 'To be checked' ? 'bg-fuchsia-500 text-white' : 'bg-gray-500 text-white'}`}
                       >
-                        {application.recruitmentData.stage || 'To be checked'}
+                        {application.applicantData.stage || 'To be checked'}
                         </span>
                     </p>
                     
