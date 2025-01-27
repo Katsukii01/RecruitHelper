@@ -569,8 +569,8 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
                <Loader/>         
               {/* Number of Applicants */}
               <p className="text-white text-lg font-bold mt-2">
-                <span className="text-white">{NumberOfSavedApplicants}</span>/
-                <span className="text-sky">{NumberOfApplicantsToSave}</span>
+                <span className="text-sky">{NumberOfSavedApplicants}</span>/
+                <span className=" text-white">{NumberOfApplicantsToSave}</span>
               </p>
             </div>
 

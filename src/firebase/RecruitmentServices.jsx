@@ -609,7 +609,7 @@ export const getApplicants = async (recruitmentId, page, limit) => {
 
         const cvPreviews = await Promise.all(cvPreviewPromises);
         const coverLetterPreviews = await Promise.all(coverLetterPreviewPromises);
-
+      
         return {
           ...applicant,
           cvPreviews,
@@ -734,16 +734,32 @@ export const getApplicantsRanking = async (recruitmentId) => {
     const matchedCourses = applicant.courses.filter(course =>
       recruitmentData.courses.includes(course)
     ).length;
-    const coursesScore = (matchedCourses / recruitmentData.courses.length) * recruitmentData.weightOfCourses;
+
+    const totalRecruitmentCourses = recruitmentData.courses?.length || 0;
+    const weightOfCourses = recruitmentData.weightOfCourses || 0;
+
+    const coursesScore = totalRecruitmentCourses > 0 
+      ? (matchedCourses / totalRecruitmentCourses) * weightOfCourses 
+      : 0;
+
     totalScore += coursesScore;
+
   
 
     // Skills
     const matchedSkills = applicant.skills.filter(skill =>
-      recruitmentData.skills.includes(skill)
+      recruitmentData.skills?.includes(skill)
     ).length;
-    const skillsScore = (matchedSkills / recruitmentData.skills.length) * recruitmentData.weightOfSkills;
+
+    const totalRecruitmentSkills = recruitmentData.skills?.length || 0;
+    const weightOfSkills = recruitmentData.weightOfSkills || 0;
+
+    const skillsScore = totalRecruitmentSkills > 0 
+      ? (matchedSkills / totalRecruitmentSkills) * weightOfSkills 
+      : 0;
+     console.log(skillsScore);
     totalScore += skillsScore;
+
   
 
     // Languages
@@ -769,59 +785,70 @@ export const getApplicantsRanking = async (recruitmentId) => {
       return false;
     }).length;
 
-    const languagesScore = (matchedLanguages / recruitmentData.languages.length) * recruitmentData.weightOfLanguages;
+    const totalRecruitmentLanguages = recruitmentData.languages?.length || 0;
+    const weightOfLanguages = recruitmentData.weightOfLanguages || 0;
+
+    const languagesScore = totalRecruitmentLanguages > 0 
+      ? (matchedLanguages / totalRecruitmentLanguages) * weightOfLanguages 
+      : 0;
+
     totalScore += languagesScore;
+
+
 
     // Experience
     const applicantExperience = parseFloat(applicant.experience || "0");
-    const requiredExperience = parseFloat(recruitmentData.experienceNeeded);
+    const requiredExperience = parseFloat(recruitmentData.experienceNeeded || "0");
+    const weightOfExperience = parseFloat(recruitmentData.weightOfExperience || "0");
 
     let experienceScore = 0;
 
-    if (applicantExperience >= requiredExperience) {
-      experienceScore = recruitmentData.weightOfExperience;
-    } else if (applicantExperience > 0) {
-      experienceScore = (applicantExperience / requiredExperience) * recruitmentData.weightOfExperience;
+    if (requiredExperience > 0) {
+      if (applicantExperience >= requiredExperience) {
+        experienceScore = weightOfExperience;
+      } else if (applicantExperience > 0) {
+        experienceScore = (applicantExperience / requiredExperience) * weightOfExperience;
+      }
     }
 
     totalScore += experienceScore;
 
+  // Education Field & Level
+  const applicantEducationField = applicant.educationField;
+  const requiredEducationField = recruitmentData.educationField;
 
+  let educationScore = 0;
 
-    // Education Field & Level
-    const applicantEducationField = applicant.educationField;
-    const requiredEducationField = recruitmentData.educationField;
+  // First, check if the education fields match
+  if (applicantEducationField === requiredEducationField) {
+    const applicantEducationLevel = applicant.educationLevel;
+    const requiredEducationLevel = recruitmentData.educationLevel;
 
-    // First check if the education fields match
-    let educationScore = 0;
-    if (applicantEducationField === requiredEducationField) {
-      const applicantEducationLevel = applicant.educationLevel;
-      const requiredEducationLevel = recruitmentData.educationLevel;
+    const applicantEducationLevelValue = levelOrder[applicantEducationLevel] || 0; // Default to 0 if level is not found
+    const requiredEducationLevelValue = levelOrder[requiredEducationLevel] || 0; // Default to 0 if level is not found
 
-      const applicantEducationLevelValue = levelOrder[applicantEducationLevel];
-      const requiredEducationLevelValue = levelOrder[requiredEducationLevel];
-
-      if (applicantEducationLevelValue >= requiredEducationLevelValue) {
-        educationScore = 1; // Full score if education level is sufficient or higher
-      } else {
-        educationScore = applicantEducationLevelValue / requiredEducationLevelValue; // Proportional score if lower
-      }
-      educationScore *= recruitmentData.weightOfEducationLevel;
+    if (applicantEducationLevelValue >= requiredEducationLevelValue) {
+      educationScore = 1; // Full score if education level is sufficient or higher
+    } else if (requiredEducationLevelValue > 0) {
+      educationScore = applicantEducationLevelValue / requiredEducationLevelValue; // Proportional score if lower
     }
 
-    totalScore += educationScore;
+    educationScore *= recruitmentData.weightOfEducationLevel || 0; // Ensure weight is a valid number
+  }
+
+  totalScore += educationScore;
     
     // Return the individual scores for each category along with the final score
     return {
       ...applicant,
-      score: parseFloat(totalScore).toFixed(4),
+      score: parseFloat(totalScore).toFixed(2),
       stage: applicant.stage || 'To be checked',
       scores: {
-        courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(4)),
-        skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(4)),
-        languages: parseFloat(((languagesScore * 100) / recruitmentData.weightOfLanguages).toFixed(4)),
-        experience: parseFloat(((experienceScore * 100) / recruitmentData.weightOfExperience).toFixed(4)),
-        education: parseFloat(((educationScore * 100) / recruitmentData.weightOfEducationLevel).toFixed(4)),
+        courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(2)),
+        skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(2)),
+        languages: parseFloat(((languagesScore * 100) / recruitmentData.weightOfLanguages).toFixed(2)),
+        experience: parseFloat(((experienceScore * 100) / recruitmentData.weightOfExperience).toFixed(2)),
+        education: parseFloat(((educationScore * 100) / recruitmentData.weightOfEducationLevel).toFixed(2)),
       }
     };
     

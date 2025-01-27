@@ -4,7 +4,8 @@ import { getApplicantsRanking, getRecruitmentById, changeApplicantStage } from '
 import { Loader } from '../../components';
 import Pagination from './Pagination';
 
-const ApplicantsOfferRanking = ({ id }) => {
+
+const ApplicantsOfferRanking = ({ id, refresh }) => {
   const [recruitment, setRecruitment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [rankedApplicants, setRankedApplicants] = useState([]);
@@ -26,24 +27,24 @@ const ApplicantsOfferRanking = ({ id }) => {
     fetchRecruitmentName();
   }, [id]);
 
-  useEffect(() => {
-    const fetchApplicantsRanking = async () => {
-      if (id) {
-        setLoading(true);
-        try {
-          const data = await getApplicantsRanking(id);
-          setTotalPages(Math.ceil(data.length / itemsPerPage));
-          setRankedApplicants(data);
-        } catch (error) {
-          console.error('Error fetching applicants ranking:', error);
-        } finally {
-          setLoading(false);
-        }
+  const fetchApplicantsRanking = async () => {
+    if (id) {
+      setLoading(true);
+      try {
+        const data = await getApplicantsRanking(id);
+        setTotalPages(Math.ceil(data.length / itemsPerPage));
+        setRankedApplicants(data); // Ensure the latest data is set
+      } catch (error) {
+        console.error('Error fetching applicants ranking:', error);
+      } finally {
+        setLoading(false);
       }
-    };
-
+    }
+  };
+  
+  useEffect(() => {
     fetchApplicantsRanking();
-  }, [id]);
+  }, [id, refresh]);
 
 
   const paginate = (applicants, pageNumber, itemsPerPage) => {
@@ -55,10 +56,16 @@ const ApplicantsOfferRanking = ({ id }) => {
 
   
   if(!recruitment) return  <section className="relative w-full h-screen mx-auto p-4 bg-glass card">No recruitment found</section>;
-  if (loading) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card"><Loader /></section>;
-
+  if (loading) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card "><Loader /></section>;
 
   const currentApplicants = paginate(rankedApplicants, currentPage, itemsPerPage);
+
+  if (!currentApplicants.length) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card">
+     <h1 className="text-2xl font-bold text-white mb-4">Applicants Offer Ranking</h1>
+          <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+           No applicants found.
+        </div>
+  </section>;
 
   const handleStageChange = async (applicantId, newStage) => {
     // Znajdź aplikanta
@@ -108,15 +115,16 @@ const ApplicantsOfferRanking = ({ id }) => {
     return 'border-green-200'; // Green
   };
 
+
   return (
-    <section className="relative w-full h-screen mx-auto p-4 bg-glass card">
+    <section className=" relative w-full h-auto mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold text-white mb-4">Applicants Offer Ranking</h1>
-      
-      {currentApplicants.length > 0 ? (
-      <div className='overflow-auto'>
+    
+      <div >
+      <div className='overflow-auto h-screen'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
           {currentApplicants.map((applicant, index) => (
-            <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg shadow-md w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.score)} overflow-auto`}>
+            <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.score)} overflow-auto `}>
               <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                   <p className="text-sm text-gray-500">{applicant.email}</p>
               </h1>
@@ -186,35 +194,39 @@ const ApplicantsOfferRanking = ({ id }) => {
               <hr  className='w-full border-t-2 border-gray-300' />
               <div className="mb-2">
                 
-                <div className="flex items-center justify-center gap-6">
-                  {[
-                    { stage: "Checked", color: "green", iconPath: "m4.5 12.75 6 6 9-13.5" },
-                    { stage: "To be checked", color: "yellow", iconPath: "M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" },
-                    { stage: "Rejected", color: "red", iconPath: "M6 18 18 6M6 6l12 12" },
-                  ].map(({ stage, color, iconPath }) => (
-                    <button
-                      key={stage}
-                      onClick={() => handleStageChange(applicant.id, stage)}
-                      className={`${
-                        applicant.stage === stage ? `bg-${color}-500` : "bg-[#a8a8a8]"
-                      } flex items-center justify-center w-12 h-12 rounded-full text-white text-4xl hover:bg-${color}-600 transition border-2 border-white`}
+              <div className="flex items-center justify-center gap-6">
+                {[
+                  { stage: "Checked", color: "green", iconPath: "m4.5 12.75 6 6 9-13.5" },
+                  { stage: "To be checked", color: "yellow", iconPath: "M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" },
+                  { stage: "Rejected", color: "red", iconPath: "M6 18 18 6M6 6l12 12" },
+                ].map(({ stage, color, iconPath }) => (
+                  <button
+                    key={stage}
+                    onClick={() => handleStageChange(applicant.id, stage)}
+                    className={`flex items-center justify-center w-12 h-12 rounded-full text-white text-4xl transition border-2 border-white ${
+                      applicant.stage === stage
+                        ? `bg-${color}-500 hover:bg-${color}-600`
+                        : `bg-[#a8a8a8] hover:bg-${color}-600`
+                    }`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-6"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
-                      </svg>
-                    </button>
-                  ))}
-                </div>
+                      <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
+                    </svg>
+                  </button>
+                ))}
+              </div>
               </div>
             </div>
           ))}
+        </div>
+
         </div>
         <Pagination
                       currentPage={currentPage}
@@ -222,10 +234,7 @@ const ApplicantsOfferRanking = ({ id }) => {
                       onPageChange={handlePageChange}
                     />
         </div>
-      ) : (
-        <p>No applicants found.</p>
-      )}
-    </section>
+     </section>
   );
 };
 

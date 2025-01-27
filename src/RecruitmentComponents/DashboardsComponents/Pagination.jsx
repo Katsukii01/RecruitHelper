@@ -8,7 +8,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4 mt-6">
+    <div className="flex items-center justify-center space-x-2 mt-6">
       {/* First Page Button */}
       <button
         onClick={() => handlePageChange(1)}

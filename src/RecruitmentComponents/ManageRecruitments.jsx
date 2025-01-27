@@ -78,6 +78,15 @@ const ManageRecruitments = () => {
     'bg-violet-500',  
   ];
 
+  const stageColors = {
+    'Collecting applicants': 'bg-gray-500',
+    'Checking applications': 'bg-blue-500 ',
+    'Interviewing applicants': 'bg-yellow-500 ',
+    'Offering jobs': 'bg-purple-500 ',
+    'Hiring employees': 'bg-green-500 ',
+    'Paused': 'bg-red-500',
+  }
+  
   const goToRecruitmentDashboard = (id) => {
     navigate(`/RecruitmentDashboard`, { state: { id } });
   };
@@ -147,6 +156,15 @@ const ManageRecruitments = () => {
                     {recruitment.status}
                   </span>
                   </p>
+
+                  <p className="text-sm text-white mt-1 font-semibold m-4 flex flex-wrap">
+                  Stage:
+                  <span 
+                    className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${stageColors[recruitment.stage] || stageColors['Collecting applicants']}`} // Ensures long words break and wrap to the next line
+                  >
+                    {recruitment.stage || 'Collecting applicants'}
+                  </span>
+                </p>
 
 
                   <p className="text-sm text-white mt-1 font-semibold m-4  ">Job Title:
@@ -242,10 +260,9 @@ const ManageRecruitments = () => {
                           Manage
                   </button>
                 </div>
+                
               ))}
-            </div>
-          )}
-                      <div className="flex justify-center items-center mt-4 pb-4 h-20">
+                                    <div className="flex justify-center items-center mt-4 pb-4 h-20">
                         {isLoading ? (
                           <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
                         ) : (
@@ -261,6 +278,8 @@ const ManageRecruitments = () => {
                           )
                         )}
                        </div>
+            </div>
+          )}
         </>
       )}
     </div>

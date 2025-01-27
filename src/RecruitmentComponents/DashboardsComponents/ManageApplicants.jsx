@@ -5,7 +5,9 @@ import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
 import { Loader } from '../../components';
 
-const ManageApplicants = ({ id, refresh }) => {
+const ManageApplicants = ({ id, refresh, onRefresh }) => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const [recruitmentId, setRecruitmentId] = useState(id);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,12 +15,11 @@ const ManageApplicants = ({ id, refresh }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [currentPage, setCurrentPage] = useState(state?.currentPage || 1); // Track the current page
   const [totalApplicants, setTotalApplicants] = useState(0); // Total number of applicants
   const [recruitmentStatus, setRecruitmentStatus] = useState("");
-  const [limit] = useState(4); // Set a fixed limit per page
-  const navigate = useNavigate();
-  const { state } = useLocation();
+
+
 
   // Function to fetch applicants data
   const fetchApplicants = async () => {
@@ -38,8 +39,31 @@ const ManageApplicants = ({ id, refresh }) => {
     }
   };
   
+  const calculateLimit = () => {
+    const screenHeight = window.innerHeight;
+    const reservedHeight = 150; // Adjust for header, footer, etc.
+    const availableHeight = screenHeight - reservedHeight;
+    const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
+    return rows > 0 ? rows : 1; // Ensure at least 1 row is displayed
+  };
 
+  const [limit, setLimit] = useState(calculateLimit()) 
   
+    // Update limit dynamically on screen resize
+    useEffect(() => {
+      const handleResize = () => {
+        const dynamicLimit = calculateLimit();
+        setLimit(dynamicLimit);
+      };
+  
+      handleResize(); // Calculate limit initially
+      window.addEventListener('resize', handleResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+
   useEffect(() => {
     if (state?.currentPage) {
       setCurrentPage(state.currentPage); // Set currentPage from state if passed
@@ -51,9 +75,9 @@ const ManageApplicants = ({ id, refresh }) => {
     }
 
     fetchApplicants(); // Initial fetch of applicants
-  }, [id, currentPage]);
+  }, [id, currentPage, limit]);
 
-    // Add another useEffect to trigger a re-fetch when `refresh` prop changes
+  
     useEffect(() => {
       fetchApplicants(); // Re-fetch applicants whenever `refresh` changes
     }, [refresh]);
@@ -107,6 +131,7 @@ const ManageApplicants = ({ id, refresh }) => {
 
         setShowConfirmDelete(false);
         fetchApplicants(); // Re-fetch applicants after deletion
+        onRefresh();
       }
     } catch (error) {
       console.error('Error deleting applicant:', error);
@@ -158,19 +183,21 @@ const ManageApplicants = ({ id, refresh }) => {
     </section>;
 
   return (
-    <section className=" overflow-auto relative w-full h-screen mx-auto p-4 bg-glass card ">
-      <h1 className="text-2xl font-bold text-white mb-4">Manage Applicants</h1>
+    <section className="h-auto  relative w-full mx-auto p-4 bg-glass card ">
+      <div>
+        <h1 className="text-2xl font-bold text-white">Manage Applicants</h1>
 
-      {/* Add Applicant Button */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={handleManualApplicants}
-          className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
-        >
-          Add Applicant
-        </button>
+        {/* Add Applicant Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleManualApplicants}
+            className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
+          >
+            Add Applicant
+          </button>
+        </div>
       </div>
-
+      <div className="h-screen overflow-auto">
       {/* Applicants Table */}
       <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-4">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white ">
@@ -361,11 +388,13 @@ const ManageApplicants = ({ id, refresh }) => {
         </table>
 
       </div>
+      </div>
       <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
+        
       {/* Confirm Delete Modal */}
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">

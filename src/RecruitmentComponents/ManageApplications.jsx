@@ -81,6 +81,25 @@ const ManageApplications = () => {
   const filteredApplications = getFilteredApplications();
   const paginatedApplications = getPaginatedApplications(filteredApplications);
 
+  const statusColors = {
+    'To be checked': 'bg-gray-500',
+    'Approved': 'bg-green-500 ',
+    'Invited for interview': 'bg-yellow-500 ',
+    'Rejected': 'bg-red-500 ',
+    'Checked': 'bg-blue-500 ',  // Możesz dodać więcej stanów w przyszłości
+  };
+  
+  const stageColors = {
+    'Collecting applicants': 'bg-gray-500',
+    'Checking applications': 'bg-blue-500 ',
+    'Interviewing applicants': 'bg-yellow-500 ',
+    'Offering jobs': 'bg-purple-500 ',
+    'Hiring employees': 'bg-green-500 ',
+    'Paused': 'bg-red-500',
+  }
+  
+
+
   return (
     <div className="w-full">
       {loading ? (
@@ -118,7 +137,7 @@ const ManageApplications = () => {
               {paginatedApplications.map((application) => (
                 <div
                   key={application.id}
-                  className="h-[350px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                  className="h-[310px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                  
                 > 
@@ -126,7 +145,7 @@ const ManageApplications = () => {
                     {application.recruitmentData.name}
                   </h3>
 
-                  <div className="h-[226.2px] overflow-auto">
+                  <div className="h-[186.2px] overflow-auto">
                     <p className="text-sm text-white mt-1 font-semibold m-4">
                       Status:
                       <span 
@@ -134,27 +153,27 @@ const ManageApplications = () => {
                       >
                         {application.recruitmentData.status}
                       </span>
-                    </p>
-                    <p className="text-sm text-white mt-1 font-semibold m-4">
+                    </p> 
+                    <p className="text-sm text-white mt-1 font-semibold m-4 flex flex-wrap">
                       Stage:
-                      <p className='p-1'/>
+      
                       <span 
-                        className={`font-normal px-2 py-0.5 rounded-full  ${application.recruitmentData.stage === 'Checking applications' ? 'bg-pink-500 text-white' : 'bg-orange-500 text-white'}`}
-                      >
-                        {application.recruitmentData.stage || 'Collecting applicants'}
-                      </span>
+                      className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${stageColors[application.recruitmentData.stage] || stageColors['Collecting applicants']}`}
+                    >
+                      {application.recruitmentData.stage || 'Collecting applicants'}
+                    </span>
                     </p>
                     <p className="text-sm text-white mt-1 font-semibold m-4">Job Title: 
                       <span className='pl-1 text-teal-400 font-normal'>{application.recruitmentData.jobTittle}</span>
                     </p>
                     <hr className="border-gray-300 border-1 m-4" />
-                    <p className="text-sm text-white mt-1 font-semibold m-4">Your current stage: 
-                    <p className='p-1'/>
-                    <span 
-                        className={`font-normal px-2 py-0.5  rounded-full m-2 ${application.applicantData.stage === 'To be checked' ? 'bg-fuchsia-500 text-white' : 'bg-gray-500 text-white'}`}
+                    <p className="text-sm text-white mt-1 font-semibold m-4 flex-wrap flex">Your current stage: 
+  
+                      <span 
+                        className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${statusColors[application.applicantData.stage] || statusColors['To be checked']}`}
                       >
                         {application.applicantData.stage || 'To be checked'}
-                        </span>
+                      </span>
                     </p>
                     
                   </div>
@@ -166,9 +185,7 @@ const ManageApplications = () => {
                   </button>
                 </div>
               ))}
-            </div>  
-          )}
-                      <div className="flex justify-center items-center mt-4 pb-4 h-20">
+                                    <div className="flex justify-center items-center mt-4 pb-4 h-20">
                         {isLoading ? (
                           <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
                         ) : (
@@ -184,6 +201,9 @@ const ManageApplications = () => {
                           )
                         )}
                        </div>
+            </div>  
+          )}
+
         </>
       )}
     </div>

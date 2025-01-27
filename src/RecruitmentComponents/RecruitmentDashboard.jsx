@@ -39,8 +39,8 @@ const RecruitmentDashboard = () => {
       <div className="w-full pt-12 overflow-y-auto pl-28 md:pl-96 pr-2 md:pr-20">
         <div className="flex flex-col items-start space-y-6">
           <RecruitmentEdit id={id} onRefresh={handleRefresh} /> {/* Trigger refresh */}
-          <ManageApplicants id={id} refresh={refresh} /> {/* Pass the refresh trigger */}
-          <ApplicantsOfferRanking id={id} />
+          <ManageApplicants id={id} refresh={refresh} onRefresh={handleRefresh}/> {/* Pass the refresh trigger */}
+          <ApplicantsOfferRanking id={id} refresh={refresh}/>
           <Meetings id={id} />
           <YourOwnScore id={id} />
           <FinalRanking id={id} />

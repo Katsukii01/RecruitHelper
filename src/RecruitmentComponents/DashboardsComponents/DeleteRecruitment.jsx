@@ -47,12 +47,13 @@ const DeleteRecruitment = ({ id }) => {
     try {
       await deleteRecruitment(id);
       setShowCustomAlert(false); // Ukryj customowy alert
-      navigate('/Home');
+      navigate('/Dashboard');
     } catch (err) {
       setError(err.message || 'An error occurred while deleting the recruitment.');
     } finally {
       setLoading(false);
       setShowModal(false);
+      alert ('Recruitment deleted successfully!');
     }
   };
 
