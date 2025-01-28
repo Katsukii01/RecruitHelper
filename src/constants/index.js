@@ -14,6 +14,10 @@ export const NavLinks = [
       title: "Recruitments",
     },
     {
+      id: "Opinions",
+      title: "Opinions",
+    },
+    {
       id: "Contact",
       title: "Contact",
     },
@@ -22,24 +26,40 @@ export const NavLinks = [
 
   export const RecruitmentDashboardLinks = [
     {
-      id: "RecruitmentEdit",
-      title: "Edit Recruitment",
-    },
-    {
-      id: "ManageApplicants",
-      title: "Manage Applicants",
+      id: "Overview",
+      title: "Overview",
     },
     {
       id: "ApplicantsOfferRanking",
-      title: "Applicants Offer Ranking",
+      title: "Cv Ranking",
     },
     {
       id: "Meetings",
       title: "Meetings",
     },
     {
-      id: "YourOwnScore",
-      title: "Your Own Score",
+      id: "MeetingsPoints",
+      title: "Meetings Points",
+    },
+    {
+      id: "Assessments",
+      title: "Assessments",
+    },
+    {
+      id: "AssessmentsPoints",
+      title: "Assessments Points",
+    },
+    {
+      id: "CoverLettersAnalyses",
+      title: "Cover Letters analyses",
+    },
+    {
+      id: "CoverLettersPoints",
+      title: "Cover Letters Points",
+    },
+    {
+      id: "AdnationalPoints",
+      title: "Adnational Points",
     },
     {
       id: "FinalRanking",
@@ -48,6 +68,14 @@ export const NavLinks = [
     {
       id: "FinishRecruitment",
       title: "Finish Recruitment",
+    },    
+    {
+      id: "ManageApplicants",
+      title: "Manage Applicants",
+    },
+    {
+      id: "RecruitmentEdit",
+      title: "Edit Recruitment",
     },
     {
       id: "DeleteRecruitment",

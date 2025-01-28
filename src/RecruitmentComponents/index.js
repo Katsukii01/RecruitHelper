@@ -8,6 +8,8 @@ import PublicRecruitments from './PublicRecruitments';
 import ManageApplications from './ManageApplications';
 import Calendar from './Calendar';
 import RecruitmentList from './RecruitmentsList';
+import AddMeetings from './AddMeetings';
+import CalendarMeetings from './CalendarMeetings';
 
 
 export {
@@ -21,4 +23,6 @@ export {
     ManageApplications,
     Calendar,
     RecruitmentList,
+    AddMeetings,
+    CalendarMeetings,
 }

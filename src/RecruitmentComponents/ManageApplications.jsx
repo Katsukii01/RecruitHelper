@@ -127,13 +127,13 @@ const ManageApplications = () => {
               </div>
           </div>
           {paginatedApplications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center mt-2 h-[655px]">
+            <div className="flex flex-col items-center justify-center mt-2 h-[680px]">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
                 No applications found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[655px] overflow-y-auto w-full px-4 py-4 inner-shadow">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[680px] overflow-y-auto w-full px-4 py-4 inner-shadow">
               {paginatedApplications.map((application) => (
                 <div
                   key={application.id}

@@ -40,7 +40,7 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
   };
   
   const calculateLimit = () => {
-    const screenHeight = window.innerHeight;
+    const screenHeight = window.innerHeight * 0.8;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
     const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
@@ -162,11 +162,11 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
 
   const totalPages = Math.ceil(totalApplicants / limit); // Calculate total pages
 
-  if(recruitmentId === undefined) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">No recruitment found</section>;
+  if(recruitmentId === undefined) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">No recruitment found</section>;
 
- if (loading) return <div className="relative w-full h-screen mx-auto flex justify-center items-center"><Loader /></div>;
+ if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center"><Loader /></div>;
 
-  if (!applicants.length) return <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">
+  if (!applicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-4">Applicants</h1>
           {/* Add Applicant Button */}
           <div className="flex justify-end mb-4">
@@ -183,7 +183,7 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
     </section>;
 
   return (
-    <section className="h-auto  relative w-full mx-auto p-4 bg-glass card ">
+    <section className="h-auto  relative w-full mx-auto bg-glass card ">
       <div>
         <h1 className="text-2xl font-bold text-white">Manage Applicants</h1>
 
@@ -197,10 +197,10 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
           </button>
         </div>
       </div>
-      <div className="h-screen overflow-auto">
+      <div className="h-screen-60 overflow-auto">
       {/* Applicants Table */}
-      <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-4">
-        <table className="table-auto w-full border-collapse border border-gray-700 text-white ">
+      <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
+        <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white ">
             <tr>
               {[
@@ -216,8 +216,8 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
                 'Skills',
                 'Courses',
                 'Additional Information',
-                'CV Preview',
-                'Cover Letter Preview',
+                'CV',
+                'Cover Letter',
                 'Actions',
               ].map((header) => (
                 <th key={header} className="px-4 py-2 border border-gray-700 text-center">
@@ -389,7 +389,7 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
 
       </div>
       </div>
-      <Pagination
+        <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}

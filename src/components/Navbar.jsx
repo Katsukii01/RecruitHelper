@@ -62,7 +62,6 @@ const Navbar = () => {
           setActive('Dashboard');
           setUnderlineToNone();
         }else{
-          console.log(pathname);
           setActive(pathname.slice(1));
           setUnderlineToNone();
         }
@@ -146,7 +145,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Links */}
-        <ul className="list-none hidden lg:flex flex-row gap-10 nav-menu">
+        <ul className="list-none hidden xl:flex flex-row gap-10 nav-menu">
           {NavLinks.map((link) => (
             <li
               key={link.id}
@@ -276,7 +275,7 @@ const Navbar = () => {
         </ul>
 
         {/* Mobile Menu */}
-        <div className="lg:hidden flex flex-1 justify-end items-center">
+        <div className="xl:hidden flex flex-1 justify-end items-center">
           <input
             id="checkbox2"
             type="checkbox"

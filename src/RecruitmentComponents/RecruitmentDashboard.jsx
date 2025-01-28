@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, YourOwnScore, FinalRanking, FinishRecruitment, DeleteRecruitment } from './DashboardsComponents';
+import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints } from './DashboardsComponents';
 
 const RecruitmentDashboard = () => {
   const location = useLocation();
@@ -31,21 +31,36 @@ const RecruitmentDashboard = () => {
   return (
     <div className=" w-full bg-glass flex min-h-screen relative z-0 ">
       {/* Navbar */}
-      <div className="top-0 left-0 h-full shadow-md w-fit fixed z-50">
+      <div className="top-0 left-0 h-full w-fit fixed z-50">
         <Navbar />
       </div>
 
       {/* Main content */}
       <div className="w-full pt-12 overflow-y-auto pl-28 md:pl-96 pr-2 md:pr-20">
-        <div className="flex flex-col items-start space-y-6">
-          <RecruitmentEdit id={id} onRefresh={handleRefresh} /> {/* Trigger refresh */}
-          <ManageApplicants id={id} refresh={refresh} onRefresh={handleRefresh}/> {/* Pass the refresh trigger */}
+        <div className="flex flex-col items-start space-y-9">
+          <Overview id={id} refresh={refresh}/>
+
           <ApplicantsOfferRanking id={id} refresh={refresh}/>
-          <Meetings id={id} />
-          <YourOwnScore id={id} />
+
+          <Meetings id={id} refresh={refresh} />
+          <MeetingPoints id={id} refresh={refresh}/>
+
+          <Assessments id={id} refresh={refresh}/>
+          <AssessmentsPoints id={id} refresh={refresh}/>
+
+          <CoverLettersAnalyses id={id} refresh={refresh}/>
+          <CoverLettersPoints id={id} refresh={refresh}/>
+
+          <AdnationalPoints id={id} refresh={refresh}/>
+
           <FinalRanking id={id} />
+      
           <FinishRecruitment id={id} />
+
+          <ManageApplicants id={id} refresh={refresh} onRefresh={handleRefresh}/> 
+          <RecruitmentEdit id={id} onRefresh={handleRefresh} /> 
           <DeleteRecruitment id={id} />
+
         </div>
       </div>
     </div>

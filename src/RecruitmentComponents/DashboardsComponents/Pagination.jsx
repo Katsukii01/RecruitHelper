@@ -8,11 +8,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-2 mt-6">
+    <div className="flex items-center justify-center md:space-x-2 md:text-md mt-6 space-x-1 text-sm">
       {/* First Page Button */}
       <button
         onClick={() => handlePageChange(1)}
-        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+        className="md:px-3 md:py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 "
         disabled={currentPage === 1}
       >
        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -23,7 +23,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       {/* Previous Page Button */}
       <button
         onClick={() => handlePageChange(currentPage - 1)}
-        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+        className="md:px-3 md:py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 "
         disabled={currentPage === 1}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -39,7 +39,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       {/* Next Page Button */}
       <button
         onClick={() => handlePageChange(currentPage + 1)}
-        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+        className="md:px-3 md:py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 "
         disabled={currentPage === totalPages}
       >
        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -50,7 +50,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       {/* Last Page Button */}
       <button
         onClick={() => handlePageChange(totalPages)}
-        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+        className="md:px-3 md:py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 "
         disabled={currentPage === totalPages}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

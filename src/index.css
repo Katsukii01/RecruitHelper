@@ -20,12 +20,29 @@
 }
 
 /*-------------------------------------------*/
+/* Calendar */
+.react-calendar__tile.dot {
+  position: relative;
+}
+
+.react-calendar__tile.dot::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: red; /* Change color of the dot as needed */
+  border-radius: 50%;
+}
+/*-------------------------------------------*/
 /*scroll bar*/
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 10px; 
 }
 ::-webkit-scrollbar-track {
-  background: rgba( 0, 0, 0, 0.5 );
+  background: rgba( 0, 0, 0, 0.0 );
   border-radius: 35px;
 }
 

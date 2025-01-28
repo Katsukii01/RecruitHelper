@@ -13,6 +13,18 @@ module.exports = {
         night: "#061526", // Nocny morski
         snow: "#FFFFFF", // Śnieżnobiały
       },
+      height: {
+        'screen-10': '10vh',
+        'screen-20': '20vh',
+        'screen-30': '30vh',
+        'screen-40': '40vh',
+        'screen-50': '50vh',
+        'screen-55': '55vh',
+        'screen-60': '60vh',
+        'screen-80': '80vh',
+        'screen-90': '90vh',
+        'screen-70': '70vh',
+      },
       boxShadow: {
         card: "0px 35px 120px -15px #87CEEB", // Lekki, niebieski cień
         customDefault: "0 20px 40px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.3)",

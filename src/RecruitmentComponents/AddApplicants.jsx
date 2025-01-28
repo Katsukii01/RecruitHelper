@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ref, uploadBytes, getDownloadURL } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios"; // For HTTP requests
 import { addApplicant } from '../firebase/RecruitmentServices';
@@ -59,7 +59,7 @@ useEffect(() => {
     setButtonText("Finish Editing Applicant");  // Ustawiamy tekst przycisku
   }
   if(userApply){
-    setButtonText("Finish application ");  // Ustawiamy tekst przycisku
+    setButtonText("Finish Application ");  // Ustawiamy tekst przycisku
   }
   if(highestId!== undefined){ setCurrentId(highestId+1)}
   else{setCurrentId(0)}
@@ -391,19 +391,19 @@ const handleInputBlur = (e) => {
     setNumberOfSavedApplicants(0);
     try {
       setIsSaving(true); // Zablokuj przycisk i rozpocznij proces
-      setButtonText("Saving applicants...");
+      setButtonText("Saving data...");
   
       // Zmienna dla setInterval
   
       // Użyj setInterval, aby aktualizować tekst przycisku
       progressInterval = setInterval(() => {
         setButtonText((prevText) => {
-          if (prevText === "Saving applicants...") {
-            return "Saving applicants.";
-          } else if (prevText === "Saving applicants.") {
-            return "Saving applicants..";
+          if (prevText === "Saving data...") {
+            return "Saving data.";
+          } else if (prevText === "Saving data.") {
+            return "Saving data..";
           } else {
-            return "Saving applicants...";
+            return "Saving data...";
           }
         });
       }, 1000);
@@ -427,7 +427,7 @@ const handleInputBlur = (e) => {
   
       // Zatrzymaj interwał po zakończeniu dodawania aplikantów
       clearInterval(progressInterval);
-      setButtonText("Applicants saved successfully!"); // Opcjonalnie, informacja o sukcesie
+      setButtonText("Data saved successfully!"); // Opcjonalnie, informacja o sukcesie
   
       // Nawigacja do kolejnego kroku
       if(userApply){
@@ -450,7 +450,14 @@ const handleInputBlur = (e) => {
       alert("Error saving applicants. Please try again.");
       clearInterval(progressInterval); // Zatrzymaj interwał w przypadku błędu
       setIsSaving(false);  // Odblokuj przycisk
-      setButtonText("Finish Adding Applicants"); // Przywróć pierwotny tekst
+
+      if(userApply){
+        setButtonText("Finish Application");  // Ustaw tekst przycisku
+      }else if(applicant){
+        setButtonText("Finish Editing Applicant");  // Ustaw tekst przycisku
+      }else{
+        setButtonText("Finish Adding Applicants"); // Przywróć pierwotny tekst
+      }
     }
   };
   
@@ -574,15 +581,29 @@ if(recruitmentId === undefined) return <section className="relative w-full h-scr
               </p>
             </div>
 
-            <p className="text-white mb-3">
-              Please wait while we save your applicants. This process may take some time, depending on the number of applicants.
-            </p>
+            {userApply ? (
+                <p className="text-white mb-3">
+                  Please wait while we save your application. This process may take some time, depending on the size of your CV and Cover Letter files.
+                </p>
+              ) : applicant ? (
+                <p className="text-white mb-3">
+                  Please wait while we save this applicant's data. This process may take some time.
+                </p>
+              ) : (
+                <p className="text-white mb-3">
+                  Please wait while we save your applicants. This process may take some time, depending on the number of applicants.
+                </p>
+              )}
+
+
             <p className="text-white mb-3">
               Your page will automatically refresh once the data is saved successfully.
             </p>
+
             <p className="text-white mb-3">
-              Please do not interrupt the process. If interrupted, the unsaved applicants will not be saved, and you will need to start over.
+              Please do not interrupt the process. If interrupted, the unsaved progress will not be saved, and you will need to start over.
             </p>
+
             <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
               Warning: Do not interrupt the process!
             </p>

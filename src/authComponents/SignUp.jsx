@@ -5,7 +5,7 @@ import { google } from '../assets';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 const SignUp = () => {
-  const { signUp, googleSignIn } = useContext(AuthContext);
+  const { signUp, googleSignIn, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
@@ -17,7 +17,12 @@ const SignUp = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
-
+  
+  useEffect(() => {
+    if (user) {
+      navigate('/Dashboard');
+    }
+  }, [user, navigate]);
   
   const handleSubmit = async (e) => {
     e.preventDefault();

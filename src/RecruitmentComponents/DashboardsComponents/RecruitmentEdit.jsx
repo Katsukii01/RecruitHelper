@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getRecruitmentById, updateRecruitment, addRecruitment } from '../../firebase/RecruitmentServices';
 import { DsectionWrapper } from '../../hoc';
 import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLanguage, removeLanguage } from '../Validations';
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { Loader } from '../../components';
 
 const RecruitmentEdit = ({ id, onRefresh }) => {
@@ -53,6 +53,9 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           });
         } catch (error) {
           console.error('Error fetching recruitment:', error);
+          if(error.message === 'You are not authorized to view this recruitment') {
+              navigate('/Dashboard');
+          }
         } finally {
           setLoading(false);
         }
@@ -113,7 +116,6 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         alert('Recruitment updated successfully!');
         onRefresh();
       } else {
-         console.log(updatedData);
         if(updatedData.status === "Public") {
           // Dodanie nowej rekrutacji
           const recruitmentId = await addRecruitment(updatedData);
@@ -134,15 +136,18 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
     }
   };
 
-  if (loading) return <div className="relative w-full h-screen mx-auto flex justify-center items-center"><Loader /></div>;
+  if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center"><Loader /></div>;
 
   return (
-    <section className="relative w-full h-screen mx-auto p-4 bg-glass card ">
+    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold mb-4">Recruitment</h1>
       <form className="space-y-4 overflow-auto p-4">
         {/* Status Toggle */}
-        <div className="flex items-center gap-4">
-          <p className="text-sm font-medium text-gray-300">Status:</p>
+        <p className="text-sm font-medium text-gray-300">Status:            
+          <span className="text-sm font-medium text-white">
+            {formData.status === ' Public' ? ' Public' : ' Private'}
+          </span></p>
+        <div className="flex flex-col items-start gap-4">
           <div
             className={`relative w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${
               formData.status === 'Public' ? 'bg-green-500' : 'bg-red-500'
@@ -160,9 +165,6 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
               }`}
             ></div>
           </div>
-          <span className="text-sm font-medium">
-            {formData.status === 'Public' ? 'Public' : 'Private'}
-          </span>
         </div>
 
         <div className=''>

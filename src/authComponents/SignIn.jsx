@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { google } from '../assets';
 
 const SignIn = () => {
-  const { signIn, googleSignIn, forgotPassword } = useContext(AuthContext);
+  const { signIn, googleSignIn, forgotPassword, user  } = useContext(AuthContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +17,14 @@ const SignIn = () => {
   
   const from = location.state?.from?.pathname || "/Home"; 
   const fragment = location.state?.from?.hash || "";  
-  
+
+  useEffect(() => {
+    if (user) {
+      navigate('/Dashboard');
+    }
+  }, [user, navigate]);
+
+
   const handleSubmit = async (e) => {
 
     setIsLoading(true);

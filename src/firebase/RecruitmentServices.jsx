@@ -13,7 +13,6 @@ import {
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { a } from 'framer-motion/client';
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -27,12 +26,9 @@ export const fetchAllEmails = async () => {
 //add email to firestore
 export const addEmail = async (email, signInMethod) => {
   try {
-    console.log('Fetching all emails from Firestore...');
     const emails = await fetchAllEmails(); // Fetch all emails from Firestore
-    console.log('Fetched emails:', emails);
 
     // Check if email already exists
-    console.log(`Checking if email (${email}) already exists...`);
     const existingEmail = emails.find((emailData) => emailData.email === email);
 
     if (existingEmail) {
@@ -43,24 +39,22 @@ export const addEmail = async (email, signInMethod) => {
 
     // If email exists and has a Google sign-in method, don't add it
     if (existingEmail && existingEmail.signInMethod === 'google') {
-      console.log('This email is already associated with a Google account. No action taken.');
+    
       return;
     }
 
     // If email exists and has an email/password sign-in method, update to Google
     if (existingEmail && existingEmail.signInMethod === 'email/password') {
-      console.log('Updating sign-in method from email/password to Google for:', email);
+    
       const docRef = doc(db, 'emails', email); // Reference to the email document
       await setDoc(docRef, { email, signInMethod: 'google' }); // Update to Google sign-in
-      console.log('Sign-in method updated successfully.');
+
       return;
     }
 
     // If email doesn't exist, create a new document
-    console.log('Creating a new email document for:', email);
     const docRef = doc(db, 'emails', email); // Correctly set a unique ID for the document
     await setDoc(docRef, { email, signInMethod });
-    console.log('Email added to Firestore with sign-in method:', signInMethod);
   } catch (error) {
     console.error('Error in addEmail function:', error);
   }
@@ -138,7 +132,6 @@ export const addRecruitment = async (recruitmentData) => {
       checkAuth(); // Verify authentication
       const userId = firebaseAuth.currentUser.uid;  // Get current user's ID
       const docRef = await addDoc(recruitmentCollection, { ...recruitmentData, userId }); // Add userId to the recruitment document
-      console.log('Recruitment added with ID:', docRef.id);
       return docRef.id;
     } catch (error) {
       console.error('Error adding recruitment:', error.message);
@@ -152,12 +145,10 @@ export const getRecruitments = async (searchTerm = '') => {
   try {
     checkAuth(); // Ensure the user is authenticated
     const userId = firebaseAuth.currentUser.uid; // Get the current user's ID
-    console.log('Current User ID:', userId); // Log userId
 
     const q = query(recruitmentCollection); // Fetch all documents from the collection
     const snapshot = await getDocs(q);
 
-    console.log('Snapshot:', snapshot.docs);
 
     // Map and filter recruitments
     return snapshot.docs
@@ -190,7 +181,6 @@ export const getPublicRecruitments = async (searchTerm = '') => {
     }
 
     const userId = user.uid;
-    console.log('Current User ID:', userId);
 
     const recruitmentCollection = collection(db, 'recruitments');
     const q = query(recruitmentCollection);
@@ -244,7 +234,6 @@ export const getUserApplications = async (searchTerm = '') => {
     }
 
     const userId = user.uid;
-    console.log('Current User ID:', userId);
 
     const recruitmentCollection = collection(db, 'recruitments');
     const q = query(recruitmentCollection);
@@ -322,7 +311,6 @@ export const deleteRecruitment = async (recruitmentId) => {
 
     // Finally, delete the recruitment document itself
     await deleteDoc(recruitmentDoc);
-    console.log(`Recruitment with ID: ${recruitmentId} has been successfully deleted.`);
   } catch (error) {
     console.error('Error deleting recruitment:', error.message);
   }
@@ -344,7 +332,6 @@ export const deleteRecruitment = async (recruitmentId) => {
       }
   
       await updateDoc(recruitmentDoc, updatedData);
-      console.log('Recruitment updated:', recruitmentId);
     } catch (error) {
       console.error('Error updating recruitment:', error.message);
       throw error;
@@ -396,7 +383,6 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
     } else {
       if (applicantIndex !== -1) {
         // Remove old CV and Cover Letter files from storage (optional, if needed)
-        console.log("deleteCV");
         await deleteOldFiles(currentApplicants[applicantIndex], recruitmentId, 'Cv');
         }
       // Otherwise, proceed with the conversion and uploading of CV files
@@ -421,7 +407,6 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
       } else {
         if (applicantIndex !== -1) {
           // Remove old CV and Cover Letter files from storage (optional, if needed)
-          console.log("deleteCl");
           await deleteOldFiles(currentApplicants[applicantIndex], recruitmentId, 'CoverLetter');
           }
         // Otherwise, proceed with the conversion and uploading of Cover Letter files
@@ -455,7 +440,6 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
         return applicant;
       });
       await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
-      console.log('Applicant updated successfully:', recruitmentId);
     } else {
       // New applicant, add to the list
       const updatedApplicants = [
@@ -468,7 +452,6 @@ export const addApplicant = async (recruitmentId, applicantData, cvFiles, coverL
       ];
 
       await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
-      console.log('Applicant added successfully:', recruitmentId);
     }
 
   } catch (error) {
@@ -552,7 +535,6 @@ export const deleteApplicant = async (recruitmentId, applicantId) => {
     const updatedApplicants = currentApplicants.filter(applicant => applicant.id !== applicantId);
     await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
 
-    console.log('Applicant deleted successfully:', applicantId);
   } catch (error) {
     console.error('Error deleting applicant:', error.message);
     throw error;
@@ -757,7 +739,6 @@ export const getApplicantsRanking = async (recruitmentId) => {
     const skillsScore = totalRecruitmentSkills > 0 
       ? (matchedSkills / totalRecruitmentSkills) * weightOfSkills 
       : 0;
-     console.log(skillsScore);
     totalScore += skillsScore;
 
   
@@ -837,28 +818,46 @@ export const getApplicantsRanking = async (recruitmentId) => {
   }
 
   totalScore += educationScore;
-    
+
+  const updatedApplicant = {
+    ...applicant,
+    cvScore: parseFloat(totalScore).toFixed(2), // Adding cvScore to the applicant object
+  };
+ 
+ 
+
+
+  
     // Return the individual scores for each category along with the final score
     return {
       ...applicant,
-      score: parseFloat(totalScore).toFixed(2),
+      CVscore: parseFloat(totalScore).toFixed(2),
       stage: applicant.stage || 'To be checked',
-      scores: {
-        courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(2)),
-        skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(2)),
-        languages: parseFloat(((languagesScore * 100) / recruitmentData.weightOfLanguages).toFixed(2)),
-        experience: parseFloat(((experienceScore * 100) / recruitmentData.weightOfExperience).toFixed(2)),
-        education: parseFloat(((educationScore * 100) / recruitmentData.weightOfEducationLevel).toFixed(2)),
+      CVscores: {
+        courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(2)) || 0,
+        skills: parseFloat(((skillsScore * 100) / recruitmentData.weightOfSkills).toFixed(2)) || 0,
+        languages: parseFloat(((languagesScore * 100) / recruitmentData.weightOfLanguages).toFixed(2)) || 0,
+        experience: parseFloat(((experienceScore * 100) / recruitmentData.weightOfExperience).toFixed(2)) || 0,
+        education: parseFloat(((educationScore * 100) / recruitmentData.weightOfEducationLevel).toFixed(2)) || 0,
       }
     };
     
   };
 
+
+
   // Map applicants and calculate scores
   const applicantsWithScores = applicants.map(applicant => calculateScore(applicant));
 
+  try {
+    await updateDoc(recruitmentDoc, { Applicants: applicantsWithScores });
+    } catch (error) {
+      console.error('Error updating applicants:', error.message);
+      throw error;
+    }
+
   // Sort applicants by score in descending order
-  const rankedApplicants = applicantsWithScores.sort((a, b) => b.score - a.score);
+  const rankedApplicants = applicantsWithScores.sort((a, b) => b.CVscore - a.CVscore);
 
   return rankedApplicants;
 };
@@ -889,10 +888,194 @@ export const changeApplicantStage = async (recruitmentId, applicantId, newStage)
 
     await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
 
-    console.log('Applicant stage updated:', applicantId);
     return { message: 'Applicant stage updated successfully' };
   } catch (error) {
     console.error('Error changing applicant stage:', error.message);
+    throw error;
+  }
+};
+
+// 11.**get meetings by ID
+export const getMeetingsById = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    if (recruitmentSnapshot.data().userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+    const meetings = recruitmentData.Meetings || [];
+
+    return meetings;
+  } catch (error) {
+    console.error('Error fetching meetings by ID:', error.message);
+    throw error;
+  }
+};
+
+// 12.**add meeting
+export const AddMeeting = async (recruitmentId, meetingData) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+      // Update the meetings list: check if the meeting with the same ID already exists
+      const currentMeetings = recruitmentData.Meetings || [];
+      const applicants = recruitmentData.Applicants || [];
+      const  applicantId =Number( meetingData.applicantId); // Extract the applicantId from meetingData
+
+      // Find applicant and change their stage to "invited for interview"
+      const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+
+
+      if (applicantIndex !== -1) {
+        applicants[applicantIndex].stage = 'invited for interview';
+        console.log('Applicant stage updated to "invited for interview"');
+      }
+
+      // Sprawdź, czy `meetingData.id` istnieje
+      if (!meetingData.id) {
+        // Znajdź największe istniejące ID w currentMeetings
+        const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+        meetingData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
+      }
+
+      // Znajdź indeks spotkania o takim samym ID
+      const meetingIndex = currentMeetings.findIndex(meeting => meeting.id === meetingData.id);
+
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error('You are not authorized to add meetings to this recruitment');
+      }
+  
+    // Convert meetingData to an array if it's not already
+    let meetingDataArray = Array.isArray(meetingData) ? meetingData : [meetingData];
+
+    if (meetingIndex !== -1) {
+      // Meeting exists, update their information and replace their files
+      const updatedMeetings = currentMeetings.map((meeting, index) => {
+        if (index === meetingIndex) {
+          return {
+            ...meeting,
+            ...meetingData,
+          };
+        }
+        return meeting;
+      });
+      await updateDoc(recruitmentDoc, { Meetings: updatedMeetings, Applicants: applicants });
+    } else {
+      // New meeting, add to the list
+      const updatedMeetings = [
+        ...currentMeetings,
+        { 
+          ...meetingData, 
+        },
+      ];
+
+      await updateDoc(recruitmentDoc, { Meetings: updatedMeetings, Applicants: applicants });
+    }
+
+  } catch (error) {
+    console.error('Error adding or updating meeting:', error.message);
+    throw error;
+  }
+};
+
+// 13.**delete meeting by ID**
+export const deleteMeeting = async (recruitmentId, meetingId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to delete meetings from this recruitment');
+    }
+
+    // Delete the meeting document
+    await deleteDoc(recruitmentDoc);
+  } catch (error) {
+    console.error('Error deleting meeting:', error.message);
+  }
+};
+
+// 14.**get meeting by ID**
+export const getMeetingById = async (recruitmentId, meetingId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const meetingIndex = recruitmentData.Meetings.findIndex(meeting => meeting.id === meetingId);
+
+    if (meetingIndex === -1) {
+      throw new Error('Meeting not found');
+    }
+
+    return {
+      id: recruitmentSnapshot.id,
+      ...recruitmentData,
+      Meetings: recruitmentData.Meetings[meetingIndex],
+    };
+  } catch (error) {
+    console.error('Error fetching meeting by ID:', error.message);
+    throw error;
+  }
+};
+
+// 15 **get applicants by stage **
+export const getApplicantsByStage = async (recruitmentId, stage) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const applicants = recruitmentData.Applicants || [];
+
+    const applicantsByStage = applicants.filter(applicant => applicant.stage === stage);
+
+    return applicantsByStage;
+  } catch (error) {
+    console.error('Error fetching applicants by stage:', error.message);
     throw error;
   }
 };

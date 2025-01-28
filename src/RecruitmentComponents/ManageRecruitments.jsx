@@ -121,28 +121,28 @@ const ManageRecruitments = () => {
             </div>
           </div>
           {paginatedRecruitments.length === 0 ? (
-            <div className=" flex flex-col items-center justify-center h-[655px] ">
+            <div className=" flex flex-col items-center justify-center h-[680px] ">
               <p className=" text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[655px] overflow-y-auto w-full px-6 py-4 inner-shadow">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[680px] overflow-y-auto w-full px-6 py-4 inner-shadow">
               {paginatedRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
-                    className="h-[628.5px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="h-[659.9px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
           
-                        <h3 className="mb-4 border-b-2 p-4 border-b-white text-center font-bold justify-center flex-col rounded-t-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
+                        <h3 className="mb-2 border-b-2 p-4 border-b-white text-center font-bold justify-center flex-col rounded-t-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
                           {recruitment.name}
        
                         </h3>
         
                   
-                  <div className='h-[505px] overflow-auto '>
+                  <div className='h-[545px] overflow-auto '>
 
                   <p className="text-sm text-white mt-1 font-semibold m-4">
                   Status:

@@ -38,9 +38,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-start top-32 left-0 z-20 p-2 sticky mt-32">
-      <div className="navbar flex flex-col gap-5 bg-glass p-1  rounded-3xl">
-        <ul className="list-none flex flex-col items-start gap-2 nav-menu">
+    <nav className="flex items-start top-32 left-0 z-20 p-2 sticky ">
+      <div className="navbar flex flex-col bg-glass rounded-xl ">
+        <ul className="list-none flex flex-col items-start nav-menu mx-1 overflow-auto h-screen-70 ">
           {RecruitmentDashboardLinks.map((link) => (
             <li
               key={link.id}
