@@ -130,8 +130,8 @@ const SignIn = () => {
 
       {showForgotPassword && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg mx-10">
-            <h2 className="text-xl font-bold mb-4">Reset Password</h2>
+          <div className="bg-white p-6 rounded-lg shadow-lg mx-10 border-2 border-black">
+            <h2 className="text-xl font-bold mb-4 text-black">Reset Password</h2>
                   {errorForgot && (
                 <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
                   {errorForgot}
