@@ -933,7 +933,7 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
         // **Aktualizacja etapu aplikanta**
         const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
         if (applicantIndex !== -1) {
-          applicants[applicantIndex].stage = 'invited for interview';
+          applicants[applicantIndex].stage = 'Invited for interview';
           console.log(`Applicant ${applicantId} stage updated to "Invited for interview"`);
         }
 
