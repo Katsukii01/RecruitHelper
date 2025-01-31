@@ -9,6 +9,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Terms from './Terms';;
 import Loader from './loader';
 import Dashboard from './Dashboard';
+import Opinions from './Opinions';
 
 
 export {
@@ -23,4 +24,5 @@ export {
     Terms,
     Loader,
     Dashboard,
+    Opinions,
 }

@@ -54,6 +54,7 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
       const handleResize = () => {
         const dynamicLimit = calculateLimit();
         setLimit(dynamicLimit);
+        setCurrentPage(1); // Reset to the first page when resizing
       };
   
       handleResize(); // Calculate limit initially

@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 
-const CalendarMeetings = ({ meetings }) => {
-  // State to store selected date and meetings for that date
+const CalendarMeetings = ({ meetingSessions }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [meetingsForSelectedDate, setMeetingsForSelectedDate] = useState([]);
 
-  // Function to handle date selection
   const onDateChange = (date) => {
     setSelectedDate(date);
-    // Filter meetings for the selected date
-    const meetingsOnSelectedDate = meetings.filter((meeting) => {
+
+    const meetingsOnSelectedDate = getAllMeetings().filter((meeting) => {
       const meetingDate = new Date(meeting.meetingDate);
       return meetingDate.toDateString() === date.toDateString();
     });
     setMeetingsForSelectedDate(meetingsOnSelectedDate);
   };
 
-  // Function to render dots on days with meetings
+  const getAllMeetings = () => {
+    console.log(meetingSessions);
+    if (!meetingSessions || meetingSessions.length === 0) {
+      return [];
+    }
+
+    return meetingSessions.flatMap((session) =>
+      (session.meetings || []).map((meeting) => ({
+        ...meeting,
+        meetingSessionName: session.meetingSessionName,
+        meetingSessionDescription: session.meetingSessionDescription,
+      }))
+    );
+  };
+
   const tileClassName = ({ date, view }) => {
     if (view === 'month') {
-      // Check if there are any meetings on this date
-      const meetingsOnDate = meetings.filter((meeting) => {
+      const meetingsOnDate = getAllMeetings().filter((meeting) => {
         const meetingDate = new Date(meeting.meetingDate);
         return meetingDate.toDateString() === date.toDateString();
       });
@@ -31,24 +42,25 @@ const CalendarMeetings = ({ meetings }) => {
   };
 
   return (
-    <section className="relative w-full h-screen mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Meetings</h1>
-      <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+    <section className="relative w-full overflow-auto h-screen-55 p-6 rounded-lg">
+
         <Calendar
+          locale="en-GB"
           onChange={onDateChange}
           value={selectedDate}
-          tileClassName={tileClassName} // Add class for dots
+          tileClassName={tileClassName}
+          className="bg-glass rounded-lg "
         />
-        {/* Show meetings list for the selected date */}
+        
         {selectedDate && (
-          <div className="mt-4">
-            <h2 className="text-xl text-white">Meetings on {selectedDate.toDateString()}</h2>
+          <div className="mt-6">
+            <h2 className="text-2xl text-white mb-4">Meetings on {selectedDate.toDateString()}</h2>
             <div className="space-y-4">
               {meetingsForSelectedDate.length > 0 ? (
                 meetingsForSelectedDate.map((meeting, index) => (
-                  <div key={index} className="bg-gray-700 p-4 rounded-lg shadow-md">
-                    <h3 className="text-lg text-white">{meeting.meetingName}</h3>
-                    <p className="text-sm text-gray-400">{meeting.meetingDescription}</p>
+                  <div key={index} className="bg-glass ml-5 p-6 rounded-xl shadow-xl transition-transform transform hover: w-5/6">
+                    <h3 className="text-xl font-semibold text-white">{meeting.meetingSessionName}</h3>
+                    <p className="text-sm text-gray-400">{meeting.meetingSessionDescription}</p>
                     <p className="text-sm text-gray-300">
                       {meeting.meetingTimeFrom} - {meeting.meetingTimeTo}
                     </p>
@@ -56,7 +68,7 @@ const CalendarMeetings = ({ meetings }) => {
                       href={meeting.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400"
+                      className="text-blue-400 hover:underline"
                     >
                       Join Meeting
                     </a>
@@ -68,7 +80,7 @@ const CalendarMeetings = ({ meetings }) => {
             </div>
           </div>
         )}
-      </div>
+    
     </section>
   );
 };

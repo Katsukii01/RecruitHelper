@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints } from './DashboardsComponents';
+import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints, MeetingSessions } from './DashboardsComponents';
 
 const RecruitmentDashboard = () => {
   const location = useLocation();
@@ -42,11 +42,12 @@ const RecruitmentDashboard = () => {
 
           <ApplicantsOfferRanking id={id} refresh={refresh}/>
 
+          <Assessments id={id} refresh={refresh} onRefresh={handleRefresh}/>
+          <AssessmentsPoints id={id} refresh={refresh}/>
+
+          <MeetingSessions id={id} refresh={refresh} onRefresh={handleRefresh}/>
           <Meetings id={id} refresh={refresh} />
           <MeetingPoints id={id} refresh={refresh}/>
-
-          <Assessments id={id} refresh={refresh}/>
-          <AssessmentsPoints id={id} refresh={refresh}/>
 
           <CoverLettersAnalyses id={id} refresh={refresh}/>
           <CoverLettersPoints id={id} refresh={refresh}/>

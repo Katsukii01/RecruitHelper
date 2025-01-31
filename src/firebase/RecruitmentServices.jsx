@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { c } from 'maath/dist/index-0332b2ed.esm';
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -223,7 +224,7 @@ export const getPublicRecruitments = async (searchTerm = '') => {
   }
 };
 
-// **2.2 Get all user applications(with filtering )**
+// **2.2 Get all user applications (with filtering)**
 export const getUserApplications = async (searchTerm = '') => {
   try {
     // Ensure the user is authenticated
@@ -249,12 +250,19 @@ export const getUserApplications = async (searchTerm = '') => {
         const applicant = applicants.find((applicant) => applicant.userUid === userId);
 
         if (applicant) {
-          // Exclude other applicants from recruitmentData
+          // Exclude other applicants from recruitmentData, and only keep the status and stage
           const { Applicants, ...filteredRecruitmentData } = recruitmentData;
+          const { status, stage, name, jobTittle } = filteredRecruitmentData;
 
           return {
             id: doc.id,
-            recruitmentData: filteredRecruitmentData, // Recruitment data without other applicants
+            recruitmentData: {
+              status, // Only include the status and stage from recruitmentData
+              stage,
+              name,
+              jobTittle,
+               // Include the name from recruitmentData
+            },
             applicantData: applicant, // Include applicant's data
           };
         }
@@ -263,14 +271,14 @@ export const getUserApplications = async (searchTerm = '') => {
       .filter((recruitment) => recruitment !== null) // Remove null values where the user is not an applicant
       .filter(
         (recruitment) =>
-          Object.values(recruitment.recruitmentData)
-            .join(' ')
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) || // Filter by recruitment data
           Object.values(recruitment.applicantData)
             .join(' ')
             .toLowerCase()
-            .includes(searchTerm.toLowerCase()) // Filter by applicant data
+            .includes(searchTerm.toLowerCase()) || // Filter by applicant data
+          [recruitment.recruitmentData.status, recruitment.recruitmentData.stage]
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) // Filter by status and stage
       );
 
     return userApplications;
@@ -279,6 +287,7 @@ export const getUserApplications = async (searchTerm = '') => {
     throw error;
   }
 };
+
 
 
   
@@ -895,35 +904,11 @@ export const changeApplicantStage = async (recruitmentId, applicantId, newStage)
   }
 };
 
-// 11.**get meetings by ID
-export const getMeetingsById = async (recruitmentId) => {
+
+// 12.**add meetings**
+export const addMeetings = async (recruitmentId, meetingsData) => {
   try {
-    await checkAuth(); // Ensure the user is authenticated asynchronously
-    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
-    const recruitmentSnapshot = await getDoc(recruitmentDoc);
-
-    if (!recruitmentSnapshot.exists()) {
-      throw new Error('Recruitment not found');
-    }
-
-    if (recruitmentSnapshot.data().userId !== firebaseAuth.currentUser.uid) {
-      throw new Error('You are not authorized to view this recruitment');
-    }
-
-    const recruitmentData = recruitmentSnapshot.data();
-    const meetings = recruitmentData.Meetings || [];
-
-    return meetings;
-  } catch (error) {
-    console.error('Error fetching meetings by ID:', error.message);
-    throw error;
-  }
-};
-
-// 12.**add meeting
-export const AddMeeting = async (recruitmentId, meetingData) => {
-  try {
-    await checkAuth(); // Ensure the user is authenticated
+    await checkAuth(); // Sprawdzenie uwierzytelnienia użytkownika
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -932,67 +917,80 @@ export const AddMeeting = async (recruitmentId, meetingData) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
+    const meetingSessions = recruitmentData.MeetingSessions || [];
+    const applicants = recruitmentData.Applicants || [];
 
-      // Update the meetings list: check if the meeting with the same ID already exists
-      const currentMeetings = recruitmentData.Meetings || [];
-      const applicants = recruitmentData.Applicants || [];
-      const  applicantId =Number( meetingData.applicantId); // Extract the applicantId from meetingData
+    // **Zapewnij, że meetingsData jest tablicą**
+    const meetingsArray = Array.isArray(meetingsData) ? meetingsData : [meetingsData];
 
-      // Find applicant and change their stage to "invited for interview"
-      const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+    // **Przetwarzanie wszystkich spotkań**
+    meetingsArray.forEach(meetingData => {
+      // Zakładając, że meetingData zawiera tablicę meetings
+      const meetings = meetingData.meetings || [];
+      meetings.forEach(singleMeeting => {
+        const applicantId = Number(singleMeeting.applicantId); // Przekształć applicantId na liczbę
 
-
-      if (applicantIndex !== -1) {
-        applicants[applicantIndex].stage = 'invited for interview';
-        console.log('Applicant stage updated to "invited for interview"');
-      }
-
-      // Sprawdź, czy `meetingData.id` istnieje
-      if (!meetingData.id) {
-        // Znajdź największe istniejące ID w currentMeetings
-        const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
-        meetingData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
-      }
-
-      // Znajdź indeks spotkania o takim samym ID
-      const meetingIndex = currentMeetings.findIndex(meeting => meeting.id === meetingData.id);
-
-      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-        throw new Error('You are not authorized to add meetings to this recruitment');
-      }
-  
-    // Convert meetingData to an array if it's not already
-    let meetingDataArray = Array.isArray(meetingData) ? meetingData : [meetingData];
-
-    if (meetingIndex !== -1) {
-      // Meeting exists, update their information and replace their files
-      const updatedMeetings = currentMeetings.map((meeting, index) => {
-        if (index === meetingIndex) {
-          return {
-            ...meeting,
-            ...meetingData,
-          };
+        // **Aktualizacja etapu aplikanta**
+        const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+        if (applicantIndex !== -1) {
+          applicants[applicantIndex].stage = 'invited for interview';
+          console.log(`Applicant ${applicantId} stage updated to "Invited for interview"`);
         }
-        return meeting;
-      });
-      await updateDoc(recruitmentDoc, { Meetings: updatedMeetings, Applicants: applicants });
-    } else {
-      // New meeting, add to the list
-      const updatedMeetings = [
-        ...currentMeetings,
-        { 
-          ...meetingData, 
-        },
-      ];
 
-      await updateDoc(recruitmentDoc, { Meetings: updatedMeetings, Applicants: applicants });
-    }
+        console.log("Meeting Sessions:", meetingSessions);
+        console.log("Single Meeting Data:", singleMeeting);
+        
+        // **Sprawdzenie, czy singleMeeting ma poprawną strukturę**
+        if (!singleMeeting || typeof singleMeeting !== "object") {
+          console.error("singleMeeting is undefined or not an object!", singleMeeting);
+          return;
+        }
+        
+        // **Sprawdzanie, czy sessionId jest dostępne w singleMeeting**
+        const sessionId = Number(singleMeeting.meetingSessionId);
+        console.log("Looking for session ID:", sessionId, "Type:", typeof sessionId);
+        console.log("Available session IDs:", meetingSessions.map(s => s.id));
+
+        const sessionIndex = meetingSessions.findIndex(
+          session => Number(session.id) === sessionId
+        );
+        
+        if (sessionIndex === -1) {
+          console.warn(`Meeting session with ID ${sessionId} not found.`);
+          return;
+        }
+        
+        console.log("Found session at index:", sessionIndex);
+
+        // **Dodaj spotkanie do sesji**
+        const session = meetingSessions[sessionIndex];
+        const currentMeetings = session.meetings || [];
+        const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+        singleMeeting.id = maxId + 1;
+
+        // **Aktualizacja lub dodanie spotkania**
+        const existingMeetingIndex = currentMeetings.findIndex(meeting => meeting.id === singleMeeting.id);
+        if (existingMeetingIndex !== -1) {
+          currentMeetings[existingMeetingIndex] = { ...currentMeetings[existingMeetingIndex], ...singleMeeting };
+        } else {
+          currentMeetings.push(singleMeeting);
+        }
+
+        meetingSessions[sessionIndex].meetings = currentMeetings;
+      });
+    });
+
+    // **Zapisz zmiany w Firestore**
+    await updateDoc(recruitmentDoc, { MeetingSessions: meetingSessions, Applicants: applicants });
+    console.log("Meetings and applicants updated successfully!");
 
   } catch (error) {
     console.error('Error adding or updating meeting:', error.message);
     throw error;
   }
 };
+
+
 
 // 13.**delete meeting by ID**
 export const deleteMeeting = async (recruitmentId, meetingId) => {
@@ -1011,12 +1009,28 @@ export const deleteMeeting = async (recruitmentId, meetingId) => {
       throw new Error('You are not authorized to delete meetings from this recruitment');
     }
 
-    // Delete the meeting document
-    await deleteDoc(recruitmentDoc);
+    const meetingSessions = recruitmentData.MeetingSessions || [];
+
+    // Find the session and the meeting within the session
+    for (let session of meetingSessions) {
+      const meetingIndex = session.meetings?.findIndex(meeting => meeting.id === meetingId);
+      
+      if (meetingIndex !== -1) {
+        // Remove the meeting from the session
+        session.meetings.splice(meetingIndex, 1);
+        console.log(`Meeting with ID ${meetingId} deleted from session ${session.id}`);
+        break;
+      }
+    }
+
+    // Save the updated meeting sessions back to Firestore
+    await updateDoc(recruitmentDoc, { MeetingSessions: meetingSessions });
+
   } catch (error) {
     console.error('Error deleting meeting:', error.message);
   }
 };
+
 
 // 14.**get meeting by ID**
 export const getMeetingById = async (recruitmentId, meetingId) => {
@@ -1035,25 +1049,34 @@ export const getMeetingById = async (recruitmentId, meetingId) => {
       throw new Error('You are not authorized to view this recruitment');
     }
 
-    const meetingIndex = recruitmentData.Meetings.findIndex(meeting => meeting.id === meetingId);
+    const meetingSessions = recruitmentData.MeetingSessions || [];
 
-    if (meetingIndex === -1) {
-      throw new Error('Meeting not found');
+    // Find the session and the meeting within the session
+    for (let session of meetingSessions) {
+      const meeting = session.meetings?.find(meeting => meeting.id === meetingId);
+      
+      if (meeting) {
+        return {
+          id: recruitmentSnapshot.id,
+          ...recruitmentData,
+          meetingSessionId: session.id,
+          meetingData: meeting,
+        };
+      }
     }
 
-    return {
-      id: recruitmentSnapshot.id,
-      ...recruitmentData,
-      Meetings: recruitmentData.Meetings[meetingIndex],
-    };
+    throw new Error('Meeting not found');
+
   } catch (error) {
     console.error('Error fetching meeting by ID:', error.message);
     throw error;
   }
 };
 
+
+
 // 15 **get applicants by stage **
-export const getApplicantsByStage = async (recruitmentId, stage) => {
+export const getApplicantsByStage = async (recruitmentId, stages) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1071,7 +1094,8 @@ export const getApplicantsByStage = async (recruitmentId, stage) => {
 
     const applicants = recruitmentData.Applicants || [];
 
-    const applicantsByStage = applicants.filter(applicant => applicant.stage === stage);
+    // Filter applicants by stages ['checked','interviewed', 'offer' etc]
+    const applicantsByStage = applicants.filter(applicant => stages.includes(applicant.stage));
 
     return applicantsByStage;
   } catch (error) {
@@ -1079,4 +1103,218 @@ export const getApplicantsByStage = async (recruitmentId, stage) => {
     throw error;
   }
 };
+
+// 16.**create meeting session
+export const createMeetingSession = async (recruitmentId, meetingSessionData) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to create meeting session');
+    }
+
+    // Update the meetings list: check if the meeting with the same ID already exists
+    const currentMeetings = recruitmentData.MeetingSessions || [];
+
+    // Sprawdź, czy `meetingData.id` istnieje
+    if (!meetingSessionData.id) {
+      // Znajdź największe istniejące ID w currentMeetings
+      const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+      meetingSessionData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
+    }
+
+    // Znajdź indeks spotkania o takim samym ID
+    const meetingIndex = currentMeetings.findIndex(meetingsession => meetingsession.id === meetingSessionData.id);
+
+    if (meetingIndex !== -1) {
+      // Meeting exists, update their information and replace their files
+      const updatedMeetings = currentMeetings.map((meetingSession, index) => {
+        if (index === meetingIndex) {
+          return {
+            ...meetingSession,
+            ...meetingSessionData,
+          };
+        }
+        return meetingSession;
+      });
+      await updateDoc(recruitmentDoc, { MeetingSessions: updatedMeetings });
+    }
+    else {
+      // New meeting, add to the list
+      const updatedMeetings = [
+        ...currentMeetings,
+        { 
+          ...meetingSessionData, 
+        },
+      ];
+
+      await updateDoc(recruitmentDoc, { MeetingSessions: updatedMeetings });
+    }
+
+  } catch (error) {
+    console.error('Error adding or updating meeting session:', error.message);
+    throw error;
+  }
+};
+
+
+// 17.**delete meeting session by ID**
+export const deleteMeetingSession = async (recruitmentId, meetingSessionId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to delete meeting session from this recruitment');
+    }
+
+    const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => meetingSession.id === meetingSessionId);
+
+    if (meetingSessionIndex === -1) {
+      throw new Error('Meeting session not found');
+    }
+
+    const updatedMeetingSessions = recruitmentData.MeetingSessions.filter((meetingSession) => meetingSession.id !== meetingSessionId);
+
+    await updateDoc(recruitmentDoc, { MeetingSessions: updatedMeetingSessions });
+  } catch (error) {
+    console.error('Error deleting meeting session:', error.message);
+  }
+};
+
+// 18.**get meeting session by ID**
+export const getMeetingSessionById = async (recruitmentId, meetingSessionId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const meetingIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => meetingSession.id === meetingSessionId);
+
+    if (meetingIndex === -1) {
+      throw new Error('Meeting session not found');
+    }
+
+    return {
+      MeetingSessions: recruitmentData.MeetingSessions[meetingIndex],
+    };
+  } catch (error) {
+    console.error('Error fetching meeting session by ID:', error.message);
+    throw error;
+  }
+};
+
+
+// 19.**get meeting sessions by recruitment ID**
+export const getMeetingSessionsByRecruitmentId = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+    const meetingSessions = recruitmentData.MeetingSessions || [];
+    return meetingSessions;
+  } catch (error) {
+    console.error('Error fetching meeting sessions by recruitment ID:', error.message);
+    throw error;
+  }
+};
+
+
+// 20 **get meeting sessions for current user**
+export const getUserMeetingSessions = async () => {
+  try {
+    // Ensure the user is authenticated
+    const user = await checkAuth();
+
+    if (!user?.uid) {
+      throw new Error('User ID is undefined.');
+    }
+
+    const userId = user.uid;
+
+    // Fetch recruitments that the user has applied to
+    const recruitmentCollection = collection(db, 'recruitments');
+    const q = query(recruitmentCollection);
+    const snapshot = await getDocs(q);
+
+    const userMeetingSessions = [];
+
+    snapshot.docs.forEach((doc) => {
+      const recruitmentData = doc.data();
+      const applicants = recruitmentData.Applicants || [];
+
+      // Find the applicant data for the current user
+      const applicant = applicants.find((applicant) => applicant.userUid === userId);
+
+      if (applicant) {
+        console.log(`Applicant found for recruitment ID: ${doc.id}`); // Log if applicant is found
+        const meetingSessions = recruitmentData.MeetingSessions || [];
+        const applicantId = applicant.id;
+
+        meetingSessions.forEach((session) => {
+          const filteredMeetings = session.meetings.filter((meeting) => {
+            const meetingApplicantId = Number(meeting.applicantId); // Convert to number
+            const currentApplicantId = Number(applicantId); // Already converted applicantId
+
+            return meetingApplicantId === currentApplicantId; // Compare after conversion
+          });
+
+          // If the user is part of any meeting in the session, include the session data
+          if (filteredMeetings.length > 0) {
+            userMeetingSessions.push({
+              meetingSessionName: session.meetingSessionName, // Only session name
+              meetingSessionDescription: session.meetingSessionDescription, // Only session description
+              meetings: filteredMeetings, // Include only meetings where the user is involved
+            });
+          }
+        });
+      }
+    });
+
+    return userMeetingSessions;
+
+  } catch (error) {
+    console.error('Error fetching user meeting sessions:', error.message);
+    throw error;
+  }
+};
+
+
+
+
+
+
+
+  
+
   

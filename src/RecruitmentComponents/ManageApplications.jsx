@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getUserApplications, deleteApplicant } from '../firebase/RecruitmentServices';
 import { Loader } from '../components';
 import { useNavigate } from 'react-router-dom';
-import { a } from 'framer-motion/client';
 
 
 const ManageApplications = () => {

@@ -10,6 +10,7 @@ import Calendar from './Calendar';
 import RecruitmentList from './RecruitmentsList';
 import AddMeetings from './AddMeetings';
 import CalendarMeetings from './CalendarMeetings';
+import CreateMeetingSession from './CreateMeetingSession';
 
 
 export {
@@ -25,4 +26,5 @@ export {
     RecruitmentList,
     AddMeetings,
     CalendarMeetings,
+    CreateMeetingSession,
 }

@@ -34,14 +34,6 @@ export const NavLinks = [
       title: "Cv Ranking",
     },
     {
-      id: "Meetings",
-      title: "Meetings",
-    },
-    {
-      id: "MeetingsPoints",
-      title: "Meetings Points",
-    },
-    {
       id: "Assessments",
       title: "Assessments",
     },
@@ -49,6 +41,19 @@ export const NavLinks = [
       id: "AssessmentsPoints",
       title: "Assessments Points",
     },
+    {
+      id: "MeetingSessions",
+      title: "Meeting Sessions",
+    },
+    {
+      id: "Meetings",
+      title: "Meetings",
+    },
+    {
+      id: "MeetingsPoints",
+      title: "Meetings Points",
+    },
+
     {
       id: "CoverLettersAnalyses",
       title: "Cover Letters analyses",

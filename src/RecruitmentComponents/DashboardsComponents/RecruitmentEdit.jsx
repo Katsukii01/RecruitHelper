@@ -145,8 +145,9 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         {/* Status Toggle */}
         <p className="text-sm font-medium text-gray-300">Status:            
           <span className="text-sm font-medium text-white">
-            {formData.status === ' Public' ? ' Public' : ' Private'}
-          </span></p>
+            {formData.status === 'Public' ? ' Public' : ' Private'}
+          </span>
+          </p>
         <div className="flex flex-col items-start gap-4">
           <div
             className={`relative w-16 h-8 flex items-center rounded-full p-1 cursor-pointer ${

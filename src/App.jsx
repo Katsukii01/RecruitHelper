@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard } from "./components";
-import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments, AddMeetings } from "./RecruitmentComponents";
+import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard, Opinions } from "./components";
+import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments, AddMeetings, CreateMeetingSession } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
 const App = () => {
@@ -41,6 +41,7 @@ const App = () => {
                 <About />
                 <KnowHow />
                 <Recruitments />
+                <Opinions />
                 <Contact />
               </>
             } 
@@ -107,6 +108,18 @@ const App = () => {
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/CreateMeetingSession" 
+            element={
+              <ProtectedRoute>
+                 <div className="w-full min-h-screen flex flex-col items-center justify-center bg-glass pt-16 px-12 ">
+                   <CreateMeetingSession />
+                  <div className='mt-12'></div>
+                </div>
+              </ProtectedRoute>
+            } 
+          />
+         
         </Routes>
       </div>
     </BrowserRouter>

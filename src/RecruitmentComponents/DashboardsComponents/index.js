@@ -14,6 +14,25 @@ import AssessmentsPoints from "./AssessmentsPoints";
 import CoverLettersAnalyses from "./CoverLettersAnalyses";
 import CoverLettersPoints from "./CoverLettersPoints";
 import MeetingPoints from "./MeetingPoints";
+import MeetingSessions from "./MeetingSessions";
 
 
-export { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Pagination, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints };
+export { 
+    Navbar, 
+    RecruitmentEdit, 
+    ManageApplicants, 
+    ApplicantsOfferRanking, 
+    Meetings, 
+    FinalRanking, 
+    FinishRecruitment, 
+    DeleteRecruitment, 
+    Pagination, 
+    Overview, 
+    AdnationalPoints, 
+    Assessments, 
+    AssessmentsPoints, 
+    CoverLettersAnalyses, 
+    CoverLettersPoints, 
+    MeetingPoints,
+    MeetingSessions
+};
