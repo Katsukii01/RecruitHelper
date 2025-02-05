@@ -10,12 +10,13 @@ import { DsectionWrapper } from '../hoc';
 const AddMeetings = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { id , MeetingToEdit} = location.state || {};
+    const { id , MeetingToEdit, currentPageMeetings} = location.state || {};
     const [currentMeetingId, setCurrentMeetingId] = useState(0);
     const [loading, setLoading] = useState(false);
      const [errors, setErrors] = useState({});
      const [applicantsData, setApplicantsData] = useState([]);
      const [meetingSessionsData, setMeetingSessionsData] = useState([]);
+     const [ disabledButtons, setDisabledButtons] = useState(false);
      const [meetingData, setMeetingData] = useState({
       meetings : [
           {
@@ -58,7 +59,6 @@ const AddMeetings = () => {
     
     useEffect(() => {
       if (MeetingToEdit) {
-        console.log(MeetingToEdit);
         setMeetingData(prevData => {
           return {
             ...prevData, 
@@ -267,6 +267,7 @@ const AddMeetings = () => {
     
     const handleAddMeeting = async () => {
         try {
+            setDisabledButtons(true); // Wyłączenie przycisków podczas dodawania spotkań
             const allMeetingErrors = {}; // Obiekt na błędy dla wszystkich spotkań
             let hasErrors = false;
     
@@ -283,15 +284,15 @@ const AddMeetings = () => {
     
             if (hasErrors) {
                 setErrors(allMeetingErrors); // Zaktualizowanie stanu błędów
+                setDisabledButtons(false);
                 return;
             }
     
-            //console.log(meetingData);
             await  addMeetings(id, meetingData);
            
             if(MeetingToEdit){
               alert("Meeting edited successfully!");
-              navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id } });
+              navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id, currentPageMeetings: currentPageMeetings } });
             }else{
               alert("Meeting added successfully!");
               navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
@@ -300,11 +301,12 @@ const AddMeetings = () => {
         } catch (error) {
             console.error("Error adding meeting:", error);
             alert("Error adding meeting. Please try again later.");
+            setDisabledButtons(false); // Włączamy przyciski ponownie po wystąpieniu błędu
         }
     };
     const handleComeBack = () => {
       if(MeetingToEdit){
-        navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id } });
+        navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id, currentPageMeetings: currentPageMeetings } });
       }else{
         navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
         }
@@ -459,7 +461,7 @@ const AddMeetings = () => {
     </div>
   ))}
       {!MeetingToEdit && (
-        <button type="button" onClick={() => addMeeting(meetingData, setMeetingData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
+        <button type="button" disabled={disabledButtons} onClick={() => addMeeting(meetingData, setMeetingData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
           Add More Meetings
       </button>
       )}
@@ -469,6 +471,7 @@ const AddMeetings = () => {
             <button
                 onClick={handleAddMeeting}
                 className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
+                disabled={disabledButtons}
             >
               {!MeetingToEdit && (
                 <>Add Meetings</>

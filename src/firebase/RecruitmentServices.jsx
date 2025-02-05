@@ -934,11 +934,10 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
         const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
         if (applicantIndex !== -1) {
           applicants[applicantIndex].stage = 'Invited for interview';
-          console.log(`Applicant ${applicantId} stage updated to "Invited for interview"`);
+
         }
 
-        console.log("Meeting Sessions:", meetingSessions);
-        console.log("Single Meeting Data:", singleMeeting);
+
         
         // **Sprawdzenie, czy singleMeeting ma poprawną strukturę**
         if (!singleMeeting || typeof singleMeeting !== "object") {
@@ -946,35 +945,6 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
           return;
         }
         
-        // **Sprawdzanie, czy sessionId jest dostępne w singleMeeting**
-        const sessionId = Number(singleMeeting.meetingSessionId);
-        console.log("Looking for session ID:", sessionId, "Type:", typeof sessionId);
-        console.log("Available session IDs:", meetingSessions.map(s => s.id));
-
-        const sessionIndex = meetingSessions.findIndex(
-          session => Number(session.id) === sessionId
-        );
-        
-        if (sessionIndex === -1) {
-          console.warn(`Meeting session with ID ${sessionId} not found.`);
-          return;
-        }
-        
-        console.log("Found session at index:", sessionIndex);
-
-        // **Dodaj spotkanie do sesji**
-        const session = meetingSessions[sessionIndex];
-        const currentMeetings = session.meetings || [];
-
-        if(!singleMeeting.id){
-          const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
-          singleMeeting.id = maxId + 1;
-        }
-
-        // **Aktualizacja lub dodanie spotkania**
-        const existingMeetingIndex = currentMeetings.findIndex(meeting => 
-          String(meeting.id) === String(singleMeeting.id)
-        );
         let IsSessionChanged = '';
 
         if(singleMeeting.previousSessionId){
@@ -983,31 +953,65 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
         IsSessionChanged = false;
         }
 
+            // **Sprawdzanie, czy sessionId jest dostępne w singleMeeting**
+            const sessionId = Number(singleMeeting.meetingSessionId);
+
+
+            const sessionIndex = meetingSessions.findIndex(
+              session => Number(session.id) === sessionId
+            );
+            
+            if (sessionIndex === -1) {
+              console.warn(`Meeting session with ID ${sessionId} not found.`);
+              return;
+            }
+            
+
+
+            // **Dodaj spotkanie do sesji**
+            const session = meetingSessions[sessionIndex];
+            const currentMeetings = session.meetings || [];
+
+
         if(IsSessionChanged){
           const PreviousSessionId = Number(singleMeeting.previousSessionId);
   
           const PreviousSessionIndex = meetingSessions.findIndex(
             session => Number(session.id) === PreviousSessionId
           );
-          
+
           const oldSession = meetingSessions[PreviousSessionIndex];
           const oldMeetings = oldSession.meetings || [];
-          console.log("Old meetings:", oldMeetings);
-          oldMeetings.splice(existingMeetingIndex, 1);
+          const indexToRemove = oldMeetings.findIndex(meeting => meeting.id === singleMeeting.id);
 
-          console.log("Old meetings splic:", oldMeetings);
+          if (indexToRemove !== -1) { 
+              oldMeetings.splice(indexToRemove, 1);
+          }
+
+         
           meetingSessions[PreviousSessionIndex].meetings = oldMeetings;
+
           const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
           singleMeeting.id = maxId + 1;
-        }
 
-        if (existingMeetingIndex !== -1) {
-          currentMeetings[existingMeetingIndex] = { ...currentMeetings[existingMeetingIndex], ...singleMeeting };
-        } else {
           currentMeetings.push(singleMeeting);
-        }
+        }else{
+            if(!singleMeeting.id){
+              const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+              singleMeeting.id = maxId + 1;
+            }
+            // **Aktualizacja lub dodanie spotkania**
+            const existingMeetingIndex = currentMeetings.findIndex(meeting => 
+              String(meeting.id) === String(singleMeeting.id)
+            );
 
-        meetingSessions[sessionIndex].meetings = currentMeetings;
+            if (existingMeetingIndex !== -1) {
+              currentMeetings[existingMeetingIndex] = { ...currentMeetings[existingMeetingIndex], ...singleMeeting };
+            } else {
+              currentMeetings.push(singleMeeting);
+            }
+          }
+
       });
     });
 
@@ -1149,6 +1153,10 @@ export const createMeetingSession = async (recruitmentId, meetingSessionData) =>
       const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
       meetingSessionData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
     }
+
+    if(!meetingSessionData.meetings){
+      meetingSessionData.meetings = [];
+      }
 
     // Znajdź indeks spotkania o takim samym ID
     const meetingIndex = currentMeetings.findIndex(meetingsession => meetingsession.id === meetingSessionData.id);

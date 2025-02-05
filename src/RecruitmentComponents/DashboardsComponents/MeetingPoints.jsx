@@ -13,8 +13,10 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
   const [meetingSessions, setMeetingSessions] = useState([]);
   const [applicants, setApplicants] = useState([]);
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [currentPage, setCurrentPage] = useState(state?.currentPage || 1); // Track the current page
+   const location = useLocation();
+
+  const {currentPageMeetings} = location.state || {};
+  const [currentPage, setCurrentPage] = currentPageMeetings? useState(currentPageMeetings) : useState(1);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [sessionIdToDelete, setSessionIdToDelete] = useState(null);
   const [meetingIdToDelete, setMeetingIdToDelete] = useState(null);
@@ -53,14 +55,7 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
     const totalPages = Math.ceil(totalApplcants/ limit); 
 
     useEffect(() => {
-      if (state?.currentPage) {
-        setCurrentPage(state.currentPage); // Set currentPage from state if passed
-        // Clear state after setting currentPage
-        navigate(location.pathname, { state: {} });
-  
-        // Set hash in the URL
-        window.location.hash = "ManageApplicants";
-      }
+
   
       fetchApplicants(); 
     }, [id, currentPage, limit]);
@@ -134,7 +129,6 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
     // Stop updating points if there's an error
     if (errorMessage) return;
 
-    console.log('Updated value:', updatedValueNumber);
     setMeetingSessions(prevSessions =>
       prevSessions.map(session =>
         session.id === meetingSessionId
@@ -171,7 +165,6 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
   };
 
   const DeleteMeeting = async (meetingSessionId, meetingId) => {
-    console.log('Delete meeting:', { id, meetingSessionId, meetingId });
   
     try {
       // Wywołaj funkcję deleteMeeting z odpowiednimi argumentami
@@ -200,7 +193,7 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
   };
 
   const EditMeeting = (meetingSessionId, meetingId) => {
-    console.log('Edit meeting:', { id, meetingSessionId, meetingId });
+
   
     // Znajdź sesję spotkania
     const MeetingSessionToEdit = meetingSessions.find(session => session.id === meetingSessionId);
@@ -216,6 +209,7 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
           state: {
             id: id,
             MeetingToEdit: MeetingToEdit,
+            currentPageMeetings: currentPage,
           },
         });
       } else {
@@ -225,7 +219,13 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
       console.error('Meeting session not found');
     }
   };
-  
+
+      useEffect(() => {
+          if (currentPageMeetings) {
+            setCurrentPage(currentPageMeetings);
+          }
+        }, [currentPageMeetings]);
+
 
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card "><Loader /></div>;
 
@@ -281,18 +281,20 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
                               {errors[session.id][applicantMeeting.id]}
                             </p>
                           )}
-                          <button
-                            onClick={() => EditMeeting(session.id, applicantMeeting.id)}
-                            className="p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleOpenDeleteConfirmation(session.id, applicantMeeting.id)}
-                            className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
-                          >
-                            Delete
-                          </button>
+                          <div className='mt-2'>
+                            <button
+                              onClick={() => EditMeeting(session.id, applicantMeeting.id)}
+                              className="p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleOpenDeleteConfirmation(session.id, applicantMeeting.id)}
+                              className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </>
                       ) : (
                         <div>No meeting</div>

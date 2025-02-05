@@ -55,7 +55,6 @@ useEffect(() => {
   
       if (paginatedMeetings.length === 0 && currentPage > 1) {
         setCurrentPage((prev) => Math.max(prev - 1, 1)); // Zmniejsz stronę, ale nie poniżej 1
-        console.log('zmniejszam stronę');
       } else {
         setPaginatedSessions(paginatedMeetings);
       }
@@ -121,7 +120,6 @@ useEffect(() => {
 
     useEffect(() => {
         if (page) {
-            console.log('page', page);
           setCurrentPage(page);
         }
       }, [page]);

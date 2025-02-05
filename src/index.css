@@ -485,11 +485,11 @@
   height: 200px;
   background: radial-gradient(circle, #09bff7 0%, #12448f 80%);
   box-shadow: 0 0 60px rgba(0, 179, 250, 0.8); /* Halo na 90% wysokości kontenera */
-  animation: pulse 3s infinite ease-in-out;
+  animation: pulseMoon 3s infinite ease-in-out;
 }
 
 
-@keyframes pulse {
+@keyframes pulseMoon {
   0%, 100% {
     transform: scale(0.7);
     opacity: 0.8;
