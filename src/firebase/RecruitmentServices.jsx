@@ -540,6 +540,14 @@ export const deleteApplicant = async (recruitmentId, applicantId) => {
       }
     }
 
+    // Delete meetings
+    const meetings = recruitmentData.MeetingSessions.map(session => session.meetings).flat();
+    for (const meeting of meetings) {
+      if (meeting.applicantId === applicantId) {
+        await deleteMeeting(recruitmentId, meeting.id);
+      }
+    }
+
     // Remove the applicant from the list and update Firestore
     const updatedApplicants = currentApplicants.filter(applicant => applicant.id !== applicantId);
     await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
@@ -752,37 +760,38 @@ export const getApplicantsRanking = async (recruitmentId) => {
 
   
 
-    // Languages
-    const matchedLanguages = applicant.languages.filter(appLang => {
-      const reqLang = recruitmentData.languages.find(reqLang =>
-        reqLang.language === appLang.language
-      );
+// Languages
+const matchedLanguagesScore = applicant.languages.reduce((totalLanguageScore, appLang) => {
+  const reqLang = recruitmentData.languages.find(reqLang =>
+    reqLang.language === appLang.language
+  );
 
-      if (reqLang) {
-        const applicantLevel = levelOrder[appLang.level];
-        const requiredLevel = levelOrder[reqLang.level];
+  if (reqLang) {
+    const applicantLevel = levelOrder[appLang.level];
+    const requiredLevel = levelOrder[reqLang.level];
 
-        let languageScore = 0;
-        if (applicantLevel >= requiredLevel) {
-          languageScore = 1;  // Full score for matching or exceeding required level
-        } else {
-          languageScore = applicantLevel / requiredLevel;  // Proportional score for lower level
-        }
+    let languageScore = 0;
+    if (applicantLevel >= requiredLevel) {
+      languageScore = 1;  // Full score for matching or exceeding required level
+    } else {
+      languageScore = applicantLevel / requiredLevel;  // Proportional score for lower level
+    }
 
-        return true; // Language matched, whether the level is sufficient or not
-      }
+    return totalLanguageScore + languageScore;
+  }
 
-      return false;
-    }).length;
+  return totalLanguageScore; // No score if language is not matched
+}, 0);
 
-    const totalRecruitmentLanguages = recruitmentData.languages?.length || 0;
-    const weightOfLanguages = recruitmentData.weightOfLanguages || 0;
+const totalRecruitmentLanguages = recruitmentData.languages?.length || 0;
+const weightOfLanguages = recruitmentData.weightOfLanguages || 0;
 
-    const languagesScore = totalRecruitmentLanguages > 0 
-      ? (matchedLanguages / totalRecruitmentLanguages) * weightOfLanguages 
-      : 0;
+const languagesScore = totalRecruitmentLanguages > 0 
+  ? (matchedLanguagesScore / totalRecruitmentLanguages) * weightOfLanguages 
+  : 0;
 
-    totalScore += languagesScore;
+
+totalScore += languagesScore;
 
 
 
@@ -828,19 +837,10 @@ export const getApplicantsRanking = async (recruitmentId) => {
 
   totalScore += educationScore;
 
-  const updatedApplicant = {
-    ...applicant,
-    cvScore: parseFloat(totalScore).toFixed(2), // Adding cvScore to the applicant object
-  };
- 
- 
-
-
-  
     // Return the individual scores for each category along with the final score
     return {
       ...applicant,
-      CVscore: parseFloat(totalScore).toFixed(2),
+      CVscore: parseFloat(totalScore.toFixed(2)),
       stage: applicant.stage || 'To be checked',
       CVscores: {
         courses: parseFloat(((coursesScore * 100) / recruitmentData.weightOfCourses).toFixed(2)) || 0,
@@ -860,10 +860,10 @@ export const getApplicantsRanking = async (recruitmentId) => {
 
   try {
     await updateDoc(recruitmentDoc, { Applicants: applicantsWithScores });
-    } catch (error) {
-      console.error('Error updating applicants:', error.message);
-      throw error;
-    }
+  } catch (error) {
+    console.error('Error updating applicants:', error); // Logujemy pełny błąd
+    throw error;
+  }
 
   // Sort applicants by score in descending order
   const rankedApplicants = applicantsWithScores.sort((a, b) => b.CVscore - a.CVscore);
@@ -965,11 +965,42 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
         // **Dodaj spotkanie do sesji**
         const session = meetingSessions[sessionIndex];
         const currentMeetings = session.meetings || [];
-        const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
-        singleMeeting.id = maxId + 1;
+
+        if(!singleMeeting.id){
+          const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+          singleMeeting.id = maxId + 1;
+        }
 
         // **Aktualizacja lub dodanie spotkania**
-        const existingMeetingIndex = currentMeetings.findIndex(meeting => meeting.id === singleMeeting.id);
+        const existingMeetingIndex = currentMeetings.findIndex(meeting => 
+          String(meeting.id) === String(singleMeeting.id)
+        );
+        let IsSessionChanged = '';
+
+        if(singleMeeting.previousSessionId){
+          IsSessionChanged= singleMeeting.meetingSessionId !== singleMeeting.previousSessionId;
+        }else{
+        IsSessionChanged = false;
+        }
+
+        if(IsSessionChanged){
+          const PreviousSessionId = Number(singleMeeting.previousSessionId);
+  
+          const PreviousSessionIndex = meetingSessions.findIndex(
+            session => Number(session.id) === PreviousSessionId
+          );
+          
+          const oldSession = meetingSessions[PreviousSessionIndex];
+          const oldMeetings = oldSession.meetings || [];
+          console.log("Old meetings:", oldMeetings);
+          oldMeetings.splice(existingMeetingIndex, 1);
+
+          console.log("Old meetings splic:", oldMeetings);
+          meetingSessions[PreviousSessionIndex].meetings = oldMeetings;
+          const maxId = currentMeetings.reduce((max, meeting) => Math.max(max, meeting.id || 0), 0);
+          singleMeeting.id = maxId + 1;
+        }
+
         if (existingMeetingIndex !== -1) {
           currentMeetings[existingMeetingIndex] = { ...currentMeetings[existingMeetingIndex], ...singleMeeting };
         } else {
@@ -993,43 +1024,31 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
 
 
 // 13.**delete meeting by ID**
-export const deleteMeeting = async (recruitmentId, meetingId) => {
+export const deleteMeeting = async (id, meetingSessionId, meetingId) => {
   try {
-    await checkAuth(); // Ensure the user is authenticated
-    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', id);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
-
     if (!recruitmentSnapshot.exists()) {
       throw new Error('Recruitment not found');
-    }
-
-    const recruitmentData = recruitmentSnapshot.data();
-
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error('You are not authorized to delete meetings from this recruitment');
-    }
-
-    const meetingSessions = recruitmentData.MeetingSessions || [];
-
-    // Find the session and the meeting within the session
-    for (let session of meetingSessions) {
-      const meetingIndex = session.meetings?.findIndex(meeting => meeting.id === meetingId);
-      
-      if (meetingIndex !== -1) {
-        // Remove the meeting from the session
-        session.meetings.splice(meetingIndex, 1);
-        console.log(`Meeting with ID ${meetingId} deleted from session ${session.id}`);
-        break;
       }
-    }
-
-    // Save the updated meeting sessions back to Firestore
-    await updateDoc(recruitmentDoc, { MeetingSessions: meetingSessions });
-
-  } catch (error) {
-    console.error('Error deleting meeting:', error.message);
-  }
-};
+      const recruitmentData = recruitmentSnapshot.data();
+      const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => meetingSession.id === meetingSessionId);
+      if (meetingSessionIndex === -1) {
+        throw new Error('Meeting session not found');
+      }
+      const meetingIndex = recruitmentData.MeetingSessions[meetingSessionIndex].meetings.findIndex(meeting => meeting.id === meetingId);
+      if (meetingIndex === -1) {
+        throw new Error('Meeting not found');
+      }
+      recruitmentData.MeetingSessions[meetingSessionIndex].meetings.splice(meetingIndex, 1);
+      await updateDoc(recruitmentDoc, { MeetingSessions: recruitmentData.MeetingSessions });
+      return recruitmentData.MeetingSessions[meetingSessionIndex].meetings;
+      } catch (error) {
+        console.error('Error deleting meeting:', error.message);
+        throw error;
+      }
+    };
 
 
 // 14.**get meeting by ID**
@@ -1308,6 +1327,97 @@ export const getUserMeetingSessions = async () => {
     throw error;
   }
 };
+
+// 21.**get applicants name ,surname, email, overall score**
+export const getApplicantsWithOverallScore = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitment = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitment);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+      }
+      const recruitmentData = recruitmentSnapshot.data();
+      const applicants = recruitmentData.Applicants || [];
+      const applicantsWithOverallScore = applicants.map(applicant => {
+        const applicantScore = parseFloat(applicant.CVscore.toFixed(2));
+        return {
+          ...applicant,
+          totalScore: applicantScore,
+        };
+      });
+
+      try {
+        await updateDoc(recruitment, { Applicants: applicantsWithOverallScore });
+      } catch (error) {
+        console.error('Error updating applicants:', error); // Logujemy pełny błąd
+        throw error;
+      }
+
+       const rankedApplicants = applicantsWithOverallScore.sort((a, b) => b.totalScore - a.totalScore);
+      
+      return rankedApplicants;
+}catch (error) {
+    console.error('Error fetching applicants overall score:', error.message);
+    throw error;
+  }
+};
+
+// 22.**get applicant name ,surname, email, overall score by ID**
+
+export const getAllApplicants= async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitment = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitment);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+      }
+      const recruitmentData = recruitmentSnapshot.data();
+      const applicants = recruitmentData.Applicants || [];
+
+      if (applicants) {
+        return applicants;
+      }
+      
+      throw new Error('Applicant not found');
+    } catch (error) {
+      console.error('Error fetching applicant confidential data:', error.message);
+      throw error;
+    }
+  };
+
+
+  // 23.**update meeting points**
+  export const updateMeetingPoints = async (id, meetingSessionId, meetingId, updatedValue) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated asynchronously
+      const recruitmentDoc = doc(db, 'recruitments', id);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error('Recruitment not found');
+        }
+        const recruitmentData = recruitmentSnapshot.data();
+        const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => meetingSession.id === meetingSessionId);
+        if (meetingSessionIndex === -1) {
+          throw new Error('Meeting session not found');
+        }
+        const meetingIndex = recruitmentData.MeetingSessions[meetingSessionIndex].meetings.findIndex(meeting => meeting.id === meetingId);
+        if (meetingIndex === -1) {
+          throw new Error('Meeting not found');
+        }
+        //c
+        recruitmentData.MeetingSessions[meetingSessionIndex].meetings[meetingIndex].points = updatedValue;
+        await updateDoc(recruitmentDoc, { MeetingSessions: recruitmentData.MeetingSessions });
+        
+        } catch (error) {
+          console.error('Error updating meeting points:', error.message);
+          throw error;
+        }
+      };
+
+
+
 
 
 

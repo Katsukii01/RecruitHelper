@@ -46,7 +46,7 @@ const Navbar = () => {
           setActive(hash);
           setUnderline(hash);
         } else {
-          setActive('Dashboard');
+          setActive('');
           setUnderlineToNone();
         }
   
@@ -59,7 +59,7 @@ const Navbar = () => {
         const validPaths = ['/SignIn', '/SignUp', '/Home', '/Dashboard','/'];
     
         if (!validPaths.includes(pathname)) {
-          setActive('Dashboard');
+          setActive('');
           setUnderlineToNone();
         }else{
           setActive(pathname.slice(1));

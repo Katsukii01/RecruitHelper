@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { defaultPfp } from '../assets';
 import { useNavigate } from 'react-router-dom';
+import {BlueMoon} from '../components';
 
 
 const Home = () => {
@@ -94,7 +95,7 @@ const Home = () => {
   
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center bg-glass pt-32">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center  pt-32">
       <h1 className="text-4xl font-bold text-white ">Welcome to your homepage</h1>
 
       <div className="space-y-4 m-6 w-full max-w-5xl text-md p-5">

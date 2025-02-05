@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getRecruitments } from '../firebase/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../components';
-import { p } from 'framer-motion/client';
 
 const ManageRecruitments = () => {
   const [recruitments, setRecruitments] = useState([]);
@@ -88,7 +87,7 @@ const ManageRecruitments = () => {
   }
   
   const goToRecruitmentDashboard = (id) => {
-    navigate(`/RecruitmentDashboard`, { state: { id } });
+    navigate(`/RecruitmentDashboard#Overview`, { state: { id } });
   };
 
   const getRandomColor = () => {

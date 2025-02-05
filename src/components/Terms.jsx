@@ -4,7 +4,7 @@ const Terms = () => {
   return (
     <div className='flex flex-col items-center justify-center pt-32'>
         <h1 className='text-2xl font-bold mb-4'>Terms and Conditions</h1>
-        <ol className='text-secondary text-[17px] max-w-3xl leading-[30px] list-decimal pt-8 p-16 card '>
+        <ol className='text-secondary text-[17px] max-w-3xl leading-[30px] list-decimal pt-8 p-16 bg-glass rounded-lg mb-20 border border-gray-500'>
             <li>
                 <strong>Acceptance of Terms and Conditions: </strong>
                 By accessing or using the Service, you are deemed to have accepted these Terms and Conditions. If you do not agree to these Terms and Conditions, you must not access or use the Service.

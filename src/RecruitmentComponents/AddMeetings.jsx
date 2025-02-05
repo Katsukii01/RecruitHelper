@@ -6,23 +6,33 @@ import { useEffect } from 'react';
 import { getMeetingById, getApplicantsByStage, getMeetingSessionsByRecruitmentId, addMeetings } from '../firebase/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
-import { c } from 'maath/dist/index-0332b2ed.esm';
 
 const AddMeetings = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { id , meetingId} = location.state || {};
+    const { id , MeetingToEdit} = location.state || {};
     const [currentMeetingId, setCurrentMeetingId] = useState(0);
     const [loading, setLoading] = useState(false);
      const [errors, setErrors] = useState({});
      const [applicantsData, setApplicantsData] = useState([]);
      const [meetingSessionsData, setMeetingSessionsData] = useState([]);
-
+     const [meetingData, setMeetingData] = useState({
+      meetings : [
+          {
+              meetingSessionId: '',
+              applicantId: '',
+              meetingDate: '',
+              meetingTimeFrom: '',
+              meetingTimeTo: '',
+              meetingLink: '',
+          },
+      ]
+  });
 
     const fetchApplicants = async () => {
         setLoading(true);
         try {
-            const applicants = await getApplicantsByStage(id, ['Checked', 'Assessments',]);
+            const applicants = await getApplicantsByStage(id, ['Checked', 'Assessments', 'Invited for interview', 'Interviewed']);
             setApplicantsData(applicants);
         } catch (error) {
             console.error('Error fetching applicant:', error);
@@ -30,6 +40,7 @@ const AddMeetings = () => {
             setLoading(false);
         }
     };
+    
 
     const fetchMeetingSessions = async () => {
         if (id) {
@@ -45,40 +56,30 @@ const AddMeetings = () => {
         }
     };
     
+    useEffect(() => {
+      if (MeetingToEdit) {
+        console.log(MeetingToEdit);
+        setMeetingData(prevData => {
+          return {
+            ...prevData, 
+            meetings: [
+              {
+                ...MeetingToEdit,
+                previousSessionId: MeetingToEdit.meetingSessionId 
+              }
+            ] 
+          };
+        });
+      }
+    }, [MeetingToEdit]);
 
-    const fetchMeeting = async () => {
-        if (meetingId) {
-            setLoading(true);
-            try {
-                const meeting = await getMeetingById(id, meetingId);
-                setMeetingData(meeting);
-            } catch (error) {
-                console.error('Error fetching meeting:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-    
     useEffect(() => {
         fetchMeetingSessions();
         fetchApplicants();
-        fetchMeeting();
     } , [id]);
 
 
-const [meetingData, setMeetingData] = useState({
-        meetings : [
-            {
-                meetingSessionId: '',
-                applicantId: '',
-                meetingDate: '',
-                meetingTimeFrom: '',
-                meetingTimeTo: '',
-                meetingLink: '',
-            },
-        ]
-    });
+
 
     const addMeeting = () => {
         const meetingErrors = validateForm(currentMeetingId);
@@ -186,6 +187,7 @@ const [meetingData, setMeetingData] = useState({
         const currentMeetingDate = currentMeeting.meetingDate;
         const currentTimeFrom = currentMeeting.meetingTimeFrom;
         const currentTimeTo = currentMeeting.meetingTimeTo;
+        
 
         // Sprawdź, czy istnieje inny meeting z tym samym applicantem w tej samej sesji
         const isDuplicate = meetingData.meetings.some((meeting, index) => 
@@ -215,43 +217,47 @@ const [meetingData, setMeetingData] = useState({
         }
 
 
-
-        if (meetingSessionsData?.length > 0) { // Upewniamy się, że meetingSessionsData jest zainicjowane i nie jest pustą tablicą
+        // Upewniamy się, że meetingSessionsData jest zainicjowane i nie jest pustą tablicą
+        if (meetingSessionsData?.length > 0) {
           const isSessionConflict = meetingSessionsData.some(session => {
-
             return session.meetings?.some((sessionMeeting, index) => {
+              // Jeśli spotkanie jest edytowane (ma id) i jest tym samym spotkaniem, pomijamy ten rekord
+              if (meetingData?.meetings[id]?.id === sessionMeeting.id) return false;
+
               const isDuplicate = sessionMeeting.meetingSessionId === currentMeetingSessionId && 
-                                    sessionMeeting.applicantId === currentApplicantId;
-                
+                                  sessionMeeting.applicantId === currentApplicantId;
+
               return isDuplicate;
             });
           });
-        
+
           if (isSessionConflict) {
-            newErrors[id].meetingSessionId = "This applicant is already assigned to a session in another meeting";
+            newErrors[id].meetingSessionId = "This applicant is already assigned to this session in another meeting";
           }
-        
+
           // Sprawdź, czy ten aplikant ma inne spotkanie w tym samym czasie w innych sesjach
           const isSessionTimeConflict = meetingSessionsData.some(session => {
-            
             return session.meetings?.some((sessionMeeting, index) => {
-                const isTimeConflict = sessionMeeting.meetingDate === currentMeetingDate &&
-                  (
-                    (currentTimeFrom >= sessionMeeting.meetingTimeFrom && currentTimeFrom < sessionMeeting.meetingTimeTo) || // Kolizja na początku
-                    (currentTimeTo > sessionMeeting.meetingTimeFrom && currentTimeTo <= sessionMeeting.meetingTimeTo) || // Kolizja na końcu
-                    (currentTimeFrom <= sessionMeeting.meetingTimeFrom && currentTimeTo >= sessionMeeting.meetingTimeTo) // Spotkanie obejmuje inne spotkanie
-                  );
+              // Jeśli spotkanie jest edytowane (ma id) i jest tym samym spotkaniem, pomijamy ten rekord
+              if (meetingData?.meetings[id]?.id === sessionMeeting.id) return false;
 
-                return isTimeConflict;
+              const isTimeConflict = sessionMeeting.meetingDate === currentMeetingDate &&
+                (
+                  (currentTimeFrom >= sessionMeeting.meetingTimeFrom && currentTimeFrom < sessionMeeting.meetingTimeTo) || // Kolizja na początku
+                  (currentTimeTo > sessionMeeting.meetingTimeFrom && currentTimeTo <= sessionMeeting.meetingTimeTo) || // Kolizja na końcu
+                  (currentTimeFrom <= sessionMeeting.meetingTimeFrom && currentTimeTo >= sessionMeeting.meetingTimeTo) // Spotkanie obejmuje inne spotkanie
+                );
+
+              return isTimeConflict;
             });
           });
-        
+
           if (isSessionTimeConflict) {
             newErrors[id].meetingTimeFrom = "There's already a meeting at this time in another session";
             newErrors[id].meetingTimeTo = "There's already a meeting at this time in another session";
           }
-        
-        } else {
+        }
+        else {
           console.log("No meeting sessions available.");
         }
         
@@ -282,8 +288,14 @@ const [meetingData, setMeetingData] = useState({
     
             //console.log(meetingData);
             await  addMeetings(id, meetingData);
-            alert("Meeting added successfully!");
-            navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
+           
+            if(MeetingToEdit){
+              alert("Meeting edited successfully!");
+              navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id } });
+            }else{
+              alert("Meeting added successfully!");
+              navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
+            }
     
         } catch (error) {
             console.error("Error adding meeting:", error);
@@ -291,7 +303,11 @@ const [meetingData, setMeetingData] = useState({
         }
     };
     const handleComeBack = () => {
+      if(MeetingToEdit){
+        navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id } });
+      }else{
         navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
+        }
     };
     
 
@@ -442,10 +458,11 @@ const [meetingData, setMeetingData] = useState({
         )}
     </div>
   ))}
-      
-      <button type="button" onClick={() => addMeeting(meetingData, setMeetingData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
-        Add More Meetings
-    </button>
+      {!MeetingToEdit && (
+        <button type="button" onClick={() => addMeeting(meetingData, setMeetingData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
+          Add More Meetings
+      </button>
+      )}
 </form>
 
         <div className="flex flex-col justify-center mb-4 mx-auto">
@@ -453,7 +470,12 @@ const [meetingData, setMeetingData] = useState({
                 onClick={handleAddMeeting}
                 className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
             >
-                Add Meetings 
+              {!MeetingToEdit && (
+                <>Add Meetings</>
+                )}
+              {MeetingToEdit && (
+                <>Save changes</>
+                )}
             </button>
             <button
             onClick={handleComeBack}

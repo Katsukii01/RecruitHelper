@@ -30,6 +30,10 @@ export const NavLinks = [
       title: "Overview",
     },
     {
+      id: "ApplicantsStages",
+      title: "Applicants stages",
+    },
+    {
       id: "ApplicantsOfferRanking",
       title: "Cv Ranking",
     },

@@ -15,6 +15,7 @@ import CoverLettersAnalyses from "./CoverLettersAnalyses";
 import CoverLettersPoints from "./CoverLettersPoints";
 import MeetingPoints from "./MeetingPoints";
 import MeetingSessions from "./MeetingSessions";
+import ApplicantsStages from "./ApplicantsStages";
 
 
 export { 
@@ -34,5 +35,6 @@ export {
     CoverLettersAnalyses, 
     CoverLettersPoints, 
     MeetingPoints,
-    MeetingSessions
+    MeetingSessions,
+    ApplicantsStages
 };

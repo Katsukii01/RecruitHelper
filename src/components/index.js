@@ -10,6 +10,8 @@ import Terms from './Terms';;
 import Loader from './loader';
 import Dashboard from './Dashboard';
 import Opinions from './Opinions';
+import Footer from './Footer';
+import BlueMoon from './BlueMoon';
 
 
 export {
@@ -25,4 +27,7 @@ export {
     Loader,
     Dashboard,
     Opinions,
+    Footer,
+    BlueMoon,
+
 }

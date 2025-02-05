@@ -11,6 +11,7 @@ import RecruitmentList from './RecruitmentsList';
 import AddMeetings from './AddMeetings';
 import CalendarMeetings from './CalendarMeetings';
 import CreateMeetingSession from './CreateMeetingSession';
+import CircularProgress from './CircularProgress';
 
 
 export {
@@ -27,4 +28,5 @@ export {
     AddMeetings,
     CalendarMeetings,
     CreateMeetingSession,
+    CircularProgress
 }

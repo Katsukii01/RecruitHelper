@@ -118,9 +118,9 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
       } else {
         if(updatedData.status === "Public") {
           // Dodanie nowej rekrutacji
-          const recruitmentId = await addRecruitment(updatedData);
+          const id = await addRecruitment(updatedData);
           alert('Recruitment added successfully!');
-          navigate('/RecruitmentDashboard', { state: { recruitmentId } });
+          navigate('/RecruitmentDashboard', { state: { id } });
         } else {
         // Dodanie nowej rekrutacji
         const recruitmentId = await addRecruitment(updatedData);
@@ -136,7 +136,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
     }
   };
 
-  if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center"><Loader /></div>;
+  if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">

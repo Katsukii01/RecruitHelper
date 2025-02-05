@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard, Opinions } from "./components";
+import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard, Opinions, Footer } from "./components";
 import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments, AddMeetings, CreateMeetingSession } from "./RecruitmentComponents";
 import { Home, SignIn, SignUp } from "./authComponents";
 
@@ -43,6 +43,7 @@ const App = () => {
                 <Recruitments />
                 <Opinions />
                 <Contact />
+                <Footer />
               </>
             } 
           />

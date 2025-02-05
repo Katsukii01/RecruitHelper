@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints, MeetingSessions } from './DashboardsComponents';
+import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Assessments, AssessmentsPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints, MeetingSessions, ApplicantsStages } from './DashboardsComponents';
 
 const RecruitmentDashboard = () => {
   const location = useLocation();
@@ -9,6 +9,7 @@ const RecruitmentDashboard = () => {
     return location.state?.id || savedId || null;
   });
   const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
+  const [refresh2, setRefresh2] = useState(false); // State to trigger re-fetch in children
 
   useEffect(() => {
     if (id) {
@@ -19,6 +20,11 @@ const RecruitmentDashboard = () => {
   const handleRefresh = () => {
     setRefresh(prev => !prev); // Toggle to trigger re-fetch in children
   };
+
+  const handleRefresh2 = () => {
+    setRefresh2(prev => !prev); // Toggle to trigger re-fetch in children
+  };
+  
 
   if (!id) {
     return (
@@ -40,14 +46,16 @@ const RecruitmentDashboard = () => {
         <div className="flex flex-col items-start space-y-9">
           <Overview id={id} refresh={refresh}/>
 
-          <ApplicantsOfferRanking id={id} refresh={refresh}/>
+          <ApplicantsStages id={id} refresh={refresh2}/>
+
+          <ApplicantsOfferRanking id={id} refresh={refresh}  onRefresh={handleRefresh2}/>
 
           <Assessments id={id} refresh={refresh} onRefresh={handleRefresh}/>
           <AssessmentsPoints id={id} refresh={refresh}/>
 
           <MeetingSessions id={id} refresh={refresh} onRefresh={handleRefresh}/>
           <Meetings id={id} refresh={refresh} />
-          <MeetingPoints id={id} refresh={refresh}/>
+          <MeetingPoints id={id} refresh={refresh} onRefresh={handleRefresh}/>
 
           <CoverLettersAnalyses id={id} refresh={refresh}/>
           <CoverLettersPoints id={id} refresh={refresh}/>
