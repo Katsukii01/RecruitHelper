@@ -73,9 +73,9 @@ useEffect(() => {
         Plan Meeting
       </button>
     </div>
-    <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+
         <CalendarMeetings meetingSessions={meetingSessions} />
-      </div>
+
     
   </section>
   )

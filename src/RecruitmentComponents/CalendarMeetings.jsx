@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { use } from 'react';
 import Calendar from 'react-calendar';
 
 const CalendarMeetings = ({ meetingSessions }) => {
@@ -33,6 +34,10 @@ const CalendarMeetings = ({ meetingSessions }) => {
     setSelectedDate(date);
   };
 
+  useEffect(() => {
+    setSelectedDate(new Date());
+  }, []); // Ustawiamy aktualną datę tylko raz na początku
+
   const tileClassName = ({ date, view }) => {
     if (view === 'month') {
       const meetingsOnDate = allMeetings.filter((meeting) => {
@@ -45,7 +50,7 @@ const CalendarMeetings = ({ meetingSessions }) => {
   };
 
   return (
-    <section className="relative w-full overflow-auto h-screen-65 p-6 rounded-lg">
+    <section className="relative w-full overflow-auto h-screen-60 p-6 rounded-lg">
       <Calendar
         locale="en-GB"
         onChange={onDateChange}
