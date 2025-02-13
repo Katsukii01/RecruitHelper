@@ -1,13 +1,13 @@
 import React from 'react';
 import { ManageRecruitments, ManageApplications, Calendar } from '../recruitment';
-import { color } from 'framer-motion';
+
 const statusColors = [
   { status: 'To be checked', color: 'bg-gray-500', description: 'The applicant is still in review and has not been evaluated yet.' },
   { status: 'Rejected', color: 'bg-red-500', description: 'The applicant has been rejected and will not move forward. You can quit the recruitment process or wait for end of the recruitment.' },
   { status: 'Checked', color: 'bg-blue-500', description: 'The applicant has been checked and reviewed.' },
   { status: 'Invited for interview', color: 'bg-yellow-500', description: 'The applicant has been invited for an interview.' },
   { status: 'Interviewed', color: 'bg-orange-500', description: 'The applicant has been interviewed and is awaiting the next step.' },
-  { status: 'Assessments', color: 'bg-pink-500', description: 'The applicant is currently undergoing assessments.' },
+  { status: 'Tasks', color: 'bg-pink-500', description: 'The applicant is currently completing tasks.' },
   { status: 'Offered', color: 'bg-purple-500', description: 'The applicant has been offered a job and is awaiting their response.' },
   { status: 'Hired', color: 'bg-green-500', description: 'The applicant has been hired and is now an employee.' },
 ];
@@ -35,7 +35,7 @@ const stageColors = [
   { stage: 'Checking applications', color: 'bg-blue-500', description: 'The recruiter is currently checking applications.' },
   { stage: 'Interviewing applicants', color: 'bg-yellow-500', description: 'The recruiter is currently interviewing applicants.' },
   { stage: 'Offering jobs', color: 'bg-purple-500', description: 'The recruiter is currently offering jobs.' },
-  { stage: 'Scoring assessments', color: 'bg-pink-500', description: 'The recruiter is currently scoring assessments.' },
+  { stage: 'Scoring tasks', color: 'bg-pink-500', description: 'The recruiter is currently scoring tasks.' },
   { stage: 'Hiring employees', color: 'bg-green-500', description: 'The recruiter is currently hiring employees.' },
   { stage: 'Paused', color: 'bg-red-500', description: 'The recruiter paused recruitment process.' },
 ];
