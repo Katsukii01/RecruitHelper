@@ -19,7 +19,7 @@ const CreateMeetingSession = () => {
         const [errors, setErrors] = useState({});
         const [loading, setLoading] = useState(false);
         const [ButtonText, setButtonText] = useState('Create Meeting Session');
-
+        const [isLoading, setIsLoading] = useState(false);
 
 
  const fetchMeetingSession = async () => {
@@ -59,8 +59,8 @@ const CreateMeetingSession = () => {
 
         if (!meetingSession.meetingSessionPointsWeight) {
             newErrors.meetingSessionPointsWeight = 'Meeting points weight is required';
-        } else if (meetingSession.meetingSessionPointsWeight.length > 100 || meetingSession.meetingSessionPointsWeight < 0) {
-            newErrors.meetingPointsWeight = 'Meeting points weight must be a number between 0 and 100';
+        } else if (meetingSession.meetingSessionPointsWeight > 100 || meetingSession.meetingSessionPointsWeight < 0) {
+            newErrors.meetingSessionPointsWeight = 'Meeting points weight must be a number between 0 and 100';
             }
 
         return newErrors;
@@ -77,6 +77,7 @@ const CreateMeetingSession = () => {
         
     const handleAddMeetingSession = async () => {
         try {
+            setIsLoading(true);
             const meetingErrors = validateForm();
             if (Object.keys(meetingErrors).length > 0) {
                 setErrors(meetingErrors); // Aktualizacja stanu błędów
@@ -93,6 +94,8 @@ const CreateMeetingSession = () => {
         } catch (error) {
             console.error('Error adding meeting session:', errors);
             alert('Error adding meeting session. Please try again later.');
+        }finally{
+            setIsLoading(false);
         }
     };
 
@@ -150,6 +153,7 @@ if (loading) return <div className="relative w-full h-auto mx-auto flex justify-
     </form>
         <div className="flex flex-col justify-center mb-4 mx-auto">
             <button
+                disabled={isLoading}
                 onClick={handleAddMeetingSession}
                 className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
             >
@@ -157,6 +161,7 @@ if (loading) return <div className="relative w-full h-auto mx-auto flex justify-
                 {ButtonText}
             </button>
             <button
+            disabled={isLoading}
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
             >

@@ -1,6 +1,6 @@
 import emailjs from '@emailjs/browser';
 
-const sendEmail = async (action, type, applicant, recruitmentName, meetingOrAssessmentName, description, additionalData) => {
+const sendEmail = async (action, type, applicant, recruitmentName, meetingOrTaskName, description, additionalData) => {
   if (!applicant?.email) {
     console.error("Applicant email is missing.");
     return;
@@ -12,30 +12,30 @@ const sendEmail = async (action, type, applicant, recruitmentName, meetingOrAsse
 
   switch (`${action}_${type}`) {
     case 'ADD_MEETING':
-      subject = `📅 New Meeting: ${meetingOrAssessmentName} for ${recruitmentName}`;
-      message += `✨ A new meeting **${meetingOrAssessmentName}** has been scheduled for **${recruitmentName}**.\n\n🔹 **Details:**\n📅 **Date:** ${additionalData.meetingDate}\n🕒 **Time:** ${additionalData.meetingTimeFrom} - ${additionalData.meetingTimeTo}\n🔗 **Link:** ${additionalData.meetingLink}\n\n📝 ${description}\n\n🚀 Best wishes,\nRecruitHelper Team`;
+      subject = `📅 New Meeting: ${meetingOrTaskName} for ${recruitmentName}`;
+      message += `✨ A new meeting **${meetingOrTaskName}** has been scheduled for **${recruitmentName}**.\n\n🔹 **Details:**\n📅 **Date:** ${additionalData.meetingDate}\n🕒 **Time:** ${additionalData.meetingTimeFrom} - ${additionalData.meetingTimeTo}\n🔗 **Link:** ${additionalData.meetingLink}\n\n📝 ${description}\n\n🚀 Best wishes,\nRecruitHelper Team`;
       break;
     
     case 'REMOVE_MEETING':
-      subject = `🚫 Meeting Removed: ${meetingOrAssessmentName}`;
-      message += `⚠️ The meeting **${meetingOrAssessmentName}** for **${recruitmentName}** has been **canceled**.\n\n❗ If you have any questions, feel free to reach out.\n\n🙌 Best wishes,\nRecruitHelper Team`;
+      subject = `🚫 Meeting Removed: ${meetingOrTaskName}`;
+      message += `⚠️ The meeting **${meetingOrTaskName}** for **${recruitmentName}** has been **canceled**.\n\n❗ If you have any questions, feel free to reach out.\n\n🙌 Best wishes,\nRecruitHelper Team`;
       break;
 
 
-    case 'ADD_ASSESSMENT':
-      subject = `📝 New Assessment: ${meetingOrAssessmentName} for ${recruitmentName}`;
-      message += `✅ A new assessment **${meetingOrAssessmentName}** has been **assigned** for **${recruitmentName}**.\n\n📌 **Deadline:** ${additionalData.assessmentDeadline}\n\n📄 **Description:**\n${description}\n\n🚀 Best of luck!\nRecruitHelper Team`;
+    case 'ADD_TASK':
+      subject = `📝 New Task: ${meetingOrTaskName} for ${recruitmentName}`;
+      message += `✅ A new Task **${meetingOrTaskName}** has been **assigned** for **${recruitmentName}**.\n\n📌 **Deadline:** ${additionalData.taskDeadline}\n\n📄 **Description:**\n${description}\n\n🚀 Best of luck!\nRecruitHelper Team`;
       break;
 
-    case 'REMOVE_ASSESSMENT':
-      subject = `❌ Assessment Removed: ${meetingOrAssessmentName}`;
-      message += `⚠️ The assessment **${meetingOrAssessmentName}** for **${recruitmentName}** has been **removed**.\n\n📩 If you have any concerns, feel free to contact us.\n\n💡 Stay tuned!\nRecruitHelper Team`;
+    case 'REMOVE_TASK':
+      subject = `❌ Task Removed: ${meetingOrTaskName}`;
+      message += `⚠️ The task **${meetingOrTaskName}** for **${recruitmentName}** has been **removed**.\n\n📩 If you have any concerns, feel free to contact us.\n\n💡 Stay tuned!\nRecruitHelper Team`;
       break;
 
 
     default:
       subject = `📢 Notification for ${recruitmentName}`;
-      message += `ℹ️ There is an **update** regarding **${meetingOrAssessmentName}** for **${recruitmentName}**.\n\n📝 ${description}\n\n🚀 Best wishes,\nRecruitHelper Team`;
+      message += `There is an **update** regarding **${meetingOrTaskName}** for **${recruitmentName}**.\n\n📝 ${description}\n\n🚀 Best wishes,\nRecruitHelper Team`;
   }
 
 

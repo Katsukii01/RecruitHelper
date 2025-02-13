@@ -9,8 +9,8 @@ import DeleteRecruitment from "./DeleteRecruitment";
 import Pagination from "./Pagination";
 import Overview from "./Overview";
 import AdnationalPoints from "./AdnationalPoints";
-import Assessments from "./Assessments";
-import AssessmentsPoints from "./AssessmentsPoints";
+import Tasks from "./Tasks";
+import TasksPoints from "./TasksPoints";
 import CoverLettersAnalyses from "./CoverLettersAnalyses";
 import CoverLettersPoints from "./CoverLettersPoints";
 import MeetingPoints from "./MeetingPoints";
@@ -30,8 +30,8 @@ export {
     Pagination, 
     Overview, 
     AdnationalPoints, 
-    Assessments, 
-    AssessmentsPoints, 
+    Tasks, 
+    TasksPoints,
     CoverLettersAnalyses, 
     CoverLettersPoints, 
     MeetingPoints,

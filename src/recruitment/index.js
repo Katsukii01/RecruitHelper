@@ -13,6 +13,8 @@ import CalendarMeetings from './CalendarMeetings';
 import CreateMeetingSession from './CreateMeetingSession';
 import CircularProgress from './CircularProgress';
 import FilesPreview from './FilesPreview';
+import AddTasks from './AddTasks';
+import CreateTasksSession from './CreateTasksSession';
 
 
 export {
@@ -31,4 +33,6 @@ export {
     CreateMeetingSession,
     CircularProgress,
     FilesPreview,
+    AddTasks,
+    CreateTasksSession
 }

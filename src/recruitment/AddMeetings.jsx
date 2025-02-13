@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Loader } from '../utils';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getMeetingById, getApplicantsByStage, getMeetingSessionsByRecruitmentId, addMeetings } from '../services/RecruitmentServices';
+import { getApplicantsByStage, getMeetingSessionsByRecruitmentId, addMeetings } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
 

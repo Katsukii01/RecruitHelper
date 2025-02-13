@@ -1577,8 +1577,8 @@ export const getAllApplicants= async (recruitmentId) => {
       }
     };
 
-  // 26.**create assessments session**
-  export const createAssessmentSession = async (recruitmentId, assessmentSessionData) => {
+  // 26.**create tasks session**
+  export const createTaskSession = async (recruitmentId, taskSessionData) => {
     try {
       await checkAuth(); // Ensure the user is authenticated
       const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1591,59 +1591,59 @@ export const getAllApplicants= async (recruitmentId) => {
       const recruitmentData = recruitmentSnapshot.data();
   
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-        throw new Error('You are not authorized to create assessment session');
+        throw new Error('You are not authorized to create task session');
       }
   
-      // Update the assessments list: check if the assessment with the same ID already exists
-      const currentAssessments = recruitmentData.AssessmentSessions || [];
+      // Update the tasks list: check if the task with the same ID already exists
+      const currentTasks = recruitmentData.TaskSessions || [];
   
-      // Sprawdź, czy `assessmentData.id` istnieje
-      if (!assessmentSessionData.id) {
-        // Znajdź największe istniejące ID w currentAssessments
-        const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
-        assessmentSessionData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
+      // Sprawdź, czy `taskData.id` istnieje
+      if (!taskSessionData.id) {
+        // Znajdź największe istniejące ID w currentTasks
+        const maxId = currentTasks.reduce((max, task) => Math.max(max, task.id || 0), 0);
+        taskSessionData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
       }
   
-      if(!assessmentSessionData.assessments){
-        assessmentSessionData.assessments = [];
+      if(!taskSessionData.tasks){
+        taskSessionData.tasks = [];
         }
   
 
-      const assessmentIndex = currentAssessments.findIndex(assessmentsession => assessmentsession.id === assessmentSessionData.id);
+      const taskIndex = currentTasks.findIndex(tasksession => tasksession.id === taskSessionData.id);
   
-      if (assessmentIndex !== -1) {
-        // Assessment exists, update their information and replace their files
-        const updatedAssessments = currentAssessments.map((assessmentSession, index) => {
-          if (index === assessmentIndex) {
+      if (taskIndex !== -1) {
+        // Task exists, update their information and replace their files
+        const updatedTasks = currentTasks.map((taskSession, index) => {
+          if (index === taskIndex) {
             return {
-              ...assessmentSession,
-              ...assessmentSessionData,
+              ...taskSession,
+              ...taskSessionData,
             };
           }
-          return assessmentSession;
+          return taskSession;
         });
-        await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessments });
+        await updateDoc(recruitmentDoc, { TaskSessions: updatedTasks });
       }
       else {
-        // New assessment, add to the list
-        const updatedAssessments = [
-          ...currentAssessments,
+        // New task, add to the list
+        const updatedTasks = [
+          ...currentTasks,
           { 
-            ...assessmentSessionData, 
+            ...taskSessionData, 
           },
         ];
   
-        await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessments });
+        await updateDoc(recruitmentDoc, { TaskSessions: updatedTasks });
       }
   
     } catch (error) {
-      console.error('Error adding or updating assessment session:', error.message);
+      console.error('Error adding or updating task session:', error.message);
       throw error;
     }
   };
   
-  // 27.**delete assessment session by ID**
-  export const deleteAssessmentSession = async (recruitmentId, assessmentSessionId) => {
+  // 27.**delete task session by ID**
+  export const deleteTaskSession = async (recruitmentId, taskSessionId) => {
     try {
       await checkAuth(); // Ensure the user is authenticated
       const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1655,34 +1655,34 @@ export const getAllApplicants= async (recruitmentId) => {
   
       const recruitmentData = recruitmentSnapshot.data();
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-        throw new Error('You are not authorized to delete assessment session from this recruitment');
+        throw new Error('You are not authorized to delete task session from this recruitment');
       }
   
-      const assessmentSessionIndex = recruitmentData.AssessmentSessions.findIndex(assessmentSession => assessmentSession.id === assessmentSessionId);
+      const taskSessionIndex = recruitmentData.TaskSessions.findIndex(taskSession => taskSession.id === taskSessionId);
   
-      if (assessmentSessionIndex === -1) {
-        throw new Error('Assessment session not found');
+      if (taskSessionIndex === -1) {
+        throw new Error('Task session not found');
       }
   
       //update applicants stage
-      const CurrentAssessmentSession = recruitmentData.AssessmentSessions[assessmentSessionIndex];
+      const CurrentTaskSession = recruitmentData.TaskSessions[taskSessionIndex];
       
   
-      //delete assessments
-      for (const assessment of CurrentAssessmentSession.assessments) {
-         await deleteAssessment(recruitmentId, assessment.assessmentSessionId ,assessment.id);
+      //delete tasks
+      for (const task of CurrentTaskSession.tasks) {
+         await deleteTask(recruitmentId, task.taskSessionId ,task.id);
       }
   
-      const updatedAssessmentSessions = recruitmentData.AssessmentSessions.filter((assessmentSession) => assessmentSession.id !== assessmentSessionId);
+      const updatedTaskSessions = recruitmentData.TaskSessions.filter((taskSession) => taskSession.id !== taskSessionId);
   
-      await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessmentSessions});
+      await updateDoc(recruitmentDoc, { TaskSessions: updatedTaskSessions});
     } catch (error) {
-      console.error('Error deleting assessment session:', error.message);
+      console.error('Error deleting task session:', error.message);
     }
   };
 
-  // 28.**add assessments**
-export const addAssessments = async (recruitmentId, assessmentsData) => {
+  // 28.**add tasks**
+export const addTasks = async (recruitmentId, tasksData) => {
   try {
     await checkAuth(); // Sprawdzenie uwierzytelnienia użytkownika
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1693,39 +1693,39 @@ export const addAssessments = async (recruitmentId, assessmentsData) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
-    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+    const taskSessions = recruitmentData.TaskSessions || [];
     const applicants = recruitmentData.Applicants || [];
 
     // **Zapewnij, że meetingsData jest tablicą**
-    const assessmentsArray = Array.isArray(assessmentsData) ? assessmentsData : [assessmentsData];
+    const tasksArray = Array.isArray(tasksData) ? tasksData : [tasksData];
 
     // **Przetwarzanie wszystkich spotkań**
-    for (const assessmentData of assessmentsArray) {
+    for (const taskData of tasksArray) {
       // Zakładając, że meetingData zawiera tablicę meetings
-      const assessments = assessmentData.assessments  || [];
-     for (const singleAssessment  of assessments ) {
+      const tasks = taskData.tasks  || [];
+     for (const singleTask  of tasks ) {
 
 
         
         // **Sprawdzenie, czy singleMeeting ma poprawną strukturę**
-        if (!singleAssessment || typeof singleAssessment !== "object") {
-          console.error("singleMeeting is undefined or not an object!", singleAssessment);
+        if (!singleTask || typeof singleTask !== "object") {
+          console.error("singleMeeting is undefined or not an object!", singleTask);
           return;
         }
         
         let IsSessionChanged = '';
 
-        if(singleAssessment.previousSessionId){
-          IsSessionChanged= singleAssessment.meetingSessionId !== singleAssessment.previousSessionId;
+        if(singleTask.previousSessionId){
+          IsSessionChanged= singleTask.meetingSessionId !== singleTask.previousSessionId;
         }else{
         IsSessionChanged = false;
         }
 
             // **Sprawdzanie, czy sessionId jest dostępne w singleMeeting**
-            const sessionId = Number(singleAssessment.assessmentSessionId);
+            const sessionId = Number(singleTask.taskSessionId);
 
 
-            const sessionIndex = assessmentSessions.findIndex(
+            const sessionIndex = taskSessions.findIndex(
               session => Number(session.id) === sessionId
             );
             
@@ -1737,97 +1737,97 @@ export const addAssessments = async (recruitmentId, assessmentsData) => {
 
 
             // **Dodaj spotkanie do sesji**
-            const session = assessmentSessions[sessionIndex];
-            const currentAssessments = session.assessments || [];
+            const session = taskSessions[sessionIndex];
+            const currentTasks = session.tasks || [];
 
 
         if(IsSessionChanged){
-          const PreviousSessionId = Number(singleAssessment.previousSessionId);
+          const PreviousSessionId = Number(singleTask.previousSessionId);
   
-          const PreviousSessionIndex = assessmentSessions.findIndex(
+          const PreviousSessionIndex = taskSessions.findIndex(
             session => Number(session.id) === PreviousSessionId
           );
 
-          const oldSession = assessmentSessions[PreviousSessionIndex];
-          const oldAssessments = oldSession.assessments || [];
-          const indexToRemove = oldAssessments.findIndex(assessment => assessment.id === singleAssessment.id);
+          const oldSession = taskSessions[PreviousSessionIndex];
+          const oldTasks = oldSession.tasks || [];
+          const indexToRemove = oldTasks.findIndex(task => task.id === singleTask.id);
 
-          const previousApplicant = oldAssessments[indexToRemove].applicantId;
+          const previousApplicant = oldTasks[indexToRemove].applicantId;
           const previousApplicantIndex = applicants.findIndex(applicant => applicant.id === previousApplicant);
 
           if(previousApplicantIndex !== -1){
-            sendEmail('REMOVE','ASSESSMENT',applicants[previousApplicantIndex], recruitmentData.name, oldSession.assessmentSessionName, oldSession.assessmentSessionDescription , singleAssessment);
-            const assessmentCount = await countApplicantAssessments(previousApplicant, recruitmentId);
-            if (assessmentCount <= 0) {
+            sendEmail('REMOVE','ASSESSMENT',applicants[previousApplicantIndex], recruitmentData.name, oldSession.taskSessionName, oldSession.taskSessionDescription , singleTask);
+            const taskCount = await countApplicantTasks(previousApplicant, recruitmentId);
+            if (taskCount <= 0) {
               applicants[previousApplicantIndex].stage = 'Checked';
             }           
           }
 
           if (indexToRemove !== -1) { 
-              oldAssessments.splice(indexToRemove, 1);
+              oldTasks.splice(indexToRemove, 1);
           }
 
          
-          assessmentSessions[PreviousSessionIndex].assessments = oldAssessments;
+          taskSessions[PreviousSessionIndex].tasks = oldTasks;
 
-          const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
-          singleAssessment.id = maxId + 1;
+          const maxId = currentTasks.reduce((max, task) => Math.max(max, task.id || 0), 0);
+          singleTask.id = maxId + 1;
 
-          currentAssessments.push(singleAssessment);
+          currentTasks.push(singleTask);
         }else{
-            if(!singleAssessment.id){
-              const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
-              singleAssessment.id = maxId + 1;
+            if(!singleTask.id){
+              const maxId = currentTasks.reduce((max, task) => Math.max(max, task.id || 0), 0);
+              singleTask.id = maxId + 1;
             }
             // **Aktualizacja lub dodanie spotkania**
-            const existingAssessmentIndex = currentAssessments.findIndex(assessment =>
-              String(assessment.id) === String(singleAssessment.id)
+            const existingTaskIndex = currentTasks.findIndex(task =>
+              String(task.id) === String(singleTask.id)
             );
 
-            if (existingAssessmentIndex !== -1) {
-              const previousApplicant = currentAssessments[existingAssessmentIndex].applicantId;
+            if (existingTaskIndex !== -1) {
+              const previousApplicant = currentTasks[existingTaskIndex].applicantId;
               const previousApplicantIndex = applicants.findIndex(applicant => String(applicant.id) === String(previousApplicant));
              
               if(previousApplicantIndex !== -1){
-                sendEmail('REMOVE','ASSESSMENT', applicants[previousApplicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
-                const assessmentCount = await countApplicantAssessments(previousApplicant, recruitmentId);
-                if (assessmentCount <= 0) {
+                sendEmail('REMOVE','ASSESSMENT', applicants[previousApplicantIndex], recruitmentData.name, session.taskSessionName,session.taskSessionDescription , singleTask);
+                const taskCount = await countApplicantTasks(previousApplicant, recruitmentId);
+                if (taskCount <= 0) {
                   applicants[previousApplicantIndex].stage = 'Checked';
                 }           
               }
 
-              currentAssessments[existingAssessmentIndex] = { ...currentAssessments[existingAssessmentIndex], ...singleAssessment };
+              currentTasks[existingTaskIndex] = { ...currentTasks[existingTaskIndex], ...singleTask };
             } else {
-              currentAssessments.push(singleAssessment);
+              currentTasks.push(singleTask);
             }
           }
 
-          const applicantId = Number(singleAssessment.applicantId); // Przekształć applicantId na liczbę
+          const applicantId = Number(singleTask.applicantId); // Przekształć applicantId na liczbę
 
           // **Aktualizacja etapu aplikanta**
           const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
           if (applicantIndex !== -1) {
             applicants[applicantIndex].stage = 'Invited for interview';
-            sendEmail('ADD','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
+            sendEmail('ADD','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.taskSessionName,session.taskSessionDescription , singleTask);
           }
 
       }
     }
 
     // **Zapisz zmiany w Firestore**
-    await updateDoc(recruitmentDoc, { AssessmentSessions: assessmentSessions, Applicants: applicants });
-    console.log("Assessments and applicants updated successfully!");
+    await updateDoc(recruitmentDoc, { TaskSessions: taskSessions, Applicants: applicants });
+    console.log("Tasks and applicants updated successfully!");
 
   } catch (error) {
-    console.error('Error adding or updating assessment:', error.message);
+    console.error('Error adding or updating task:', error.message);
     throw error;
   }
 };
 
 
 
-// 29.**delete assessment by ID**
-export const deleteAssessment = async (id, assessmentSessionId, assessmentId) => {
+// 29.**delete task by ID**
+export const deleteTask = async (id, taskSessionId, taskId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', id);
@@ -1839,46 +1839,46 @@ export const deleteAssessment = async (id, assessmentSessionId, assessmentId) =>
 
       const recruitmentData = recruitmentSnapshot.data();
       const applicants = recruitmentData.Applicants || [];
-      const AssessmentSessionIndex = recruitmentData.AssessmentSessions.findIndex(assessmentSession =>
-        String(assessmentSession.id) === String(assessmentSessionId) 
+      const TaskSessionIndex = recruitmentData.TaskSessions.findIndex(taskSession =>
+        String(taskSession.id) === String(taskSessionId) 
       );
-      if (AssessmentSessionIndex === -1) {
-        throw new Error('Assessment session not found');
+      if (TaskSessionIndex === -1) {
+        throw new Error('Task session not found');
       }
 
-      const AssessmentIndex = recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments.findIndex(assessment => 
-        String(assessment.id) === String(assessmentId)
+      const TaskIndex = recruitmentData.TaskSessions[TaskSessionIndex].tasks.findIndex(task => 
+        String(task.id) === String(taskId)
       );
-      if (AssessmentIndex === -1) {
-        throw new Error('Assessment not found');
+      if (TaskIndex === -1) {
+        throw new Error('Task not found');
       }
 
-      const session = recruitmentData.AssessmentSessions[AssessmentSessionIndex];
-      const singleAssessment = session.assessments[AssessmentIndex];
-      const applicantId = Number( recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments[AssessmentIndex].applicantId); // Przekształć applicantId na liczbę
+      const session = recruitmentData.TaskSessions[TaskSessionIndex];
+      const singleTask = session.tasks[TaskIndex];
+      const applicantId = Number( recruitmentData.TaskSessions[TaskSessionIndex].tasks[TaskIndex].applicantId); // Przekształć applicantId na liczbę
 
       // **Aktualizacja etapu aplikanta**
       const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
       if (applicantIndex !== -1) {
-        sendEmail('REMOVE','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
-        const assessmentCount = await countApplicantAssessments(applicantId, id);
-        if (assessmentCount <= 0) {
+        sendEmail('REMOVE','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.taskSessionName,session.taskSessionDescription , singleTask);
+        const taskCount = await countApplicantTasks(applicantId, id);
+        if (taskCount <= 0) {
           applicants[applicantIndex].stage = 'Checked';
         }
       }
 
-      recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments.splice(AssessmentIndex, 1);
-      await updateDoc(recruitmentDoc, { AssessmentSessions: recruitmentData.AssessmentSessions, Applicants: applicants });
-      return recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments;
+      recruitmentData.TaskSessions[TaskSessionIndex].tasks.splice(TaskIndex, 1);
+      await updateDoc(recruitmentDoc, { TaskSessions: recruitmentData.TaskSessions, Applicants: applicants });
+      return recruitmentData.TaskSessions[TaskSessionIndex].tasks;
       } catch (error) {
-        console.error('Error deleting assessment:', error.message);
+        console.error('Error deleting task:', error.message);
         throw error;
       }
     };
 
 
-// 30.**get assessment by ID**
-export const getAssessmentById = async (recruitmentId, assessmentId) => {
+// 30.**get task by ID**
+export const getTaskById = async (recruitmentId, taskId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1894,34 +1894,34 @@ export const getAssessmentById = async (recruitmentId, assessmentId) => {
       throw new Error('You are not authorized to view this recruitment');
     }
 
-    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+    const taskSessions = recruitmentData.TaskSessions || [];
 
     // Find the session and the meeting within the session
-    for (let session of assessmentSessions) {
-      const assessment = session.assessments?.find(assessment => assessment.id === assessmentId);
+    for (let session of taskSessions) {
+      const task = session.tasks?.find(task => task.id === taskId);
       
-      if (assessment) {
+      if (task) {
         return {
           id: recruitmentSnapshot.id,
           ...recruitmentData,
-          assessmentSessionId: session.id,
-          assessmentData: assessment,
+          taskSessionId: session.id,
+          taskData: task,
         };
       }
     }
 
-    throw new Error('Assessment not found');
+    throw new Error('Task not found');
 
   } catch (error) {
-    console.error('Error fetching assessment by ID:', error.message);
+    console.error('Error fetching task by ID:', error.message);
     throw error;
   }
 };
 
 
 
-// 31.**count assessments by user ID**
-export const countApplicantAssessments = async (userId, recruitmentId) => {
+// 31.**count tasks by user ID**
+export const countApplicantTasks = async (userId, recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1930,25 +1930,25 @@ export const countApplicantAssessments = async (userId, recruitmentId) => {
       throw new Error('Recruitment not found');
       }
       const recruitmentData = recruitmentSnapshot.data();
-      const assessmentSessions = recruitmentData.AssessmentSessions || [];
-      let assessmentCount = -1; 
-      assessmentSessions.forEach((session) => {
-          session.assessments.forEach((assessment) => {
-            if (String(assessment.applicantId) === String(userId)) {
-              assessmentCount++;
+      const taskSessions = recruitmentData.TaskSessions || [];
+      let taskCount = -1; 
+      taskSessions.forEach((session) => {
+          session.tasks.forEach((task) => {
+            if (String(task.applicantId) === String(userId)) {
+              taskCount++;
             }
           });
         });
-        console.log(assessmentCount);
-        return assessmentCount;
+        console.log(taskCount);
+        return taskCount;
       } catch (error) {
-        console.error('Error counting applicant assessments:', error.message);
+        console.error('Error counting applicant tasks:', error.message);
         throw error;
       }
     };
 
-    // 32.**get assessments session by recruitment ID**
-export const getAssessmentsByRecruitmentId = async (recruitmentId) => {
+    // 32.**get tasks session by recruitment ID**
+export const getTasksSessionsByRecruitmentId = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
@@ -1964,21 +1964,43 @@ export const getAssessmentsByRecruitmentId = async (recruitmentId) => {
       throw new Error('You are not authorized to view this recruitment');
     }
 
-    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+    const taskSessions = recruitmentData.TaskSessions || [];
 
-    if (assessmentSessions) {
-      return assessmentSessions;
+    if (taskSessions) {
+      return taskSessions;
     }
     
-    throw new Error('Assessment session not found');
+    throw new Error('Task session not found');
   } catch (error) {
-    console.error('Error fetching assessment session by ID:', error.message);
+    console.error('Error fetching task session by ID:', error.message);
     throw error;
   }
 };
 
     
 
+// 33.**get task session by ID**
+export const getTaskSessionById = async (recruitmentId, taskSessionId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc); 
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+    const taskSessionIndex = recruitmentData.TaskSessions.findIndex(taskSession => taskSession.id === taskSessionId);
+    if (taskSessionIndex === -1) {
+      throw new Error('Task session not found');
+    }
+    return {
+      TaskSessions: recruitmentData.TaskSessions[taskSessionIndex],
+    };
+  } catch (error) {
+    console.error('Error fetching task session by ID:', error.message);
+    throw error;
+  }
+};
 
 
 

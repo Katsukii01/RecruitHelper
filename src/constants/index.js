@@ -38,12 +38,12 @@ export const NavLinks = [
       title: "Cv Ranking",
     },
     {
-      id: "Assessments",
-      title: "Assessments",
+      id: "Tasks",
+      title: "Tasks",
     },
     {
-      id: "AssessmentsPoints",
-      title: "Assessments Points",
+      id: "TasksPoints",
+      title: "Tasks Points",
     },
     {
       id: "MeetingSessions",
