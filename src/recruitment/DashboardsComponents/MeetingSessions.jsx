@@ -1,11 +1,10 @@
 import { useState, useEffect, React } from 'react'
 import { DsectionWrapper } from '../../hoc'
-import { Loader } from '../../components'
-import { getMeetingSessionsByRecruitmentId, deleteMeetingSession } from '../../firebase/RecruitmentServices'
+import { Loader } from '../../utils'
+import { getMeetingSessionsByRecruitmentId, deleteMeetingSession } from '../../services/RecruitmentServices'
 import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
 import { useLocation } from 'react-router-dom';
-import { use } from 'react';
 
 const  MeetingSessions = ({ id, refresh, onRefresh}) => {
   const location = useLocation();

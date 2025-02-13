@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getUserApplications, deleteApplicant } from '../firebase/RecruitmentServices';
-import { Loader } from '../components';
+import { getUserApplications, deleteApplicant } from '../services/RecruitmentServices';
+import { Loader } from '../utils';
 import { useNavigate } from 'react-router-dom';
 
 

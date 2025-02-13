@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
-import { Loader } from '../components';
+import { Loader } from '../utils';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getMeetingSessionById, createMeetingSession } from '../firebase/RecruitmentServices';
+import { getMeetingSessionById, createMeetingSession } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
 

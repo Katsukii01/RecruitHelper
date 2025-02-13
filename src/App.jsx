@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar, Hero, About, KnowHow, Recruitments, Contact, StarsCanvas, ProtectedRoute, Terms, Dashboard, Opinions, Footer } from "./components";
-import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments, AddMeetings, CreateMeetingSession } from "./RecruitmentComponents";
-import { Home, SignIn, SignUp } from "./authComponents";
+import { Navbar, Hero, About, KnowHow, Recruitments, Contact, Terms, Dashboard, Opinions, Footer } from "./components";
+import { CreateRecruitment, AddApplicants, RecruitmentDashboard, ChooseMethod, AddApplicantsWithHelp, PublicRecruitments, AddMeetings, CreateMeetingSession, FilesPreview } from "./recruitment";
+import { StarsCanvas, ProtectedRoute } from "./utils";
+import { Home, SignIn, SignUp } from "./auth";
 
 const App = () => {
   return (
@@ -117,6 +118,14 @@ const App = () => {
                    <CreateMeetingSession />
                   <div className='mt-12'></div>
                 </div>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/FilesPreview"
+            element={
+              <ProtectedRoute>
+                <FilesPreview />
               </ProtectedRoute>
             } 
           />

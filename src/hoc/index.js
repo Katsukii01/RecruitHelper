@@ -1,4 +1,4 @@
 import SectionWrapper from "./sectionWrapper";
-import DsectionWrapper from "./DsectionWrapper";
+import DsectionWrapper from "./DashboardSectionWrapper";
 
 export { SectionWrapper, DsectionWrapper };

@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { getRecruitments } from '../firebase/RecruitmentServices';
+import { getPublicRecruitments } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
-import { Loader } from '../components';
+import { Loader } from '../utils';
 
-const ManageRecruitments = () => {
+const RecruitmentList = () => {
   const [recruitments, setRecruitments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const itemsPerPage = 4; // Number of items to display per page
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
+
+  
   // Fetch recruitments on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getRecruitments();
+        const data = await getPublicRecruitments();
         setRecruitments(data);
       } catch (error) {
         console.error('Error fetching recruitments:', error);
@@ -63,7 +65,7 @@ const ManageRecruitments = () => {
   };
 
   const skillColors = [
-    'bg-blue-500',    
+
     'bg-green-500',   
     'bg-teal-500',    
     'bg-indigo-500',  
@@ -77,29 +79,26 @@ const ManageRecruitments = () => {
     'bg-violet-500',  
   ];
 
-  const stageColors = {
-    'Collecting applicants': 'bg-gray-500',
-    'Checking applications': 'bg-blue-500 ',
-    'Interviewing applicants': 'bg-yellow-500 ',
-    'Offering jobs': 'bg-purple-500 ',
-    'Hiring employees': 'bg-green-500 ',
-    'Paused': 'bg-red-500',
-  }
-  
-  const goToRecruitmentDashboard = (id) => {
-    navigate(`/RecruitmentDashboard#Overview`, { state: { id } });
+  const goToAddApplicants = (id, highestId) => {
+    navigate('/RecruitmentAddApplicants', {
+        state: {
+          recruitmentId: id,
+          highestId: highestId, // Pass the highest ID
+          userApply: true,
+        }
+      });
   };
 
   const getRandomColor = () => {
     return skillColors[Math.floor(Math.random() * skillColors.length)];
   };
   return (
-    <div className=" w-full">
+    <div className="px-4 sm:px-6 lg:px-8 w-full">
       {loading ? (
         <div className="t flex justify-center items-center"><Loader /></div>
       ) : (
         <>
-          <div className="mb-4 flex flex-row items-center justify-center ">
+          <div className="mb-4 flex flex-row items-center justify-center max-w-7xl mx-auto">
             <input
               type="text"
               placeholder="Search recruitments..."
@@ -112,36 +111,35 @@ const ManageRecruitments = () => {
                 onClick={goToCreateRecruitment}
                 className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition border-2 border-white"
               >
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-
+                +
               </button>
+              <p className="mt-4 text-gray-600 font-semibold text-lg">
+              </p>
             </div>
           </div>
           {paginatedRecruitments.length === 0 ? (
-            <div className=" flex flex-col items-center justify-center h-[680px] ">
-              <p className=" text-gray-600 font-semibold text-lg">
+            <div className=" flex flex-col items-center justify-center mt-2">
+              <p className="mt-4 text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 h-[680px] overflow-y-auto w-full px-6 py-4 inner-shadow">
-              {paginatedRecruitments.map((recruitment) => (
+            <div className="flex flex-wrap justify-center  gap-8 h-auto w-full px-16 py-4">
+              {paginatedRecruitments.map((recruitment, index) => (
                 <div
                     key={recruitment.id}
-                    className="h-[659.9px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="h-[627px] w-[400px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
           
-                        <h3 className="mb-2 border-b-2 p-4 border-b-white text-center font-bold justify-center flex-col rounded-t-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
+                        <h3 className="mb-4 border-b-2 p-4 border-b-white text-center font-bold justify-center flex-col rounded-t-lg bg-gradient-to-tr from-blue-950 to-slate-900 w-full">
                           {recruitment.name}
        
                         </h3>
         
                   
-                  <div className='h-[545px] overflow-auto '>
+                  <div className='h-[505px] overflow-auto '>
 
                   <p className="text-sm text-white mt-1 font-semibold m-4">
                   Status:
@@ -155,15 +153,6 @@ const ManageRecruitments = () => {
                     {recruitment.status}
                   </span>
                   </p>
-
-                  <p className="text-sm text-white mt-1 font-semibold m-4 flex flex-wrap">
-                  Stage:
-                  <span 
-                    className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${stageColors[recruitment.stage] || stageColors['Collecting applicants']}`} // Ensures long words break and wrap to the next line
-                  >
-                    {recruitment.stage || 'Collecting applicants'}
-                  </span>
-                </p>
 
 
                   <p className="text-sm text-white mt-1 font-semibold m-4  ">Job Title:
@@ -251,38 +240,36 @@ const ManageRecruitments = () => {
                     </div>
                   </div>
                   </div>
-
                   <button
-                          onClick={() => goToRecruitmentDashboard(recruitment.id)}
+                          onClick={() => goToAddApplicants(recruitment.id, recruitment.highestId)}
                           className="mt-1 border-t-white border-t-2 p-2 text-center font-bold justify-center flex-col rounded-b-md w-full  bg-sky text-white   shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                         >
-                          Manage
+                          Apply
                   </button>
                 </div>
-                
               ))}
-                                    <div className="flex justify-center items-center mt-4 pb-4 h-20">
-                        {isLoading ? (
-                          <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
-                        ) : (
-                          page * itemsPerPage < filteredRecruitments.length && (
-                 
-                              <button
-                                onClick={handleLoadMore} // Funkcja wywołująca ładowanie
-                                className="m-5 border-sky border-2 p-2 text-center font-bold justify-center flex-col rounded-md w-1/2 text-sky shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 hover:text-white"
-                              >
-                                Load more
-                              </button>
-                           
-                          )
-                        )}
-                       </div>
             </div>
           )}
         </>
       )}
+            <div className="flex justify-center items-center mt-4 pb-4">
+              {isLoading ? (
+                <Loader /> // Zamiast przycisku pokazujemy loader przez 1 sekundę
+              ) : (
+                page * itemsPerPage < filteredRecruitments.length && (
+       
+                    <button
+                      onClick={handleLoadMore} // Funkcja wywołująca ładowanie
+                      className="m-5 border-sky border-2 p-2 text-center font-bold justify-center flex-col rounded-md w-1/2 text-sky shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 hover:text-white"
+                    >
+                      Load more
+                    </button>
+                 
+                )
+              )}
+             </div>
     </div>
   );
 };
 
-export default ManageRecruitments;
+export default RecruitmentList;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
-import { getApplicantsRanking,  changeApplicantStage } from '../../firebase/RecruitmentServices';
-import { Loader } from '../../components';
+import { getApplicantsRanking} from '../../services/RecruitmentServices';
+import { Loader } from '../../utils';
 import Pagination from './Pagination';
 
 const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {

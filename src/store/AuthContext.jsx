@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import app, { firebaseAuth } from '../firebase/baseconfig'; // Firebase config
+import { firebaseAuth } from '../firebase/baseconfig'; // Firebase config
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -16,7 +16,7 @@ import {
    reauthenticateWithPopup,
    updatePassword as firebaseUpdatePassword,
 } from 'firebase/auth';
-import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, fetchAllEmails, addEmail, deleteEmail } from '../firebase/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
+import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, fetchAllEmails, addEmail, deleteEmail, getMeetingsByUserId, deleteMeeting } from '../services/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
 
 
 // Create AuthContext
@@ -243,19 +243,39 @@ const signUp = async (email, password, username) => {
           recruitments = []; // Set recruitments to an empty array on error
         }
   
-        // 2. Remove the current user from all recruitments where they are listed as an applicant
+        // 2. Remove the current user from all recruitments
         if (recruitments && recruitments.length > 0) {
           for (const recruitment of recruitments) {
             try {
               await deleteRecruitment(recruitment.id); // Delete the recruitment
-              console.log(`Recruitment ${recruitment.name} deleted successfully.`);
             } catch (err) {
               console.error(`Error deleting recruitment ${recruitment.name}:`, err);
             }
           }
         }
+        
+        // 3. Fetch all meetings associated with the user
+        let meetings = [];
+        try {
+          meetings = await getMeetingsByUserId(currentUser.uid);
+        } catch (error) {
+          console.error("Error fetching meetings:", error);
+          meetings = [];
+        }
+
+        // 4. Delete each meeting
+        if (meetings.length > 0) {
+          for (const meeting of meetings) {
+            try {
+              await deleteMeeting(meeting.recruitmentId, meeting.meetingSessionId, meeting.meetingId);
+             
+            } catch (err) {
+              console.error(`Error deleting meeting ${meeting.meetingId}:`, err);
+            }
+          }
+        }
   
-        // 3. Fetch all applications associated with the user
+        // 5. Fetch all applications associated with the user
         let applications = [];
         try {
           applications = await getUserApplications();
@@ -264,19 +284,22 @@ const signUp = async (email, password, username) => {
           applications = []; // Set applications to an empty array on error
         }
   
-        // 4. Delete each application
+        // 6. Delete each application
         if (applications && applications.length > 0) {
           for (const application of applications) {
             try {
               await deleteApplicant(application.id, application.applicantData.id); // Delete individual application
-              console.log(`Application ${application.recruitmentData.name} deleted successfully.`);
             } catch (err) {
               console.error(`Error deleting application ${application.recruitmentData.name}:`, err);
             }
           }
         }
+
+
+
+
   
-        // 5. Delete the user account after all recruitments and applications are handled
+        // 7. Delete the user account after all recruitments and applications are handled
         await deleteUser(currentUser);
         await deleteEmail(currentUser.email);
         setCurrentUser(null); // Clear the current user after deletion
@@ -284,6 +307,7 @@ const signUp = async (email, password, username) => {
       } else {
         throw new Error("No user is logged in.");
       }
+
     }  catch (error) {
       console.error("Error during account deletion:", error);
       if (

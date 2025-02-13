@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { defaultPfp } from '../assets';
 import { useNavigate } from 'react-router-dom';
-import {BlueMoon} from '../components';
 
 
 const Home = () => {
@@ -82,7 +81,7 @@ const Home = () => {
       try {
         await deleteAccount(passwordInput);
         alert('The account has been deleted');
-        navigate('/signup#SignUp'); 
+        navigate('/SignUp'); 
         window.location.reload();
       } catch (error) {
         console.error('Error while deleting the account:', error);

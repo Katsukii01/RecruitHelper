@@ -1,5 +1,5 @@
 import React from 'react'
-import BlueMoon from './BlueMoon'
+import { BlueMoon } from '../utils';
 
 const Footer = () => {
   return (

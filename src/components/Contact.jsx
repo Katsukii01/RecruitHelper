@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 import { styles } from '../styles';
 import { SectionWrapper } from '../hoc';
 import { fadeIn, textVariant } from '../utils/motion';
-import BlueMoon from './BlueMoon';
+import {Waves} from '../utils';
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -58,32 +58,36 @@ const Contact = () => {
       alert('Failed to send message.');
       setIsSubmitting(false);
     });
+
   };
 
   return (
-    <section className='relative w-full h-screen mx-auto mb-6'>
+    <section className='w-full min-h-screen mx-auto mb-6'>
       <motion.div variants={textVariant()}>
         <h2 className={styles.sectionHeadText}>Contact</h2>
       </motion.div>
 
       <motion.div variants={fadeIn("", "", 0.3, 2)}>
       
-        <div className="absolute inset-0 flex justify-center items-center z-0 opacity-50 t-2">
-          <BlueMoon />
-        </div>
 
-        <div className="relative p-8 rounded-xl shadow-2xl border-sky border-2 bg-glass-dark backdrop-blur-md mt-16 max-w-lg mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-center text-white drop-shadow-lg">Contact Us</h2>
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-blue-100">Name</label>
+      
+        <div className="p-8 rounded-xl shadow-2xl border-sky border-2 bg-glass-dark backdrop-blur-md mt-16 max-w-lg mx-auto">
+
+          <div className="absolute inset-0 flex justify-center items-center z-0 opacity-50 t-2">
+            <Waves />
+          </div>
+
+          <h2 className="text-3xl font-bold mb-6 text-center text-white drop-shadow-lg  w-fit rounded-xl border-silver border-2 p-2">Contact Us</h2>
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 block z-10  relative ">
+         
+            <div >
+              <label className="block text-sm font-medium text-blue-100 ">Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md bg-transparent backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
-              
+                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md bg-glass-dark backdrop-blur-xl text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
               />
               {errors.name && (
                   <p className="text-red-500 bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
@@ -98,7 +102,7 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md bg-transparent backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
+                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md  bg-glass-dark backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
                
               />
               {errors.email && (
@@ -114,7 +118,7 @@ const Contact = () => {
                 name="subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md bg-transparent backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
+                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md  bg-glass-dark backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky"
               
               />
               {errors.subject && (
@@ -127,10 +131,10 @@ const Contact = () => {
               <label className="block text-sm font-medium text-blue-100">Message</label>
               <textarea
                 name="message"
-                rows="8"
+                rows="6"
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md bg-transparent backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky resize-none"
+                className="mt-1 w-full px-4 py-2 border border-cyan-300 rounded-md shadow-md  bg-glass-dark backdrop-blur-md text-white focus:outline-none focus:ring-2 focus:ring-sky focus:border-sky resize-none "
               
               />
               {errors.message && (
@@ -139,39 +143,64 @@ const Contact = () => {
                   </p>
                 )}
             </div>
+            
             <div className="flex items-center justify-center">
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className={`flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg text-white font-medium border shadow-md transition-all ${
-                  isSuccess ? 'bg-green-500 border-green-600' : 'bg-sky border-white hover:bg-cyan-600 focus:ring-cyan-600'
-                }`}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isSuccess ? (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex items-center gap-2"
-                  >
-                  <svg className="w-6 h-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  </motion.div>
-                ) : (
-                  <motion.span
-                    initial={{ x: 0 }}
-                    animate={isSubmitting ? { x: 50, opacity: 0 } : { x: 0, opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    Send Message
-                  </motion.span>
-                )}
-              </motion.button>
-            </div>
+  <motion.button
+    type="submit"
+    disabled={isSubmitting}
+    className={`relative flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg text-white font-medium border shadow-md transition-all overflow-hidden h-12 ${
+      isSuccess ? 'bg-green-500 border-green-600' : 'bg-sky border-white hover:bg-cyan-600 focus:ring-cyan-600'
+    }`}
+    whileTap={{ scale: 0.95 }}
+  >
+    {isSuccess ? (
+      <>
+        {/* Ukrywanie tekstu przesuwając go poza ekran */}
+        <motion.span
+          initial={{ x: 0, opacity: 1 }}
+          animate={{ x: "100%", opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="absolute"
+        >
+          Send Message
+        </motion.span>
+
+        {/* Ikonka pojawia się na środku, zachowując wysokość przycisku */}
+        <motion.div
+          className="absolute flex items-center justify-center w-full h-full"
+          initial={{ x: "-100%", scale: 0.8, opacity: 0 }}
+          animate={{ x: 0, scale: 1.3, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-8 h-8 text-white"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </motion.div>
+      </>
+    ) : (
+      <motion.span
+        initial={{ x: 0 }}
+        animate={isSubmitting ? { x: "100%", opacity: 0 } : { x: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        Send Message
+      </motion.span>
+    )}
+  </motion.button>
+</div>
+
+
+
           </form>
         </div>
+        
       </motion.div>
     </section>
   );

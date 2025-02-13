@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DsectionWrapper } from '../../hoc/index';
-import { Loader } from '../../components';
-import { getMeetingSessionsByRecruitmentId, getAllApplicants, updateMeetingPoints, deleteMeeting} from '../../firebase/RecruitmentServices';
+import { Loader } from '../../utils';
+import { getMeetingSessionsByRecruitmentId, getAllApplicants, updateMeetingPoints, deleteMeeting} from '../../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination'; 
 import { useLocation } from 'react-router-dom';
@@ -229,7 +229,13 @@ const MeetingPoints = ({ id, refresh, onRefresh }) => {
 
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card "><Loader /></div>;
 
-  if (!meetingSessions.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">No recruitment found</section>;
+  if (!meetingSessions.length) return(     
+      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+        <h1 className="text-2xl font-bold text-white mb-4">Meetings Points</h1>
+        <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+            No meetings found.
+          </div>
+      </section>);
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">

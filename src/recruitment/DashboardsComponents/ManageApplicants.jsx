@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getApplicants, deleteApplicant } from '../../firebase/RecruitmentServices';
+import { getApplicants, deleteApplicant } from '../../services/RecruitmentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
-import { Loader } from '../../components';
+import { Loader } from '../../utils';
 
 const ManageApplicants = ({ id, refresh, onRefresh }) => {
   const navigate = useNavigate();

@@ -105,17 +105,42 @@
   position: relative;
 }
 
-.react-calendar__tile.dot::after {
+.react-calendar__tile.dot-red::after {
   content: '';
   position: absolute;
-  top: 7px;
-  left: 54%;
+  top: 5px;
+  left: 55%;
   transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background-color: #ff4444; /* Red for events */
   border-radius: 50%;
   box-shadow: 0 0 6px rgba(255, 68, 68, 0.8);
+}
+
+.react-calendar__tile.dot-blue::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 57%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #44d3ff; /* Red for events */
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(68, 211, 255, 0.8);
+}
+.react-calendar__tile.dot-purple::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 57%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #9333ea; /* Red for events */
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(147, 51, 234, 0.8);
 }
 
 /* Weekend Days */
@@ -501,3 +526,190 @@
 }
 
 /* ------------------------------------------- */
+
+
+/* Waves */
+.waves-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -100;
+}
+
+.waves {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+}
+
+.waves::before,
+.waves::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 50%;
+  background: rgba(0, 195, 255, 0.3);
+  top: 60%;
+  left: -50%;
+  border-radius: 50%;
+  animation: waveAnimation 4s linear infinite;
+}
+
+.waves::after {
+  top: 85%;
+  width: 220%;
+  height: 25%;
+  opacity: 0.7;
+  animation-delay: 2s;
+}
+
+@keyframes waveAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform:  translateY(-10px);
+  }
+  100% {
+    transform:  translateY(0);
+  }
+}
+
+
+/* ------------------------------------------- */
+
+
+/* Silver Moon */
+.silver-moon {
+  position: absolute;
+  top: 1%;
+  right: 1%;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle at 30% 30%, #ffffff 20%, #d9d9d9 60%, #a8a8a8 100%);
+  box-shadow: -10px -10px 30px rgba(255, 255, 255, 0.3),
+              10px 10px 40px rgba(0, 0, 0, 0.5);
+  animation: pulseMoon 3s infinite ease-in-out;
+}
+
+/* Kratery na Księżycu */
+.silver-moon::before,
+.silver-moon::after,
+.silver-moon .crater {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Duże kratery */
+.silver-moon::before {
+  width: 30px;
+  height: 30px;
+  top: 40px;
+  left: 50px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.silver-moon::after {
+  width: 20px;
+  height: 20px;
+  top: 120px;
+  left: 100px;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Dodatkowe kratery */
+.silver-moon .crater-1 {
+  width: 15px;
+  height: 15px;
+  top: 20px;
+  left: 120px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.silver-moon .crater-2 {
+  width: 25px;
+  height: 25px;
+  top: 80px;
+  left: 20px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.silver-moon .crater-3 {
+  width: 18px;
+  height: 18px;
+  top: 150px;
+  left: 60px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.silver-moon .crater-4 {
+  width: 12px;
+  height: 12px;
+  top: 100px;
+  left: 140px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.silver-moon .crater-5 {
+  width: 10px;
+  height: 10px;
+  top: 160px;
+  left: 130px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulseMoon {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------- */
+
+/* Stars */
+.star {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgb(161, 170, 141);
+  clip-path: polygon(50% 0%, 61% 38%, 100% 38%, 68% 61%, 79% 100%, 50% 75%, 21% 100%, 32% 61%, 0% 38%, 39% 38%);
+  animation: twinkle 3s infinite ease-in-out alternate;
+  opacity: 0.8;
+}
+
+/* Rozmieszczenie gwiazd */
+.star:nth-child(1) { top: 27%; left: 15%; width: 8px; height: 8px; }
+.star:nth-child(2) { top: 3%; left: 45%; width: 12px; height: 12px; }
+.star:nth-child(3) { top: 28%; left: 25%; width: 10px; height: 10px; }
+.star:nth-child(4) { top: 9%; left: 10%; width: 14px; height: 14px; }
+.star:nth-child(5) { top: 42%; left: 60%; width: 6px; height: 6px; }
+.star:nth-child(6) { top: 52%; left: 35%; width: 9px; height: 9px; }
+.star:nth-child(7) { top: 15%; left: 30%; width: 13px; height: 13px; }
+.star:nth-child(8) { top: 40%; left: 70%; width: 7px; height: 7px; }
+.star:nth-child(9) { top: 40%; left: 36%; width: 11px; height: 11px; }
+.star:nth-child(10) { top: 15%; left: 10%; width: 5px; height: 5px; }
+.star:nth-child(11) { top: 42%; left: 19%; width: 12px; height: 12px; }
+.star:nth-child(12) { top: 24%; left: 43%; width: 14px; height: 14px; }
+.star:nth-child(13) { top: 53%; left: 55%; width: 11px; height: 11px; }
+.star:nth-child(14) { top: 14%; left: 53%; width: 14px; height: 14px; }
+
+@keyframes twinkle {
+  0% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.8; transform: scale(1); }
+}

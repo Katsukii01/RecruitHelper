@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios"; // For HTTP requests
-import { addApplicant } from '../firebase/RecruitmentServices';
+import { addApplicant } from '../services/RecruitmentServices';
 import { existingLanguages } from "../constants";
 import usePreventPageReload from './usePreventPageReload';
-import { Loader } from '../components';
+import { Loader } from '../utils';
 import { firebaseAuth } from '../firebase/baseconfig';
 const AddApplicants = () => {
   useEffect(() => {

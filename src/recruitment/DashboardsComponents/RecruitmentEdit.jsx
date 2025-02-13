@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getRecruitmentById, updateRecruitment, addRecruitment } from '../../firebase/RecruitmentServices';
+import { getRecruitmentById, updateRecruitment, addRecruitment } from '../../services/RecruitmentServices';
 import { DsectionWrapper } from '../../hoc';
 import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLanguage, removeLanguage } from '../Validations';
 import {  useNavigate } from 'react-router-dom';
-import { Loader } from '../../components';
+import { Loader } from '../../utils';
 
 const RecruitmentEdit = ({ id, onRefresh }) => {
   const [recruitment, setRecruitment] = useState(null);

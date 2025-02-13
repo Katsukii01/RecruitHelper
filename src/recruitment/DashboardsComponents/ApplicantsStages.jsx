@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
-import { getApplicantsWithOverallScore, changeApplicantStage } from '../../firebase/RecruitmentServices';
-import { Loader } from '../../components';
+import { getApplicantsWithOverallScore, changeApplicantStage } from '../../services/RecruitmentServices';
+import { Loader } from '../../utils';
 import Pagination from './Pagination';
 import {CircularProgress} from '../';
 
@@ -101,6 +101,16 @@ const ApplicantsStages = ( {id, refresh}) => {
 
       if(!id) return  <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">No recruitment found</section>;
       if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
+
+      if (!Applicants.length) return (
+        <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
+        <h1 className="text-2xl font-bold text-white mb-4">Applicants stages</h1>
+          <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+            No Applicants found
+          </div>
+        </section>); 
+
+
   return (
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-1">Applicants stages</h1>

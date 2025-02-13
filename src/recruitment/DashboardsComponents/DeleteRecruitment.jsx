@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteRecruitment, getRecruitmentById } from '../../firebase/RecruitmentServices';
+import { deleteRecruitment, getRecruitmentById } from '../../services/RecruitmentServices';
 import { DsectionWrapper } from '../../hoc';
 
 const DeleteRecruitment = ({ id }) => {

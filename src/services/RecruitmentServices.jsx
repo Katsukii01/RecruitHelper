@@ -10,10 +10,11 @@ import {
   query,
   where,
   setDoc,
+  count,
 } from 'firebase/firestore';
 import { firebaseAuth } from '../firebase/baseconfig';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { c } from 'maath/dist/index-0332b2ed.esm';
+import  sendEmail from './MailerServices';
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -304,7 +305,7 @@ export const deleteRecruitment = async (recruitmentId) => {
       throw new Error('You are not authorized to delete this recruitment');
     }
 
-    // Delete all applicants' CV files and optional Covering Letter files
+    // Delete all CV and Cover Letter files for each applicant
     const applicants = recruitmentData.Applicants || [];
     for (const applicant of applicants) {
       // Call deleteOldFiles for CVs
@@ -543,8 +544,8 @@ export const deleteApplicant = async (recruitmentId, applicantId) => {
     // Delete meetings
     const meetings = recruitmentData.MeetingSessions.map(session => session.meetings).flat();
     for (const meeting of meetings) {
-      if (meeting.applicantId === applicantId) {
-        await deleteMeeting(recruitmentId, meeting.id);
+      if (String(meeting.applicantId) === String(applicantId)) {
+        await deleteMeeting(recruitmentId, meeting.meetingSessionId ,meeting.id);
       }
     }
 
@@ -924,18 +925,10 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
     const meetingsArray = Array.isArray(meetingsData) ? meetingsData : [meetingsData];
 
     // **Przetwarzanie wszystkich spotkań**
-    meetingsArray.forEach(meetingData => {
+    for (const meetingData of meetingsArray) {
       // Zakładając, że meetingData zawiera tablicę meetings
       const meetings = meetingData.meetings || [];
-      meetings.forEach(singleMeeting => {
-        const applicantId = Number(singleMeeting.applicantId); // Przekształć applicantId na liczbę
-
-        // **Aktualizacja etapu aplikanta**
-        const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
-        if (applicantIndex !== -1) {
-          applicants[applicantIndex].stage = 'Invited for interview';
-
-        }
+     for (const singleMeeting of meetings) {
 
 
         
@@ -984,6 +977,17 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
           const oldMeetings = oldSession.meetings || [];
           const indexToRemove = oldMeetings.findIndex(meeting => meeting.id === singleMeeting.id);
 
+          const previousApplicant = oldMeetings[indexToRemove].applicantId;
+          const previousApplicantIndex = applicants.findIndex(applicant => applicant.id === previousApplicant);
+
+          if(previousApplicantIndex !== -1){
+            sendEmail('REMOVE','MEETING',applicants[previousApplicantIndex], recruitmentData.name, oldSession.meetingSessionName, oldSession.meetingSessionDescription , singleMeeting);
+            const meetingCount = await countApplicantMeetings(previousApplicant, recruitmentId);
+            if (meetingCount <= 0) {
+              applicants[previousApplicantIndex].stage = 'Checked';
+            }           
+          }
+
           if (indexToRemove !== -1) { 
               oldMeetings.splice(indexToRemove, 1);
           }
@@ -1006,14 +1010,34 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
             );
 
             if (existingMeetingIndex !== -1) {
+              const previousApplicant = currentMeetings[existingMeetingIndex].applicantId;
+              const previousApplicantIndex = applicants.findIndex(applicant => String(applicant.id) === String(previousApplicant));
+              console.log("previousApplicantIndex",previousApplicantIndex);
+              if(previousApplicantIndex !== -1){
+                sendEmail('REMOVE','MEETING', applicants[previousApplicantIndex], recruitmentData.name, session.meetingSessionName,session.meetingSessionDescription , singleMeeting);
+                const meetingCount = await countApplicantMeetings(previousApplicant, recruitmentId);
+                if (meetingCount <= 0) {
+                  applicants[previousApplicantIndex].stage = 'Checked';
+                }           
+              }
+
               currentMeetings[existingMeetingIndex] = { ...currentMeetings[existingMeetingIndex], ...singleMeeting };
             } else {
               currentMeetings.push(singleMeeting);
             }
           }
 
-      });
-    });
+          const applicantId = Number(singleMeeting.applicantId); // Przekształć applicantId na liczbę
+
+          // **Aktualizacja etapu aplikanta**
+          const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+          if (applicantIndex !== -1) {
+            applicants[applicantIndex].stage = 'Invited for interview';
+            sendEmail('ADD','MEETING',applicants[applicantIndex], recruitmentData.name, session.meetingSessionName,session.meetingSessionDescription , singleMeeting);
+          }
+
+      }
+    }
 
     // **Zapisz zmiany w Firestore**
     await updateDoc(recruitmentDoc, { MeetingSessions: meetingSessions, Applicants: applicants });
@@ -1033,20 +1057,43 @@ export const deleteMeeting = async (id, meetingSessionId, meetingId) => {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, 'recruitments', id);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    
     if (!recruitmentSnapshot.exists()) {
       throw new Error('Recruitment not found');
       }
+
       const recruitmentData = recruitmentSnapshot.data();
-      const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => meetingSession.id === meetingSessionId);
+      const applicants = recruitmentData.Applicants || [];
+      const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(meetingSession => 
+        String(meetingSession.id) === String(meetingSessionId) 
+      );
       if (meetingSessionIndex === -1) {
         throw new Error('Meeting session not found');
       }
-      const meetingIndex = recruitmentData.MeetingSessions[meetingSessionIndex].meetings.findIndex(meeting => meeting.id === meetingId);
+
+      const meetingIndex = recruitmentData.MeetingSessions[meetingSessionIndex].meetings.findIndex(meeting => 
+        String(meeting.id) === String(meetingId) 
+      );
       if (meetingIndex === -1) {
         throw new Error('Meeting not found');
       }
+
+      const session = recruitmentData.MeetingSessions[meetingSessionIndex];
+      const singleMeeting = session.meetings[meetingIndex];
+      const applicantId = Number( recruitmentData.MeetingSessions[meetingSessionIndex].meetings[meetingIndex].applicantId); // Przekształć applicantId na liczbę
+
+      // **Aktualizacja etapu aplikanta**
+      const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+      if (applicantIndex !== -1) {
+        sendEmail('REMOVE','MEETING',applicants[applicantIndex], recruitmentData.name, session.meetingSessionName,session.meetingSessionDescription , singleMeeting);
+        const meetingCount = await countApplicantMeetings(applicantId, id);
+        if (meetingCount <= 0) {
+          applicants[applicantIndex].stage = 'Checked';
+        }
+      }
+
       recruitmentData.MeetingSessions[meetingSessionIndex].meetings.splice(meetingIndex, 1);
-      await updateDoc(recruitmentDoc, { MeetingSessions: recruitmentData.MeetingSessions });
+      await updateDoc(recruitmentDoc, { MeetingSessions: recruitmentData.MeetingSessions, Applicants: applicants });
       return recruitmentData.MeetingSessions[meetingSessionIndex].meetings;
       } catch (error) {
         console.error('Error deleting meeting:', error.message);
@@ -1205,7 +1252,6 @@ export const deleteMeetingSession = async (recruitmentId, meetingSessionId) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
-
     if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
       throw new Error('You are not authorized to delete meeting session from this recruitment');
     }
@@ -1214,6 +1260,14 @@ export const deleteMeetingSession = async (recruitmentId, meetingSessionId) => {
 
     if (meetingSessionIndex === -1) {
       throw new Error('Meeting session not found');
+    }
+
+
+    const CurrentMeetingSession = recruitmentData.MeetingSessions[meetingSessionIndex];
+  
+    //delete meetings
+    for (const meeting of CurrentMeetingSession.meetings) {
+       await deleteMeeting(recruitmentId, meeting.meetingSessionId ,meeting.id);
     }
 
     const updatedMeetingSessions = recruitmentData.MeetingSessions.filter((meetingSession) => meetingSession.id !== meetingSessionId);
@@ -1300,32 +1354,58 @@ export const getUserMeetingSessions = async () => {
       const recruitmentData = doc.data();
       const applicants = recruitmentData.Applicants || [];
 
-      // Find the applicant data for the current user
-      const applicant = applicants.find((applicant) => applicant.userUid === userId);
 
-      if (applicant) {
-        console.log(`Applicant found for recruitment ID: ${doc.id}`); // Log if applicant is found
-        const meetingSessions = recruitmentData.MeetingSessions || [];
-        const applicantId = applicant.id;
+        if (recruitmentData.userId === userId) {
+            const meetingSessions = recruitmentData.MeetingSessions || [];
+            
+            meetingSessions.forEach((session) => {
+                userMeetingSessions.push({
+                    meetingSessionName: session.meetingSessionName, // Only session name
+                    meetingSessionDescription: session.meetingSessionDescription, // Only session description
+                    meetings: (session.meetings || []).map((meeting) => {
+                        // Znalezienie aplikanta na podstawie `applicantId`
+                        const applicant = applicants.find((app) => String(app.id) === String(meeting.applicantId));
 
-        meetingSessions.forEach((session) => {
-          const filteredMeetings = session.meetings.filter((meeting) => {
-            const meetingApplicantId = Number(meeting.applicantId); // Convert to number
-            const currentApplicantId = Number(applicantId); // Already converted applicantId
-
-            return meetingApplicantId === currentApplicantId; // Compare after conversion
-          });
-
-          // If the user is part of any meeting in the session, include the session data
-          if (filteredMeetings.length > 0) {
-            userMeetingSessions.push({
-              meetingSessionName: session.meetingSessionName, // Only session name
-              meetingSessionDescription: session.meetingSessionDescription, // Only session description
-              meetings: filteredMeetings, // Include only meetings where the user is involved
+                        return {
+                            ...meeting,
+                            meetingApplicant: applicant || null, // Dodajemy dane aplikanta, jeśli znaleziono
+                        };
+                    }),
+                });
             });
+        }else{
+          const applicants = recruitmentData.Applicants || [];
+
+          // Find the applicant data for the current user
+          const applicant = applicants.find((applicant) => applicant.userUid === userId);
+
+          if (applicant) {
+            console.log(`Applicant found for recruitment ID: ${doc.id}`); // Log if applicant is found
+            const meetingSessions = recruitmentData.MeetingSessions || [];
+            const applicantId = applicant.id;
+
+            meetingSessions.forEach((session) => {
+              const filteredMeetings = session.meetings.filter((meeting) => {
+                const meetingApplicantId = Number(meeting.applicantId); // Convert to number
+                const currentApplicantId = Number(applicantId); // Already converted applicantId
+
+                return meetingApplicantId === currentApplicantId; // Compare after conversion
+              });
+
+              // If the user is part of any meeting in the session, include the session data
+              if (filteredMeetings.length > 0) {
+                userMeetingSessions.push({
+                  meetingSessionName: session.meetingSessionName, // Only session name
+                  meetingSessionDescription: session.meetingSessionDescription, // Only session description
+                  meetings: filteredMeetings, 
+                  recruitmentName: recruitmentData.name,
+                  recruitmentjobTittle: recruitmentData.jobTittle,
+                });
+              }
+              
+            });  
           }
-        });
-      }
+        }
     });
 
     return userMeetingSessions;
@@ -1382,6 +1462,11 @@ export const getAllApplicants= async (recruitmentId) => {
       throw new Error('Recruitment not found');
       }
       const recruitmentData = recruitmentSnapshot.data();
+      
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error('You are not authorized to view this recruitment');
+      }
+
       const applicants = recruitmentData.Applicants || [];
 
       if (applicants) {
@@ -1424,6 +1509,475 @@ export const getAllApplicants= async (recruitmentId) => {
         }
       };
 
+  // 24.**get meetings by user UID**
+  export const getMeetingsByUserId = async (userUid) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated asynchronously
+      const recruitmentCollection = collection(db, "recruitments");
+      const q = query(recruitmentCollection);
+      const snapshot = await getDocs(q);
+      const userMeetings = [];
+  
+      snapshot.docs.forEach((doc) => {
+        const recruitmentData = doc.data();
+        const applicants = recruitmentData.Applicants || [];
+        const meetingSessions = recruitmentData.MeetingSessions || [];
+  
+        // Find the applicant data for the current user
+        const applicant = applicants.find((applicant) => String(applicant.userUid) === String(userUid));
+  
+        if (applicant) {
+          // Find the meetings for the current user
+          meetingSessions.forEach((session) => {
+            const userMeetingsInSession = session.meetings.filter((meeting) => String(meeting.applicantId) === String(applicant.id));
+  
+            userMeetingsInSession.forEach((meeting) => {
+              userMeetings.push({
+                recruitmentId: doc.id, // ID dokumentu rekrutacji
+                meetingSessionId: session.id, // ID sesji spotkań
+                meetingId: meeting.id, // ID konkretnego spotkania
+                meetingDetails: meeting, // Szczegóły spotkania
+              });
+            });
+          });
+        }
+      });
+  
+      return userMeetings;
+    } catch (error) {
+      console.error("Error fetching meetings by user UID:", error.message);
+      throw error;
+    }
+  };
+
+  // 25.**count applicant meetings**
+  export const countApplicantMeetings = async (userId, recruitmentId) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated asynchronously
+      const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error('Recruitment not found');
+      }
+      const recruitmentData = recruitmentSnapshot.data();
+      const meetingSessions = recruitmentData.MeetingSessions || [];
+      let meetingCount = -1; 
+      meetingSessions.forEach((session) => {
+          session.meetings.forEach((meeting) => {
+            if (String(meeting.applicantId) === String(userId)) {
+              meetingCount++;
+            }
+          });
+        });
+        console.log(meetingCount);
+        return meetingCount;
+      } catch (error) {
+        console.error('Error counting applicant meetings:', error.message);
+        throw error;
+      }
+    };
+
+  // 26.**create assessments session**
+  export const createAssessmentSession = async (recruitmentId, assessmentSessionData) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated
+      const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error('Recruitment not found');
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+  
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error('You are not authorized to create assessment session');
+      }
+  
+      // Update the assessments list: check if the assessment with the same ID already exists
+      const currentAssessments = recruitmentData.AssessmentSessions || [];
+  
+      // Sprawdź, czy `assessmentData.id` istnieje
+      if (!assessmentSessionData.id) {
+        // Znajdź największe istniejące ID w currentAssessments
+        const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
+        assessmentSessionData.id = maxId + 1; // Ustaw nowe ID jako o 1 większe niż największe
+      }
+  
+      if(!assessmentSessionData.assessments){
+        assessmentSessionData.assessments = [];
+        }
+  
+
+      const assessmentIndex = currentAssessments.findIndex(assessmentsession => assessmentsession.id === assessmentSessionData.id);
+  
+      if (assessmentIndex !== -1) {
+        // Assessment exists, update their information and replace their files
+        const updatedAssessments = currentAssessments.map((assessmentSession, index) => {
+          if (index === assessmentIndex) {
+            return {
+              ...assessmentSession,
+              ...assessmentSessionData,
+            };
+          }
+          return assessmentSession;
+        });
+        await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessments });
+      }
+      else {
+        // New assessment, add to the list
+        const updatedAssessments = [
+          ...currentAssessments,
+          { 
+            ...assessmentSessionData, 
+          },
+        ];
+  
+        await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessments });
+      }
+  
+    } catch (error) {
+      console.error('Error adding or updating assessment session:', error.message);
+      throw error;
+    }
+  };
+  
+  // 27.**delete assessment session by ID**
+  export const deleteAssessmentSession = async (recruitmentId, assessmentSessionId) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated
+      const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error('Recruitment not found');
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error('You are not authorized to delete assessment session from this recruitment');
+      }
+  
+      const assessmentSessionIndex = recruitmentData.AssessmentSessions.findIndex(assessmentSession => assessmentSession.id === assessmentSessionId);
+  
+      if (assessmentSessionIndex === -1) {
+        throw new Error('Assessment session not found');
+      }
+  
+      //update applicants stage
+      const CurrentAssessmentSession = recruitmentData.AssessmentSessions[assessmentSessionIndex];
+      
+  
+      //delete assessments
+      for (const assessment of CurrentAssessmentSession.assessments) {
+         await deleteAssessment(recruitmentId, assessment.assessmentSessionId ,assessment.id);
+      }
+  
+      const updatedAssessmentSessions = recruitmentData.AssessmentSessions.filter((assessmentSession) => assessmentSession.id !== assessmentSessionId);
+  
+      await updateDoc(recruitmentDoc, { AssessmentSessions: updatedAssessmentSessions});
+    } catch (error) {
+      console.error('Error deleting assessment session:', error.message);
+    }
+  };
+
+  // 28.**add assessments**
+export const addAssessments = async (recruitmentId, assessmentsData) => {
+  try {
+    await checkAuth(); // Sprawdzenie uwierzytelnienia użytkownika
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+    const applicants = recruitmentData.Applicants || [];
+
+    // **Zapewnij, że meetingsData jest tablicą**
+    const assessmentsArray = Array.isArray(assessmentsData) ? assessmentsData : [assessmentsData];
+
+    // **Przetwarzanie wszystkich spotkań**
+    for (const assessmentData of assessmentsArray) {
+      // Zakładając, że meetingData zawiera tablicę meetings
+      const assessments = assessmentData.assessments  || [];
+     for (const singleAssessment  of assessments ) {
+
+
+        
+        // **Sprawdzenie, czy singleMeeting ma poprawną strukturę**
+        if (!singleAssessment || typeof singleAssessment !== "object") {
+          console.error("singleMeeting is undefined or not an object!", singleAssessment);
+          return;
+        }
+        
+        let IsSessionChanged = '';
+
+        if(singleAssessment.previousSessionId){
+          IsSessionChanged= singleAssessment.meetingSessionId !== singleAssessment.previousSessionId;
+        }else{
+        IsSessionChanged = false;
+        }
+
+            // **Sprawdzanie, czy sessionId jest dostępne w singleMeeting**
+            const sessionId = Number(singleAssessment.assessmentSessionId);
+
+
+            const sessionIndex = assessmentSessions.findIndex(
+              session => Number(session.id) === sessionId
+            );
+            
+            if (sessionIndex === -1) {
+              console.warn(`Meeting session with ID ${sessionId} not found.`);
+              return;
+            }
+            
+
+
+            // **Dodaj spotkanie do sesji**
+            const session = assessmentSessions[sessionIndex];
+            const currentAssessments = session.assessments || [];
+
+
+        if(IsSessionChanged){
+          const PreviousSessionId = Number(singleAssessment.previousSessionId);
+  
+          const PreviousSessionIndex = assessmentSessions.findIndex(
+            session => Number(session.id) === PreviousSessionId
+          );
+
+          const oldSession = assessmentSessions[PreviousSessionIndex];
+          const oldAssessments = oldSession.assessments || [];
+          const indexToRemove = oldAssessments.findIndex(assessment => assessment.id === singleAssessment.id);
+
+          const previousApplicant = oldAssessments[indexToRemove].applicantId;
+          const previousApplicantIndex = applicants.findIndex(applicant => applicant.id === previousApplicant);
+
+          if(previousApplicantIndex !== -1){
+            sendEmail('REMOVE','ASSESSMENT',applicants[previousApplicantIndex], recruitmentData.name, oldSession.assessmentSessionName, oldSession.assessmentSessionDescription , singleAssessment);
+            const assessmentCount = await countApplicantAssessments(previousApplicant, recruitmentId);
+            if (assessmentCount <= 0) {
+              applicants[previousApplicantIndex].stage = 'Checked';
+            }           
+          }
+
+          if (indexToRemove !== -1) { 
+              oldAssessments.splice(indexToRemove, 1);
+          }
+
+         
+          assessmentSessions[PreviousSessionIndex].assessments = oldAssessments;
+
+          const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
+          singleAssessment.id = maxId + 1;
+
+          currentAssessments.push(singleAssessment);
+        }else{
+            if(!singleAssessment.id){
+              const maxId = currentAssessments.reduce((max, assessment) => Math.max(max, assessment.id || 0), 0);
+              singleAssessment.id = maxId + 1;
+            }
+            // **Aktualizacja lub dodanie spotkania**
+            const existingAssessmentIndex = currentAssessments.findIndex(assessment =>
+              String(assessment.id) === String(singleAssessment.id)
+            );
+
+            if (existingAssessmentIndex !== -1) {
+              const previousApplicant = currentAssessments[existingAssessmentIndex].applicantId;
+              const previousApplicantIndex = applicants.findIndex(applicant => String(applicant.id) === String(previousApplicant));
+             
+              if(previousApplicantIndex !== -1){
+                sendEmail('REMOVE','ASSESSMENT', applicants[previousApplicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
+                const assessmentCount = await countApplicantAssessments(previousApplicant, recruitmentId);
+                if (assessmentCount <= 0) {
+                  applicants[previousApplicantIndex].stage = 'Checked';
+                }           
+              }
+
+              currentAssessments[existingAssessmentIndex] = { ...currentAssessments[existingAssessmentIndex], ...singleAssessment };
+            } else {
+              currentAssessments.push(singleAssessment);
+            }
+          }
+
+          const applicantId = Number(singleAssessment.applicantId); // Przekształć applicantId na liczbę
+
+          // **Aktualizacja etapu aplikanta**
+          const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+          if (applicantIndex !== -1) {
+            applicants[applicantIndex].stage = 'Invited for interview';
+            sendEmail('ADD','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
+          }
+
+      }
+    }
+
+    // **Zapisz zmiany w Firestore**
+    await updateDoc(recruitmentDoc, { AssessmentSessions: assessmentSessions, Applicants: applicants });
+    console.log("Assessments and applicants updated successfully!");
+
+  } catch (error) {
+    console.error('Error adding or updating assessment:', error.message);
+    throw error;
+  }
+};
+
+
+
+// 29.**delete assessment by ID**
+export const deleteAssessment = async (id, assessmentSessionId, assessmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', id);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+      }
+
+      const recruitmentData = recruitmentSnapshot.data();
+      const applicants = recruitmentData.Applicants || [];
+      const AssessmentSessionIndex = recruitmentData.AssessmentSessions.findIndex(assessmentSession =>
+        String(assessmentSession.id) === String(assessmentSessionId) 
+      );
+      if (AssessmentSessionIndex === -1) {
+        throw new Error('Assessment session not found');
+      }
+
+      const AssessmentIndex = recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments.findIndex(assessment => 
+        String(assessment.id) === String(assessmentId)
+      );
+      if (AssessmentIndex === -1) {
+        throw new Error('Assessment not found');
+      }
+
+      const session = recruitmentData.AssessmentSessions[AssessmentSessionIndex];
+      const singleAssessment = session.assessments[AssessmentIndex];
+      const applicantId = Number( recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments[AssessmentIndex].applicantId); // Przekształć applicantId na liczbę
+
+      // **Aktualizacja etapu aplikanta**
+      const applicantIndex = applicants.findIndex(applicant => applicant.id === applicantId);
+      if (applicantIndex !== -1) {
+        sendEmail('REMOVE','ASSESSMENT',applicants[applicantIndex], recruitmentData.name, session.assessmentSessionName,session.assessmentSessionDescription , singleAssessment);
+        const assessmentCount = await countApplicantAssessments(applicantId, id);
+        if (assessmentCount <= 0) {
+          applicants[applicantIndex].stage = 'Checked';
+        }
+      }
+
+      recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments.splice(AssessmentIndex, 1);
+      await updateDoc(recruitmentDoc, { AssessmentSessions: recruitmentData.AssessmentSessions, Applicants: applicants });
+      return recruitmentData.AssessmentSessions[AssessmentSessionIndex].assessments;
+      } catch (error) {
+        console.error('Error deleting assessment:', error.message);
+        throw error;
+      }
+    };
+
+
+// 30.**get assessment by ID**
+export const getAssessmentById = async (recruitmentId, assessmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+
+    // Find the session and the meeting within the session
+    for (let session of assessmentSessions) {
+      const assessment = session.assessments?.find(assessment => assessment.id === assessmentId);
+      
+      if (assessment) {
+        return {
+          id: recruitmentSnapshot.id,
+          ...recruitmentData,
+          assessmentSessionId: session.id,
+          assessmentData: assessment,
+        };
+      }
+    }
+
+    throw new Error('Assessment not found');
+
+  } catch (error) {
+    console.error('Error fetching assessment by ID:', error.message);
+    throw error;
+  }
+};
+
+
+
+// 31.**count assessments by user ID**
+export const countApplicantAssessments = async (userId, recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+      }
+      const recruitmentData = recruitmentSnapshot.data();
+      const assessmentSessions = recruitmentData.AssessmentSessions || [];
+      let assessmentCount = -1; 
+      assessmentSessions.forEach((session) => {
+          session.assessments.forEach((assessment) => {
+            if (String(assessment.applicantId) === String(userId)) {
+              assessmentCount++;
+            }
+          });
+        });
+        console.log(assessmentCount);
+        return assessmentCount;
+      } catch (error) {
+        console.error('Error counting applicant assessments:', error.message);
+        throw error;
+      }
+    };
+
+    // 32.**get assessments session by recruitment ID**
+export const getAssessmentsByRecruitmentId = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, 'recruitments', recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error('Recruitment not found');
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error('You are not authorized to view this recruitment');
+    }
+
+    const assessmentSessions = recruitmentData.AssessmentSessions || [];
+
+    if (assessmentSessions) {
+      return assessmentSessions;
+    }
+    
+    throw new Error('Assessment session not found');
+  } catch (error) {
+    console.error('Error fetching assessment session by ID:', error.message);
+    throw error;
+  }
+};
+
+    
 
 
 
