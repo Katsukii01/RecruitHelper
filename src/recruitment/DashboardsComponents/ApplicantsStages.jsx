@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
-import { getApplicantsWithOverallScore, changeApplicantStage } from '../../services/RecruitmentServices';
+import { getApplicantsWithOverallScore, changeApplicantStage, } from '../../services/RecruitmentServices';
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
 import {CircularProgress} from '../';
 
-const ApplicantsStages = ( {id, refresh}) => {
+const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
     const [loading, setLoading] = useState();
     const [Applicants, setApplicants] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,6 +13,7 @@ const ApplicantsStages = ( {id, refresh}) => {
     const [totalPages, setTotalPages] = useState(0);
     const [showTooltip, setShowTooltip] = useState([]); 
     const [error, setError] = useState(null);
+    
 
 
     // Fetch recruitment name by ID
@@ -22,7 +23,8 @@ const ApplicantsStages = ( {id, refresh}) => {
         try {
             setLoading(true);
             const applicants= await getApplicantsWithOverallScore(id);
-   
+            onRefresh();
+            console.log("refresh 2");
             setTotalPages(Math.ceil(applicants.length / itemsPerPage));
             setApplicants(applicants);
             setLoading(false);
@@ -32,7 +34,7 @@ const ApplicantsStages = ( {id, refresh}) => {
         };
 
         fetchApplicants();
-    }, [id, refresh]);
+    }, [refresh]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -44,11 +46,6 @@ const ApplicantsStages = ( {id, refresh}) => {
         return 'border-green-200'; // Green
       };
       
-    const getProgressBarColor = (score) => {
-    if (score < 40) return 'bg-gradient-to-tr from-red-600 to-red-300'; // Red
-    if (score < 70) return 'bg-gradient-to-tr from-yellow-600 to-yellow-300'; // Yellow
-    return 'bg-gradient-to-tr from-green-600 to-green-300'; // Green
-  };
 
     const paginate = (applicants, pageNumber, itemsPerPage) => {
         const startIndex = (pageNumber - 1) * itemsPerPage;
@@ -86,8 +83,8 @@ const ApplicantsStages = ( {id, refresh}) => {
         );
     
         try {
-        // Wywołanie API
         await changeApplicantStage(id, applicantId, newStage);
+        onRefresh2(); 
         } catch (error) {
         // W przypadku błędu, przywróć poprzedni etap
         console.error('Failed to change applicant stage:', error);
@@ -115,8 +112,7 @@ const ApplicantsStages = ( {id, refresh}) => {
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-1">Applicants stages</h1>
   
-    <div >
-    <div className='overflow-auto h-screen-60'>
+    <div className='overflow-auto h-screen-80'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
         {Applicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
@@ -193,12 +189,12 @@ const ApplicantsStages = ( {id, refresh}) => {
       </div>
 
       </div>
+
       <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={handlePageChange}
         />
-      </div>
    </section>
   )
 }

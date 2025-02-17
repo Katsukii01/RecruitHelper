@@ -24,7 +24,7 @@ const sendEmail = async (action, type, applicant, recruitmentName, meetingOrTask
 
     case 'ADD_TASK':
       subject = `📝 New Task: ${meetingOrTaskName} for ${recruitmentName}`;
-      message += `✅ A new Task **${meetingOrTaskName}** has been **assigned** for **${recruitmentName}**.\n\n📌 **Deadline:** ${additionalData.taskDeadline}\n\n📄 **Description:**\n${description}\n\n🚀 Best of luck!\nRecruitHelper Team`;
+      message += `✅ A new Task **${meetingOrTaskName}** has been **assigned** for **${recruitmentName}**.\n\n🕒 **Submission Deadline:** ${additionalData.taskSessionDeadlineDate} at ${additionalData.taskSessionDeadlineTime}\n\n📄 **Description:**\n${description}\n\n🚀 Best of luck!\nRecruitHelper Team`;
       break;
 
     case 'REMOVE_TASK':
@@ -43,7 +43,7 @@ const sendEmail = async (action, type, applicant, recruitmentName, meetingOrTask
   try {
     console.log('📧 Sending email...');
     
-    await emailjs.send(
+    /*await emailjs.send(
       import.meta.env.VITE_EMAILJS_SERVICE_ID,
       import.meta.env.VITE_EMAILJS_NOTIFICATION_TEMPLATE_ID,
       {
@@ -52,8 +52,9 @@ const sendEmail = async (action, type, applicant, recruitmentName, meetingOrTask
         message,
       },
       import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-    );
+    );*/
 
+    console.log(additionalData);
     console.log('📨 Email sent successfully!');
   } catch (error) {
     console.error('❌ Failed to send email:', error);

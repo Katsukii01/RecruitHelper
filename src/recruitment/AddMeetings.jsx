@@ -33,7 +33,7 @@ const AddMeetings = () => {
     const fetchApplicants = async () => {
         setLoading(true);
         try {
-            const applicants = await getApplicantsByStage(id, ['Checked', 'Assessments', 'Invited for interview', 'Interviewed']);
+            const applicants = await getApplicantsByStage(id, ['Checked', 'Tasks', 'Invited for interview', 'Interviewed']);
             setApplicantsData(applicants);
         } catch (error) {
             console.error('Error fetching applicant:', error);
@@ -362,7 +362,7 @@ const AddMeetings = () => {
           {applicantsData?.length > 0 ? (
             applicantsData.map((applicant) => (
               <option key={applicant._id} value={applicant.id}>
-                {applicant.name} ({applicant.email}) - {applicant.CVscore}%
+                {applicant.name} ({applicant.email}) - {applicant.totalScore}%
               </option>
             ))
           ) : (

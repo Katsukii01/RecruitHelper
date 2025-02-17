@@ -10,6 +10,8 @@ const RecruitmentDashboard = () => {
   });
   const [refresh, setRefresh] = useState(false); // State to trigger re-fetch
   const [refresh2, setRefresh2] = useState(false); // State to trigger re-fetch in children
+  const [refresh3, setRefresh3] = useState(false); // State to trigger re-fetch in children
+  const [refresh4, setRefresh4] = useState(false); // State to trigger re-fetch in children
 
   useEffect(() => {
     if (id) {
@@ -23,6 +25,14 @@ const RecruitmentDashboard = () => {
 
   const handleRefresh2 = () => {
     setRefresh2(prev => !prev); // Toggle to trigger re-fetch in children
+  };
+
+  const handleRefresh3 = () => {
+    setRefresh3(prev => !prev); // Toggle to trigger re-fetch in children
+  };
+
+  const handleRefresh4 = () => {
+    setRefresh4(prev => !prev); // Toggle to trigger re-fetch in children
   };
   
 
@@ -44,25 +54,25 @@ const RecruitmentDashboard = () => {
       {/* Main content */}
       <div className="w-full pt-12 overflow-y-auto pl-28 md:pl-96 pr-2 md:pr-20">
         <div className="flex flex-col items-start space-y-9">
-          <Overview id={id} refresh={refresh}/>
+          <Overview id={id} refresh={refresh4} refresh2={refresh} />
 
-          <ApplicantsStages id={id} refresh={refresh2}/>
+          <ApplicantsStages id={id} refresh={refresh2} onRefresh={handleRefresh3} onRefresh2={handleRefresh4}/>
 
           <ApplicantsOfferRanking id={id} refresh={refresh}  onRefresh={handleRefresh2}/>
 
           <Tasks id={id} refresh={refresh} onRefresh={handleRefresh}/>
-          <TasksPoints id={id} refresh={refresh} onRefresh={handleRefresh}/>
+          <TasksPoints id={id} refresh={refresh} onRefresh={handleRefresh2}/>
 
           <MeetingSessions id={id} refresh={refresh} onRefresh={handleRefresh}/>
           <Meetings id={id} refresh={refresh} />
-          <MeetingPoints id={id} refresh={refresh} onRefresh={handleRefresh}/>
+          <MeetingPoints id={id} refresh={refresh} onRefresh={handleRefresh2}/>
 
           <CoverLettersAnalyses id={id} refresh={refresh}/>
-          <CoverLettersPoints id={id} refresh={refresh}/>
+          <CoverLettersPoints id={id} refresh={refresh} onRefresh={handleRefresh2}/>
 
-          <AdnationalPoints id={id} refresh={refresh}/>
+          <AdnationalPoints id={id} refresh={refresh} onRefresh={handleRefresh2}/>
 
-          <FinalRanking id={id} />
+          <FinalRanking id={id} refresh={refresh3}  onRefresh={handleRefresh2}/>
       
           <FinishRecruitment id={id} />
 

@@ -22,6 +22,7 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
         setTotalPages(Math.ceil(data.length / itemsPerPage));
         setRankedApplicants(data); // Ensure the latest data is set
         onRefresh(); // Refresh the parent component to update the applicants list
+        console.log("refresh 1"); // Log the fetched data for debugging
       } catch (error) {
         console.error('Error fetching applicants ranking:', error);
       } finally {
@@ -80,8 +81,7 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold text-white mb-1">CV Ranking</h1>
     
-      <div >
-      <div className='overflow-auto h-screen-60'>
+      <div className='overflow-auto h-screen-80'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
           {currentApplicants.map((applicant, index) => (
             <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
@@ -155,14 +155,13 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
             </div>
           ))}
         </div>
-
         </div>
+                
         <Pagination
                       currentPage={currentPage}
                       totalPages={totalPages}
                       onPageChange={handlePageChange}
           />
-        </div>
      </section>
   );
 };

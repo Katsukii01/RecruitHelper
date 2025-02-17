@@ -20,6 +20,8 @@ import {
   deleteObject,
 } from "firebase/storage";
 import sendEmail from "./MailerServices";
+import { a } from "framer-motion/client";
+
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -1084,7 +1086,7 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
 
           const previousApplicant = oldMeetings[indexToRemove].applicantId;
           const previousApplicantIndex = applicants.findIndex(
-            (applicant) => applicant.id === previousApplicant
+            (applicant) => String(applicant.id) === String(previousApplicant)
           );
 
           if (previousApplicantIndex !== -1) {
@@ -1102,7 +1104,15 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
               recruitmentId
             );
             if (meetingCount <= 0) {
-              applicants[previousApplicantIndex].stage = "Checked";
+              const taskCount = await countApplicantTasks(
+                previousApplicant,
+                recruitmentId
+              );
+              if (taskCount <= -1) {
+                applicants[previousApplicantIndex].stage = "Checked";
+              } else {
+                applicants[previousApplicantIndex].stage = "Tasks";
+              }
             }
           }
 
@@ -1154,7 +1164,15 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
                 recruitmentId
               );
               if (meetingCount <= 0) {
-                applicants[previousApplicantIndex].stage = "Checked";
+                const taskCount = await countApplicantTasks(
+                  previousApplicant,
+                  recruitmentId
+                );
+                if (taskCount <= -1) {
+                  applicants[previousApplicantIndex].stage = "Checked";
+                } else {
+                  applicants[previousApplicantIndex].stage = "Tasks";
+                }
               }
             }
 
@@ -1251,7 +1269,12 @@ export const deleteMeeting = async (id, meetingSessionId, meetingId) => {
       );
       const meetingCount = await countApplicantMeetings(applicantId, id);
       if (meetingCount <= 0) {
-        applicants[applicantIndex].stage = "Checked";
+        const taskCount = await countApplicantTasks(applicantId, id);
+        if (taskCount <= -1) {
+          applicants[applicantIndex].stage = "Checked";
+        } else {
+          applicants[applicantIndex].stage = "Tasks";
+        }
       }
     }
 
@@ -1605,32 +1628,74 @@ export const getUserMeetingSessions = async () => {
   }
 };
 
+
 // 21.**get applicants name ,surname, email, overall score**
 export const getApplicantsWithOverallScore = async (recruitmentId) => {
   try {
-    await checkAuth(); // Ensure the user is authenticated asynchronously
-    const recruitment = doc(db, "recruitments", recruitmentId);
-    const recruitmentSnapshot = await getDoc(recruitment);
+    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    const recruitmentRef = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentRef);
+
     if (!recruitmentSnapshot.exists()) {
       throw new Error("Recruitment not found");
     }
+
     const recruitmentData = recruitmentSnapshot.data();
     const applicants = recruitmentData.Applicants || [];
-    const applicantsWithOverallScore = applicants.map((applicant) => {
-      const applicantScore = parseFloat(applicant.CVscore.toFixed(2));
-      return {
-        ...applicant,
-        totalScore: applicantScore,
-      };
-    });
 
+    // Pobieramy wartości count (czy dany element ma być brany pod uwagę)
+    const countCL = recruitmentData.ClCountStatus ?? true;
+    const countCV = recruitmentData.CvCountStatus ?? true;
+    const countTasks = recruitmentData.TasksCountStatus ?? true;
+    const countMeetings = recruitmentData.MeetingsCountStatus ?? true;
+    const countAdnationalPointsCountStatus = recruitmentData.AdnationalPointsCountStatus ?? true;
+
+    // Pobieramy maksymalne wartości dopiero po sprawdzeniu istnienia dokumentu
+    const { meetingsPointsWeight, tasksPointsWeight } = await getMaxPoints(recruitmentId);
+
+    // Pobieramy wyniki asynchronicznie
+    const applicantsWithOverallScore = await Promise.all(
+      applicants.map(async (applicant) => {
+        const Scores = await getApplicantScore(recruitmentId, applicant.id);
+
+        const Cvscore = countCV ? applicant.CVscore || 0 : 0;
+        const CLscore = countCL ? applicant.CLscore || 0 : 0;
+        const adnationalPoints = applicant.adnationalPoints || 0;
+
+        const Meetingsscore =  (Scores.Meetingsscore / meetingsPointsWeight) * 100 ;
+        const Tasksscore = (Scores.Tasksscore / tasksPointsWeight) * 100 ;
+
+        const AddMeetingscore = countMeetings ? Meetingsscore : 0;
+        const AddTasksscore = countTasks ? Tasksscore : 0;
+        
+        // Liczymy, ile czynników bierzemy pod uwagę
+        const activeFactors = [countCV, countCL, countTasks , countMeetings].filter(Boolean).length;
+        const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
+        let totalScore = parseFloat(baseScore).toFixed(2);
+
+        // Dodajemy dodatkowe punkty
+        if(countAdnationalPointsCountStatus) {
+            totalScore = parseFloat(baseScore + adnationalPoints * 0.2).toFixed(2);
+          }
+  
+        return {
+          ...applicant,
+          totalScore: parseFloat(totalScore), // Zamiana na liczbę
+          Tasksscore,
+          Meetingsscore,
+        };
+      })
+    );
+
+    // Aktualizujemy dokument w Firestore
     try {
-      await updateDoc(recruitment, { Applicants: applicantsWithOverallScore });
+      await updateDoc(recruitmentRef, { Applicants: applicantsWithOverallScore });
     } catch (error) {
-      console.error("Error updating applicants:", error); // Logujemy pełny błąd
+      console.error("Error updating applicants:", error);
       throw error;
     }
 
+    // Sortujemy według totalScore malejąco
     const rankedApplicants = applicantsWithOverallScore.sort(
       (a, b) => b.totalScore - a.totalScore
     );
@@ -1641,6 +1706,136 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
     throw error;
   }
 };
+
+//21.1 ** get max points for meetings and tasks
+export const getMaxPoints = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitment = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitment);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+    const meetings = recruitmentData.MeetingSessions || [];
+    const tasks = recruitmentData.TaskSessions || [];
+
+    //sum meetings.meetingSessionPointsWeight
+    let meetingsPointsWeight = 0;
+    meetings.forEach((meeting) => {
+      meetingsPointsWeight += parseFloat(meeting.meetingSessionPointsWeight);
+    });
+
+    //sum tasks.taskSessionPointsWeight
+    let tasksPointsWeight = 0;
+    tasks.forEach((task) => {
+      tasksPointsWeight += parseFloat(task.taskSessionPointsWeight);
+    });
+
+    return { meetingsPointsWeight, tasksPointsWeight };
+
+    } catch (error) {
+      console.error("Error fetching max points:", error.message);
+      throw error;
+    }
+  };
+
+  //21.2 **get applicant score for meetings and tasks**
+  export const getApplicantScore = async (recruitmentId, applicantId) => {
+    try {
+      await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+      const recruitmentRef = doc(db, "recruitments", recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentRef);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error("Recruitment not found");
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+  
+      const meetingSessions = recruitmentData.MeetingSessions || [];
+      const taskSessions = recruitmentData.TaskSessions || [];
+  
+      let Meetingsscore = 0;
+      let Tasksscore = 0;
+  
+      meetingSessions.forEach((session) => {
+        (session.meetings || []).forEach((meeting) => {
+          if (meeting.applicantId && String(meeting.applicantId) === String(applicantId)) {
+            Meetingsscore += parseFloat(session.meetingSessionPointsWeight) * (meeting.points *0.01) || 0;
+          }
+        });
+      });
+  
+      taskSessions.forEach((session) => {
+        (session.tasks || []).forEach((task) => {
+          if (task.applicantId && String(task.applicantId) === String(applicantId)) {
+            Tasksscore += parseFloat(session.taskSessionPointsWeight) * (task.points *0.01) || 0;
+          }
+        });
+      });
+  
+      return { Meetingsscore, Tasksscore };
+    } catch (error) {
+      console.error("Error fetching applicant score:", error.message);
+      throw error;
+    }
+  };
+
+  //21.3 **change count status** 
+  export const changeCountStatus = async (recruitmentId, field) => {
+    try {
+      await checkAuth(); // Sprawdzenie autoryzacji
+      const recruitmentRef = doc(db, "recruitments", recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentRef);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error("Recruitment not found");
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+  
+      // Jeśli pole nie istnieje, ustaw domyślnie na false
+      const currentValue = recruitmentData[field] ?? true;
+      const updatedValue = !currentValue; // Odwracamy wartość
+  
+      // Aktualizacja tylko jednego pola w Firestore
+      await updateDoc(recruitmentRef, { [field]: updatedValue });
+  
+      console.log(`Updated ${field} to:`, updatedValue);
+      return updatedValue; // Zwracamy nową wartość
+    } catch (error) {
+      console.error("Error updating count status:", error.message);
+      throw error;
+    }
+  };
+  
+      
+
+  //21.4 **get count status** 
+  export const getCountStatus = async (recruitmentId) => {
+    try {
+        await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+        const recruitmentRef = doc(db, "recruitments", recruitmentId);
+        const recruitmentSnapshot = await getDoc(recruitmentRef);
+
+        if (!recruitmentSnapshot.exists()) {
+          throw new Error("Recruitment not found");
+          }
+          const recruitmentData = recruitmentSnapshot.data();
+          return {
+            ClCountStatus: recruitmentData.ClCountStatus ?? true,
+            CvCountStatus: recruitmentData.CvCountStatus ?? true,
+            TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+            MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+            AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
+            };
+          } catch (error) {
+            console.error("Error fetching count status:", error.message);
+            throw error;
+            }
+      };
+
 
 // 22.**get applicant name ,surname, email, overall score by ID**
 
@@ -1909,12 +2104,12 @@ export const addTasks = async (recruitmentId, tasksData) => {
     const taskSessions = recruitmentData.TaskSessions || [];
     const applicants = recruitmentData.Applicants || [];
 
-    // **Zapewnij, że meetingsData jest tablicą**
+    // **Zapewnij, że tasksData jest tablicą**
     const tasksArray = Array.isArray(tasksData) ? tasksData : [tasksData];
 
     // **Przetwarzanie wszystkich spotkań**
     for (const taskData of tasksArray) {
-      // Zakładając, że meetingData zawiera tablicę meetings
+      // Zakładając, że taskData zawiera tablicę tasks
       const tasks = taskData.tasks || [];
       for (const singleTask of tasks) {
         // **Sprawdzenie, czy singleMeeting ma poprawną strukturę**
@@ -1930,7 +2125,7 @@ export const addTasks = async (recruitmentId, tasksData) => {
 
         if (singleTask.previousSessionId) {
           IsSessionChanged =
-            singleTask.meetingSessionId !== singleTask.previousSessionId;
+            singleTask.taskSessionId !== singleTask.previousSessionId;
         } else {
           IsSessionChanged = false;
         }
@@ -1966,7 +2161,7 @@ export const addTasks = async (recruitmentId, tasksData) => {
 
           const previousApplicant = oldTasks[indexToRemove].applicantId;
           const previousApplicantIndex = applicants.findIndex(
-            (applicant) => applicant.id === previousApplicant
+            (applicant) => String(applicant.id) === String(previousApplicant)
           );
 
           if (previousApplicantIndex !== -1) {
@@ -1984,7 +2179,16 @@ export const addTasks = async (recruitmentId, tasksData) => {
               recruitmentId
             );
             if (taskCount <= 0) {
-              applicants[previousApplicantIndex].stage = "Checked";
+              const meetingCount = await countApplicantMeetings(
+                previousApplicant,
+                recruitmentId
+              );
+              if (meetingCount <= -1) {
+                applicants[previousApplicantIndex].stage = "Checked";
+              } else {
+                applicants[previousApplicantIndex].stage =
+                  "Invited for interview";
+              }
             }
           }
 
@@ -2036,7 +2240,16 @@ export const addTasks = async (recruitmentId, tasksData) => {
                 recruitmentId
               );
               if (taskCount <= 0) {
-                applicants[previousApplicantIndex].stage = "Checked";
+                const meetingCount = await countApplicantMeetings(
+                  previousApplicant,
+                  recruitmentId
+                );
+                if (meetingCount <= -1) {
+                  applicants[previousApplicantIndex].stage = "Checked";
+                } else {
+                  applicants[previousApplicantIndex].stage =
+                    "Invited for interview";
+                }
               }
             }
 
@@ -2050,7 +2263,10 @@ export const addTasks = async (recruitmentId, tasksData) => {
         }
 
         const applicantId = Number(singleTask.applicantId); // Przekształć applicantId na liczbę
-
+        const DeadlineData = {
+          taskSessionDeadlineDate: session.taskSessionDeadline,
+          taskSessionDeadlineTime: session.taskSessionDeadlineTime,
+        };
         // **Aktualizacja etapu aplikanta**
         const applicantIndex = applicants.findIndex(
           (applicant) => applicant.id === applicantId
@@ -2059,12 +2275,12 @@ export const addTasks = async (recruitmentId, tasksData) => {
           applicants[applicantIndex].stage = "Tasks";
           sendEmail(
             "ADD",
-            "ASSESSMENT",
+            "TASK",
             applicants[applicantIndex],
             recruitmentData.name,
             session.taskSessionName,
             session.taskSessionDescription,
-            singleTask
+            DeadlineData
           );
         }
       }
@@ -2132,7 +2348,12 @@ export const deleteTask = async (id, taskSessionId, taskId) => {
       );
       const taskCount = await countApplicantTasks(applicantId, id);
       if (taskCount <= 0) {
-        applicants[applicantIndex].stage = "Checked";
+        const meetingCount = await countApplicantMeetings(applicantId, id);
+        if (meetingCount <= -1) {
+          applicants[applicantIndex].stage = "Checked";
+        } else {
+          applicants[applicantIndex].stage = "Invited for interview";
+        }
       }
     }
 
@@ -2167,7 +2388,7 @@ export const getTaskById = async (recruitmentId, taskId) => {
 
     const taskSessions = recruitmentData.TaskSessions || [];
 
-    // Find the session and the meeting within the session
+    // Find the session and the task within the session
     for (let session of taskSessions) {
       const task = session.tasks?.find((task) => task.id === taskId);
 
@@ -2269,3 +2490,174 @@ export const getTaskSessionById = async (recruitmentId, taskSessionId) => {
     throw error;
   }
 };
+
+// 32.**update task points**
+export const updateTaskPoints = async (
+  id,
+  taskSessionId,
+  taskId,
+  updatedValue
+) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, "recruitments", id);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+    const taskSessionIndex = recruitmentData.TaskSessions.findIndex(
+      (taskSession) => taskSession.id === taskSessionId
+    );
+
+    const taskIndex = recruitmentData.TaskSessions[
+      taskSessionIndex
+    ].tasks.findIndex((task) => task.id === taskId);
+    console.log(taskIndex);
+    if (taskIndex === -1) {
+      throw new Error("Task not found");
+    }
+
+    recruitmentData.TaskSessions[taskSessionIndex].tasks[taskIndex].points =
+      updatedValue;
+    await updateDoc(recruitmentDoc, {
+      TaskSessions: recruitmentData.TaskSessions,
+    });
+  } catch (error) {
+    console.error("Error updating task points:", error.message);
+    throw error;
+  }
+};
+
+// 33. **set/update Adnational Points**
+export const setAdnationalPoints = async (id, applicantId, updatedValue) => {
+  try {
+    const recruitmentDoc = doc(db, "recruitments", id);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    const recruitmentData = recruitmentSnapshot.data();
+    console.log(recruitmentData);
+    const applicantIndex = recruitmentData.Applicants.findIndex(
+      (applicant) => applicant.id === applicantId
+    );
+    recruitmentData.Applicants[applicantIndex].adnationalPoints = updatedValue;
+    await updateDoc(recruitmentDoc, {
+      Applicants: recruitmentData.Applicants,
+    });
+  } catch (error) {
+    console.error("Error updating adnational points:", error.message);
+    throw error;
+  }
+};
+
+//34. **get recruitment stats**
+export const getRecruitmentStats = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+    const applicants = recruitmentData.Applicants || [];
+
+    const totalApplicants = applicants.length;
+
+    const highestTotalScore = applicants.reduce((max, applicant) => {
+      return applicant.totalScore > max ? applicant.totalScore : max;
+    }, 0);
+
+    const averageTotalScore = applicants.reduce((total, applicant) => {
+      return total + applicant.totalScore;
+    }, 0) / applicants.length;
+
+    const ApplicantsInEachStage = applicants.reduce((acc, applicant) => {
+      acc[applicant.stage] = (acc[applicant.stage] || 0) + 1;
+      return acc;
+    }, {});
+
+    const totalMeetings = recruitmentData.MeetingSessions.length;
+
+    const totalTasks = recruitmentData.TaskSessions.length;
+
+    const CurrentStage = recruitmentData.stage || "Collecting applicants";
+
+    //count where coverLetterFileUrls is not empty
+    const TotalCoverLetters = applicants.reduce((total, applicant) => {
+      if (applicant.coverLetterFileUrls.length > 0) {
+        return total + 1;
+      }
+      return total;
+    }, 0);
+
+    const TotalCoverLettersPercentage = TotalCoverLetters / applicants.length *100;
+
+    return {
+      totalApplicants,
+      highestTotalScore,
+      totalMeetings,
+      totalTasks,
+      averageTotalScore,
+      ApplicantsInEachStage,
+      CurrentStage,
+      TotalCoverLettersPercentage,
+    };
+
+  } catch (error) {
+    console.error("Error fetching recruitment stats:", error.message);
+    throw error;
+  }
+};
+
+//35 **set/update cover letter points**
+export const setCoverLetterPoints = async (id, applicantId, updatedValue) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const recruitmentDoc = doc(db, "recruitments", id);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+    const applicantIndex = recruitmentData.Applicants.findIndex(
+      (applicant) => applicant.id === applicantId
+    );
+    recruitmentData.Applicants[applicantIndex].CLscore = updatedValue;
+    await updateDoc(recruitmentDoc, {
+      Applicants: recruitmentData.Applicants,
+    });
+  } catch (error) {
+    console.error("Error updating cover letter points:", error.message);
+    throw error;
+  }
+  };
+
+  //36 **set/update recruitment stage**
+  export const changeRecruitmentStage = async (id, newStage) => {
+    try {
+      await checkAuth(); // Ensure the user is authenticated
+      const recruitmentDoc = doc(db, "recruitments", id);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error("Recruitment not found");
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+  
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to change recruitment stage");
+      }
+  
+      recruitmentData.stage = newStage;
+  
+      await updateDoc(recruitmentDoc, {
+        stage: newStage,
+      });
+    } catch (error) {
+      console.error("Error changing recruitment stage:", error.message);
+      throw error;
+    }
+  };

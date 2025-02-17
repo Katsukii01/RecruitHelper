@@ -169,7 +169,7 @@ const Tasks = ({ id, refresh, onRefresh }) => {
     );
 
     return (
-      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card over">
         <h1 className="text-2xl font-bold text-white mb-4">Tasks</h1>
         <div className="flex justify-end mb-4">
           <button
@@ -179,7 +179,8 @@ const Tasks = ({ id, refresh, onRefresh }) => {
             Create Task
           </button>
         </div>
-        <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
+        <div className="h-screen-60 overflow-auto">
+        <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2 ">
           <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
             <thead className="bg-gray-900 text-white">
               <tr>
@@ -265,6 +266,7 @@ const Tasks = ({ id, refresh, onRefresh }) => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
         <Pagination
           currentPage={currentPage}

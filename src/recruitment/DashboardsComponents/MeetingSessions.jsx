@@ -176,6 +176,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
           Create Meeting Session
         </button>
       </div>
+      <div className="h-screen-60 overflow-auto">
       <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white">
@@ -247,6 +248,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
       <Pagination
         currentPage={currentPage}
