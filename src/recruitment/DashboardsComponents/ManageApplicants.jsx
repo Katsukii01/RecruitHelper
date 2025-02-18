@@ -5,7 +5,7 @@ import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
 import { Loader } from '../../utils';
 
-const ManageApplicants = ({ id, refresh, onRefresh }) => {
+const ManageApplicants = ({ id }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [recruitmentId, setRecruitmentId] = useState(id);
@@ -78,10 +78,7 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
     fetchApplicants(); // Initial fetch of applicants
   }, [id, currentPage, limit]);
 
-  
-    useEffect(() => {
-      fetchApplicants(); // Re-fetch applicants whenever `refresh` changes
-    }, [refresh]);
+
     
   const handleManualApplicants = () => {
     if(recruitmentStatus == "Private"){
@@ -132,7 +129,6 @@ const ManageApplicants = ({ id, refresh, onRefresh }) => {
 
         setShowConfirmDelete(false);
         fetchApplicants(); // Re-fetch applicants after deletion
-        onRefresh();
       }
     } catch (error) {
       console.error('Error deleting applicant:', error);

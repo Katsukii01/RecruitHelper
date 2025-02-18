@@ -10,7 +10,7 @@ import {
   deleteTaskSession,
 } from "../../services/RecruitmentServices";
 
-const Tasks = ({ id, refresh, onRefresh }) => {
+const Tasks = ({ id, onRefresh }) => {
   const location = useLocation();
   const { page } = location.state || {};
   const [loading, setLoading] = useState(true);
@@ -83,7 +83,7 @@ const Tasks = ({ id, refresh, onRefresh }) => {
 
   useEffect(() => {
     fetchTaskSessions();
-  }, [id, refresh]);
+  }, [id]);
 
   const handleAddTaskSession = async () => {
     // Add task session

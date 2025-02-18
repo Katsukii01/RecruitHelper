@@ -8,7 +8,7 @@ import {
   setCoverLetterPoints,
 } from "../../services/RecruitmentServices";
 
-const CoverLettersPoints =  ({ id, refresh, onRefresh })=> {
+const CoverLettersPoints =  ({ id })=> {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [applicants, setApplicants] = useState([]);
@@ -69,7 +69,7 @@ const CoverLettersPoints =  ({ id, refresh, onRefresh })=> {
 
   useEffect(() => {
     fetchApplicants();
-  }, [id, refresh]);
+  }, [id]);
 
   const validateAdnationalPoints = (value) => {
     if (value < 0) return "cover letter points cannot be negative";
@@ -112,7 +112,6 @@ const CoverLettersPoints =  ({ id, refresh, onRefresh })=> {
     try {
       await setCoverLetterPoints(id, applicantId, updatedValueNumber);
       console.log("Points saved successfully");
-      onRefresh();
     } catch (error) {
       console.error("Error updating points:", error);
     }
@@ -124,6 +123,13 @@ const CoverLettersPoints =  ({ id, refresh, onRefresh })=> {
         <Loader />
       </div>
     );
+
+    if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Points</h1>
+        <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+          No Applicants found
+        </div>
+    </section>;
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">

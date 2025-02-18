@@ -12,7 +12,7 @@ import {
   deleteTask,
 } from "../../services/RecruitmentServices";
 
-const TasksPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
+const TasksPoints = ({ id, refresh }) => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [taskSessions, setTaskSessions] = useState([]);
@@ -152,7 +152,7 @@ const TasksPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
       console.log(taskSessionId, taskId, updatedValueNumber);
       await updateTaskPoints(id, taskSessionId, taskId, updatedValueNumber);
       console.log("Points saved successfully");
-      onRefresh2();
+
     } catch (error) {
       console.error("Error updating points:", error);
     }
@@ -188,7 +188,6 @@ const TasksPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
 
       // Ustaw zaktualizowane session
       setTaskSessions(newTaskSessions);
-      onRefresh();
       handleCloseDeleteConfirmation();
       alert("Task deleted successfully!");
     } catch (error) {

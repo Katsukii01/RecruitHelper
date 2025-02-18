@@ -4,13 +4,13 @@ import { getApplicantsRanking} from '../../services/RecruitmentServices';
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
 
-const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
+const ApplicantsOfferRanking = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [rankedApplicants, setRankedApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8); 
+  const [itemsPerPage] = useState(4); 
   const [totalPages, setTotalPages] = useState(0);
-  const [showTooltip, setShowTooltip] = useState([]); 
+  const [pagginatedApplicants, setPaginatedApplicants] = useState([]);
   
 
   
@@ -20,9 +20,7 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
       try {
         const data = await getApplicantsRanking(id);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
-        setRankedApplicants(data); // Ensure the latest data is set
-        onRefresh(); // Refresh the parent component to update the applicants list
-        console.log("refresh 1"); // Log the fetched data for debugging
+        setRankedApplicants(data); 
       } catch (error) {
         console.error('Error fetching applicants ranking:', error);
       } finally {
@@ -33,7 +31,7 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
   
   useEffect(() => {
     fetchApplicantsRanking();
-  }, [id, refresh]);
+  }, [id]);
 
 
   const paginate = (applicants, pageNumber, itemsPerPage) => {
@@ -43,14 +41,16 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
     return applicants.slice(startIndex, endIndex);
   };
 
+  useEffect(() => {
+    setPaginatedApplicants(paginate(rankedApplicants, currentPage, itemsPerPage));
+  }, [rankedApplicants, currentPage, itemsPerPage]);
   
   if(!id) return  <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">No recruitment found</section>;
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
-  const currentApplicants = paginate(rankedApplicants, currentPage, itemsPerPage);
 
-  if (!currentApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-     <h1 className="text-2xl font-bold text-white mb-4">Applicants Offer Ranking</h1>
+  if (!pagginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+     <h1 className="text-2xl font-bold text-white mb-4">CV Scores</h1>
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
            No applicants found.
         </div>
@@ -79,11 +79,11 @@ const ApplicantsOfferRanking = ({ id, refresh, onRefresh }) => {
 
   return (
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-      <h1 className="text-2xl font-bold text-white mb-1">CV Ranking</h1>
+      <h1 className="text-2xl font-bold text-white mb-1">CV Scores</h1>
     
       <div className='overflow-auto h-screen-80'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
-          {currentApplicants.map((applicant, index) => (
+          {pagginatedApplicants.map((applicant, index) => (
             <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
               <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                   <p className="text-sm text-gray-500">{applicant.email}</p>

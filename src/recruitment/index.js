@@ -15,6 +15,7 @@ import CircularProgress from './CircularProgress';
 import FilesPreview from './FilesPreview';
 import AddTasks from './AddTasks';
 import CreateTasksSession from './CreateTasksSession';
+import UserStats from './UserStats';
 
 
 export {
@@ -34,5 +35,6 @@ export {
     CircularProgress,
     FilesPreview,
     AddTasks,
-    CreateTasksSession
+    CreateTasksSession,
+    UserStats
 }

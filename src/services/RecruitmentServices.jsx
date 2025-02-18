@@ -10,7 +10,6 @@ import {
   query,
   where,
   setDoc,
-  count,
 } from "firebase/firestore";
 import { firebaseAuth } from "../firebase/baseconfig";
 import {
@@ -20,7 +19,6 @@ import {
   deleteObject,
 } from "firebase/storage";
 import sendEmail from "./MailerServices";
-import { a } from "framer-motion/client";
 
 
 //fetch all emails with  signInMethod
@@ -1641,7 +1639,7 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
-    const applicants = recruitmentData.Applicants || [];
+    const applicants = await getApplicantsRanking(recruitmentId);
 
     // Pobieramy wartości count (czy dany element ma być brany pod uwagę)
     const countCL = recruitmentData.ClCountStatus ?? true;
@@ -1662,14 +1660,15 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
         const CLscore = countCL ? applicant.CLscore || 0 : 0;
         const adnationalPoints = applicant.adnationalPoints || 0;
 
-        const Meetingsscore =  (Scores.Meetingsscore / meetingsPointsWeight) * 100 ;
-        const Tasksscore = (Scores.Tasksscore / tasksPointsWeight) * 100 ;
-
+        const Meetingsscore = meetingsPointsWeight > 0 ? (Scores.Meetingsscore / meetingsPointsWeight) * 100 : 0;
+        const Tasksscore = tasksPointsWeight > 0 ? (Scores.Tasksscore / tasksPointsWeight) * 100 : 0;
+        
         const AddMeetingscore = countMeetings ? Meetingsscore : 0;
         const AddTasksscore = countTasks ? Tasksscore : 0;
         
         // Liczymy, ile czynników bierzemy pod uwagę
         const activeFactors = [countCV, countCL, countTasks , countMeetings].filter(Boolean).length;
+       
         const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
         let totalScore = parseFloat(baseScore).toFixed(2);
 
@@ -2563,24 +2562,31 @@ export const getRecruitmentStats = async (recruitmentId) => {
     const recruitmentData = recruitmentSnapshot.data();
     const applicants = recruitmentData.Applicants || [];
 
-    const totalApplicants = applicants.length;
+    const totalApplicants = applicants.length || 0;
 
     const highestTotalScore = applicants.reduce((max, applicant) => {
       return applicant.totalScore > max ? applicant.totalScore : max;
     }, 0);
 
-    const averageTotalScore = applicants.reduce((total, applicant) => {
-      return total + applicant.totalScore;
-    }, 0) / applicants.length;
+    const averageTotalScore = applicants.length > 0 
+    ? applicants.reduce((total, applicant) => total + applicant.totalScore, 0) / applicants.length 
+    : 0;
+  
 
     const ApplicantsInEachStage = applicants.reduce((acc, applicant) => {
       acc[applicant.stage] = (acc[applicant.stage] || 0) + 1;
       return acc;
     }, {});
 
-    const totalMeetings = recruitmentData.MeetingSessions.length;
+    let totalMeetings = 0;
+    if(recruitmentData.MeetingSessions){
+    totalMeetings = recruitmentData.MeetingSessions.length ;
+    } 
 
-    const totalTasks = recruitmentData.TaskSessions.length;
+    let totalTasks = 0;
+    if(recruitmentData.TaskSessions){
+     totalTasks = recruitmentData.TaskSessions.length ;
+    } 
 
     const CurrentStage = recruitmentData.stage || "Collecting applicants";
 
@@ -2592,7 +2598,10 @@ export const getRecruitmentStats = async (recruitmentId) => {
       return total;
     }, 0);
 
-    const TotalCoverLettersPercentage = TotalCoverLetters / applicants.length *100;
+    const TotalCoverLettersPercentage = applicants.length > 0 
+      ? (TotalCoverLetters / applicants.length) * 100 
+      : 0;
+
 
     return {
       totalApplicants,
@@ -2661,3 +2670,85 @@ export const setCoverLetterPoints = async (id, applicantId, updatedValue) => {
       throw error;
     }
   };
+
+
+  //37 **get user stats**
+  export const getUserStats = async () => {
+    try {
+      const userId = firebaseAuth.currentUser.uid;
+      const userStatsCollection = collection(db, "userStats");
+      const q = query(userStatsCollection, where("id", "==", userId));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.empty) {
+        return null; // Jeśli nie ma rekordu, nie tworzymy nowego
+      }
+  
+      const userStatsData = querySnapshot.docs[0].data();
+      return { id: querySnapshot.docs[0].id, ...userStatsData };
+    } catch (error) {
+      console.error("Error getting user stats:", error);
+      return null;
+    }
+  };
+// 38 **create user stats**
+export const createUserStats = async (userId) => {
+  try {
+    const userStatsCollection = collection(db, "userStats");
+    const newDocRef = doc(userStatsCollection); // Losowe ID
+
+    const newStats = {
+      id: userId,
+      AllTimeMeetingsCount: 0,
+      AllTimeRecruitmentsCount: 0,
+      AllTimeApplicationsCount: 0,
+      AllTimeApplicationRejected: 0,
+      AllTimeApplicationHired: 0,
+      AllTimeHiredApplicants: 0,
+    };
+
+    await setDoc(newDocRef, newStats);
+    return { id: newDocRef.id, ...newStats };
+  } catch (error) {
+    console.error("Error creating user stats:", error);
+    return null;
+  }
+};
+
+// 39 **check and create user stats**
+export const checkAndCreateUserStats = async () => {
+  const stats = await getUserStats();
+  if (!stats) {
+    const userId = firebaseAuth.currentUser.uid;
+    return await createUserStats(userId);
+  }
+  return stats;
+};
+
+// 40 **update user stats**
+export const updateUserStat = async (userId, whatToCount, action = "increment") => {
+  try {
+    const userStatsCollection = collection(db, "userStats");
+    const q = query(userStatsCollection, where("id", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.log("User stats not found, creating new stats...");
+      await createUserStats(userId);
+      return;
+    }
+
+    const userDoc = querySnapshot.docs[0].ref;
+    const userData = querySnapshot.docs[0].data();
+    const currentCount = userData[whatToCount] || 0;
+
+    // Decyzja o akcji
+    const newCount = action === "increment" ? currentCount + 1 : Math.max(0, currentCount - 1);
+
+    await updateDoc(userDoc, { [whatToCount]: newCount });
+    console.log(`${action === "increment" ? "Incremented" : "Decremented"} ${whatToCount} for user ${userId}`);
+  } catch (error) {
+    console.error("Error updating user stats:", error);
+  }
+};
+

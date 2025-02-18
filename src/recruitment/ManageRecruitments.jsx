@@ -130,7 +130,7 @@ const ManageRecruitments = () => {
               {paginatedRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
-                    className="h-[659.9px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                    className="min-h-[659.9px]  h-fit relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                     
                   >
@@ -166,13 +166,13 @@ const ManageRecruitments = () => {
                 </p>
 
 
-                  <p className="text-sm text-white mt-1 font-semibold m-4  ">Job Title:
+                  <p className="text-sm text-white mt-1 font-semibold m-4">Job Title:
                     <span className='text-teal-400 font-normal'> {recruitment.jobTittle}</span>
                   </p>
 
-                  <p className="text-sm text-white mt-1 font-semibold m-4">
+                  <p className="text-sm text-white mt-1 font-semibold m-4 ">
                     Education Level: 
-                    <span className="text-teal-400 font-normal pl-1">
+                    <span className="text-teal-400 font-normal pl-1 ">
                       {recruitment.educationLevel ? (
                         <>
                           {recruitment.educationLevel} - {recruitment.educationField || <span className="text-gray-400">Not provided</span>}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ManageRecruitments, ManageApplications, Calendar } from '../recruitment';
+import { ManageRecruitments, ManageApplications, Calendar, UserStats } from '../recruitment';
 
 const statusColors = [
   { status: 'To be checked', color: 'bg-gray-500', description: 'The applicant is still in review and has not been evaluated yet.' },
@@ -7,7 +7,7 @@ const statusColors = [
   { status: 'Checked', color: 'bg-blue-500', description: 'The applicant has been checked and reviewed.' },
   { status: 'Invited for interview', color: 'bg-yellow-500', description: 'The applicant has been invited for an interview.' },
   { status: 'Interviewed', color: 'bg-orange-500', description: 'The applicant has been interviewed and is awaiting the next step.' },
-  { status: 'Tasks', color: 'bg-pink-500', description: 'The applicant is currently completing tasks.' },
+  { status: 'Tasks', color: 'bg-pink-500', description: 'The applicant is currently completing tasks. Check yout email for more details.' },
   { status: 'Offered', color: 'bg-purple-500', description: 'The applicant has been offered a job and is awaiting their response.' },
   { status: 'Hired', color: 'bg-green-500', description: 'The applicant has been hired and is now an employee.' },
 ];
@@ -31,13 +31,13 @@ const ApplicantStatus = () => {
 };
 
 const stageColors = [
+  { stage: 'Paused', color: 'bg-red-500', description: 'The recruiter paused recruitment process.' },
   { stage: 'Collecting applicants', color: 'bg-gray-500', description: 'The recruiter is still in the process of collecting applicants.' },
   { stage: 'Checking applications', color: 'bg-blue-500', description: 'The recruiter is currently checking applications.' },
   { stage: 'Interviewing applicants', color: 'bg-yellow-500', description: 'The recruiter is currently interviewing applicants.' },
-  { stage: 'Offering jobs', color: 'bg-purple-500', description: 'The recruiter is currently offering jobs.' },
   { stage: 'Scoring tasks', color: 'bg-pink-500', description: 'The recruiter is currently scoring tasks.' },
+  { stage: 'Offering jobs', color: 'bg-purple-500', description: 'The recruiter is currently offering jobs.' },
   { stage: 'Hiring employees', color: 'bg-green-500', description: 'The recruiter is currently hiring employees.' },
-  { stage: 'Paused', color: 'bg-red-500', description: 'The recruiter paused recruitment process.' },
 ];
 
 const RecruitmentStage = () => {
@@ -67,14 +67,14 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 justify-items-center">
         {/* Placeholder or empty */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80">
-          <h2 className="text-2xl font-semibold">Overview</h2>
-          
+          <h2 className="text-2xl font-semibold">📊Overview</h2>
+          <UserStats />
         </div>
 
         {/* Calendar */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80">
         <h2 className="text-2xl font-semibold flex items-center space-x-4 flex-wrap">
-          Meetings Calendar
+        📅Meetings Calendar
         </h2>
         <div className="flex items-center space-x-4 flex-wrap">
         <div className="flex items-center space-x-3 text-sm text-gray-300">
@@ -98,14 +98,14 @@ const Dashboard = () => {
 
         {/* Recruitment Management */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full flex flex-col justify-between">
-          <h2 className="text-2xl font-semibold">Recruitments</h2>
+          <h2 className="text-2xl font-semibold">📑Recruitments</h2>
           <ManageRecruitments />
           <RecruitmentStage />
         </div>
 
         {/* Applications Management */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full flex flex-col justify-between">
-          <h2 className="text-2xl font-semibold">Applications</h2>
+          <h2 className="text-2xl font-semibold">💼Applications</h2>
           <ManageApplications />
           <ApplicantStatus />
         </div>

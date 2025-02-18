@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
-import { getApplicantsWithOverallScore, changeApplicantStage, } from '../../services/RecruitmentServices';
+import { getAllApplicants, changeApplicantStage, } from '../../services/RecruitmentServices';
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
-import {CircularProgress} from '../';
 
-const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
+const ApplicantsStages = ( {id}) => {
     const [loading, setLoading] = useState();
     const [Applicants, setApplicants] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,9 +21,7 @@ const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
    
         try {
             setLoading(true);
-            const applicants= await getApplicantsWithOverallScore(id);
-            onRefresh();
-            console.log("refresh 2");
+            const applicants= await getAllApplicants(id);
             setTotalPages(Math.ceil(applicants.length / itemsPerPage));
             setApplicants(applicants);
             setLoading(false);
@@ -34,25 +31,13 @@ const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
         };
 
         fetchApplicants();
-    }, [refresh]);
+    }, [id]);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
       };
-    
-    const getBorderColor = (score) => {
-        if (score < 40) return 'border-red-200'; // Red
-        if (score < 70) return 'border-yellow-200'; // Yellow
-        return 'border-green-200'; // Green
-      };
-      
+    ;
 
-    const paginate = (applicants, pageNumber, itemsPerPage) => {
-        const startIndex = (pageNumber - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-    
-        return applicants.slice(startIndex, endIndex);
-      };
     
     const stages = [
         { stage: "Checked", color: "blue", iconPath: "m4.5 12.75 6 6 9-13.5" },
@@ -84,7 +69,6 @@ const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
     
         try {
         await changeApplicantStage(id, applicantId, newStage);
-        onRefresh2(); 
         } catch (error) {
         // W przypadku błędu, przywróć poprzedni etap
         console.error('Failed to change applicant stage:', error);
@@ -115,19 +99,11 @@ const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
     <div className='overflow-auto h-screen-80'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
         {Applicants.map((applicant, index) => (
-          <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
+          <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 border-2 border-blue-200 overflow-auto `}>
             <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                 <p className="text-sm text-gray-500">{applicant.email}</p>
             </h1>
 
-            <hr className='w-full border-t-2 border-gray-300' />
-            
-            <div className="flex flex-col items-center justify-center space-y-4">
-            <p className="text-xl font-bold text-white">Overall Score</p>
-            <div className="">
-                <CircularProgress score={applicant.totalScore} />
-            </div>
-            </div>
 
             <hr  className='w-full border-t-2 border-gray-300' />
             <div className="mb-2">
@@ -141,7 +117,7 @@ const ApplicantsStages = ( {id, refresh, onRefresh, onRefresh2}) => {
                 onMouseEnter={() => setShowTooltip([stage, applicant.id])} // Set both stage and applicant.id
                 onMouseLeave={() => setShowTooltip(null)} // Reset tooltip when mouse leaves
                 className={`relative flex items-center justify-center w-12 h-12 rounded-full text-white text-4xl transition border-2 border-white ${
-                  applicant.stage === stage
+                  (applicant.stage|| "To be checked") === stage
                     ? `bg-${color}-500 hover:bg-${color}-600`
                     : `bg-[#a8a8a8] 
                         ${color === "blue" ? "hover:bg-blue-600" : ""} 

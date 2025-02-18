@@ -118,6 +118,13 @@ const AdnationalPoints = ({ id, refresh, onRefresh }) => {
     }
   };
 
+  if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+      <h1 className="text-2xl font-bold text-white mb-4">Adnational Points</h1>
+        <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
+          No Applicants found
+        </div>
+    </section>;
+
   if (loading)
     return (
       <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card ">
