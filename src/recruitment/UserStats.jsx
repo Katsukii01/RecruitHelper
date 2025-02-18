@@ -28,8 +28,8 @@ const UserStats = () => {
     if (!userStats) return <div>No user stats found</div>;
 
     return (
-        <div className="p-4 md:p-6 h-screen-80 overflow-auto ">
-            <div className="md:mt-12 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4  ">
+        <div className="p-4 xl:p-6 h-screen-80 overflow-auto ">
+            <div className="xl:mt-12 grid xl:grid-cols-2 lg:grid-cols-1 gap-4  ">
 
                 {/* All Time Recruitments Count */}
                 <div className="p-4 bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">

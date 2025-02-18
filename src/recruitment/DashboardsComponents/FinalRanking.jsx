@@ -5,81 +5,117 @@ import { Loader } from '../../utils';
 import Pagination from './Pagination';
 import {CircularProgress} from '../';
 
-const FinalRanking = ( {id}) => {
-    const [loading, setLoading] = useState(true);
-      const [Applicants, setApplicants] = useState([]);
-      const [currentPage, setCurrentPage] = useState(1);
-      const [itemsPerPage] = useState(4); 
-      const [totalPages, setTotalPages] = useState(0);
-      const [countStatus, setCountStatus] = useState(true);
-      const [pagginatedApplicants, setPaginatedApplicants] = useState([]);
+const FinalRanking = ({ id }) => {
+  const [loading, setLoading] = useState(true);
+  const [applicants, setApplicants] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(4);
+  const [totalPages, setTotalPages] = useState(0);
+  const [countStatus, setCountStatus] = useState({});
+  const [paginatedApplicants, setPaginatedApplicants] = useState([]);
 
+    // Funkcja do obliczania wyniku kandydata
+    const calculateTotalScore = (applicant, countStatus) => {
+      if (!countStatus) return 0;
+  
+      const { AdnationalPointsCountStatus, ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus } =
+        countStatus;
+  
+      const Cvscore = CvCountStatus ? applicant.CVscore || 0 : 0;
+      const CLscore = ClCountStatus ? applicant.CLscore || 0 : 0;
+      const adnationalPoints = applicant.adnationalPoints || 0;
+      const AddMeetingscore = MeetingsCountStatus ? applicant.Meetingsscore || 0 : 0;
+      const AddTasksscore = TasksCountStatus ? applicant.Tasksscore || 0 : 0;
+  
+  
+      // Liczba aktywnych czynników
+      const activeFactors = [ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus].filter(Boolean).length;
+      const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
+      let totalScore = parseFloat(baseScore);
+  
+      // Dodatkowe punkty
+      if (AdnationalPointsCountStatus) {
+        totalScore += adnationalPoints * 0.2;
+      }
+  
+      return totalScore;
+    };
+  
+    // Pobieranie danych kandydatów i ich wyników
+    const fetchApplicants = async () => {
+      try {
+        setLoading(true);
+        const applicantsData = await getApplicantsWithOverallScore(id);
+        const countStatusData = await getCountStatus(id);
+        setCountStatus(countStatusData);
+  
+        // Obliczanie totalScore dla każdego kandydata
+        const updatedApplicants = applicantsData.map((applicant) => ({
+          ...applicant,
+          totalScore: calculateTotalScore(applicant, countStatusData),
+        }));
+  
+        setApplicants(updatedApplicants);
+        setTotalPages(Math.ceil(updatedApplicants.length / itemsPerPage));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching applicants:", error);
+      }
+    };
+  
+    // Efekt pobierania danych po załadowaniu komponentu lub zmianie `id`
+    useEffect(() => {
+      fetchApplicants();
+    }, [id]);
 
-      // Fetch recruitment name by ID
-      const fetchApplicants = async () => {
-            try {
-                setLoading(true);
-                const applicants= await getApplicantsWithOverallScore(id);
-                const countStatus = await getCountStatus(id);
-                setCountStatus(countStatus);
-                setTotalPages(Math.ceil(applicants.length / itemsPerPage));
-                setApplicants(applicants);
-                setLoading(false);
-            } catch (error) {
-                setError(error.message || 'Failed to fetch recruitment details.');
-            }
-        };
-
-          useEffect(() => {
-              fetchApplicants();
-          }, [id]);
-
-          const handlePageChange = (page) => {
-            setCurrentPage(page);
-          };
-        
-        const getBorderColor = (score) => {
-            if (score < 40) return 'border-red-200'; // Red
-            if (score < 70) return 'border-yellow-200'; // Yellow
-            return 'border-green-200'; // Green
-          };
-
+    const RecalculationOfTotalScores = async () => {
+      const updatedApplicants = applicants.map((applicant) => ({
+        ...applicant,
+        totalScore: calculateTotalScore(applicant, countStatus),
+      }));
     
-        const paginate = (applicants, pageNumber, itemsPerPage) => {
-            const startIndex = (pageNumber - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-        
-            return applicants.slice(startIndex, endIndex);
-          };
-
-          useEffect(() => {
-            setPaginatedApplicants(paginate(Applicants, currentPage, itemsPerPage));
-          }, [Applicants, currentPage, itemsPerPage]);
-          
-          const handleToggle = async (key) => {
-            try {
-              // Przełącz lokalny stan, aby użytkownik widział natychmiastową zmianę
-              setCountStatus((prev) => ({
-                ...prev,
-                [key]: !prev[key],
-              }));
-          
-              // Aktualizacja wartości w bazie danych (Firestore)
-              await changeCountStatus(id, key);
-          
-              // Odśwież dane po zmianie statusu
-              await fetchApplicants();
-            } catch (error) {
-              console.error("Error toggling status:", error);
-            }
-          };
-          
-        
+      setApplicants(updatedApplicants);
+    
+    };
+    
+  
+    // Recalculation of total scores when countStatus changes
+    useEffect(() => {
+      RecalculationOfTotalScores();
+    }, [countStatus]);
+  
+    // Obsługa paginacji
+    useEffect(() => {
+      const sortedApplicants = [...applicants].sort((a, b) => b.totalScore - a.totalScore);
+      setPaginatedApplicants(sortedApplicants.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+    }, [applicants, currentPage]);
+  
+    const handlePageChange = (page) => setCurrentPage(page);
+  
+    const getBorderColor = (score) => {
+      if (score < 40) return "border-red-200"; // Red
+      if (score < 70) return "border-yellow-200"; // Yellow
+      return "border-green-200"; // Green
+    };
+  
+    const handleToggle = async (key) => {
+      try {
+        setCountStatus((prev) => ({
+          ...prev,
+          [key]: !prev[key],
+        }));
+  
+        // Aktualizacja statusu w bazie bez ponownego pobierania
+        await changeCountStatus(id, key);
+      } catch (error) {
+        console.error("Error toggling status:", error);
+      }
+    };
           
       if(!id) return  <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">No recruitment found</section>;
       if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
-      if (!Applicants.length) return (
+      if (!applicants.length) return (
         <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-2xl font-bold text-white mb-4">Final Ranking</h1>
 
@@ -131,7 +167,7 @@ const FinalRanking = ( {id}) => {
 
     <div className='overflow-auto h-screen-80'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
-        {pagginatedApplicants.map((applicant, index) => (
+        {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.totalScore)} overflow-auto `}>
             <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                 <p className="text-sm text-gray-500">{applicant.email}</p>

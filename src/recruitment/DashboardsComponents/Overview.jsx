@@ -98,7 +98,7 @@ const Overview = ({ id }) => {
         {/* Current Stage */}
 
         <h2 className="text-lg md:text-xl font-bold mb-1">Current Stage</h2>
-        <div className="py-4  rounded-2xl shadow-lg text-white w-full overflow-x-auto mb-6 inner-shadow">
+        <div className="py-4  rounded-2xl shadow-lg text-white w-full overflow-x-auto mb-6 inner-shadow px-2">
 
           {/* Pasek postępu */}
           <div className="relative flex items-center justify-between min-w-[800px] px-1">
@@ -161,7 +161,7 @@ const Overview = ({ id }) => {
           </svg>
             <div>
               <h2 className="text-lg md:text-xl font-bold">Highest Score</h2>
-              <p className="text-2xl">{stats.highestTotalScore}%</p>
+              <p className="text-2xl">{stats.highestTotalScore.toFixed(2)}%</p>
             </div>
           </div>
 

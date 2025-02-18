@@ -509,7 +509,7 @@
   width: 200px;
   height: 200px;
   background: radial-gradient(circle, #09bff7 0%, #12448f 80%);
-  box-shadow: 0 0 60px rgba(0, 179, 250, 0.8); /* Halo na 90% wysokości kontenera */
+  box-shadow: 0 0 60px rgba(0, 179, 250, 0.4); /* Halo na 90% wysokości kontenera */
   animation: pulseMoon 3s infinite ease-in-out;
 }
 

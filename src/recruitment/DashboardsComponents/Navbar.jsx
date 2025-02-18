@@ -13,11 +13,6 @@ const Navbar = () => {
     closed: { opacity: 0, height: 0, transition: { duration: 0.3, ease: "easeInOut" } },
   };
   
-  const arrowVariants = {
-    open: { rotate: 180, transition: { duration: 0.3, ease: "easeInOut" } },
-    closed: { rotate: 0, transition: { duration: 0.3, ease: "easeInOut" } },
-  };
-  
   useEffect(() => {
     const updateActiveFromHash = () => {
       const currentHash = window.location.hash.replace("#", "");
@@ -50,11 +45,6 @@ const Navbar = () => {
     setOpenCategories((prev) => {
       const isOpening = !prev[title];
 
-      if (isOpening && firstLink) {
-        window.location.hash = firstLink;
-        const matchingLink = RecruitmentDashboardLinks.find((link) => link.id === firstLink);
-        if (matchingLink) setActive(matchingLink.title);
-      }
 
       return { ...prev, [title]: isOpening };
     });

@@ -1638,15 +1638,7 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
       throw new Error("Recruitment not found");
     }
 
-    const recruitmentData = recruitmentSnapshot.data();
     const applicants = await getApplicantsRanking(recruitmentId);
-
-    // Pobieramy wartości count (czy dany element ma być brany pod uwagę)
-    const countCL = recruitmentData.ClCountStatus ?? true;
-    const countCV = recruitmentData.CvCountStatus ?? true;
-    const countTasks = recruitmentData.TasksCountStatus ?? true;
-    const countMeetings = recruitmentData.MeetingsCountStatus ?? true;
-    const countAdnationalPointsCountStatus = recruitmentData.AdnationalPointsCountStatus ?? true;
 
     // Pobieramy maksymalne wartości dopiero po sprawdzeniu istnienia dokumentu
     const { meetingsPointsWeight, tasksPointsWeight } = await getMaxPoints(recruitmentId);
@@ -1656,32 +1648,13 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
       applicants.map(async (applicant) => {
         const Scores = await getApplicantScore(recruitmentId, applicant.id);
 
-        const Cvscore = countCV ? applicant.CVscore || 0 : 0;
-        const CLscore = countCL ? applicant.CLscore || 0 : 0;
-        const adnationalPoints = applicant.adnationalPoints || 0;
-
         const Meetingsscore = meetingsPointsWeight > 0 ? (Scores.Meetingsscore / meetingsPointsWeight) * 100 : 0;
         const Tasksscore = tasksPointsWeight > 0 ? (Scores.Tasksscore / tasksPointsWeight) * 100 : 0;
         
-        const AddMeetingscore = countMeetings ? Meetingsscore : 0;
-        const AddTasksscore = countTasks ? Tasksscore : 0;
-        
-        // Liczymy, ile czynników bierzemy pod uwagę
-        const activeFactors = [countCV, countCL, countTasks , countMeetings].filter(Boolean).length;
-       
-        const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
-        let totalScore = parseFloat(baseScore).toFixed(2);
-
-        // Dodajemy dodatkowe punkty
-        if(countAdnationalPointsCountStatus) {
-            totalScore = parseFloat(baseScore + adnationalPoints * 0.2).toFixed(2);
-          }
-  
         return {
           ...applicant,
-          totalScore: parseFloat(totalScore), // Zamiana na liczbę
-          Tasksscore,
           Meetingsscore,
+          Tasksscore,
         };
       })
     );
@@ -1801,7 +1774,6 @@ export const getMaxPoints = async (recruitmentId) => {
       // Aktualizacja tylko jednego pola w Firestore
       await updateDoc(recruitmentRef, { [field]: updatedValue });
   
-      console.log(`Updated ${field} to:`, updatedValue);
       return updatedValue; // Zwracamy nową wartość
     } catch (error) {
       console.error("Error updating count status:", error.message);
@@ -2550,6 +2522,32 @@ export const setAdnationalPoints = async (id, applicantId, updatedValue) => {
   }
 };
 
+    const calculateTotalScore = (applicant, countStatus) => {
+      if (!countStatus) return 0;
+  
+      const { AdnationalPointsCountStatus, ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus } =
+        countStatus;
+  
+      const Cvscore = CvCountStatus ? applicant.CVscore || 0 : 0;
+      const CLscore = ClCountStatus ? applicant.CLscore || 0 : 0;
+      const adnationalPoints = applicant.adnationalPoints || 0;
+      const AddMeetingscore = MeetingsCountStatus ? applicant.Meetingsscore || 0 : 0;
+      const AddTasksscore = TasksCountStatus ? applicant.Tasksscore || 0 : 0;
+  
+  
+      // Liczba aktywnych czynników
+      const activeFactors = [ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus].filter(Boolean).length;
+      const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
+      let totalScore = parseFloat(baseScore);
+  
+      // Dodatkowe punkty
+      if (AdnationalPointsCountStatus) {
+        totalScore += adnationalPoints * 0.2;
+      }
+  
+      return totalScore;
+    };
+
 //34. **get recruitment stats**
 export const getRecruitmentStats = async (recruitmentId) => {
   try {
@@ -2560,23 +2558,54 @@ export const getRecruitmentStats = async (recruitmentId) => {
       throw new Error("Recruitment not found");
     }
     const recruitmentData = recruitmentSnapshot.data();
-    const applicants = recruitmentData.Applicants || [];
+    const applicants = await getApplicantsWithOverallScore(recruitmentId);
 
-    const totalApplicants = applicants.length || 0;
+      const countStatus = {
+        ClCountStatus: recruitmentData.ClCountStatus || true,
+        CvCountStatus: recruitmentData.CvCountStatus|| true,
+        TasksCountStatus: recruitmentData.TasksCountStatus|| true,
+        MeetingsCountStatus: recruitmentData.MeetingsCountStatus|| true,
+        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus || true,
+    };
 
-    const highestTotalScore = applicants.reduce((max, applicant) => {
+    if (!Array.isArray(applicants)) {
+      console.error("Error: applicants is not an array", applicants);
+      applicants = []; // Zapewniamy, że to zawsze tablica
+    }
+   
+    // Mapujemy aplikantów i liczymy `totalScore`
+    const updatedApplicants = await Promise.all(
+      applicants.map(async (applicant) => ({
+        ...applicant,
+        totalScore: await calculateTotalScore(applicant, countStatus)
+      }))
+    );
+
+
+    const totalApplicants = updatedApplicants.length || 0;
+
+    const highestTotalScore = updatedApplicants.reduce((max, applicant) => {
       return applicant.totalScore > max ? applicant.totalScore : max;
     }, 0);
 
-    const averageTotalScore = applicants.length > 0 
-    ? applicants.reduce((total, applicant) => total + applicant.totalScore, 0) / applicants.length 
+    const averageTotalScore = updatedApplicants.length > 0 
+    ? (() => {
+        const totalScore = updatedApplicants.reduce((total, applicant) => {
+            const score = applicant.totalScore ?? 0;
+            return total + score;
+        }, 0);
+
+        if (totalScore === 0 || updatedApplicants.length === 0) return 0;
+        return totalScore / updatedApplicants.length;
+    })()
     : 0;
-  
 
     const ApplicantsInEachStage = applicants.reduce((acc, applicant) => {
-      acc[applicant.stage] = (acc[applicant.stage] || 0) + 1;
+      const stage = applicant.stage || "To be checked";
+      acc[stage] = (acc[stage] || 0) + 1;
       return acc;
-    }, {});
+  }, {});
+  
 
     let totalMeetings = 0;
     if(recruitmentData.MeetingSessions){
@@ -2691,6 +2720,7 @@ export const setCoverLetterPoints = async (id, applicantId, updatedValue) => {
       return null;
     }
   };
+  
 // 38 **create user stats**
 export const createUserStats = async (userId) => {
   try {
