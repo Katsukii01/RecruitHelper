@@ -48,15 +48,8 @@ const FinalRanking = ({ id }) => {
         const applicantsData = await getApplicantsWithOverallScore(id);
         const countStatusData = await getCountStatus(id);
         setCountStatus(countStatusData);
-  
-        // Obliczanie totalScore dla każdego kandydata
-        const updatedApplicants = applicantsData.map((applicant) => ({
-          ...applicant,
-          totalScore: calculateTotalScore(applicant, countStatusData),
-        }));
-  
-        setApplicants(updatedApplicants);
-        setTotalPages(Math.ceil(updatedApplicants.length / itemsPerPage));
+        setApplicants(applicantsData);
+        setTotalPages(Math.ceil(applicantsData.length / itemsPerPage));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching applicants:", error);
@@ -86,7 +79,12 @@ const FinalRanking = ({ id }) => {
   
     // Obsługa paginacji
     useEffect(() => {
-      const sortedApplicants = [...applicants].sort((a, b) => b.totalScore - a.totalScore);
+      const ApplicantsWithScores = applicants.map((applicant) => ({
+        ...applicant,
+        totalScore: calculateTotalScore(applicant, countStatus),
+      }));
+
+      const sortedApplicants = [...ApplicantsWithScores].sort((a, b) => b.totalScore - a.totalScore);
       setPaginatedApplicants(sortedApplicants.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
     }, [applicants, currentPage]);
   
