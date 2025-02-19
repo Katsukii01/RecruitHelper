@@ -72,7 +72,7 @@ const Dashboard = () => {
         </div>
 
         {/* Calendar */}
-        <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80 overflow-y-auto ">
+        <div className="card bg-white shadow-lg rounded-lg p-6 w-full h-screen-80 overflow-auto ">
         <h2 className="text-2xl font-semibold flex items-center space-x-4 flex-wrap ">
         📅Meetings Calendar
         </h2>

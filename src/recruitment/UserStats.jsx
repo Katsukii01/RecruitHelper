@@ -29,7 +29,7 @@ const UserStats = () => {
 
     return (
             <div className="p-4 xl:p-6 h-screen overflow-auto inner-shadow">
-            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6 ">
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-5 ">
                 {[
                 { label: "All Time Recruitments", icon: "👥", value: userStats.AllTimeRecruitmentsCount },
                 { label: "Hired Applicants", icon: "🏆", value: userStats.AllTimeHiredApplicants },
