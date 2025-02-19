@@ -67,17 +67,17 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 justify-items-center">
         {/* Placeholder or empty */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80">
-          <h2 className="text-2xl font-semibold">📊Overview</h2>
+          <h2 className="text-2xl font-semibold">📊Statistics</h2>
           <UserStats />
         </div>
 
         {/* Calendar */}
-        <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80 overflow-y-auto">
-        <h2 className="text-2xl font-semibold flex items-center space-x-4 flex-wrap">
+        <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80 overflow-y-auto ">
+        <h2 className="text-2xl font-semibold flex items-center space-x-4 flex-wrap ">
         📅Meetings Calendar
         </h2>
-        <div className="flex items-center space-x-4 flex-wrap">
-        <div className="flex items-center space-x-3 text-sm text-gray-300">
+        <div className="flex items-center space-x-4 flex-wrap ">
+        <div className="flex items-center space-x-3 text-sm text-gray-300 ">
             <div className="flex items-center space-x-1">
               <span className="w-3 h-3 bg-[#ff4444] rounded-full shadow-md"></span>
               <span>Recruitment Meetings</span>

@@ -28,64 +28,36 @@ const UserStats = () => {
     if (!userStats) return <div>No user stats found</div>;
 
     return (
-        <div className="p-4 xl:p-6 h-screen-80 overflow-auto ">
-            <div className="xl:mt-12 grid xl:grid-cols-2 lg:grid-cols-1 gap-4  ">
+            <div className="p-4 xl:p-6 h-screen overflow-auto inner-shadow">
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6 ">
+                {[
+                { label: "All Time Recruitments", icon: "👥", value: userStats.AllTimeRecruitmentsCount },
+                { label: "Hired Applicants", icon: "🏆", value: userStats.AllTimeHiredApplicants },
+                { label: "All Time Meetings", icon: "📅", value: userStats.AllTimeMeetingsCount },
+                { label: "All Time Applications", icon: "📄", value: userStats.AllTimeApplicationsCount },
+                { label: "Applications Rejected", icon: "❌", value: userStats.AllTimeApplicationRejected },
+                { label: "Applications Hired", icon: "✅", value: userStats.AllTimeApplicationHired },
+                ].map((item, index) => (
+                <div
+                    key={index}
+                    className="p-11 bg-glass-dark rounded-2xl shadow-2xl shadow-black text-white flex items-center gap-6 hover:scale-105 transition-all duration-300 relative group"
+                >
+                    {/* Dynamiczne światło na hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-20 transition-opacity rounded-2xl" />
 
-                {/* All Time Recruitments Count */}
-                <div className="p-4 bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">👥</span>
+                    {/* Ikona */}
+                    <span className="text-2xl md:text-3xl">{item.icon}</span>
+
+                    {/* Opis i wartość */}
                     <div>
-                        <h2 className="text-lg font-bold">All Time Recruitments</h2>
-                        <p className="text-xl">{userStats.AllTimeRecruitmentsCount}</p>
+                    <h2 className="text-lg md:text-xl font-extrabold tracking-wide">{item.label}</h2>
+                    <p className="text-2xl md:text-3xl font-bold text-primary">{item.value}</p>
                     </div>
                 </div>
-                 {/* Hired Applicants */}
-                <div className="p-4 bg-gradient-to-r from-gray-600 to-black rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">🏆</span>
-                    <div>
-                        <h2 className="text-lg font-bold">Hired Applicants</h2>
-                        <p className="text-xl">{userStats.AllTimeHiredApplicants}</p>
-                    </div>
-                </div>
-
-                {/* All Time Meetings Count */}
-                <div className="p-4 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">📅</span>
-                    <div>
-                        <h2 className="text-lg font-bold">All Time Meetings</h2>
-                        <p className="text-xl">{userStats.AllTimeMeetingsCount}</p>
-                    </div>
-                </div>
-                {/* All Time Applications Count */}
-                <div className="p-4 bg-gradient-to-r from-yellow-600 to-red-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">📄</span>
-                    <div>
-                        <h2 className="text-lg font-bold">All Time Applications</h2>
-                        <p className="text-xl">{userStats.AllTimeApplicationsCount}</p>
-                    </div>
-                </div>
-
-                {/* Applications Rejected */}
-                <div className="p-4 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">❌</span>
-                    <div>
-                        <h2 className="text-lg font-bold">Applications Rejected</h2>
-                        <p className="text-xl">{userStats.AllTimeApplicationRejected}</p>
-                    </div>
-                </div>
-
-                {/* Applications Hired */}
-                <div className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-lg text-white flex items-center gap-4 hover:scale-105">
-                    <span className="text-2xl">✅</span>
-                    <div>
-                        <h2 className="text-lg font-bold">Applications Hired</h2>
-                        <p className="text-xl">{userStats.AllTimeApplicationHired}</p>
-                    </div>
-                </div>
-
-
+                ))}
             </div>
-        </div>
+            </div>
+
     );
 };
 

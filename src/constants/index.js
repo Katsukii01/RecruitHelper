@@ -31,7 +31,7 @@ export const NavLinks = [
     },
     {
       id: "ApplicantsStages",
-      title: "Applicants stages",
+      title: "Applicants Stages",
     },
     {
       id: "ApplicantsOfferRanking",
@@ -59,8 +59,8 @@ export const NavLinks = [
     },
 
     {
-      id: "CoverLettersAnalyses",
-      title: "Cover Letters analyses",
+      id: "CoverLettersAnalysis",
+      title: "Cover Letters Analysis",
     },
     {
       id: "CoverLettersPoints",

@@ -41,7 +41,7 @@ const AdnationalPoints = ({ id }) => {
     const screenHeight = window.innerHeight * 0.8;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
-    const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
+    const rows = Math.floor(availableHeight / 75) - 1; // Calculate rows - 1
     return rows > 0 ? rows : 1; // Ensure at least 1 row is displayed
   };
 

@@ -81,7 +81,7 @@ const RecruitmentDashboard = () => {
   
       // Cover Letters - zawsze pokazujemy oba komponenty
       case "CoverLetters":
-      case "CoverLettersAnalyses":
+      case "CoverLettersAnalysis":
       case "CoverLettersPoints":
         return (
           <>
