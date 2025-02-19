@@ -79,11 +79,10 @@ const RecruitmentList = () => {
     'bg-violet-500',  
   ];
 
-  const goToAddApplicants = (id, highestId) => {
+  const goToAddApplicants = (id) => {
     navigate('/RecruitmentAddApplicants', {
         state: {
           recruitmentId: id,
-          highestId: highestId, // Pass the highest ID
           userApply: true,
         }
       });
@@ -241,7 +240,7 @@ const RecruitmentList = () => {
                   </div>
                   </div>
                   <button
-                          onClick={() => goToAddApplicants(recruitment.id, recruitment.highestId)}
+                          onClick={() => goToAddApplicants(recruitment.id)}
                           className="mt-1 border-t-white border-t-2 p-2 text-center font-bold justify-center flex-col rounded-b-md w-full  bg-sky text-white   shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                         >
                           Apply

@@ -196,10 +196,6 @@ export const getPublicRecruitments = async (searchTerm = "") => {
         const recruitmentData = doc.data();
         const applicants = recruitmentData.Applicants || [];
 
-        // Get highest ID from applicants
-        const highestId = applicants.reduce((maxId, applicant) => {
-          return applicant.id > maxId ? applicant.id : maxId;
-        }, 0);
 
         // Check if the current user is already an applicant
         const isAlreadyApplicant = applicants.some(
@@ -208,10 +204,17 @@ export const getPublicRecruitments = async (searchTerm = "") => {
 
         return {
           id: doc.id,
-          highestId,
-          isAlreadyApplicant, // Add a flag indicating if the user is already an applicant
-          ...recruitmentData,
+          isAlreadyApplicant,
+          name: recruitmentData.name,
+          status: recruitmentData.status,
+          jobTittle: recruitmentData.jobTittle,
+          educationLevel: recruitmentData.educationLevel,
+          educationField: recruitmentData.educationField,
+          languages: recruitmentData.languages,
+          skills: recruitmentData.skills,
+          courses: recruitmentData.courses,
         };
+        
       })
       .filter(
         (recruitment) =>

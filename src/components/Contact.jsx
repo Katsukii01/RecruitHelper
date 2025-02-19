@@ -71,13 +71,12 @@ const Contact = () => {
       
 
       
-        <div className="p-8 rounded-xl shadow-2xl border-sky border-2 bg-glass-dark backdrop-blur-md mt-16 max-w-lg mx-auto">
+        <div className="p-8 rounded-xl shadow-2xl border-sky border-2 bg-glass-dark backdrop-blur-md mt-8 max-w-lg mx-auto">
 
           <div className="absolute inset-0 flex justify-center items-center z-0 opacity-50 t-2">
             <Waves />
           </div>
 
-          <h2 className="text-3xl font-bold mb-6 text-center text-white drop-shadow-lg  w-fit rounded-xl border-silver border-2 p-2">Contact Us</h2>
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 block z-10  relative ">
          
             <div >
