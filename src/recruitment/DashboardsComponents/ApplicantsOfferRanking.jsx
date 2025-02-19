@@ -8,48 +8,62 @@ const ApplicantsOfferRanking = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [rankedApplicants, setRankedApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); 
+  const [itemsPerPage, setItemsPerPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [pagginatedApplicants, setPaginatedApplicants] = useState([]);
-  
+  const [paginatedApplicants, setPaginatedApplicants] = useState([]);
 
-  
-  const fetchApplicantsRanking = async () => {
-    if (id) {
-      setLoading(true);
-      try {
-        const data = await getApplicantsRanking(id);
-        setTotalPages(Math.ceil(data.length / itemsPerPage));
-        setRankedApplicants(data); 
-      } catch (error) {
-        console.error('Error fetching applicants ranking:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const calculateLimit = () => {
+      const screenHeight = window.innerHeight * 0.9;
+      const reservedHeight = 100;
+      const availableHeight = screenHeight - reservedHeight;
+      const rows = Math.max(Math.floor(availableHeight / 300) - 1, 1);
+      return rows * 4;
   };
-  
+
   useEffect(() => {
-    fetchApplicantsRanking();
+      const updateItemsPerPage = () => {
+          const newLimit = calculateLimit();
+          setItemsPerPage(newLimit);
+          setCurrentPage(1);
+      };
+
+      updateItemsPerPage();
+      window.addEventListener('resize', updateItemsPerPage);
+      return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
+
+  const fetchApplicantsRanking = async () => {
+      if (id) {
+          setLoading(true);
+          try {
+              const data = await getApplicantsRanking(id);
+              setTotalPages(Math.ceil(data.length / itemsPerPage));
+              setRankedApplicants(data);
+          } catch (error) {
+              console.error('Error fetching applicants ranking:', error);
+          } finally {
+              setLoading(false);
+          }
+      }
+  };
+
+  useEffect(() => {
+      fetchApplicantsRanking();
   }, [id]);
 
-
-  const paginate = (applicants, pageNumber, itemsPerPage) => {
-    const startIndex = (pageNumber - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return applicants.slice(startIndex, endIndex);
-  };
-
   useEffect(() => {
-    setPaginatedApplicants(paginate(rankedApplicants, currentPage, itemsPerPage));
+      setTotalPages(Math.ceil(rankedApplicants.length / itemsPerPage));
+      setPaginatedApplicants(rankedApplicants.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+      ));
   }, [rankedApplicants, currentPage, itemsPerPage]);
   
   if(!id) return  <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">No recruitment found</section>;
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
 
-  if (!pagginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+  if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
      <h1 className="text-2xl font-bold text-white mb-4">CV Scores</h1>
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
            No applicants found.
@@ -83,7 +97,7 @@ const ApplicantsOfferRanking = ({ id }) => {
     
       <div className='overflow-auto h-screen-80'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
-          {pagginatedApplicants.map((applicant, index) => (
+          {paginatedApplicants.map((applicant, index) => (
             <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
               <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                   <p className="text-sm text-gray-500">{applicant.email}</p>

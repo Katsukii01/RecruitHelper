@@ -483,7 +483,7 @@ const AddApplicants = () => {
       
       const handleAnalyzeCoverLetter = async (coverLetterContent) => {
         if (coverLetterContent !== "" && RecruitmentData) {
-          const endpoint = "/api/analyze_letter";
+          const endpoint = "/api/analyze_letter_Deepseek";
       
           // 📌 Poprawiona struktura `job_requirements`
           const jobRequirements = {
@@ -560,14 +560,13 @@ const AddApplicants = () => {
         if (fileType === "cv") {
           setCvfilePreviews(response.data.previews);
           console.log("File previews set:", response.data.previews);
-        } else if (fileType === "coveringLetter") {
-          setCoveringLetterPreviews(response.data.previews);
-          
+        } else if (fileType === "coveringLetter") {      
           if (response.data.content) {
             await handleAnalyzeCoverLetter(response.data.content);
           } else {
             console.warn("No cover letter content received!");
           }
+          setCoveringLetterPreviews(response.data.previews);
         }
       } 
     } catch (err) {
@@ -1059,6 +1058,7 @@ const AddApplicants = () => {
                     />
                   </svg>
                   <input
+                    disabled={isLoadingCoveringLetter}
                     type="file"
                     id="coveringLetter"
                     name="coveringLetter"
@@ -1129,6 +1129,7 @@ const AddApplicants = () => {
                   />
                 </svg>
                 <input
+                  disabled={isLoadingCv}
                   type="file"
                   className="hidden"
                   id="cv"

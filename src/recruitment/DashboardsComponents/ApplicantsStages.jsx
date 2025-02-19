@@ -8,35 +8,56 @@ const ApplicantsStages = ( {id}) => {
     const [loading, setLoading] = useState();
     const [Applicants, setApplicants] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(8); 
-    const [totalPages, setTotalPages] = useState(0);
     const [showTooltip, setShowTooltip] = useState([]); 
     const [error, setError] = useState(null);
-    
+    const [itemsPerPage, setItemsPerPage] = useState(0);
 
+    // Dynamic limit calculation based on viewport height
+    const calculateLimit = () => {
+      const screenHeight = window.innerHeight * 0.9;
+      const reservedHeight = 100; // Adjust for header, footer, etc.
+      const availableHeight = screenHeight - reservedHeight;
+      const rows = Math.max(Math.floor(availableHeight / 210) - 1, 1);
+      return rows * 4;
+  };
 
-    // Fetch recruitment name by ID
-    useEffect(() => {
-        const fetchApplicants = async () => {
-   
-        try {
-            setLoading(true);
-            const applicants= await getAllApplicants(id);
-            setTotalPages(Math.ceil(applicants.length / itemsPerPage));
-            setApplicants(applicants);
-            setLoading(false);
-        } catch (error) {
-            setError(error.message || 'Failed to fetch recruitment details.');
-        }
-        };
-
-        fetchApplicants();
-    }, [id]);
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
+  useEffect(() => {
+      const updateItemsPerPage = () => {
+          const newLimit = calculateLimit();
+          setItemsPerPage(newLimit);
+          setCurrentPage(1); // Reset to the first page when resizing
       };
-    ;
+
+      updateItemsPerPage();
+      window.addEventListener('resize', updateItemsPerPage);
+      return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
+
+  useEffect(() => {
+      const fetchApplicants = async () => {
+          try {
+              setLoading(true);
+              const fetchedApplicants = await getAllApplicants(id);
+              setApplicants(fetchedApplicants);
+              setLoading(false);
+          } catch (error) {
+              setError(error.message || 'Failed to fetch applicants.');
+              setLoading(false);
+          }
+      };
+
+      fetchApplicants();
+  }, [id]);
+
+  const totalPages = Math.ceil(Applicants.length / itemsPerPage);
+  const paginatedApplicants = Applicants.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+      setCurrentPage(page);
+  };
 
     
     const stages = [
@@ -98,7 +119,7 @@ const ApplicantsStages = ( {id}) => {
   
     <div className='overflow-auto h-screen-80'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
-        {Applicants.map((applicant, index) => (
+        {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 border-2 border-blue-200 overflow-auto `}>
             <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
                 <p className="text-sm text-gray-500">{applicant.email}</p>
