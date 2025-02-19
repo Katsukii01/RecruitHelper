@@ -13,7 +13,6 @@ const Calendar = () => {
               try {
                   const meetingSessions = await getUserMeetingSessions();
                   setMeetingSessions(meetingSessions);
-                  console.log(meetingSessions);
               } catch (error) {
                   console.error('Error fetching meeting sessions:', error);
               } finally {

@@ -5,12 +5,10 @@ import Pagination from "./Pagination";
 import { Loader } from "../../utils";
 import {
   getAllApplicants,
-  setCoverLetterPoints,
 } from "../../services/RecruitmentServices";
 
-const CoverLettersPoints =  ({ id })=> {
+const CoverLetterAnalysis =  ({ id })=> {
   const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState({});
   const [applicants, setApplicants] = useState([]);
   const [totalApplicants, setTotalApplicants] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,6 +61,7 @@ const CoverLettersPoints =  ({ id })=> {
       console.error("Error fetching applicants:", error);
     }
   };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -71,51 +70,8 @@ const CoverLettersPoints =  ({ id })=> {
     fetchApplicants();
   }, [id]);
 
-  const validateAdnationalPoints = (value) => {
-    if (value < 0) return "cover letter points cannot be negative";
-    if (value > 100) return "cover letter points cannot be greater than 100";
-    return null;
-  };
 
-  const ChangeAdnationalPoints = async (e, applicantId) => {
-    let updatedValue = e.target.value.trim(); // Remove unnecessary spaces
 
-    // Remove leading zeros (but allow "0")
-    if (/^0\d+/.test(updatedValue)) {
-      updatedValue = updatedValue.replace(/^0+/, "");
-    }
-
-    // Ensure it's a valid number
-    if (!/^\d*$/.test(updatedValue)) {
-      return; // Stop execution if input is not a valid number
-    }
-
-    const updatedValueNumber = Number(updatedValue);
-
-    const errorMessage = validateAdnationalPoints(updatedValueNumber);
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [applicantId]: errorMessage, // Assign error to specific applicant
-    }));
-
-    if (errorMessage) return; // Stop execution if there's an error message
-
-    setApplicants((prevApplicants) =>
-      prevApplicants.map((applicant) =>
-        applicant.id === applicantId
-          ? { ...applicant, CLscore: updatedValueNumber }
-          : applicant
-      )
-    );
-
-    try {
-      await setCoverLetterPoints(id, applicantId, updatedValueNumber);
-      console.log("Points saved successfully");
-    } catch (error) {
-      console.error("Error updating points:", error);
-    }
-  };
 
   if (loading)
     return (
@@ -125,7 +81,7 @@ const CoverLettersPoints =  ({ id })=> {
     );
 
     if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Points</h1>
+      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Analyses</h1>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
           No Applicants found
         </div>
@@ -133,7 +89,7 @@ const CoverLettersPoints =  ({ id })=> {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Points</h1>
+      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Analyses</h1>
 
       <div className="h-screen-80 overflow-auto">
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">
@@ -146,9 +102,13 @@ const CoverLettersPoints =  ({ id })=> {
               <th
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Cover Letter Points
-                </th>
-
+                  Cover Proposed Letter Points
+              </th>
+              <th
+                  className="px-4 py-2 border border-gray-700 text-center"
+                >
+                  Cover Letter Analysis
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -171,26 +131,18 @@ const CoverLettersPoints =  ({ id })=> {
                   <td className="px-4 py-2 border border-gray-700">
                     <div className="max-h-[120px] overflow-y-auto">
                       <div className="text-sm">
-                      <input
-                              type="number"
-                              value={applicant.CLscore || 0} 
-                              onChange={(e) =>
-                                ChangeAdnationalPoints (
-                                  e,
-                                  applicant.id
-                                )
-                              }
-                              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                            />
-                            {errors[applicant.id] && (
-                              <p className="text-red-500 bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-                                {errors[applicant.id]}
-                              </p>
-                            )}
-                        
+                          {applicant.CoverLetterProposedPoints || 0}
                       </div>
                     </div>
                   </td>
+                  <td className="px-4 py-2 border border-gray-700">
+                    <div className="max-h-[120px] overflow-y-auto">
+                      <div className="text-sm">
+                          {applicant.CoverLetterAnalysis|| "No Analysis Yet"}
+                      </div>
+                    </div>
+                  </td>
+
                 </tr>
               ))
             ) : (
@@ -213,5 +165,5 @@ const CoverLettersPoints =  ({ id })=> {
   );
 };
 
-export default  DsectionWrapper(CoverLettersPoints, 'CoverLettersPoints')
+export default  DsectionWrapper(CoverLetterAnalysis, 'CoverLettersAnalysis')
 

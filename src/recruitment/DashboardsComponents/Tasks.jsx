@@ -22,7 +22,7 @@ const Tasks = ({ id, onRefresh }) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const calculateLimit = () => {
-    const screenHeight = window.innerHeight * 0.8;
+    const screenHeight = window.innerHeight * 0.83;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
     const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1

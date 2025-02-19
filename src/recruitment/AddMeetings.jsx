@@ -362,7 +362,7 @@ const AddMeetings = () => {
           {applicantsData?.length > 0 ? (
             applicantsData.map((applicant) => (
               <option key={applicant._id} value={applicant.id}>
-                {applicant.name} ({applicant.email}) - {applicant.totalScore}%
+                {applicant.name} {applicant.surname} - ({applicant.email})
               </option>
             ))
           ) : (

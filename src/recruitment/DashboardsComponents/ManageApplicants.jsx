@@ -11,7 +11,6 @@ const ManageApplicants = ({ id }) => {
   const [recruitmentId, setRecruitmentId] = useState(id);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [highestId, setHighestId] = useState(null);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [applicantToDelete, setApplicantToDelete] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -26,11 +25,10 @@ const ManageApplicants = ({ id }) => {
     if (id) {
       setLoading(true);
       try {
-        const { applicants, totalApplicants, highestId: fetchedHighestId, recruitmentStatus } = await getApplicants(id, currentPage, limit);
+        const { applicants, totalApplicants, recruitmentStatus } = await getApplicants(id, currentPage, limit);
         setApplicants(applicants);
         setTotalApplicants(totalApplicants); // Set the total number of applicants
         setRecruitmentStatus(recruitmentStatus);
-        setHighestId(fetchedHighestId || 0); // Ensure a fallback value (e.g., 0) if undefined
       } catch (error) {
         console.error('Error fetching applicants:', error);
       } finally {
@@ -40,7 +38,7 @@ const ManageApplicants = ({ id }) => {
   };
   
   const calculateLimit = () => {
-    const screenHeight = window.innerHeight * 0.8;
+    const screenHeight = window.innerHeight * 0.9;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
     const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
@@ -84,8 +82,7 @@ const ManageApplicants = ({ id }) => {
     if(recruitmentStatus == "Private"){
       navigate('/chooseMethod', {
         state: {
-          recruitmentId: id,
-          highestId: highestId, // Pass the highest ID
+          recruitmentId: id, 
         }
       });
     }else{

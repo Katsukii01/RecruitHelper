@@ -8,7 +8,7 @@ import {
   setAdnationalPoints,
 } from "../../services/RecruitmentServices";
 
-const AdnationalPoints = ({ id, refresh, onRefresh }) => {
+const AdnationalPoints = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [applicants, setApplicants] = useState([]);
@@ -69,7 +69,7 @@ const AdnationalPoints = ({ id, refresh, onRefresh }) => {
 
   useEffect(() => {
     fetchApplicants();
-  }, [id, refresh]);
+  }, [id]);
 
   const validateAdnationalPoints = (value) => {
     if (value < 0) return "Adnational points cannot be negative";
@@ -112,7 +112,6 @@ const AdnationalPoints = ({ id, refresh, onRefresh }) => {
     try {
       await setAdnationalPoints(id, applicantId, updatedValueNumber);
       console.log("Points saved successfully");
-      onRefresh();
     } catch (error) {
       console.error("Error updating points:", error);
     }

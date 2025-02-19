@@ -12,8 +12,9 @@ const CircularProgress = ({ score, size = 160 }) => {
   const strokeWidth = size * 0.0875; // Skalowany strokeWidth (~14 dla size=160)
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const progress = (score / 100) * circumference;
-  const percentage = (score / 100) * 100;
+  const maxScore = Math.min(score, 100); // Ograniczamy progres do 100%
+  const progress = (maxScore / 100) * circumference;
+  const percentage = (maxScore / 100) * 100;
 
   const [gradientColor, setGradientColor] = useState(getProgressGradient(percentage));
   const [displayScore, setDisplayScore] = useState(0);
@@ -25,8 +26,8 @@ const CircularProgress = ({ score, size = 160 }) => {
 
     let start = 0;
     const interval = setInterval(() => {
-      setGradientColor(getProgressGradient(start));
-      if (start < score) {
+      setGradientColor(getProgressGradient(Math.min(start, 100)));
+      if (start < maxScore) {
         start += score / totalSteps;
         setDisplayScore(start.toFixed(2));
       } else {
@@ -68,9 +69,7 @@ const CircularProgress = ({ score, size = 160 }) => {
       </svg>
 
       {/* Wynik w środku */}
-      <motion.span className="absolute font-bold text-white drop-shadow-lg"
-        style={{ fontSize: size * 0.2}}
-      >
+      <motion.span className="absolute font-bold text-white drop-shadow-lg" style={{ fontSize: size * 0.2 }}>
         {displayScore}%
       </motion.span>
     </div>

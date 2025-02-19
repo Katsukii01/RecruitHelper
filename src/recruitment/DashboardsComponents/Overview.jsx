@@ -125,7 +125,7 @@ const Overview = ({ id }) => {
                   className={`relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full transition-all border-2 text-xs md:text-sm font-semibold text-center p-3 border-black  hover:scale-110 shadow-lg shadow-slate-950 ${
                     index <= currentStageIndex
                       ? `${stage.color} text-white bg-gradient-to-r` // Aktualny i wcześniejsze etapy
-                      : "bg-gradient-to-l from-slate-50 to-slate-300 text-gray-600" // Przyszłe etapy
+                      : "text-white bg-slate-800" // Przyszłe etapy
                   }`}
                 >
                   <span className="whitespace-normal text-center leading-tight">{stage.stage}</span>

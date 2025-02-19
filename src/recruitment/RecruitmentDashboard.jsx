@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Tasks, TasksPoints, CoverLettersAnalyses, CoverLettersPoints, MeetingPoints, MeetingSessions, ApplicantsStages } from "./DashboardsComponents";
+import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Tasks, TasksPoints, CoverLettersAnalysis, CoverLettersPoints, MeetingPoints, MeetingSessions, ApplicantsStages } from "./DashboardsComponents";
 import { useLocation } from 'react-router-dom';
 
 const RecruitmentDashboard = () => {
@@ -85,7 +85,7 @@ const RecruitmentDashboard = () => {
       case "CoverLettersPoints":
         return (
           <>
-            <CoverLettersAnalyses id={id} />
+            <CoverLettersAnalysis id={id} />
             <CoverLettersPoints id={id} />
           </>
         );

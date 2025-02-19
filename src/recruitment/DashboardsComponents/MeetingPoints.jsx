@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useLocation } from "react-router-dom";
 
-const MeetingPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
+const MeetingPoints = ({ id, refresh }) => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [meetingSessions, setMeetingSessions] = useState([]);
@@ -50,7 +50,7 @@ const MeetingPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
   }, []);
 
   const calculateLimit = () => {
-    const screenHeight = window.innerHeight * 0.8;
+    const screenHeight = window.innerHeight * 0.9;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
     const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
@@ -154,7 +154,6 @@ const MeetingPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
         updatedValueNumber
       );
       console.log("Points saved successfully");
-      onRefresh2();
     } catch (error) {
       console.error("Error updating points:", error);
     }
@@ -192,7 +191,6 @@ const MeetingPoints = ({ id, refresh, onRefresh, onRefresh2 }) => {
 
       // Ustaw zaktualizowane session
       setMeetingSessions(newMeetingSessions);
-      onRefresh();
       handleCloseDeleteConfirmation();
       alert("Meeting deleted successfully!");
     } catch (error) {

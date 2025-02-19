@@ -381,13 +381,16 @@ export const addApplicant = async (
 
     // Update the applicants list: check if the applicant with the same ID already exists
     const currentApplicants = recruitmentData.Applicants || [];
+
     const applicantIndex = currentApplicants.findIndex(
       (applicant) => applicant.id === applicantData.id
     );
-
+    
     if (applicantData.userUid) {
       if (recruitmentData.status == "Private") {
         throw new Error("This recruitment is private, you cant apply");
+      }else{
+        await updateUserStat(applicantData.userUid, "AllTimeApplicationsCount", "increment");
       }
     } else {
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
@@ -400,6 +403,14 @@ export const addApplicant = async (
           throw new Error(
             "You need to cahnge recruitment to private  to add applicants by yourself"
           );
+        }else{
+          // Get highest id from applicants
+          const highestId = currentApplicants.reduce((maxId, applicant) => 
+            applicant.id > maxId ? applicant.id : maxId, 0
+          ); 
+
+          applicantData.id = highestId + 1;
+
         }
       }
     }
@@ -640,10 +651,7 @@ export const getApplicants = async (recruitmentId, page, limit) => {
     // Get total applicants count
     const totalApplicants = applicants.length;
 
-    // Get highest id from applicants
-    const highestId = applicants.reduce((maxId, applicant) => {
-      return applicant.id > maxId ? applicant.id : maxId;
-    }, 0); // Starting with 0 as initial value for maxId
+
 
     // Sort applicants by id (ascending order)
     const sortedApplicants = applicants.sort((a, b) => a.id - b.id);
@@ -689,7 +697,6 @@ export const getApplicants = async (recruitmentId, page, limit) => {
     return {
       applicants: applicantsWithPreviews,
       totalApplicants,
-      highestId,
       recruitmentStatus,
     };
   } catch (error) {
@@ -952,18 +959,12 @@ export const getApplicantsRanking = async (recruitmentId) => {
       },
     };
   };
-
   // Map applicants and calculate scores
   const applicantsWithScores = applicants.map((applicant) =>
     calculateScore(applicant)
   );
 
-  try {
-    await updateDoc(recruitmentDoc, { Applicants: applicantsWithScores });
-  } catch (error) {
-    console.error("Error updating applicants:", error); // Logujemy pełny błąd
-    throw error;
-  }
+  
 
   // Sort applicants by score in descending order
   const rankedApplicants = applicantsWithScores.sort(
@@ -995,7 +996,7 @@ export const changeApplicantStage = async (
     }
 
     const updatedApplicants = recruitmentData.Applicants.map((applicant) => {
-      if (applicant.id === applicantId) {
+      if (String(applicant.id) === String(applicantId)) {
         return { ...applicant, stage: newStage };
       }
       return applicant;
@@ -1190,6 +1191,11 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
           (applicant) => applicant.id === applicantId
         );
         if (applicantIndex !== -1) {
+          
+          if(applicants[applicantIndex].userUid){
+            await updateUserStat(applicants[applicantIndex].userUid, "AllTimeMeetingsCount", "increment");
+          }
+
           applicants[applicantIndex].stage = "Invited for interview";
           sendEmail(
             "ADD",
@@ -1864,10 +1870,14 @@ export const updateMeetingPoints = async (
     if (meetingIndex === -1) {
       throw new Error("Meeting not found");
     }
-    //c
+
     recruitmentData.MeetingSessions[meetingSessionIndex].meetings[
       meetingIndex
     ].points = updatedValue;
+
+    const applicantId = recruitmentData.MeetingSessions[meetingSessionIndex].meetings[meetingIndex].applicantId;
+    await changeApplicantStage(id, applicantId, "Interviewed");
+
     await updateDoc(recruitmentDoc, {
       MeetingSessions: recruitmentData.MeetingSessions,
     });
@@ -2560,18 +2570,17 @@ export const getRecruitmentStats = async (recruitmentId) => {
     const recruitmentData = recruitmentSnapshot.data();
     const applicants = await getApplicantsWithOverallScore(recruitmentId);
 
+
       const countStatus = {
-        ClCountStatus: recruitmentData.ClCountStatus || true,
-        CvCountStatus: recruitmentData.CvCountStatus|| true,
-        TasksCountStatus: recruitmentData.TasksCountStatus|| true,
-        MeetingsCountStatus: recruitmentData.MeetingsCountStatus|| true,
-        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus || true,
+        ClCountStatus: recruitmentData.ClCountStatus ?? true,
+        CvCountStatus: recruitmentData.CvCountStatus ?? true,
+        TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+        MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
     };
 
-    if (!Array.isArray(applicants)) {
-      console.error("Error: applicants is not an array", applicants);
-      applicants = []; // Zapewniamy, że to zawsze tablica
-    }
+
+
    
     // Mapujemy aplikantów i liczymy `totalScore`
     const updatedApplicants = await Promise.all(
@@ -2781,4 +2790,40 @@ export const updateUserStat = async (userId, whatToCount, action = "increment") 
     console.error("Error updating user stats:", error);
   }
 };
+
+//41 **get recruitment offer data
+export const getRecruitmentOfferData = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+    
+    const recruitmentData = recruitmentSnapshot.data();
+
+    const DataToExport ={ 
+      recruitmentjobTittle: recruitmentData.jobTittle,
+      recruitmentCourses: recruitmentData.courses,
+      recruitmentSkills: recruitmentData.skills,
+      recruitmentLanguages: recruitmentData.languages,
+      recruitmentExperience: recruitmentData.experienceNeeded,
+      recruitmentEducationField: recruitmentData.educationField,
+      recruitmentEducationLevel: recruitmentData.educationLevel,
+    }
+    return DataToExport;
+
+  } catch (error) {
+    console.error("Error fetching recruitment offer data:", error.message);
+    throw error;
+  }
+};
+
+
+//updateUserStat(userId, "AllTimeHiredApplicants", "increment");
+//updateUserStat(userId, "AllTimeApplicationRejected", "increment");
+//updateUserStat(userId, "AllTimeApplicationHired", "increment");
+
 

@@ -11,7 +11,7 @@ import Overview from "./Overview";
 import AdnationalPoints from "./AdnationalPoints";
 import Tasks from "./Tasks";
 import TasksPoints from "./TasksPoints";
-import CoverLettersAnalyses from "./CoverLettersAnalyses";
+import CoverLettersAnalysis from "./CoverLettersAnalysis";
 import CoverLettersPoints from "./CoverLettersPoints";
 import MeetingPoints from "./MeetingPoints";
 import MeetingSessions from "./MeetingSessions";
@@ -32,7 +32,7 @@ export {
     AdnationalPoints, 
     Tasks, 
     TasksPoints,
-    CoverLettersAnalyses, 
+    CoverLettersAnalysis, 
     CoverLettersPoints, 
     MeetingPoints,
     MeetingSessions,

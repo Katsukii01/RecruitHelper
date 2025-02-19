@@ -72,7 +72,7 @@ const Dashboard = () => {
         </div>
 
         {/* Calendar */}
-        <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80">
+        <div className="card bg-white shadow-lg rounded-lg p-6 w-full  h-screen-80 overflow-y-auto">
         <h2 className="text-2xl font-semibold flex items-center space-x-4 flex-wrap">
         📅Meetings Calendar
         </h2>
@@ -80,11 +80,11 @@ const Dashboard = () => {
         <div className="flex items-center space-x-3 text-sm text-gray-300">
             <div className="flex items-center space-x-1">
               <span className="w-3 h-3 bg-[#ff4444] rounded-full shadow-md"></span>
-              <span>Meeting with Applicant</span>
+              <span>Recruitment Meetings</span>
             </div>
             <div className="flex items-center space-x-1">
               <span className="w-3 h-3 bg-[#44d3ff] rounded-full shadow-md"></span>
-              <span>Recruitment Meeting</span>
+              <span>Application Meetings</span>
             </div>
             <div className="flex items-center space-x-1">
               <span className="w-3 h-3 bg-[#9333ea] rounded-full shadow-md"></span>
