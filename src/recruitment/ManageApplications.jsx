@@ -126,7 +126,7 @@ const ManageApplications = () => {
               </div>
           </div>
           {paginatedApplications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center mt-2 h-[680px]">
+            <div className="flex flex-col items-center justify-center mt-2 h-[680px] inner-shadow">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
                 No applications found with matching search criteria.
               </p>

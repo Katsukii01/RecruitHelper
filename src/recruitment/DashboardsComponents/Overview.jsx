@@ -65,13 +65,13 @@ const Overview = ({ id }) => {
   };
 
   const stageColors = [
-    { stage: 'Paused', color: ' from-red-500 to-red-700', description: 'The recruiter paused recruitment process.' },
-    { stage: 'Collecting applicants', color: 'from-gray-500 to-gray-700', description: 'The recruiter is still in the process of collecting applicants.' },
-    { stage: 'Checking applications', color: 'from-blue-500 to-blue-700', description: 'The recruiter is currently checking applications.' },
-    { stage: 'Interviewing applicants', color: ' from-yellow-500 to-yellow-700', description: 'The recruiter is currently interviewing applicants.' },
-    { stage: 'Scoring tasks', color: ' from-pink-500 to-pink-700', description: 'The recruiter is currently scoring tasks.' },
-    { stage: 'Offering jobs', color: 'from-purple-500 to-purple-700', description: 'The recruiter is currently offering jobs.' },
-    { stage: 'Hiring employees', color: ' from-green-500 to-green-700', description: 'The recruiter is currently hiring employees.' },
+    { stage: 'Paused', color: ' bg-red-500 ', description: 'The recruiter paused recruitment process.' },
+    { stage: 'Collecting applicants', color: 'bg-gray-500 ', description: 'The recruiter is still in the process of collecting applicants.' },
+    { stage: 'Checking applications', color: 'bg-blue-500 ', description: 'The recruiter is currently checking applications.' },
+    { stage: 'Interviewing applicants', color: ' bg-yellow-500 ', description: 'The recruiter is currently interviewing applicants.' },
+    { stage: 'Scoring tasks', color: ' bg-pink-500 ', description: 'The recruiter is currently scoring tasks.' },
+    { stage: 'Offering jobs', color: 'bg-purple-500 ', description: 'The recruiter is currently offering jobs.' },
+    { stage: 'Hiring employees', color: ' bg-green-500 ', description: 'The recruiter is currently hiring employees.' },
 
   ];
   
@@ -107,7 +107,7 @@ const Overview = ({ id }) => {
 
             {/* Pasek postępu */}
             <div
-              className={`absolute top-1/2 left-[1%] h-9 transition-all duration-500 rounded-full bg-gradient-to-l ${
+              className={`absolute top-1/2 left-[1%] h-9 transition-all duration-500 rounded-full blur-sm  ${
                 stageColors[currentStageIndex]?.color || "bg-gray-500"
               }`}
               style={{
@@ -118,19 +118,41 @@ const Overview = ({ id }) => {
 
             {/* Kulki z etapami */}
             <div className="relative flex w-full justify-between ">
-              {stageColors.map((stage, index) => (
+            {stageColors.map((stage, index) => (
+              <div key={stage.stage} className="relative flex items-center justify-center">
+
+                {/* Efekt światła pod spodem */}
+                <div
+                  className={`absolute inset-0 w-15 h-15 rounded-full blur-sm transition-all
+                    ${
+                      index <= currentStageIndex
+                        ? `${stage.color} ` // Subtelny rozbłysk dla aktywnych etapów
+                        : "opacity-0"
+                    }`}
+                ></div>
+
+                {/* Sam przycisk */}
                 <button
-                  key={stage.stage}
                   onClick={() => handleClick(index)}
-                  className={`relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full transition-all border-2 text-xs md:text-sm font-semibold text-center p-3 border-black  hover:scale-110 shadow-lg shadow-slate-950 ${
-                    index <= currentStageIndex
-                      ? `${stage.color} text-white bg-gradient-to-r` // Aktualny i wcześniejsze etapy
-                      : "text-white bg-slate-800" // Przyszłe etapy
-                  }`}
+                  className={`relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 
+                    rounded-full transition-all border-2 text-xs md:text-sm font-semibold text-center 
+                    p-3 border-black shadow-lg shadow-slate-950 backdrop-blur-lg bg-opacity-0
+                    ${
+                      index <= currentStageIndex
+                        ? `text-white border-opacity-50`
+                        : "text-gray-300 bg-slate-900 border-gray-700"
+                    }
+                    hover:scale-110
+                  `}
                 >
-                  <span className="whitespace-normal text-center leading-tight">{stage.stage}</span>
+                  <span className="whitespace-normal text-center leading-tight tracking-wide uppercase">
+                    {stage.stage}
+                  </span>
                 </button>
-              ))}
+              </div>
+            ))}
+
+
             </div>
 
           </div>
@@ -144,7 +166,7 @@ const Overview = ({ id }) => {
  
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full ">
           {/* Total Applicants */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full  shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full  shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
@@ -155,7 +177,7 @@ const Overview = ({ id }) => {
           </div>
 
           {/* Highest Score */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
           </svg>
@@ -166,7 +188,7 @@ const Overview = ({ id }) => {
           </div>
 
           {/* Average Score */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-12">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
           </svg>
@@ -177,7 +199,7 @@ const Overview = ({ id }) => {
           </div>
 
           {/* Total Meetings */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-12">
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />
           </svg>
@@ -188,7 +210,7 @@ const Overview = ({ id }) => {
           </div>
 
           {/* Total Tasks */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
               <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
             </svg>
@@ -199,7 +221,7 @@ const Overview = ({ id }) => {
           </div>
 
           {/* Cover leeter percentage */}
-          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950">
+          <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
           </svg>

@@ -163,7 +163,7 @@ const FinalRanking = ({ id }) => {
 
 
 
-    <div className='overflow-auto h-screen-80'>
+    <div className='overflow-auto h-screen-80 inner-shadow p-2'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
         {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.totalScore)} overflow-auto `}>

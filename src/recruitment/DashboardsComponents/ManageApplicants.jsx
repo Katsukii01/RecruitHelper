@@ -41,7 +41,7 @@ const ManageApplicants = ({ id }) => {
     const screenHeight = window.innerHeight * 0.9;
     const reservedHeight = 150; // Adjust for header, footer, etc.
     const availableHeight = screenHeight - reservedHeight;
-    const rows = Math.floor(availableHeight / 120) - 1; // Calculate rows - 1
+    const rows = Math.floor(availableHeight / 125) - 1; // Calculate rows - 1
     return rows > 0 ? rows : 1; // Ensure at least 1 row is displayed
   };
 
@@ -191,7 +191,7 @@ const ManageApplicants = ({ id }) => {
           </button>
         </div>
       </div>
-      <div className="h-screen-60 overflow-auto">
+      <div className="h-screen-60 overflow-auto ">
       {/* Applicants Table */}
       <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">

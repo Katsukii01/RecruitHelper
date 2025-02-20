@@ -32,7 +32,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="relative z-0 night-navy-gradient ">
-        <StarsCanvas />
+        <div className="absolute inset-0 z-[-1] bg-glass"></div>
         <Navbar />
 
         <Routes>
@@ -41,6 +41,7 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Home />
+                <StarsCanvas />
               </ProtectedRoute>
             }
           />
@@ -53,14 +54,26 @@ const App = () => {
             }
           />
 
-          <Route path="/SignIn" element={<SignIn />} />
-          <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/SignIn" element={
+            <>
+            <StarsCanvas />
+            <SignIn />
+            </>
+           
+            } />
+          <Route path="/SignUp" element={
+            <>
+            <StarsCanvas />
+            <SignUp />
+            </>
+            } />
 
           {/* HomePage elements */}
           <Route
             path=""
             element={
               <>
+                <StarsCanvas />
                 <Hero />
                 <About />
                 <KnowHow />
@@ -118,6 +131,7 @@ const App = () => {
             path="/PublicRecruitments"
             element={
               <ProtectedRoute>
+                <StarsCanvas />
                 <PublicRecruitments />
               </ProtectedRoute>
             }

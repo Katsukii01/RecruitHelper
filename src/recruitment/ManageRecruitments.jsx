@@ -120,7 +120,7 @@ const ManageRecruitments = () => {
             </div>
           </div>
           {paginatedRecruitments.length === 0 ? (
-            <div className=" flex flex-col items-center justify-center h-[680px] ">
+            <div className=" flex flex-col items-center justify-center h-[680px] inner-shadow">
               <p className=" text-gray-600 font-semibold text-lg">
                 No recruitments found with matching search criteria.
               </p>

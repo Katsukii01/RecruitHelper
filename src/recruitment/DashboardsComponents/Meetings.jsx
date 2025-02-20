@@ -61,9 +61,11 @@ useEffect(() => {
       </button>
     </div>
 
-        <CalendarMeetings meetingSessions={meetingSessions} applicants={applicants}/>
 
-    
+    <div className="inner-shadow">
+        <CalendarMeetings meetingSessions={meetingSessions} applicants={applicants}/>
+    </div>
+      
   </section>
   )
 }

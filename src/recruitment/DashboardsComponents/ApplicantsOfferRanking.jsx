@@ -63,7 +63,7 @@ const ApplicantsOfferRanking = ({ id }) => {
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
 
-  if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+  if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
      <h1 className="text-2xl font-bold text-white mb-4">CV Scores</h1>
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
            No applicants found.
@@ -95,7 +95,7 @@ const ApplicantsOfferRanking = ({ id }) => {
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold text-white mb-1">CV Scores</h1>
     
-      <div className='overflow-auto h-screen-80'>
+      <div className='overflow-auto h-screen-80 inner-shadow p-2'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
           {paginatedApplicants.map((applicant, index) => (
             <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>

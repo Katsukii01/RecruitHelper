@@ -94,9 +94,7 @@ const Home = () => {
   
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center  pt-32">
-      <h1 className="text-4xl font-bold text-white ">Welcome to your homepage</h1>
-
+    <div className="w-full min-h-screen flex flex-col items-center justify-center  pt-16">
       <div className="space-y-4 m-6 w-full max-w-5xl text-md p-5">
         {/* User Info Card */}
         <div className="card">

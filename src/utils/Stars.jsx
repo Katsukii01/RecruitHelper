@@ -7,7 +7,7 @@ const Stars = (props) => {
   const ref = useRef();
   
   const [sphere] = useState(() => {
-    const positions = new Float32Array(2000 * 3); // Każdy punkt ma X, Y, Z
+    const positions = new Float32Array(3500); // Każdy punkt ma X, Y, Z
     for (let i = 0; i < positions.length; i += 3) {
       const r = 1.2 * Math.cbrt(Math.random()); // Losowy promień w zakresie [0, 1.2]
       const theta = Math.random() * Math.PI * 2; // Losowy kąt w XY
@@ -21,9 +21,9 @@ const Stars = (props) => {
   
 
   useFrame((state, delta) => {
-    ref.current.rotation.x += delta / 30;
-    ref.current.rotation.y -= delta / 30;
-    ref.current.rotation.z -= delta / 30;
+    ref.current.rotation.x += delta / 60;
+    ref.current.rotation.y -= delta / 60;
+    ref.current.rotation.z -= delta / 60;
   });
 
   return (
@@ -43,7 +43,7 @@ const Stars = (props) => {
 
 const StarsCanvas = () => {
   return (
-    <div className='w-full h-auto absolute inset-0 z-[-1] bg-glass'>
+    <div className='w-full h-auto absolute inset-0 z-[-1] '>
       <Canvas camera={{ position: [0, 0, 1] }}>
         <Suspense fallback={null}>
           <Stars />
