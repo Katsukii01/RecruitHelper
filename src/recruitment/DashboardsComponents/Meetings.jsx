@@ -62,7 +62,7 @@ useEffect(() => {
     </div>
 
 
-    <div className="inner-shadow">
+    <div className="inner-shadow overflow-auto">
         <CalendarMeetings meetingSessions={meetingSessions} applicants={applicants}/>
     </div>
       

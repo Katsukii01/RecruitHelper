@@ -28,7 +28,7 @@ const Calendar = () => {
 
   if(loading) return <Loader />;
   return (
-    <div className="inner-shadow">
+    <div className="inner-shadow overflow-auto">
         <CalendarMeetings meetingSessions={meetingSessions} applicants={[]}/>
     </div>
   )

@@ -94,7 +94,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
   
 
   return (
-    <section className="relative w-full overflow-auto h-screen-55 p-4 rounded-lg">
+    <section className="relative w-full  h-screen-64 p-4 rounded-lg">
       <Calendar
         locale="en-GB"
         onChange={onDateChange}
