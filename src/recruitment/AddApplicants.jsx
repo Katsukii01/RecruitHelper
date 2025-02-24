@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios"; // For HTTP requests
 import {
   addApplicant,
   getRecruitmentOfferData,
@@ -9,7 +8,7 @@ import { existingLanguages } from "../constants";
 import usePreventPageReload from "./usePreventPageReload";
 import { Loader } from "../utils";
 import { firebaseAuth } from "../firebase/baseconfig";
-import { c } from "maath/dist/index-0332b2ed.esm";
+import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
 
 const AddApplicants = () => {
   useEffect(() => {
@@ -18,7 +17,7 @@ const AddApplicants = () => {
 
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { recruitmentId, applicant, currentPage, userApply } = state || {};
+  const { recruitmentId, applicant, currentPage, userApply, CVapplicants } = state || {};
   const [applicants, setApplicants] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [CvfilePreviews, setCvfilePreviews] = useState("");
@@ -38,7 +37,7 @@ const AddApplicants = () => {
 
   // Jeśli aplikant do edycji został przekazany, ustawiamy dane w formularzu
   const [formData, setFormData] = useState({
-    id: applicant ? applicant.id : 0,
+    id: applicant ? applicant.id : "",
     name: applicant ? applicant.name : "",
     surname: applicant ? applicant.surname : "",
     email: applicant ? applicant.email : "",
@@ -67,6 +66,15 @@ const AddApplicants = () => {
       setButtonText("Finish Application "); // Ustawiamy tekst przycisku
     }
   }, [applicant]);
+
+  useEffect(() => {
+    console.log("CVapplicants: ", CVapplicants);
+    if(CVapplicants.length !== 0){
+      setApplicants(CVapplicants);
+      setFormData(CVapplicants[0]);
+      setCvfilePreviews(CVapplicants[0].CvPreview|| ""); // Jeśli aplikant ma plik CV, ustawiamy go
+    }
+  }, [CVapplicants]);
 
   // Funkcja scrollująca wszystkie elementy na stronie do góry
   const scrollToTop = () => {
@@ -121,7 +129,7 @@ const AddApplicants = () => {
     if (fileExtension === "pdf") {
       document.getElementById("cv").value = "";
       setCvfilePreviews(""); // Clear previous preview when a new file is selected
-      uploadFile(file, "cv"); // Upload the selected file
+      handleUpload(file, "cv"); // Upload the selected file
     } else {
       alert("Only PDF files are allowed.");
       return;
@@ -135,7 +143,7 @@ const AddApplicants = () => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
     if (fileExtension === "pdf") {
       document.getElementById("coveringLetter").value = "";
-      uploadFile(file, "coveringLetter"); // Upload the covering letter
+      handleUpload(file, "coveringLetter"); // Upload the covering letter
     } else {
       alert("Only PDF files are allowed for the covering letter.");
       return;
@@ -473,114 +481,46 @@ const AddApplicants = () => {
     setCoveringLetterPreviews("");
   };
 
-  // Dynamic backend URL setup
-  const backendUrl =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-      ? "http://127.0.0.1:8000" // Local development URL
-      : "https://recruithelperbackend.onrender.com"; // Deployed URL on Render
 
-      
-      const handleAnalyzeCoverLetter = async (coverLetterContent) => {
-        if (coverLetterContent !== "" && RecruitmentData) {
-          const endpoint = "/api/analyze_letter_Deepseek";
-      
-          // 📌 Poprawiona struktura `job_requirements`
-          const jobRequirements = {
-            jobTittle: RecruitmentData.recruitmentjobTittle || "Unknown",
-            experienceNeeded: RecruitmentData.recruitmentExperience || "0",
-            educationLevel: RecruitmentData.recruitmentEducationLevel || "Unknown",
-            educationField: RecruitmentData.recruitmentEducationField || "Unknown",
-            courses: Array.isArray(RecruitmentData.recruitmentCourses) ? RecruitmentData.recruitmentCourses : [],
-            skills: Array.isArray(RecruitmentData.recruitmentSkills) ? RecruitmentData.recruitmentSkills : [],
-            languages: Array.isArray(RecruitmentData.recruitmentLanguages) 
-              ? RecruitmentData.recruitmentLanguages.map(lang => ({
-                  language: lang.language || "Unknown",
-                  level: lang.level || "Unknown"
-                }))
-              : []
-          };
-      
-          console.log("✅ Backend URL:", backendUrl);
-          console.log("📤 Sending data to backend:", JSON.stringify({
-            cover_letter_content: coverLetterContent,
-            job_requirements: jobRequirements
-          }, null, 2));
-      
-          try {
-            const response = await axios.post(`${backendUrl}${endpoint}/`, {
-              cover_letter_content: coverLetterContent,
-              job_requirements: jobRequirements
-            });
-      
-            console.log("✅ Response from backend:", response.data);
-      
-            setFormData((prevData) => ({
-              ...prevData,
-              CoverLetterProposedPoints: response.data.score,
-              CoverLetterAnalysis: response.data.feedback,
-            }));
-      
-          } catch (error) {
-            console.error("❌ Error analyzing cover letter:", error);
+
+
+      const handleUpload = async (file, fileType) => {
+
+        if (fileType === "cv") {
+          setIsLoadingCv(true);
+        } else if (fileType === "coveringLetter") {
+          setIsLoadingCoveringLetter(true);
+        }
+
+        try {
+
+          const response = await uploadFile(file, fileType);
+          
+          if (fileType === "cv") {
+            setCvfilePreviews(response.previews);
+          } else if (fileType === "coveringLetter") {
+            console.log("analyzer cover letter");
+            if (response.content) {
+              const analysis = await analyzeCoverLetter(response.content, RecruitmentData);
+              setFormData((prevData) => ({
+                ...prevData,
+                CoverLetterProposedPoints: analysis.score,
+                CoverLetterAnalysis: analysis.feedback,
+              }));
+              setCoveringLetterPreviews(response.previews);
+              console.log("✅ Cover letter analysis:", analysis);
+            }
           }
-        } else {
-          console.log("⚠️ Not sending:", { coverLetterContent, RecruitmentData });
+        } catch (error) {
+          alert("Błąd podczas wysyłania pliku.");
+        } finally {
+          if (fileType === "cv") {
+            setIsLoadingCv(false);
+          } else if (fileType === "coveringLetter") {
+            setIsLoadingCoveringLetter(false);
+          }
         }
       };
-      
-
-
-  const uploadFile = async (file, fileType) => {
-    if (fileType === "cv") {
-      setIsLoadingCv(true);
-    } else if (fileType === "coveringLetter") {
-      setIsLoadingCoveringLetter(true);
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const endpoint = "/api/upload_pdf";
-
-    console.log("Backend URL:", backendUrl);
-    console.log(
-      "Sending file to backend:",
-      file.name,
-      "at",
-      backendUrl + endpoint
-    );
-
-    try {
-      const response = await axios.post(`${backendUrl}${endpoint}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response.data.previews && response.data.previews.length > 0) {
-        if (fileType === "cv") {
-          setCvfilePreviews(response.data.previews);
-          console.log("File previews set:", response.data.previews);
-        } else if (fileType === "coveringLetter") {      
-          if (response.data.content) {
-            await handleAnalyzeCoverLetter(response.data.content);
-          } else {
-            console.warn("No cover letter content received!");
-          }
-          setCoveringLetterPreviews(response.data.previews);
-        }
-      } 
-    } catch (err) {
-      console.error("Error uploading file:", err);
-      alert("Error uploading file. Please try again.");
-    } finally {
-      if (fileType === "cv") {
-        setIsLoadingCv(false);
-      } else if (fileType === "coveringLetter") {
-        setIsLoadingCoveringLetter(false);
-      }
-    }
-  };
-
   
 
   useEffect(() => {
@@ -794,24 +734,14 @@ const AddApplicants = () => {
                 >
                   Education Level
                 </label>
-                <select
+                <input 
+                type="text"
                   id="educationLevel"
                   name="educationLevel"
                   value={formData.educationLevel}
                   onChange={handleInputChange}
                   className="w-full border rounded-md p-2 mb-4"
-                >
-                  <option value="">Select Level</option>
-                  <option value="Technician">Technician</option>
-                  <option value="Engineer">Engineer</option>
-                  <option value="Master">Master</option>
-                  <option value="Doctor">Doctor</option>
-                  <option value="Specialist">Specialist</option>
-                  <option value="Undergraduate">Undergraduate</option>
-                  <option value="Postgraduate">Postgraduate</option>
-                  <option value="Diploma">Diploma</option>
-                  <option value="Certificate">Certificate</option>
-                </select>
+                />
                 {errors.educationLevel && (
                   <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
                     {errors.educationLevel}
@@ -823,31 +753,15 @@ const AddApplicants = () => {
                   <label className="block text-sm font-medium mb-2">
                     Education Field
                   </label>
-                  <select
+                  <input 
+                    type="text"
                     id="educationField"
                     name="educationField"
                     value={formData.educationField}
                     onChange={handleInputChange}
                     className="w-full border rounded-md p-2"
-                  >
-                    <option value="">Select education field</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Biology">Biology</option>
-                    <option value="Economics">Economics</option>
-                    <option value="History">History</option>
-                    <option value="Political Science">Political Science</option>
-                    <option value="Geography">Geography</option>
-                    <option value="Art and Design">Art and Design</option>
-                    <option value="Business Administration">
-                      Business Administration
-                    </option>
-                    <option value="Law">Law</option>
-                    <option value="Medicine">Medicine</option>
-                    <option value="Psychology">Psychology</option>
-                  </select>
+                  />
+  
                   {errors.educationField && (
                     <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
                       {errors.educationField}

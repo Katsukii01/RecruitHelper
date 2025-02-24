@@ -1,4 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Source+Code+Pro:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap');
+
+* {
+  font-family: 'Manrope', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+code, pre, .code-block {
+  font-family: 'Source Code Pro', monospace;
+}
+
 
 @tailwind base;
 @tailwind components;
@@ -8,9 +22,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
   color-scheme: dark;
+  font-family: 'Inter', sans-serif;
 }
 
 .hash-span {

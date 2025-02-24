@@ -4,14 +4,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const ChooseMethod = () => {
   const navigate = useNavigate();
   const { state } = useLocation(); // Odbieranie stanu z nawigacji
-  const { recruitmentId, highestId } = state || {}; // Destrukturyzacja recruitmentId z state
+  const { recruitmentId } = state || {}; // Destrukturyzacja recruitmentId z state
 
   const handleManualApplicants = () => {
     // Przekierowanie do zarządzania aplikantami, przekazując recruitmentId
     navigate('/RecruitmentAddApplicants', {
       state: {
         recruitmentId:  recruitmentId,
-        highestId: highestId, // Pass the highest ID
       }
     });
   };

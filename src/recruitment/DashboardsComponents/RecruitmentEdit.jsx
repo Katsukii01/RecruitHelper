@@ -215,24 +215,14 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
               <label className="block text-sm font-medium text-gray-300">
                 Education Level
               </label>
-              <select
+              <input
                 id="educationLevel"
                 name="educationLevel"
                 value={formData.educationLevel}
                 onChange={handleChange}
                 className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
-              >
-                <option value="">Select Level</option>
-                <option value="Technician">Technician</option>
-                <option value="Engineer">Engineer</option>
-                <option value="Master">Master</option>
-                <option value="Doctor">Doctor</option>
-                <option value="Specialist">Specialist</option>
-                <option value="Undergraduate">Undergraduate</option>
-                <option value="Postgraduate">Postgraduate</option>
-                <option value="Diploma">Diploma</option>
-                <option value="Certificate">Certificate</option>
-              </select>
+              />
+
               {errors.educationLevel && (
                   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationLevel}</p>
               )}
@@ -243,29 +233,14 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
               <label className="block text-sm font-medium text-gray-300">
                 Education Field
               </label>
-              <select
+              <input 
+                type='text'
                 id="educationField"
                 name="educationField"
                 value={formData.educationField}
                 onChange={handleChange}
                 className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
-              >
-                <option value="">Select education field</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Physics">Physics</option>
-                <option value="Chemistry">Chemistry</option>
-                <option value="Biology">Biology</option>
-                <option value="Economics">Economics</option>
-                <option value="History">History</option>
-                <option value="Political Science">Political Science</option>
-                <option value="Geography">Geography</option>
-                <option value="Art and Design">Art and Design</option>
-                <option value="Business Administration">Business Administration</option>
-                <option value="Law">Law</option>
-                <option value="Medicine">Medicine</option>
-                <option value="Psychology">Psychology</option>
-              </select>
+              />
               {errors.educationField && (
                   <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationField}</p>
               )}

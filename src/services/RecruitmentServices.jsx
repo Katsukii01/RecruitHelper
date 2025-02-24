@@ -19,6 +19,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import sendEmail from "./MailerServices";
+import { s } from "maath/dist/misc-19a3ec46.esm";
 
 
 //fetch all emails with  signInMethod
@@ -109,14 +110,21 @@ const checkAuth = async () => {
   });
 };
 
-// Funkcja do konwersji base64 na obiekt File
+// Funkcja do konwersji Base64 na obiekt File z pomiarem czasu
 const base64ToFile = (base64, fileName) => {
+  console.time(`Base64 to File Conversion Time: ${fileName}`); // Start pomiaru
+
   const [metadata, data] = base64.split(",");
   const mimeType = metadata.match(/:(.*?);/)[1]; // Wyciągnięcie typu MIME
   const binary = atob(data); // Dekodowanie Base64
-  const array = Uint8Array.from(binary, (char) => char.charCodeAt(0)); // Bezpośrednia konwersja
-  return new File([array], fileName, { type: mimeType });
+  const array = Uint8Array.from(binary, (char) => char.charCodeAt(0)); // Konwersja do Uint8Array
+  const file = new File([array], fileName, { type: mimeType });
+
+  console.timeEnd(`Base64 to File Conversion Time: ${fileName}`); // Koniec pomiaru
+  return file;
 };
+
+
 
 // Funkcja do przesyłania pliku do Firebase Storage
 const uploadToStorage = async (file, filePath) => {
@@ -388,6 +396,10 @@ export const addApplicant = async (
     const applicantIndex = currentApplicants.findIndex(
       (applicant) => applicant.id === applicantData.id
     );
+
+    console.log("applicantData", applicantData);
+    console.log("aplicant index", applicantIndex);
+
     
     if (applicantData.userUid) {
       if (recruitmentData.status == "Private") {
@@ -413,10 +425,11 @@ export const addApplicant = async (
           ); 
 
           applicantData.id = highestId + 1;
-
         }
       }
     }
+
+    console.log("applicantData id: ", applicantData.id);
 
     // Convert cvFiles to an array if it's not already
     const cvFilesArray = Array.isArray(cvFiles) ? cvFiles : Array.from(cvFiles);
@@ -440,17 +453,20 @@ export const addApplicant = async (
         );
       }
       // Otherwise, proceed with the conversion and uploading of CV files
-      for (const [index, cvFileBase64] of cvFilesArray.entries()) {
+      const cvFileUploadPromises = cvFilesArray.map((cvFileBase64, index) => {
         const cvFile = base64ToFile(
           cvFileBase64,
-          `${applicantData.id}_cv_${index + 1}.png`
+          `${applicantData.id}_cv_${index + 1}.webp`
         );
-        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${
-          index + 1
-        }.png`;
-        const uploadedCvFileUrl = await uploadToStorage(cvFile, cvFilePath);
-        cvFileUrls.push(uploadedCvFileUrl);
-      }
+        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${index + 1}.webp`;
+
+        return uploadToStorage(cvFile, cvFilePath);
+      });
+
+      // Równoczesne przesyłanie plików i oczekiwanie na ich zakończenie
+      cvFileUrls = await Promise.all(cvFileUploadPromises);
+
+
     }
 
     // Prepare to upload Cover Letter files (if they exist)
@@ -474,23 +490,19 @@ export const addApplicant = async (
           );
         }
         // Otherwise, proceed with the conversion and uploading of Cover Letter files
-        for (const [
-          index,
-          coverLetterFileBase64,
-        ] of coverLetterFiles.entries()) {
+        const coverLetterUploadPromises = coverLetterFiles.map((coverLetterFileBase64, index) => {
           const coverLetterFile = base64ToFile(
             coverLetterFileBase64,
-            `${applicantData.id}_coverLetter_${index + 1}.png`
+            `${applicantData.id}_coverLetter_${index + 1}.webp`
           );
-          const coverLetterFilePath = `coveringletters/${recruitmentId}/${
-            applicantData.id
-          }_${index + 1}.png`;
-          const uploadedCoverLetterFileUrl = await uploadToStorage(
-            coverLetterFile,
-            coverLetterFilePath
-          );
-          coverLetterFileUrls.push(uploadedCoverLetterFileUrl);
-        }
+          const coverLetterFilePath = `coveringletters/${recruitmentId}/${applicantData.id}_${index + 1}.webp`;
+
+          return uploadToStorage(coverLetterFile, coverLetterFilePath);
+        });
+
+        // Równoczesne przesyłanie plików i oczekiwanie na ich zakończenie
+        coverLetterFileUrls = await Promise.all(coverLetterUploadPromises);
+
       }
     } else {
       if (applicantIndex !== -1) {
@@ -540,7 +552,7 @@ export const addApplicant = async (
 };
 
 // Function to delete old CV and cover letter files from Firebase Storage
-const deleteOldFiles = async (oldApplicantData, recruitmentId, type) => {
+const deleteOldFiles = async (oldApplicantData, type) => {
   try {
     if (type === "Cv") {
       // Poprawione na '===' do porównania
@@ -808,12 +820,17 @@ export const getApplicantsRanking = async (recruitmentId) => {
   const calculateScore = (applicant) => {
     let totalScore = 0;
 
-    // Courses
-    const matchedCourses = applicant.courses.filter((course) =>
-      recruitmentData.courses.includes(course)
-    ).length;
+    // Zamiana list na zbiory (O(n))
+    const recruitmentCoursesSet = new Set(recruitmentData.courses || []);
+    const recruitmentSkillsSet = new Set(recruitmentData.skills || []);
 
-    const totalRecruitmentCourses = recruitmentData.courses?.length || 0;
+    // Courses
+    const matchedCourses = applicant.courses.reduce(
+      (count, course) => count + (recruitmentCoursesSet.has(course) ? 1 : 0),
+      0
+    );
+
+    const totalRecruitmentCourses = recruitmentCoursesSet.size;
     const weightOfCourses = recruitmentData.weightOfCourses || 0;
 
     const coursesScore =
@@ -824,18 +841,21 @@ export const getApplicantsRanking = async (recruitmentId) => {
     totalScore += coursesScore;
 
     // Skills
-    const matchedSkills = applicant.skills.filter((skill) =>
-      recruitmentData.skills?.includes(skill)
-    ).length;
+    const matchedSkills = applicant.skills.reduce(
+      (count, skill) => count + (recruitmentSkillsSet.has(skill) ? 1 : 0),
+      0
+    );
 
-    const totalRecruitmentSkills = recruitmentData.skills?.length || 0;
+    const totalRecruitmentSkills = recruitmentSkillsSet.size;
     const weightOfSkills = recruitmentData.weightOfSkills || 0;
 
     const skillsScore =
       totalRecruitmentSkills > 0
         ? (matchedSkills / totalRecruitmentSkills) * weightOfSkills
         : 0;
+
     totalScore += skillsScore;
+
 
     // Languages
     const matchedLanguagesScore = applicant.languages.reduce(
@@ -2823,6 +2843,74 @@ export const getRecruitmentOfferData = async (recruitmentId) => {
     throw error;
   }
 };
+
+//42 **finish recruitment**
+export const finishRecruitment = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+      }
+      const recruitmentData = recruitmentSnapshot.data();
+
+    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+      throw new Error("You are not authorized to finish recruitment");
+      }
+
+      const recruitmentStats = await getRecruitmentStats(recruitmentId);
+
+      const countStatus = {
+        ClCountStatus: recruitmentData.ClCountStatus ?? true,
+        CvCountStatus: recruitmentData.CvCountStatus ?? true,
+        TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+        MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
+    };
+
+      const applicants =  await getApplicantsWithOverallScore(recruitmentId);
+
+      // Mapujemy aplikantów i liczymy `totalScore`
+      const updatedApplicants = await Promise.all(
+        applicants.map(async (applicant) => ({
+          ...applicant,
+          totalScore: await calculateTotalScore(applicant, countStatus)
+        }))
+      );
+
+      const sortedApplicants = updatedApplicants.sort((a, b) => b.totalScore - a.totalScore);
+
+      const meetings = recruitmentData.MeetingSessions || [];
+      const tasks =  recruitmentData.TaskSessions || [];
+      const offerData = {
+        jobTittle: recruitmentData.jobTittle,
+        experienceNeeded: recruitmentData.experienceNeeded,
+        educationLevel: recruitmentData.educationLevel,
+        educationField: recruitmentData.educationField,
+        courses: recruitmentData.courses,
+        skills: recruitmentData.skills,
+        languages: recruitmentData.languages,
+      }
+
+      await updateDoc(recruitmentDoc, { stage: "Finished" });
+
+      return {
+        recruitmentStats,
+        sortedApplicants,
+        meetings,
+        tasks,
+        offerData,
+      };
+    } catch (error) {
+      console.error("Error finishing recruitment:", error);
+      throw error;
+    }
+  };
+
+
+
+
 
 
 //updateUserStat(userId, "AllTimeHiredApplicants", "increment");
