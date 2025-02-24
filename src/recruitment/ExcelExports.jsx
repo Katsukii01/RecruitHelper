@@ -262,8 +262,6 @@ export const exportTasks = (workbook, tasks) => {
         sheetData.push([
           taskDetail.id || "N/A",
           taskDetail.applicantId || "N/A",
-          taskDetail.taskName || "N/A",
-          taskDetail.taskLink || "N/A",
           taskDetail.points || "N/A",
         ]);
       });
