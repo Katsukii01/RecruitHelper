@@ -6,14 +6,14 @@ export const RecruitmentValidateForm = (formData) => {
 
     if (!formData.name) {
       newErrors.name = 'Name is required';
-    } else if (formData.name.length > 25) {
-      newErrors.name = 'Name cannot exceed 25 characters';
+    } else if (formData.name.length > 45) {
+      newErrors.name = 'Name cannot exceed 45 characters';
     }
 
     if (!formData.jobTittle) {
       newErrors.jobTittle = 'Job Title is required';
-    } else if (formData.jobTittle.length > 30) {
-      newErrors.jobTittle = 'Job Title cannot exceed 30 characters';
+    } else if (formData.jobTittle.length > 45) {
+      newErrors.jobTittle = 'Job Title cannot exceed 45 characters';
     }
 
     if (!formData.experienceNeeded) {
