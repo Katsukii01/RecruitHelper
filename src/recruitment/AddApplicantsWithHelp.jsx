@@ -63,11 +63,21 @@ const AddApplicantsWithHelp = () => {
           CvPreview: response.previews || [] // Dodajemy pliki, jeśli istnieją
       };
 
+      //change all null fields in applicantData to empty string
+      const applicantDataWithEmptyFields = Object.keys(applicantData).reduce((acc, key) => {
+        if (applicantData[key] === null) {
+          acc[key] = "";
+        } else {
+          acc[key] = applicantData[key];
+        }
+        return acc;
+      }, {});
+
       // 📝 Debugging - sprawdźmy wynikowy obiekt
-      console.log("📝 applicantData:", applicantData);
+      console.log("📝 applicantData:", applicantDataWithEmptyFields);
 
 
-        uploadedApplicants.push(applicantData);
+        uploadedApplicants.push(applicantDataWithEmptyFields);
   
         console.log(`✅ CV dodane do listy przesłanych: ${file.name}`);
         setNumberOfSavedApplicants((prev) => prev + 1);

@@ -10,10 +10,8 @@ import { Loader } from "../utils";
 import { firebaseAuth } from "../firebase/baseconfig";
 import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
 
+
 const AddApplicants = () => {
-  useEffect(() => {
-    scrollToTop();
-  }, []);
 
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -30,6 +28,8 @@ const AddApplicants = () => {
   const [NumberOfSavedApplicants, setNumberOfSavedApplicants] = useState(0); // licznik zapisanych aplikantów
   const [NumberOfApplicantsToSave, setNumberOfApplicantsToSave] = useState(0); // Liczba aplikantów do zapisania
   const [RecruitmentData, setRecruitmentData] = useState({});
+  const [applicantsToCheck, setApplicantsToCheck] = useState(0);
+  const [applicantsChecked, setApplicantsChecked] = useState(0);
 
   usePreventPageReload(true);
   // If currentPage is undefined, set it to 1
@@ -69,11 +69,17 @@ const AddApplicants = () => {
 
   useEffect(() => {
     console.log("CVapplicants: ", CVapplicants);
-    if(CVapplicants.length !== 0){
-      setApplicants(CVapplicants);
-      setFormData(CVapplicants[0]);
-      setCvfilePreviews(CVapplicants[0].CvPreview|| ""); // Jeśli aplikant ma plik CV, ustawiamy go
-    }
+    if(CVapplicants === undefined){
+    
+    }else{
+      if(CVapplicants.length !== 0){
+        setApplicantsChecked(1);
+        setApplicantsToCheck(CVapplicants.length);
+        setApplicants(CVapplicants);
+        setFormData(CVapplicants[0]);
+        setCvfilePreviews(CVapplicants[0].CvPreview|| ""); // Jeśli aplikant ma plik CV, ustawiamy go
+      }
+  }
   }, [CVapplicants]);
 
   // Funkcja scrollująca wszystkie elementy na stronie do góry
@@ -181,19 +187,25 @@ const AddApplicants = () => {
       newErrors.CvfilePreviews = "CV file is required";
     }
 
+    if (!formData.educationField) {
+      newErrors.educationField = "Education field is required";
+    } else if (formData.educationField.length > 40) {
+      newErrors.educationField = "Education field cannot exceed 40 characters";
+    }
+
     if (!formData.educationLevel) {
-    } else if (!formData.institutionName) {
-      if (!formData.institutionName) {
-        newErrors.institutionName = "Institution name is required";
+      newErrors.educationLevel = "Education level is required";
+    }else if (formData.educationLevel.length > 25) {
+      newErrors.educationLevel = "Education level cannot exceed 25 characters";
+    }
+
+   if (!formData.institutionName) {
       } else if (formData.institutionName.length > 100) {
         newErrors.institutionName =
           "Institution name cannot exceed 100 characters";
       }
 
-      if (!formData.educationField) {
-        newErrors.educationField = "Education field is required";
-      }
-    }
+
 
     if (!formData.experience) {
     } else if (
@@ -257,6 +269,7 @@ const AddApplicants = () => {
     console.log(formData);
     // Zwiększamy indeks, aby przejść do następnego aplikanta
     setCurrentIndex(currentIndex + 1);
+    setApplicantsChecked(prev => prev + 1);
 
     // Jeśli nie ma więcej aplikantów, ustawiamy pusty formularz na nowego aplikanta
     if (applicants[currentIndex + 1]) {
@@ -306,6 +319,9 @@ const AddApplicants = () => {
       setCurrentIndex(currentIndex - 1);
     }
 
+    if(applicantsChecked !== 0){
+    }
+
     // Opóźnione przewijanie na górę strony
     setTimeout(() => {
       scrollToTop();
@@ -348,6 +364,9 @@ const AddApplicants = () => {
       setCvfilePreviews(previousApplicant.CvPreview || "");
       setCoveringLetterPreviews(previousApplicant.CoveringLetterPreview || "");
       setCurrentIndex(Math.max(0, currentIndex - 1));
+      if(applicantsToCheck !== 0){
+        setApplicantsToCheck(prev => prev - 1);
+      }
     } else {
       // Brak aplikantów, ustawiamy pusty formularz
       setFormData({
@@ -391,6 +410,11 @@ const AddApplicants = () => {
 
     if (updatedApplicants.length === 0) {
       alert("You must add at least one applicant.");
+      return;
+    }
+
+    if(applicantsChecked < applicantsToCheck){
+      alert("You must check all applicants before proceeding.");
       return;
     }
 

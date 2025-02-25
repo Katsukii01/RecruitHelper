@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { RecruitmentDashboardLinks } from "../../constants";
+import { HelpLinks } from "../../constants";
 import { motion } from "framer-motion";
-
 
 const Navbar = () => {
   const [active, setActive] = useState("");
@@ -15,7 +14,7 @@ const Navbar = () => {
   useEffect(() => {
     const updateActiveFromHash = () => {
       const currentHash = window.location.hash.replace("#", "");
-      const matchingLink = RecruitmentDashboardLinks.find((link) => link.id === currentHash);
+      const matchingLink = HelpLinks.find((link) => link.id === currentHash);
 
       if (matchingLink) {
         setActive(matchingLink.title);
@@ -83,12 +82,9 @@ const Navbar = () => {
         <ul className="list-none flex flex-col nav-menu overflow-auto h-[70vh] max-h-fit w-full px-2">
           <li className="pt-4">
             <a
-              href="#Overview"
-              className={`w-full text-left block text-[13px] md:text-[30px] font-medium cursor-pointer py-2 px-2 transition-all duration-300 hover:text-sky ${
-                active === "Overview" ? "text-sky bg-[rgba(85,145,201,0.2)] rounded-lg" : "text-[#a8a8a8]"
-              }`}
+              className="w-full text-left block text-[13px] md:text-[30px] font-medium cursor-pointer py-2 px-2 "
             >
-              📊Overview
+              ❓ Help Center
             </a>
           </li>
 
@@ -121,7 +117,7 @@ const Navbar = () => {
                       variants={variants}
                     >
                   {category.links.map((id) => {
-                    const link = RecruitmentDashboardLinks.find((link) => link.id === id);
+                    const link = HelpLinks.find((link) => link.id === id);
                     return (
                       link && (
                         <li key={id} className="w-full">

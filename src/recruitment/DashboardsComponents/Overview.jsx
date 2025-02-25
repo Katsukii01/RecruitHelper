@@ -71,7 +71,7 @@ const Overview = ({ id }) => {
     { stage: 'Interviewing applicants', color: ' bg-yellow-500 ', description: 'The recruiter is currently interviewing applicants.' },
     { stage: 'Scoring tasks', color: ' bg-pink-500 ', description: 'The recruiter is currently scoring tasks.' },
     { stage: 'Offering jobs', color: 'bg-purple-500 ', description: 'The recruiter is currently offering jobs.' },
-    { stage: 'Hiring employees', color: ' bg-green-500 ', description: 'The recruiter is currently hiring employees.' },
+    { stage: 'Finished', color: ' bg-green-500 ', description: 'The recruiter has finished the recruitment process.' },
 
   ];
   

@@ -1,78 +1,146 @@
-import * as XLSX from "xlsx";
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const exportApplicantsToExcel = (workbook, applicants) => {
   if (!applicants || !Array.isArray(applicants) || applicants.length === 0) {
     console.warn("⚠ No applicants data to export.");
     return;
   }
 
-  // 🔹 Formatowanie danych aplikantów
-  const formattedApplicants = applicants.map(app => ({
-    Name: app.name || "N/A",
-    Surname: app.surname || "N/A",
-    Email: app.email || "N/A",
-    Phone: app.phone || "N/A",
-    "Education Level": app.educationLevel || "N/A",
-    "Institution Name": app.institutionName || "N/A",
-    "Education Field": app.educationField || "N/A",
-    Experience: app.experience || "N/A",
-    "Additional Info": app.additionalInformation || "N/A",
-    "Skills": Array.isArray(app.skills) ? app.skills.join(", ") : "N/A",
-    "Courses": Array.isArray(app.courses) ? app.courses.join(", ") : "N/A",
-    "Languages": Array.isArray(app.languages)
-      ? app.languages.map(lang => `${lang.language} (${lang.level})`).join(", ")
-      : "N/A",
-  }));
+  // 🔹 Tworzymy nowy arkusz
+  const sheet = workbook.addWorksheet("Applicants");
 
-  // 🔹 Tworzymy arkusz aplikantów
-  const applicantsSheet = XLSX.utils.json_to_sheet(formattedApplicants);
+  // 🔹 Definiujemy kolumny
+  sheet.columns = [
+    { header: "Name", key: "name", width: 15 },
+    { header: "Surname", key: "surname", width: 15 },
+    { header: "Email", key: "email", width: 25 },
+    { header: "Phone", key: "phone", width: 15 },
+    { header: "Education Level", key: "educationLevel", width: 20 },
+    { header: "Institution Name", key: "institutionName", width: 25 },
+    { header: "Education Field", key: "educationField", width: 20 },
+    { header: "Experience", key: "experience", width: 15 },
+    { header: "Skills", key: "skills", width: 40 },
+    { header: "Courses", key: "courses", width: 40 },
+    { header: "Languages", key: "languages", width: 40 },
+    { header: "Additional Info", key: "additionalInformation", width: 30 },
+  ];
 
-  // 🔹 Automatyczna szerokość kolumn na podstawie największego wpisu
-  const columnWidths = Object.keys(formattedApplicants[0]).map((key, i) => ({
-    wch: ["Skills", "Courses", "Languages"].includes(key) ? 40 : Math.max(
-      key.length,
-      ...formattedApplicants.map(row => (row[key] ? row[key].toString().length : 0))
-    ) + 2
-  }));
-  applicantsSheet["!cols"] = columnWidths;
-
-  // 🔹 Stylowanie nagłówków (pogrubienie, kolor, środek)
-  const headerRange = XLSX.utils.decode_range(applicantsSheet["!ref"]);
-  for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
-    const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
-    if (!applicantsSheet[cellAddress]) continue;
-    applicantsSheet[cellAddress].s = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "0070C0" } }, // 🔹 Niebieskie nagłówki
-      alignment: { horizontal: "center" },
-    };
-  }
-
-  // 🔹 Dodanie arkusza do workbooka
-  XLSX.utils.book_append_sheet(workbook, applicantsSheet, "Applicants");
-
-  console.log("✅ Applicants sheet added to workbook");
-
-  // ===== 📊 WYKRESY W TYM SAMYM ARKUSZU =====
-
-  // 🔹 Definicja wykresów na podstawie wyników
-  const scoreFields = ["totalScore", "CVscore", "CLscore", "Meetingsscore", "Tasksscore", "adnationalPoints"];
-
-  let rowOffset = formattedApplicants.length + 3; // 🔹 Gdzie zaczynamy wykresy (pod tabelą aplikantów)
-
-  scoreFields.forEach((field) => {
-    const chartData = applicants.map((app) => [app.name + " " + app.surname, app[field] || 0]);
-    const headers =["Total Score (%)", "CV Score (%)", "Cover Letter Score (%)", "Meetings Score (%)", "Tasks Score (%)", "Adnational Points (%)"];
-    chartData.unshift(["Applicant", headers[scoreFields.indexOf(field)]]);
-
-    XLSX.utils.sheet_add_aoa(applicantsSheet, chartData, { origin: `A${rowOffset}` });
-
-    rowOffset += applicants.length + 3; // 🔹 Odstęp między wykresami
+  // 🔹 Stylizacja nagłówków (ciemnogranatowy dla lepszego kontrastu)
+  const headerRow = sheet.getRow(1);
+  headerRow.eachCell(cell => {
+    cell.font = { bold: true, color: { argb: "FFFFFF" } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
+    cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
   });
 
 
-  console.log("✅ Charts added below applicants table");
+// 🔹 Dodanie danych aplikantów
+applicants.forEach((app, index) => {
+  const rowData = {
+    name: app.name || "N/A",
+    surname: app.surname || "N/A",
+    email: app.email || "N/A",
+    phone: app.phone || "N/A",
+    educationLevel: app.educationLevel || "N/A",
+    institutionName: app.institutionName || "N/A",
+    educationField: app.educationField || "N/A",
+    experience: app.experience || "N/A",
+    skills: Array.isArray(app.skills) ? app.skills.join(", ") : "N/A",
+    courses: Array.isArray(app.courses) ? app.courses.join(", ") : "N/A",
+    languages: Array.isArray(app.languages)
+      ? app.languages.map((lang) => `${lang.language} (${lang.level})`).join(", ")
+      : "N/A",
+    additionalInformation: app.additionalInformation || "N/A",
+  };
+
+  const row = sheet.addRow(rowData);
+
+  // 🔹 Oblicz długość najdłuższego tekstu w wierszu
+  const maxLength = Math.max(...Object.values(rowData).map(value => value.length));
+
+  // 🔹 Dynamiczna wysokość wiersza na podstawie długości tekstu (20 px + 5 px na każde 50 znaków)
+  row.height = 20 + Math.ceil(maxLength / 50) * 5;
+
+  row.eachCell(cell => {
+    cell.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: index % 2 === 0 ? "F2F2F2" : "D9E1F2" }, // Naprzemienne kolory
+    };
+    cell.border = {
+      top: { style: "thin" },
+      left: { style: "thin" },
+      bottom: { style: "thin" },
+      right: { style: "thin" },
+    };
+    cell.alignment = { vertical: "middle", wrapText: true };
+  });
+});
+
+
+  sheet.addRow([]);
+  sheet.addRow([]);
+  
+  // 🔹 Definicja wyników
+  const scoreFields = [
+    { field: "totalScore", label: "Total Score (%)" },
+    { field: "CVscore", label: "CV Score (%)" },
+    { field: "CLscore", label: "Cover Letter Score (%)" },
+    { field: "Meetingsscore", label: "Meetings Score (%)" },
+    { field: "Tasksscore", label: "Tasks Score (%)" },
+    { field: "adnationalPoints", label: "Adnational Points (%)" }
+  ];
+
+  // 🔹 Dodanie tabeli wyników
+  scoreFields.forEach((scoreField) => {
+    // Dodajemy nagłówki dla wyników
+    const row = sheet.addRow(["Applicant", scoreField.label]);
+
+    // Stylizacja nagłówków
+    row.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: "FFFFFF" } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } };
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+      cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
+    });
+  
+    // Dodajemy dane dla każdego aplikanta
+    applicants.forEach((app, index) => {
+      const score = app[scoreField.field] || 0;
+      const rowData = [`${app.name} ${app.surname}`, score];
+      const dataRow = sheet.addRow(rowData);
+
+      // Zmieniamy kolor wiersza w tabeli wyników
+      dataRow.eachCell(cell => {
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: index % 2 === 0 ? "E8F4FF" : "D9E1F2" }, // Naprzemienne kolory
+        };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+        cell.alignment = { vertical: "middle", wrapText: true };
+      });
+
+
+    });
+
+    // 🔹 Dostosowanie szerokości kolumn w tabelach wyników do długości nagłówków
+    const headerLength = Math.max(...scoreFields.map(sf => sf.label.length));
+    sheet.getColumn(1).width = 15; // Szerokość dla kolumny "Applicant"
+    sheet.getColumn(2).width = headerLength + 5; // Dostosowanie szerokości do długości nagłówka
+
+    // Dodajemy odstęp między tabelami wyników
+    sheet.addRow([]);
+  });
+
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const exportOfferDataToExcel = (workbook, offerData) => {
   if (!offerData || typeof offerData !== "object") {
@@ -80,37 +148,73 @@ export const exportOfferDataToExcel = (workbook, offerData) => {
     return;
   }
 
-  // 🔹 Jeśli `offerData` jest pojedynczym obiektem, wrzucamy go do tablicy
   const formattedOfferData = Array.isArray(offerData) ? offerData[0] : offerData;
 
-  // 🔹 Konwersja danych do formatu pionowego (klucz → wartość)
   const offerSheetData = Object.entries({
     "Job Title": formattedOfferData.jobTittle || "N/A",
     "Experience Needed": formattedOfferData.experienceNeeded || "N/A",
     "Education Level": formattedOfferData.educationLevel || "N/A",
     "Education Field": formattedOfferData.educationField || "N/A",
-    "Courses": formattedOfferData.courses?.join(", ") || "N/A",
-    "Skills": formattedOfferData.skills?.join(", ") || "N/A",
-    "Languages": formattedOfferData.languages?.map(lang => `${lang.language} (${lang.level})`).join(", ") || "N/A",
+    "Courses": Array.isArray(formattedOfferData.courses) ? formattedOfferData.courses.join(", ") : "N/A",
+    "Skills": Array.isArray(formattedOfferData.skills) ? formattedOfferData.skills.join(", ") : "N/A",
+    "Languages": Array.isArray(formattedOfferData.languages)
+      ? formattedOfferData.languages.map(lang => `${lang.language} (${lang.level})`).join(", ")
+      : "N/A",
   });
 
-  // 🔹 Tworzymy tablicę dla XLSX (każdy wiersz: [klucz, wartość])
-  const sheetData = [["Category", "Details"], ...offerSheetData];
+  const sheet = workbook.addWorksheet("Offer Data");
 
-  // 🔹 Tworzenie arkusza
-  const offerDataSheet = XLSX.utils.aoa_to_sheet(sheetData);
-
-  // 🔹 Automatyczna szerokość kolumn
-  offerDataSheet["!cols"] = [
-    { wch: Math.max(...sheetData.map(row => row[0].length)) + 2 }, // Szerokość kolumny "Category"
-    { wch: Math.max(...sheetData.map(row => (row[1] ? row[1].toString().length : 0))) + 5 } // Szerokość kolumny "Details"
+  // 🔹 Definiujemy kolumny
+  sheet.columns = [
+    { header: "Category", key: "category", width: 35 },
+    { header: "Details", key: "details", width: 70 },
   ];
 
-  // 🔹 Dodanie arkusza do workbooka
-  XLSX.utils.book_append_sheet(workbook, offerDataSheet, "Offer Data");
+  // 🔹 Stylizacja nagłówków (ciemnogranatowy dla lepszego kontrastu)
+  const headerRow = sheet.getRow(1);
+  headerRow.eachCell(cell => {
+    cell.font = { bold: true, color: { argb: "FFFFFF" } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
+    cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
+  });
 
-  console.log("✅ Offer data added to workbook");
+  // 🔹 Dodanie danych do arkusza z lepszym stylem
+  offerSheetData.forEach(([category, details], index) => {
+    const row = sheet.addRow({ category, details });
+
+    row.eachCell(cell => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: index % 2 === 0 ? "F2F2F2" : "D9E1F2" }, // Naprzemienne kolory
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+      cell.alignment = { vertical: "middle", wrapText: true };
+    });
+
+    // 🔹 Automatyczne dostosowanie wysokości wiersza dla Skills
+    if (category === "Skills") {
+      const estimatedLines = Math.ceil(details.length / 50); // Przyjmujemy ok. 50 znaków na linię
+      row.height = Math.max(20, estimatedLines * 15); // Podstawowa wysokość + dodatkowe linie
+    }
+  });
+
+  // 🔹 Automatyczne dopasowanie wysokości wierszy dla długich treści
+  sheet.eachRow(row => {
+    if (!row.height) {
+      row.height = 20;
+    }
+  });
 };
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const exportRecruitmentStats = (workbook, recruitmentStats) => {
   if (!recruitmentStats || typeof recruitmentStats !== "object") {
@@ -118,24 +222,20 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
     return;
   }
 
-  // 🔹 Jeśli `recruitmentStats` jest pojedynczym obiektem, wrzucamy go do tablicy
   const formattedRecruitmentStats = Array.isArray(recruitmentStats) ? recruitmentStats[0] : recruitmentStats;
 
-  // 🔹 Konwersja danych do formatu pionowego (klucz → wartość)
   const recruitmentStatsSheetData = [
-    ["Category", "Details"],
     ["Total Applicants", formattedRecruitmentStats.totalApplicants || 0],
     ["Total Meetings Sessions", formattedRecruitmentStats.totalMeetings || 0],
     ["Total Tasks Sessions", formattedRecruitmentStats.totalTasks || 0],
-    ["Hihest Total Score", formattedRecruitmentStats.highestTotalScore || 0],
+    ["Highest Total Score", formattedRecruitmentStats.highestTotalScore || 0],
     ["Average Total Score", formattedRecruitmentStats.averageTotalScore || 0],
     ["Current Stage", formattedRecruitmentStats.CurrentStage || "N/A"],
-    ["Total Cover Letters Percentage", formattedRecruitmentStats.TotalCoverLettersPercentage || 0],
-    ["", ""], // 🔹 Pusta linia dla czytelności
-    ["Applicants in each stage", ""], // 🔹 Nagłówek dla etapów rekrutacji
+    ["Total Cover Letters Percentage", formattedRecruitmentStats.TotalCoverLettersPercentage || "0%"],
+    ["", ""], // Pusta linia dla czytelności
+    ["Applicants in Each Stage", ""], // 🔹 Ten wiersz dostaje styl nagłówka
   ];
 
-  // 🔹 Etapy rekrutacji i liczba aplikantów
   const stages = [
     "Checked",
     "To be checked",
@@ -147,26 +247,63 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
     "Hired",
   ];
 
-  // 🔹 Pobieramy liczbę aplikantów dla każdego etapu, jeśli istnieją w danych
   stages.forEach(stage => {
     const count = formattedRecruitmentStats.ApplicantsInEachStage?.[stage] || 0;
     recruitmentStatsSheetData.push([`Applicants in ${stage}`, count]);
   });
 
-  // 🔹 Tworzenie arkusza
-  const recruitmentStatsSheet = XLSX.utils.aoa_to_sheet(recruitmentStatsSheetData);
+  const sheet = workbook.addWorksheet("Recruitment Stats");
 
-  // 🔹 Automatyczna szerokość kolumn
-  recruitmentStatsSheet["!cols"] = [
-    { wch: Math.max(...recruitmentStatsSheetData.map(row => row[0].length)) + 2 }, // Szerokość kolumny "Category"
-    { wch: Math.max(...recruitmentStatsSheetData.map(row => (row[1] ? row[1].toString().length : 0))) + 5 } // Szerokość kolumny "Details"
+  sheet.columns = [
+    { header: "Category", key: "category", width: 35 },
+    { header: "Details", key: "details", width: 25 },
   ];
 
-  // 🔹 Dodanie arkusza do workbooka
-  XLSX.utils.book_append_sheet(workbook, recruitmentStatsSheet, "Recruitment Stats");
+  // 🔹 Stylizacja nagłówka (ciemnogranatowy)
+  const headerRow = sheet.getRow(1);
+  headerRow.eachCell(cell => {
+    cell.font = { bold: true, color: { argb: "FFFFFF" } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
+    cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
+  });
 
-  console.log("✅ Recruitment stats added to workbook");
+  // 🔹 Dodanie danych do arkusza
+  recruitmentStatsSheetData.forEach(([category, details], index) => {
+    const row = sheet.addRow({ category, details });
+
+    row.eachCell(cell => {
+      if (category === "Applicants in Each Stage") {
+        // 🔹 Stylizacja nagłówka dla "Applicants in Each Stage"
+        cell.font = { bold: true, color: { argb: "FFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } };
+        cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+      } else {
+        // 🔹 Normalne komórki
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: index % 2 === 0 ? "E8F4FF" : "D9E1F2" },
+        };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+        cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+      }
+    });
+  });
+
+  // 🔹 Dopasowanie wysokości wierszy
+  sheet.eachRow(row => {
+    row.height = 20;
+  });
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 export const exportMeetings = (workbook, meetings) => {
@@ -175,64 +312,89 @@ export const exportMeetings = (workbook, meetings) => {
     return;
   }
 
-  const sheetData = [];
+  const worksheet = workbook.addWorksheet("Meetings");
 
   meetings.forEach(meeting => {
-    sheetData.push(["Meeting Session Name", "Description", "Points Weight"]);
-    sheetData.push([
+    // 🔹 Nagłówek dla sesji spotkań (grubsza linia)
+    const sessionHeader = worksheet.addRow(["Meeting Session Name", "Description", "Points Weight"]);
+    sessionHeader.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: "FFFFFF" } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } }; // Ciemny niebiesko-szary
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+      cell.border = { bottom: { style: "thick", color: { argb: "000000" } } }; // Pogrubiona dolna linia
+    });
+
+    // 🔹 Dane sesji spotkań
+    const sessionData = worksheet.addRow([
       meeting.meetingSessionName || "N/A",
       meeting.meetingSessionDescription || "N/A",
       meeting.meetingSessionPointsWeight || "N/A",
     ]);
 
-    // 🔹 Pusta linia dla czytelności między sesjami
-    sheetData.push([]);
+    sessionData.eachCell(cell => {
+      cell.font = { bold: true };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "E8F4FF" } }; // Jasnoniebieskie tło
+      cell.alignment = { horizontal: "left", vertical: "middle" };
+      cell.border = { bottom: { style: "thin", color: { argb: "CCCCCC" } } };
+    });
 
-    // 🔹 Nagłówek dla spotkań pod sesją (tylko jeśli są jakieś spotkania)
+    worksheet.addRow([]); // Pusta linia dla czytelności
+
     if (meeting.meetings && meeting.meetings.length > 0) {
-      sheetData.push(["Meeting ID", "Applicant ID", "Date", "Time From", "Time To", "Meeting Link", "Points"]);
+      // 🔹 Nagłówek dla pojedynczych spotkań (grubsza linia)
+      const meetingsHeader = worksheet.addRow([
+        "Meeting ID", "Applicant ID", "Date", "Time From", "Time To", "Points"
+      ]);
+      meetingsHeader.eachCell(cell => {
+        cell.font = { bold: true, color: { argb: "FFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } }; // Ciemnoniebieskie tło
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+        cell.border = { bottom: { style: "thick", color: { argb: "000000" } } };
+      });
 
-      meeting.meetings.forEach(meetingDetail => {
-        sheetData.push([
+      meeting.meetings.forEach((meetingDetail, index) => {
+        const row = worksheet.addRow([
           meetingDetail.id || "N/A",
           meetingDetail.applicantId || "N/A",
           meetingDetail.meetingDate || "N/A",
           meetingDetail.meetingTimeFrom || "N/A",
           meetingDetail.meetingTimeTo || "N/A",
-          meetingDetail.meetingLink || "N/A",
           meetingDetail.points || "N/A",
         ]);
+
+        row.alignment = { horizontal: "left" };
+
+        // 🔹 Alternatywne kolory dla lepszej czytelności (bardziej profesjonalne)
+        row.eachCell(cell => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: index % 2 === 0 ? "F2F2F2" : "D9E1F2" }, // Szaro-niebieskie pasy
+          };
+          cell.border = { bottom: { style: "thin", color: { argb: "CCCCCC" } } };
+        });
       });
     }
 
-    // 🔹 Dodajemy trzy puste wiersze między sesjami dla lepszej czytelności
-    sheetData.push([], [], []);
+    // 🔹 Puste wiersze dla lepszej separacji sekcji
+    worksheet.addRow([]);
+    worksheet.addRow([]);
   });
 
-  // 🔹 Tworzenie arkusza
-  const meetingsSheet = XLSX.utils.aoa_to_sheet(sheetData);
-
-  // 🔹 Dostosowanie szerokości kolumn do najdłuższej zawartości
-  const columnWidths = sheetData[0].map((_, colIndex) => ({
-    wch: Math.max(
-      10, // Minimalna szerokość
-      ...sheetData.map(row => (row[colIndex] ? row[colIndex].toString().length : 0))
-    ) + 2
-  }));
-  meetingsSheet["!cols"] = columnWidths;
-
-  // 🔹 Wyrównanie zawartości do lewej
-  Object.keys(meetingsSheet).forEach(cell => {
-    if (!cell.startsWith("!")) {
-      meetingsSheet[cell].s = { alignment: { horizontal: "left" } };
-    }
+  // 🔹 Automatyczne dopasowanie szerokości kolumn
+  worksheet.columns.forEach(column => {
+    let maxLength = 10;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const cellLength = cell.value ? cell.value.toString().length : 0;
+      if (cellLength > maxLength) {
+        maxLength = cellLength;
+      }
+    });
+    column.width = maxLength + 2;
   });
-
-  // 🔹 Dodanie arkusza do workbooka
-  XLSX.utils.book_append_sheet(workbook, meetingsSheet, "Meetings");
-
-  console.log("✅ Meetings data added to workbook with adjusted column widths and left alignment");
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const exportTasks = (workbook, tasks) => {
   if (!tasks || !Array.isArray(tasks) || tasks.length === 0) {
@@ -240,59 +402,81 @@ export const exportTasks = (workbook, tasks) => {
     return;
   }
 
-  
-  const sheetData = [];
+  const worksheet = workbook.addWorksheet("Tasks");
+
   tasks.forEach(task => {
-    sheetData.push(["Task Session Name", "Description", "Points Weight"]);
-    // 🔹 Add task session details row
-    sheetData.push([
+    // 🔹 Nagłówek dla sesji zadań (gruba linia)
+    const sessionHeader = worksheet.addRow(["Task Session Name", "Description", "Points Weight"]);
+    sessionHeader.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: "FFFFFF" } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } }; // Ciemnoniebiesko-szary
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+      cell.border = { bottom: { style: "thick", color: { argb: "000000" } } }; // Gruba linia pod nagłówkiem
+    });
+
+    // 🔹 Dane sesji
+    const sessionData = worksheet.addRow([
       task.taskSessionName || "N/A",
       task.taskSessionDescription || "N/A",
       task.taskSessionPointsWeight || "N/A",
     ]);
 
-    // 🔹 Empty row for readability between sessions
-    sheetData.push([]);
+    sessionData.eachCell(cell => {
+      cell.font = { bold: true };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "E8F4FF" } }; // Jasnoniebieskie tło
+      cell.alignment = { horizontal: "left", vertical: "middle" };
+      cell.border = { bottom: { style: "thin", color: { argb: "CCCCCC" } } };
+    });
 
-    // 🔹 Add header for tasks under the session (only if tasks exist)
+    worksheet.addRow([]); // Pusta linia dla czytelności
+
     if (task.tasks && task.tasks.length > 0) {
-      sheetData.push(["Task ID", "Applicant ID", "Task Name", "Task Link", "Points"]);
+      // 🔹 Nagłówek dla listy zadań (gruba linia)
+      const tasksHeader = worksheet.addRow(["Task ID", "Applicant ID", "Points"]);
+      tasksHeader.eachCell(cell => {
+        cell.font = { bold: true, color: { argb: "FFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } }; // Ciemnoniebieskie tło
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+        cell.border = { bottom: { style: "thick", color: { argb: "000000" } } };
+      });
 
-      task.tasks.forEach(taskDetail => {
-        sheetData.push([
+      task.tasks.forEach((taskDetail, index) => {
+        const row = worksheet.addRow([
           taskDetail.id || "N/A",
           taskDetail.applicantId || "N/A",
           taskDetail.points || "N/A",
         ]);
+
+        row.alignment = { horizontal: "left" };
+
+        // 🔹 Naprzemienne kolory dla lepszej czytelności (bardziej eleganckie)
+        row.eachCell(cell => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: index % 2 === 0 ? "F2F2F2" : "D9E1F2" }, // Szaro-niebieskie pasy
+          };
+          cell.border = { bottom: { style: "thin", color: { argb: "CCCCCC" } } };
+        });
       });
     }
 
-    // 🔹 Add three empty rows between task sessions for better readability
-    sheetData.push([], [], []);
+    // 🔹 Puste wiersze dla lepszej separacji sekcji
+    worksheet.addRow([]);
+    worksheet.addRow([]);
   });
 
-  // 🔹 Create worksheet
-  const tasksSheet = XLSX.utils.aoa_to_sheet(sheetData);
-
-  // 🔹 Adjust column widths dynamically based on the longest content
-  const columnWidths = sheetData[0].map((_, colIndex) => ({
-    wch: Math.max(
-      10, // Minimum width
-      ...sheetData.map(row => (row[colIndex] ? row[colIndex].toString().length : 0))
-    ) + 2
-  }));
-  tasksSheet["!cols"] = columnWidths;
-
-  // 🔹 Align all content to the left
-  Object.keys(tasksSheet).forEach(cell => {
-    if (!cell.startsWith("!")) {
-      tasksSheet[cell].s = { alignment: { horizontal: "left" } };
-    }
+  // 🔹 Automatyczne dopasowanie szerokości kolumn
+  worksheet.columns.forEach(column => {
+    let maxLength = 10;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const cellLength = cell.value ? cell.value.toString().length : 0;
+      if (cellLength > maxLength) {
+        maxLength = cellLength;
+      }
+    });
+    column.width = maxLength + 2;
   });
-
-  // 🔹 Add sheet to workbook
-  XLSX.utils.book_append_sheet(workbook, tasksSheet, "Tasks");
-
-  console.log("✅ Tasks data added to workbook with adjusted column widths and left alignment");
 };
+
 

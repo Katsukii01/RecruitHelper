@@ -92,6 +92,74 @@ export const NavLinks = [
     },
   ];
 
+  export const HelpLinks = [
+    {
+      id: "Overview",
+      title: "Overview",
+    },
+    {
+      id: "ApplicantsStages",
+      title: "Applicants Stages",
+    },
+    {
+      id: "ApplicantsOfferRanking",
+      title: "Cv Ranking",
+    },
+    {
+      id: "Tasks",
+      title: "Tasks",
+    },
+    {
+      id: "TasksPoints",
+      title: "Tasks Points",
+    },
+    {
+      id: "MeetingSessions",
+      title: "Meeting Sessions",
+    },
+    {
+      id: "Meetings",
+      title: "Meetings",
+    },
+    {
+      id: "MeetingsPoints",
+      title: "Meetings Points",
+    },
+
+    {
+      id: "CoverLettersAnalysis",
+      title: "Cover Letters Analysis",
+    },
+    {
+      id: "CoverLettersPoints",
+      title: "Cover Letters Points",
+    },
+    {
+      id: "AdnationalPoints",
+      title: "Adnational Points",
+    },
+    {
+      id: "FinalRanking",
+      title: "Final Ranking",
+    },
+    {
+      id: "FinishRecruitment",
+      title: "Finish Recruitment",
+    },    
+    {
+      id: "ManageApplicants",
+      title: "Manage Applicants",
+    },
+    {
+      id: "RecruitmentEdit",
+      title: "Edit Recruitment",
+    },
+    {
+      id: "DeleteRecruitment",
+      title: "Delete Recruitment",
+    },
+  ];
+
   export const existingLanguages = [
     "afrikaans",
     "albanian",

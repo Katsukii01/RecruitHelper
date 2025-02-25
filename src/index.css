@@ -727,3 +727,24 @@ code, pre, .code-block {
   50% { opacity: 1; transform: scale(1.2); }
   100% { opacity: 0.8; transform: scale(1); }
 }
+
+/* Customize Swiper navigation & pagination */
+.custom-swiper .swiper-button-next,
+.custom-swiper .swiper-button-prev {
+    color: #87CEEB !important; /* Bright yellow for visibility */
+}
+
+.custom-swiper .swiper-pagination-bullet {
+    background: #fff !important; /* Match the stars */
+}
+
+.custom-swiper .swiper-pagination-bullet-active {
+    background: #44d3ff !important; /* Slightly darker for active state */
+}
+
+/* Improve Opinion Card Styling */
+.opinion-card {
+    background: rgba(30, 30, 30, 0.9); /* Darker gray with transparency */
+    padding: 1.5rem;
+    border-radius: 12px;
+}

@@ -19,7 +19,6 @@ import {
   deleteObject,
 } from "firebase/storage";
 import sendEmail from "./MailerServices";
-import { s } from "maath/dist/misc-19a3ec46.esm";
 
 
 //fetch all emails with  signInMethod
@@ -333,6 +332,7 @@ export const deleteRecruitment = async (recruitmentId) => {
           "Cv"
         );
       }
+      
 
       // Call deleteOldFiles for Cover Letters
       if (
@@ -345,6 +345,7 @@ export const deleteRecruitment = async (recruitmentId) => {
           "CoverLetter"
         );
       }
+
     }
 
     // Finally, delete the recruitment document itself
@@ -2892,6 +2893,7 @@ export const finishRecruitment = async (recruitmentId) => {
         skills: recruitmentData.skills,
         languages: recruitmentData.languages,
       }
+   
 
       await updateDoc(recruitmentDoc, { stage: "Finished" });
 
@@ -2908,13 +2910,155 @@ export const finishRecruitment = async (recruitmentId) => {
     }
   };
 
+  export const addOpinion = async (recruitmentId, opinion) => {
+    try {
+      await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+  
+      // Pobranie dokumentu rekrutacji
+      const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+      const recruitmentSnapshot = await getDoc(recruitmentDoc);
+  
+      if (!recruitmentSnapshot.exists()) {
+        throw new Error("Recruitment not found");
+      }
+  
+      const recruitmentData = recruitmentSnapshot.data();
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to add an opinion");
+      }
+  
+      const opinionsCollection = collection(db, "opinions");
+  
+      // Pobranie wszystkich opinii, aby znaleźć największe ID
+      const opinionsSnapshot = await getDocs(opinionsCollection);
+      let maxId = 0;
+  
+      opinionsSnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.id && data.id > maxId) {
+          maxId = data.id;
+        }
+      });
+  
+      if (opinion.id === undefined) {
+        opinion.id = maxId + 1; // Jeśli nie ma opinii, zacznie od 1
+      }
+  
+      // Sprawdzenie, czy opinia już istnieje
+      const opinionQuery = query(opinionsCollection, where("id", "==", opinion.id));
+      const opinionSnapshot = await getDocs(opinionQuery);
+  
+      const formattedDate = new Date().toLocaleString("pl-PL", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+  
+      if (opinionSnapshot.empty) {
+        // Dodanie nowej opinii
+        const newOpinion = {
+          ...opinion,
+          recruitmentName: recruitmentData.name,
+          recruitmentId: recruitmentId,
+          jobTittle: recruitmentData.jobTittle,
+          date: formattedDate, // Sformatowana data
+        };
+        await addDoc(opinionsCollection, newOpinion);
+        return newOpinion;
+      } else {
+        // Aktualizacja istniejącej opinii
+        const existingOpinionRef = opinionSnapshot.docs[0].ref;
+        const updatedOpinion = {
+          ...opinion,
+          recruitmentId: recruitmentId,
+          recruitmentName: recruitmentData.name,
+          jobTittle: recruitmentData.jobTittle,
+          date: formattedDate, // Sformatowana data
+        };
+        await updateDoc(existingOpinionRef, updatedOpinion);
+        return updatedOpinion;
+      }
+    } catch (error) {
+      console.error("Error adding opinion:", error.message);
+      throw error;
+    }
+  };
 
 
+//45 **get opinion by recruitmentId**
+export const findOpinionById = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    const opinionsCollection = collection(db, "opinions");
+    const opinionQuery = query(opinionsCollection, where("recruitmentId", "==", recruitmentId));
+    const opinionSnapshot = await getDocs(opinionQuery);
+    if (opinionSnapshot.empty) {
+      return null; 
+    }
+    return opinionSnapshot.docs[0].data();
+  } catch (error) {
+    console.error("Error fetching opinion by ID:", error.message);
+    throw error;
+  }
+};
 
+//46 **get random opinions**
+export const getRandomOpinions = async () => {
+  try {
+    const opinionsSnapshot = await getDocs(collection(db, "opinions"));
+    if (opinionsSnapshot.empty) {
+      return []; // Return an empty array if no opinions exist
+    }
 
+    const allOpinions = opinionsSnapshot.docs.map(opinion => opinion.data());
+    
+    // Shuffle array and get up to 9 random opinions
+    const shuffledOpinions = allOpinions.sort(() => Math.random() - 0.5);
+    const randomOpinions = shuffledOpinions.slice(0, 9);
 
-//updateUserStat(userId, "AllTimeHiredApplicants", "increment");
-//updateUserStat(userId, "AllTimeApplicationRejected", "increment");
-//updateUserStat(userId, "AllTimeApplicationHired", "increment");
+    return randomOpinions;
+  } catch (error) {
+    console.error("Error fetching random opinions:", error.message);
+    throw error;
+  }
+};
+
+//47 **colse recruitment**
+export const closeRecruitment = async (recruitmentId) => {
+  try {
+    const recruitmentDoc = await getDoc(doc(db, "recruitments", recruitmentId));
+    if (!recruitmentDoc.exists()) {
+      return null;
+    }
+    const recruitmentData = recruitmentDoc.data();
+
+    const applicants = recruitmentData.Applicants || [];
+
+    for (const applicant of applicants) {
+      
+      if(applicant.stage == "Hired")
+        {
+          await updateUserStat(firebaseAuth.currentUser.uid, "AllTimeHiredApplicants", "increment");
+          if(applicant.userUid){
+          await updateUserStat(applicant.userUid, "AllTimeApplicationHired", "increment");
+          }
+        }else{
+          if(applicant.userUid){
+           await updateUserStat(applicant.userUid, "AllTimeApplicationRejected", "increment");
+            }
+        }
+
+      }
+
+      // Delete recruitment
+      await deleteRecruitment(recruitmentId);
+  } catch (error) {
+    console.error("Error closing recruitment:", error.message);
+    throw error;
+  }
+};
+
 
 

@@ -5,7 +5,7 @@ export const backendUrl =
 
 export const apiEndpoints = {
   uploadPdf: "/api/upload_pdf",
-  analyzeCoverLetter: "/api/analyze_letter_Deepseek",
+  analyzeCoverLetter: "/api/analyze_letter",
   submitApplicants: "/api/submit-applicants",
-  analyzeCV: "/api/analyze_cv_Deepseek",
-};
+  analyzeCV: "/api/analyze_cv",
+}

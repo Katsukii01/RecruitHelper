@@ -25,6 +25,7 @@ import {
   AddTasks,
   CreateTasksSession,
 } from "./recruitment";
+import Help  from "./Help/Help.jsx";
 import { StarsCanvas, ProtectedRoute } from "./utils";
 import { Home, SignIn, SignUp } from "./auth";
 
@@ -188,6 +189,12 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/Help"
+            element={
+                <Help />
+            }
+            />
         </Routes>
       </div>
     </BrowserRouter>
