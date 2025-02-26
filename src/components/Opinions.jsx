@@ -18,7 +18,6 @@ const Opinions = () => {
         const fetchOpinions = async () => {
             try {
                 const data = await getRandomOpinions();
-                console.log("Fetched Opinions:", data);
                 setOpinions(data || []);
             } catch (error) {
                 console.error('Error fetching opinions:', error);
@@ -50,7 +49,7 @@ const Opinions = () => {
 
             <motion.p
               variants={fadeIn("", "", 0.3, 2)}
-              className='mt-6 text-secondary text-xl max-w-3xl '
+              className='mt-6 text-secondary text-xl max-w-3xl ml-4'
             >
                 See what users are saying about their experience with our platform. We value your feedback and strive to improve our services based on your suggestions and experiences.
             </motion.p>

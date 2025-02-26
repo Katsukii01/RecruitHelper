@@ -24,12 +24,12 @@ const features = [
   {
     icon: <FaCalendarAlt className="text-4xl text-yellow-400" />, 
     title: "Calendar with Meetings",
-    description: "Schedule and manage interviews effortlessly with an integrated calendar. Sync with external apps for better organization."
+    description: "Schedule and manage interviews effortlessly with an integrated calendar. No more missed calls or missed meetings!"
   },
   {
     icon: <FaEnvelopeOpenText className="text-4xl text-purple-400" />, 
     title: "Automated Emails",
-    description: "Send task and meeting reminders automatically to candidates and recruiters, keeping everyone on track."
+    description: "Send task and meeting reminders automatically to candidates, keeping everyone on track."
   },
   {
     icon: <FaFileExport className="text-4xl text-orange-400" />, 
@@ -63,7 +63,7 @@ const About = () => {
       {/* Opis sekcji */}
       <motion.p
         variants={fadeIn("", "", 0.3, 2)}
-        className='mt-6 text-secondary text-lg max-w-4xl'
+        className='mt-6 text-secondary text-lg max-w-4xl ml-4'
       >
         Ultimate platform designed to streamline the recruitment process.
         Our innovative tools help you find, evaluate, and hire top talent with ease.

@@ -4,40 +4,34 @@ import { SectionWrapper } from '../hoc';
 import { motion } from 'framer-motion';
 import { fadeIn, textVariant } from '../utils/motion';
 import { Link } from 'react-router-dom';
-import { FaUserTie, FaFileAlt, FaUserCircle, FaTachometerAlt, FaChartBar } from 'react-icons/fa';
 
 const sections = [
   { 
-    name: "Recruitments", 
-    link: "/help#recruitments",
-    description: "Master the art of recruitment. Learn how to create, manage, and streamline your hiring process.",
-    icon: <FaUserTie className="text-6xl text-teal-400" />
+    "name": "Recruitments", 
+    "link": "/help#CreatingRecruitment",
+    "description": "Learn how to create job postings, and optimize your hiring process."
   },
   { 
-    name: "Applications", 
-    link: "/help#applications",
-    description: "Track, review, and efficiently manage incoming applications with ease.",
-    icon: <FaFileAlt className="text-6xl text-cyan-400" />
+    "name": "Applications", 
+    "link": "/help#ApplyForJob",
+    "description": "Discover how to apply for jobs, and stay updated on your hiring journey."
   },
   { 
-    name: "Account", 
-    link: "/help#account",
-    description: "Configure your profile, manage settings, and enhance security effortlessly.",
-    icon: <FaUserCircle className="text-6xl text-blue-400" />
+    "name": "Account", 
+    "link": "/help#SignIn",
+    "description": "Learn how to set up your profile and manage your account settings."
   },
   { 
-    name: "Dashboard", 
-    link: "/help#dashboard",
-    description: "Navigate through your workspace, tools, and quick access features.",
-    icon: <FaTachometerAlt className="text-6xl text-indigo-400" />
+    "name": "Dashboard", 
+    "link": "/help#Statistics",
+    "description": "Understand how to navigate your dashboard and access key features."
   },
   { 
-    name: "Statistics", 
-    link: "/help#statistics",
-    description: "Analyze performance metrics, hiring trends, and detailed insights.",
-    icon: <FaChartBar className="text-6xl text-purple-400" />
-  },
-];
+    "name": "Statistics", 
+    "link": "/help#StatisticsExplained",
+    "description": "Explore the statistics and analytics tools to gain insights into your hiring process."
+  }
+]
 
 const KnowHow = () => {
   return (
@@ -48,7 +42,7 @@ const KnowHow = () => {
       
       <motion.p
         variants={fadeIn("", "", 0.3, 2)}
-        className='mt-6 text-secondary text-xl max-w-3xl '
+        className='mt-6 text-secondary text-xl max-w-3xl ml-4'
       >
         Discover how to make the most of <span className="text-cyan-400 font-semibold">RecruitHelper</span>. Click on a section to access detailed guides and expert tips.
       </motion.p>
@@ -63,7 +57,6 @@ const KnowHow = () => {
             className='bg-gray-800 p-8 rounded-2xl shadow-xl text-center border border-gray-700 transition-transform flex flex-col items-center gap-6 w-80 h-64 shadow-[rgba(0,0,0,0.8)]'
           >
             <Link to={section.link} className='flex flex-col items-center gap-4 h-full w-full'>
-              {section.icon}
               <span className='text-2xl font-semibold text-cyan-300'>{section.name}</span>
               <p className="text-gray-300 text-lg">{section.description}</p>
               <span className="text-cyan-400 font-semibold transition-transform relative group text-lg">

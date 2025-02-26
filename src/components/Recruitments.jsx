@@ -18,7 +18,7 @@ const Recruitments = () => {
 
       <motion.p
         variants={fadeIn("", "", 0.3, 2)}
-        className='mt-6 text-secondary text-xl max-w-3xl leading-relaxed'
+        className='mt-6 text-secondary text-xl max-w-3xl leading-relaxed ml-4'
       >
         Discover the latest job opportunities and recruitment openings. 
         Find the perfect role that fits your skills and experience with our 

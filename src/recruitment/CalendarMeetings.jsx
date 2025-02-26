@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from 'react-calendar';
+import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase } from "react-icons/bi";
 
 const CalendarMeetings = ({ meetingSessions, applicants,}) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -114,87 +115,92 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
               const coverLetterFileUrls = meeting.meetingApplicant?.coverLetterFileUrls || [];
               
               return (
-                  <div
-                    key={index}
-                    className="p-6 bg-gradient-to-br from-blue-900 to-cyan-600 ml-5 rounded-xl shadow-2xl w-5/6 min-w-[250px] border border-white flex flex-col lg:flex-row items-center lg:items-start justify-between min-h-[220px] gap-4 transition-transform hover:scale-105"
-                  >
-                    {/* 📅 Lewa sekcja – Informacje o spotkaniu */}
-                    <div className="flex-1 space-y-2">
-                      <h3 className="text-2xl font-bold text-white">📅 {meeting.meetingSessionName}</h3>
-                      <p className="text-sm text-gray-300 italic">{meeting.meetingSessionDescription}</p>
-
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm text-gray-400">
-                          🕒 {meeting.meetingTimeFrom} - {meeting.meetingTimeTo}
-                        </span>
-                      </div>
-
-                      <a
-                        href={meeting.meetingLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
-                      >
-                        🔗 Join Meeting
-                      </a>
+                <div
+                  key={index}
+                  className="p-6 bg-gradient-to-br from-blue-900 to-cyan-600 ml-5 rounded-xl shadow-2xl w-5/6 min-w-[250px] border border-white flex flex-col lg:flex-row items-center lg:items-start justify-between min-h-[220px] gap-6 transition-transform hover:scale-105"
+                >
+                  {/* 📅 Lewa sekcja – Informacje o spotkaniu */}
+                  <div className="flex-1 space-y-3">
+                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+                      <BiCalendar className="text-3xl text-white" /> {meeting.meetingSessionName}
+                    </h3>
+                    <p className="text-sm text-gray-300 italic">{meeting.meetingSessionDescription}</p>
+              
+                    <div className="flex items-center space-x-2 text-sm text-gray-400">
+                      <BiTimeFive className="text-lg text-white" />
+                      <span>{meeting.meetingTimeFrom} - {meeting.meetingTimeTo}</span>
                     </div>
-
+              
+                    <a
+                      href={meeting.meetingLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
+                    >
+                      <BiLinkExternal className="text-lg" /> Join Meeting
+                    </a>
+                  </div>
+              
                   {/* Prawa sekcja – Dane aplikanta lub Rekrutacja */}
-                  <div className="flex-1   ">
+                  <div className="flex-1">
                     {meeting.meetingApplicant && Object.keys(meeting.meetingApplicant).length > 0 ? (
-                           <>
-                           <h3 className="text-lg font-semibold text-white">👤 Applicant:</h3>
-                           <p className="text-sm text-gray-300">{meeting.meetingApplicant.name || '-'} {meeting.meetingApplicant.surname || '-'}</p>
-                           <p className="text-sm text-gray-300">📧 {meeting.meetingApplicant.email || '-'}</p>
-                   
-                           {/* 📄 Dokumenty */}
-                           <div className="mt-2">
-                             <h3 className="text-lg font-semibold text-white">📄 Documents:</h3>
-                             <div className="flex flex-col space-y-1">
-                               {cvFileUrls.length > 0 ? (
-                                 <button
-                                   onClick={() => openFilesPreview(cvFileUrls)}
-                                  className="inline-block mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
-                                 >
-                                   📑 Open CV
-                                 </button>
-                               ) : (
-                                 <p className="text-sm text-gray-400">No CV uploaded</p>
-                               )}
-                   
-                               {coverLetterFileUrls.length > 0 ? (
-                                 <button
-                                   onClick={() => openFilesPreview(coverLetterFileUrls)}
-                                   className="inline-block mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
-                                 >
-                                   📑 Open Cover Letter
-                                 </button>
-                               ) : (
-                                 <p className="text-sm text-gray-400">No Cover Letter uploaded</p>
-                               )}
-                             </div>
-                           </div>
-                         </>
-                    ) : (
-                        <div className="text-center text-white bg-white/10 p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
-                          <h3 className="text-lg font-semibold flex items-center gap-2">
-                            📌 Recruitment
-                          </h3> 
-                          <p className="text-md text-gray-300 flex items-center gap-2">
-                             {meeting.recruitmentName || "-"}
-                          </p>
-
+                      <>
+                        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                          <BiUser className="text-xl text-white" /> Applicant:
+                        </h3>
+                        <p className="text-sm text-gray-300">{meeting.meetingApplicant.name || '-'} {meeting.meetingApplicant.surname || '-'}</p>
+                        <p className="text-sm text-gray-300 flex items-center gap-2">
+                          <BiEnvelope className="text-lg text-white" /> {meeting.meetingApplicant.email || '-'}
+                        </p>
+              
+                        {/* 📄 Dokumenty */}
+                        <div className="mt-3">
                           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                            💼 Job Title:
+                            <BiFile className="text-xl text-white" /> Documents:
                           </h3>
-                          <p className="text-md text-gray-300 flex items-center gap-2">
-                             {meeting.recruitmentjobTittle || "-"}
-                          </p>
+                          <div className="flex flex-col space-y-2">
+                            {cvFileUrls.length > 0 ? (
+                              <button
+                                onClick={() => openFilesPreview(cvFileUrls)}
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
+                              >
+                                <BiFile className="text-lg" /> Open CV
+                              </button>
+                            ) : (
+                              <p className="text-sm text-gray-400">No CV uploaded</p>
+                            )}
+              
+                            {coverLetterFileUrls.length > 0 ? (
+                              <button
+                                onClick={() => openFilesPreview(coverLetterFileUrls)}
+                                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
+                              >
+                                <BiFile className="text-lg" /> Open Cover Letter
+                              </button>
+                            ) : (
+                              <p className="text-sm text-gray-400">No Cover Letter uploaded</p>
+                            )}
+                          </div>
                         </div>
+                      </>
+                    ) : (
+                      <div className="text-center text-white bg-white/10 p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <BiCalendar className="text-xl text-white" /> Recruitment
+                        </h3>
+                        <p className="text-md text-gray-300">{meeting.recruitmentName || "-"}</p>
+              
+                        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                          <BiBriefcase className="text-xl text-white" /> Job Title:
+                        </h3>
+                        <p className="text-md text-gray-300">{meeting.recruitmentjobTittle || "-"}</p>
+                      </div>
                     )}
                   </div>
                 </div>
               );
+
+              
             })
           ) : (
             <p className="text-white">No meetings scheduled for this day.</p>

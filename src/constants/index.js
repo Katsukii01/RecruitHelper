@@ -94,71 +94,139 @@ export const NavLinks = [
 
   export const HelpLinks = [
     {
-      id: "Overview",
-      title: "Overview",
+      id: "CreatingRecruitment",
+      title: "Creating Recruitment",
     },
     {
-      id: "ApplicantsStages",
-      title: "Applicants Stages",
+      id: "RecruitmentChooseMethod",
+      title: "Recruitment Choose Method",
     },
     {
-      id: "ApplicantsOfferRanking",
-      title: "Cv Ranking",
+      id: "RecruitmentAddApplicantsManually",
+      title: "Recruitment Add Applicants Manually",
     },
     {
-      id: "Tasks",
-      title: "Tasks",
+      id: "RecruitmentAddApplicantsFromFile",
+      title: "Recruitment Add Applicants From File",
     },
     {
-      id: "TasksPoints",
-      title: "Tasks Points",
+      id: "RecruitmentOverview",
+      title: "Recruitment Overview",
     },
     {
-      id: "MeetingSessions",
-      title: "Meeting Sessions",
+      id: "RecruitmentApplicantsStages",
+      title: "Recruitment Applicants Stages",
     },
     {
-      id: "Meetings",
-      title: "Meetings",
+      id: "RecruitmentApplicantsManage",
+      title: "Recruitment Applicants Manage",
     },
     {
-      id: "MeetingsPoints",
-      title: "Meetings Points",
-    },
-
-    {
-      id: "CoverLettersAnalysis",
-      title: "Cover Letters Analysis",
+      id: "RecruitmentTasks",
+      title: "Recruitment Tasks",
     },
     {
-      id: "CoverLettersPoints",
-      title: "Cover Letters Points",
+      id: "RecruitmentTasksPoints",
+      title: "Recruitment Tasks Points",
     },
     {
-      id: "AdnationalPoints",
-      title: "Adnational Points",
+      id: "RecruitmentMeetingsSessions",
+      title: "Recruitment Meetings Sessions",
     },
     {
-      id: "FinalRanking",
-      title: "Final Ranking",
+      id: "RecruitmentMeetings",
+      title: "Recruitment Meetings",
     },
     {
-      id: "FinishRecruitment",
-      title: "Finish Recruitment",
-    },    
+      id: "RecruitmentMeetingsPoints",
+      title: "Recruitment Meetings Points",
+    },
     {
-      id: "ManageApplicants",
-      title: "Manage Applicants",
+      id: "RecruitmentCoverLettersAnalysis",
+      title: "Recruitment Cover Letters Analysis",
+    },
+    {
+      id: "RecruitmentCoverLettersPoints",
+      title: "Recruitment Cover Letters Points",
+    },
+    {
+      id: "RecruitmentAdnationalPoints",
+      title: "Recruitment Adnational Points",
+    },
+    {
+      id: "RecruitmentFinalRanking",
+      title: "Recruitment Final Ranking",
+    },
+    {
+      id: "RecruitmentFinish",
+      title: "Recruitment Finish",
     },
     {
       id: "RecruitmentEdit",
-      title: "Edit Recruitment",
+      title: "Recruitment Edit",
     },
     {
-      id: "DeleteRecruitment",
-      title: "Delete Recruitment",
+      id: "RecruitmentDelete",
+      title: "Recruitment Delete",
     },
+    {
+      id: "RecruitmentsList",
+      title: "Recruitments List",
+    },
+    {
+      id: "ApplicationStages",
+      title: "Application Stages",
+    },
+    {
+      id: "SignIn",
+      title: "Sign In",
+    },
+    {
+      id: "SignUp",
+      title: "Sign Up",
+    },
+    {
+      id: "HomePage",
+      title: "Home Page",
+    },
+    {
+      id: "EmailAccounts",
+      title: "Email Accounts",
+    },
+    {
+      id: "GoogleAccounts",
+      title: "Google Accounts",
+    },
+    {
+      id: "Statistics",
+      title: "Statistics",
+    },
+    {
+      id: "MeetingsCalendar",
+      title: "Meetings Calendar",
+    },
+    {
+      id: "RecruitmentsBox",
+      title: "Recruitments",
+    },
+    {
+      id: "StatisticsExplained",
+      title: "Statistics Explained",
+    },
+    {
+      id: "StatisticsKnowHow",
+      title: "Statistics Know-How",
+    },
+    {
+      id: "Applications",
+      title: "Applications",
+    },
+    {
+      id: "ApplyForJob",
+      title: "Apply For Job",
+    }
   ];
+  
 
   export const existingLanguages = [
     "afrikaans",
@@ -233,3 +301,5 @@ export const NavLinks = [
     "yoruba",
   ];
   
+
+

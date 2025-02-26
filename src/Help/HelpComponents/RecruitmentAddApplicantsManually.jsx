@@ -2,7 +2,7 @@ import React from 'react';
 import { DsectionWrapper } from '../../hoc';
 
 
-const BaseHelp = () => {
+const RecruitmentAddApplicantsManually = () => {
 
   return (
     <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
@@ -15,5 +15,4 @@ const BaseHelp = () => {
   )
 }
 
-export default  DsectionWrapper(BaseHelp, 'BaseHelp')
-
+export default  DsectionWrapper(RecruitmentAddApplicantsManually, 'RecruitmentAddApplicantsManually')

@@ -1,6 +1,7 @@
 import React from 'react';
 import { styles } from '../styles';
 import { motion } from 'framer-motion';
+import { HiUser, HiChevronDoubleRight, HiOutlineDocumentText, HiCog } from "react-icons/hi2";
 
 const Hero = () => {
   return (
@@ -10,7 +11,7 @@ const Hero = () => {
       {/* Header Section */}
       <div className="text-center">
       <h1 className={`${styles.heroHeadText} text-snow`}>
-        Welcome to <span className="bg-clip-text bg-gradient-to-br from-teal-200 to-cyan-600 border-text">RecruitHelper</span>
+        Welcome to <span className="bg-clip-text bg-gradient-to-br to-teal-500 from-sky  border-text">RecruitHelper</span>
       </h1>
       <p className={`${styles.heroSubText} mt-4 text-breeze`}>
         Empowering you to navigate your recruitment process with our innovative 
@@ -21,64 +22,67 @@ const Hero = () => {
     </div>
 
 
-      {/* Animation Section */}
-      <div className="flex items-center xl:gap-12 gap-2 relative justify-center xl:h-1/2 md:h-1/3 ">
-        {/* Person Icon */}
-        <div className="flex flex-col items-center">
-          <div className="xl:w-36 xl:h-36 md:h-28 md:w-28 h-16 w-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="p-2">
-          <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+        {/* SVG Gradient Definitions */}
+        <svg width="0" height="0">
+          <defs>
+            <linearGradient id="userGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop stopColor="#3b82f6" offset="0%" /> {/* Blue */}
+              <stop stopColor="#06b6d4" offset="100%" /> {/* Cyan */}
+            </linearGradient>
+            <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop stopColor="#3b82f6" offset="0%" /> {/* Blue */}
+              <stop stopColor="#ffffff" offset="100%" /> {/* white */}
+            </linearGradient>
+            <linearGradient id="pdfGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop stopColor="#3b82f6" offset="0%" /> {/* blue */}
+              <stop stopColor="#1e3a8a" offset="100%" /> {/* dark blue  */}
+            </linearGradient>
+            <linearGradient id="cogGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop stopColor="#1e3a8a" offset="0%" /> {/* Dark Blue */}
+              <stop stopColor="#14b8a6" offset="100%" /> {/* Teal */}
+            </linearGradient>
+          </defs>
         </svg>
-          </div>
-        </div>
 
-        {/* Arrow Animation */}
-        <div className="flex flex-col items-center">
-          <div className="xl:w-36 xl:h-36  h-16 w-16 md:h-28 md:w-28  flex items-center justify-center">
-              <div className="  animate-moveRight-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="xl:size-40 size-20">
-              <path fillRule="evenodd" d="M15.28 9.47a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L13.69 10 9.97 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25ZM6.03 5.22l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L8.69 10 4.97 6.28a.75.75 0 0 1 1.06-1.06Z" clipRule="evenodd" />
-            </svg>
+        {/* Animation Section */}
+        <div className="flex items-center xl:gap-16 md:gap-10 gap-4 relative justify-center xl:h-1/2 md:h-1/3">
+          {/* User Icon */}
+          <div className="flex flex-col items-center">
+            <HiUser className="xl:text-9xl md:text-7xl text-5xl" style={{ fill: "url(#userGradient)" }} />
+          </div>
+
+          {/* Double Arrow Animation */}
+          <div className="flex flex-col items-center">
+            <div className="animate-moveRight-1">
+              <HiChevronDoubleRight className="xl:text-9xl md:text-7xl text-5xl" style={{ fill: "url(#arrowGradient)" }} />
             </div>
           </div>
-        </div>
 
-        {/* Document Icon */}
-        <div className="flex flex-col items-center">
-          <div className="xl:w-36 xl:h-36  h-16 w-16  md:h-28 md:w-28  bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="p-2">
-            <path fillRule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm4.75 11.25a.75.75 0 0 0 1.5 0v-2.546l.943 1.048a.75.75 0 1 0 1.114-1.004l-2.25-2.5a.75.75 0 0 0-1.114 0l-2.25 2.5a.75.75 0 1 0 1.114 1.004l.943-1.048v2.546Z" clipRule="evenodd" />
-          </svg>
+          {/* PDF Icon */}
+          <div className="flex flex-col items-center">
+            <HiOutlineDocumentText className="xl:text-9xl md:text-7xl text-5xl" style={{ fill: "url(#pdfGradient)" }} />
           </div>
-        </div>
 
-        {/* Arrow Animation */}
-        <div className="flex flex-col items-center">
-          <div className="xl:w-36 xl:h-36 h-16 w-16 md:h-28 md:w-28 flex items-center justify-center">
-              <div className="animate-moveRight-2 opacity-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="xl:size-40 size-20">
-              <path fillRule="evenodd" d="M15.28 9.47a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L13.69 10 9.97 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25ZM6.03 5.22l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L8.69 10 4.97 6.28a.75.75 0 0 1 1.06-1.06Z" clipRule="evenodd" />
-            </svg>
+          {/* Second Double Arrow Animation */}
+          <div className="flex flex-col items-center">
+            <div className="animate-moveRight-2">
+              <HiChevronDoubleRight className="xl:text-9xl md:text-7xl text-5xl" style={{ fill: "url(#arrowGradient)" }} />
             </div>
           </div>
-        </div>
 
-        {/* Cog Icon */}
-        <div className="flex flex-col items-center">
-          <div className="xl:w-36 xl:h-36  h-16 w-16 md:h-28 md:w-28   bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center animate-spinSlow">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="p-2">
-            <path fillRule="evenodd" d="M7.84 1.804A1 1 0 0 1 8.82 1h2.36a1 1 0 0 1 .98.804l.331 1.652a6.993 6.993 0 0 1 1.929 1.115l1.598-.54a1 1 0 0 1 1.186.447l1.18 2.044a1 1 0 0 1-.205 1.251l-1.267 1.113a7.047 7.047 0 0 1 0 2.228l1.267 1.113a1 1 0 0 1 .206 1.25l-1.18 2.045a1 1 0 0 1-1.187.447l-1.598-.54a6.993 6.993 0 0 1-1.929 1.115l-.33 1.652a1 1 0 0 1-.98.804H8.82a1 1 0 0 1-.98-.804l-.331-1.652a6.993 6.993 0 0 1-1.929-1.115l-1.598.54a1 1 0 0 1-1.186-.447l-1.18-2.044a1 1 0 0 1 .205-1.251l1.267-1.114a7.05 7.05 0 0 1 0-2.227L1.821 7.773a1 1 0 0 1-.206-1.25l1.18-2.045a1 1 0 0 1 1.187-.447l1.598.54A6.992 6.992 0 0 1 7.51 3.456l.33-1.652ZM10 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
-          </svg>
+          {/* Cog Icon (Spinning) */}
+          <div className="flex flex-col items-center animate-spinSlow">
+            <HiCog className="xl:text-9xl md:text-7xl text-5xl" style={{ fill: "url(#cogGradient)" }} />
           </div>
         </div>
-      </div>
+
       
     </div>
 
 
       <div className='absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center'>
         <a href='#About'>
-          <div className='w-[35px] h-[64px] rounded-3xl border-4 border-mint flex justify-center items-start p-2'>
+          <div className='w-[35px] h-[64px] rounded-3xl border-4 border-white flex justify-center items-start p-2 bg-gradient-to-br from-blue-500 to-cyan-500  '>
             <motion.div
               animate={{
                 y: [0, 24, 0],
@@ -88,7 +92,7 @@ const Hero = () => {
                 repeat: Infinity,
                 repeatType: 'loop',
               }}
-              className='w-3 h-3 rounded-full bg-mint mb-1'
+              className='w-3 h-3 rounded-full bg-white mb-1'
             />
           </div>
         </a>

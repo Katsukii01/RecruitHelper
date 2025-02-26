@@ -1,67 +1,158 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
-import {Navbar, BaseHelp } from "./HelpComponents";
+import { useLocation } from "react-router-dom";
+import {
+  Navbar,
+  CreatingRecruitment,
+  RecruitmentChooseMethod,
+  RecruitmentAddApplicantsManually,
+  RecruitmentAddApplicantsFromFile,
+  RecruitmentOverview,
+  RecruitmentApplicantsStages,
+  RecruitmentApplicantsManage,
+  RecruitmentTasks,
+  RecruitmentTasksPoints,
+  RecruitmentMeetingsSessions,
+  RecruitmentMeetings,
+  RecruitmentMeetingsPoints,
+  RecruitmentCoverLettersAnalysis,
+  RecruitmentCoverLettersPoints,
+  RecruitmentAdnationalPoints,
+  RecruitmentFinalRanking,
+  RecruitmentFinish,
+  RecruitmentEdit,
+  RecruitmentDelete,
+  RecruitmentsList,
+  ApplicationStages,
+  SignIn,
+  SignUp,
+  HomePage,
+  EmailAccounts,
+  GoogleAccounts,
+  Statistics,
+  MeetingsCalendar,
+  Recruitments,
+  StatisticsExplained,
+  StatisticsKnowHow,
+  Applications,
+  ApplyForJob,
+} from "./HelpComponents";
 
 const Help = () => {
-  const [hash, setHash] = useState(window.location.hash.replace("#", "") || "Overview");
+  const [hash, setHash] = useState(
+    window.location.hash.replace("#", "") || "Overview"
+  );
   const location = useLocation();
-  
+
   useEffect(() => {
     const handleHashChange = () => {
-      setHash(window.location.hash.replace("#", "") || "");
+      setHash(window.location.hash.replace("#", "") || "Overview");
     };
 
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-
   const renderComponent = () => {
     switch (hash) {
-      // Applicants - zawsze pokazujemy oba komponenty
-      case "Applicants":
-      case "ApplicantsStages":
+      // Recruitment
+      case "CreatingRecruitment":
+      case "RecruitmentChooseMethod":
+      case "RecruitmentAddApplicantsManually":
+      case "RecruitmentAddApplicantsFromFile":
+      case "RecruitmentOverview":
+      case "RecruitmentApplicantsStages":
+      case "RecruitmentApplicantsManage":
+      case "RecruitmentTasks":
+      case "RecruitmentTasksPoints":
+      case "RecruitmentMeetingsSessions":
+      case "RecruitmentMeetings":
+      case "RecruitmentMeetingsPoints":
+      case "RecruitmentCoverLettersAnalysis":
+      case "RecruitmentCoverLettersPoints":
+      case "RecruitmentAdnationalPoints":
+      case "RecruitmentFinalRanking":
+      case "RecruitmentFinish":
+      case "RecruitmentEdit":
+      case "RecruitmentDelete":
+        return (
+          <>
+            <CreatingRecruitment />
+            <RecruitmentChooseMethod />
+            <RecruitmentAddApplicantsManually />
+            <RecruitmentAddApplicantsFromFile />
+            <RecruitmentOverview />
+            <RecruitmentApplicantsStages />
+            <RecruitmentApplicantsManage />
+            <RecruitmentTasks />
+            <RecruitmentTasksPoints />
+            <RecruitmentMeetingsSessions />
+            <RecruitmentMeetings />
+            <RecruitmentMeetingsPoints />
+            <RecruitmentCoverLettersAnalysis />
+            <RecruitmentCoverLettersPoints />
+            <RecruitmentAdnationalPoints />
+            <RecruitmentFinalRanking />
+            <RecruitmentFinish />
+            <RecruitmentEdit />
+            <RecruitmentDelete />
+          </>
+        );
+
+      // Applications
+      case "ApplicationStages":
+      case "RecruitmentsList":
+      case "ApplyForJob":
+        return (
+          <>
+            <ApplyForJob />
+            <RecruitmentsList />
+            <ApplicationStages />
+          </>
+        );
+        
+
+      // Authentication
+      case "SignIn":
+      case "SignUp":
+      case "HomePage":
+      case "EmailAccounts":
+      case "GoogleAccounts":
         return (
             <>
-  
+              <SignIn />
+              <SignUp />
+              <HomePage />
+              <EmailAccounts />
+              <GoogleAccounts />
             </>
-          );
-  
-      // Tasks - zawsze pokazujemy oba komponenty
-      case "Tasks":
-      case "TasksPoints":
+        ) 
+
+      //Dashboard
+      case "Statistics":
+      case "MeetingsCalendar":
+      case "RecruitmentsBox":
+      case "Applications":
         return (
           <>
-
+            <Statistics />
+            <MeetingsCalendar />
+            <Recruitments />
+            <Applications />
           </>
         );
-  
-      // Meetings - zawsze pokazujemy wszystkie komponenty z grupy
-      case "Meetings":
-      case "MeetingSessions":
-      case "MeetingsPoints":
+
+
+      // Statistics
+      case "StatisticsExplained":
+      case "StatisticsKnowHow":
         return (
           <>
-
+          <StatisticsExplained />
+          <StatisticsKnowHow />
           </>
         );
-  
-      // Cover Letters - zawsze pokazujemy oba komponenty
-      case "CoverLetters":
-      case "CoverLettersAnalysis":
-      case "CoverLettersPoints":
-        return (
-          <>
-
-          </>
-        )
-
-      // Domyślnie przekierowanie na Overview
-      default:
-        return <BaseHelp />;
     }
   };
-  
 
   return (
     <div className="w-full bg-glass flex min-h-screen relative z-0">

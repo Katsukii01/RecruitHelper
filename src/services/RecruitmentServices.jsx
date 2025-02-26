@@ -21,6 +21,7 @@ import {
 import sendEmail from "./MailerServices";
 
 
+
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
   const emailsCollection = collection(db, "emails");
@@ -145,6 +146,7 @@ export const addRecruitment = async (recruitmentData) => {
       ...recruitmentData,
       userId,
     }); // Add userId to the recruitment document
+    await updateUserStat(userId, "AllTimeRecruitmentsCount", "increment");
     return docRef.id;
   } catch (error) {
     console.error("Error adding recruitment:", error.message);
@@ -192,7 +194,7 @@ export const getPublicRecruitments = async (searchTerm = "") => {
     }
 
     const userId = user.uid;
-
+    console.log("userId", userId);
     const recruitmentCollection = collection(db, "recruitments");
     const q = query(recruitmentCollection);
     const snapshot = await getDocs(q);
@@ -209,9 +211,13 @@ export const getPublicRecruitments = async (searchTerm = "") => {
           (applicant) => applicant.userUid === userId
         );
 
+        const isOwner = recruitmentData.userId === userId;
+        console.log(isOwner);
+
         return {
           id: doc.id,
           isAlreadyApplicant,
+          isOwner,
           name: recruitmentData.name,
           status: recruitmentData.status,
           jobTittle: recruitmentData.jobTittle,
@@ -226,7 +232,7 @@ export const getPublicRecruitments = async (searchTerm = "") => {
       .filter(
         (recruitment) =>
           recruitment.status === "Public" &&
-          recruitment.userId !== userId && // Ensure the recruitment is not owned by the current user
+          !recruitment.isOwner && // Ensure the recruitment is not owned by the current user
           !recruitment.isAlreadyApplicant && // Ensure the current user is not already an applicant
           Object.values(recruitment)
             .join(" ")
@@ -324,11 +330,11 @@ export const deleteRecruitment = async (recruitmentId) => {
     // Delete all CV and Cover Letter files for each applicant
     const applicants = recruitmentData.Applicants || [];
     for (const applicant of applicants) {
+
       // Call deleteOldFiles for CVs
       if (applicant.cvFileUrls && applicant.cvFileUrls.length > 0) {
         await deleteOldFiles(
-          { cvFileUrls: applicant.cvFileUrls },
-          recruitmentId,
+          applicant,
           "Cv"
         );
       }
@@ -340,12 +346,10 @@ export const deleteRecruitment = async (recruitmentId) => {
         applicant.coverLetterFileUrls.length > 0
       ) {
         await deleteOldFiles(
-          { coverLetterFileUrls: applicant.coverLetterFileUrls },
-          recruitmentId,
+          applicant,
           "CoverLetter"
         );
       }
-
     }
 
     // Finally, delete the recruitment document itself
@@ -398,6 +402,15 @@ export const addApplicant = async (
       (applicant) => applicant.id === applicantData.id
     );
 
+    if(applicantIndex === -1){
+          // Get highest id from applicants
+          const highestId = currentApplicants.reduce((maxId, applicant) => 
+            applicant.id > maxId ? applicant.id : maxId, 0
+          ); 
+
+          applicantData.id = highestId + 1;
+    }
+
     console.log("applicantData", applicantData);
     console.log("aplicant index", applicantIndex);
 
@@ -420,12 +433,7 @@ export const addApplicant = async (
             "You need to cahnge recruitment to private  to add applicants by yourself"
           );
         }else{
-          // Get highest id from applicants
-          const highestId = currentApplicants.reduce((maxId, applicant) => 
-            applicant.id > maxId ? applicant.id : maxId, 0
-          ); 
 
-          applicantData.id = highestId + 1;
         }
       }
     }
@@ -449,7 +457,6 @@ export const addApplicant = async (
         // Remove old CV and Cover Letter files from storage (optional, if needed)
         await deleteOldFiles(
           currentApplicants[applicantIndex],
-          recruitmentId,
           "Cv"
         );
       }
@@ -457,9 +464,9 @@ export const addApplicant = async (
       const cvFileUploadPromises = cvFilesArray.map((cvFileBase64, index) => {
         const cvFile = base64ToFile(
           cvFileBase64,
-          `${applicantData.id}_cv_${index + 1}.webp`
+          `${applicantData.id}_cv_${index + 1}.png`
         );
-        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${index + 1}.webp`;
+        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${index + 1}.png`;
 
         return uploadToStorage(cvFile, cvFilePath);
       });
@@ -486,7 +493,6 @@ export const addApplicant = async (
           // Remove old CV and Cover Letter files from storage (optional, if needed)
           await deleteOldFiles(
             currentApplicants[applicantIndex],
-            recruitmentId,
             "CoverLetter"
           );
         }
@@ -512,7 +518,6 @@ export const addApplicant = async (
         if (coverLetterUrls && coverLetterUrls.length > 0) {
           await deleteOldFiles(
             currentApplicants[applicantIndex],
-            recruitmentId,
             "CoverLetter"
           );
         }
@@ -553,31 +558,40 @@ export const addApplicant = async (
 };
 
 // Function to delete old CV and cover letter files from Firebase Storage
+// Function to delete old CV and cover letter files from Firebase Storage
 const deleteOldFiles = async (oldApplicantData, type) => {
   try {
     if (type === "Cv") {
-      // Poprawione na '===' do porównania
+      if (!oldApplicantData.cvFileUrls || oldApplicantData.cvFileUrls.length === 0) {
+        return;
+      }
+
       // Delete old CV files from storage
       for (const cvFileUrl of oldApplicantData.cvFileUrls) {
         const cvFilePath = cvFileUrl.split("?")[0]; // Get the file path from the URL
         const cvRef = ref(storage, cvFilePath);
         await deleteObject(cvRef);
-        console.log(`Deleted old CV file: ${cvFilePath}`);
       }
     } else if (type === "CoverLetter") {
-      // Poprawione na '===' do porównania
+
+      if (!oldApplicantData.coverLetterFileUrls || oldApplicantData.coverLetterFileUrls.length === 0) {
+        return;
+      }
+
       // Delete old Cover Letter files from storage
       for (const coverLetterFileUrl of oldApplicantData.coverLetterFileUrls) {
         const coverLetterFilePath = coverLetterFileUrl.split("?")[0]; // Get the file path from the URL
         const coverLetterRef = ref(storage, coverLetterFilePath);
         await deleteObject(coverLetterRef);
-        console.log(`Deleted old Cover Letter file: ${coverLetterFilePath}`);
       }
+    } else {
     }
+
   } catch (error) {
-    console.error("Error deleting old files:", error.message);
+    console.error("Error deleting old files:", error);
   }
 };
+
 
 // 6. Delete an applicant from a recruitment (with CV and optional Cover Letter)
 export const deleteApplicant = async (recruitmentId, applicantId) => {
@@ -3051,7 +3065,6 @@ export const closeRecruitment = async (recruitmentId) => {
         }
 
       }
-
       // Delete recruitment
       await deleteRecruitment(recruitmentId);
   } catch (error) {
