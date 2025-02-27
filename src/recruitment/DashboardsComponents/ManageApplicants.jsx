@@ -177,7 +177,7 @@ const ManageApplicants = ({ id }) => {
     </section>;
 
   return (
-    <section className="h-auto  relative w-full mx-auto bg-glass card ">
+    <section className="h-auto min-h-screen-80 relative w-full mx-auto bg-glass card ">
       <div>
         <h1 className="text-2xl font-bold text-white">Manage Applicants</h1>
 

@@ -109,7 +109,7 @@ const ApplicantsStages = ( {id}) => {
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-1">Applicants Stages</h1>
   
-    <div className='overflow-auto h-screen-60 inner-shadow'>
+    <div className='overflow-auto h-screen-67 bg-gray-900 inner-shadow '>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 p-2">
         {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 border-2 border-blue-200 overflow-auto `}>

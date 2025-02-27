@@ -136,7 +136,7 @@ const CoverLettersPoints =  ({ id })=> {
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
       <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Points</h1>
 
-      <div className="h-screen-80 overflow-auto">
+      <div className="h-screen-67 overflow-auto">
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white">

@@ -188,7 +188,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                         </div>
                       </>
                     ) : (
-                      <div className="text-center text-white bg-glass-dark p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
+                      <div className="text-center text-white bg-glass-dark border border-blue-400 p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
                         <h3 className="text-lg font-semibold flex items-center gap-2">
                           <BiBook className="text-xl text-blue-500" /> Recruitment
                         </h3>

@@ -124,7 +124,7 @@ const FinalRanking = ({ id }) => {
         </section>); 
 
   return (
-    <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
+    <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-2xl font-bold text-white mb-2 ">
             Final Ranking
         </h1>
@@ -164,10 +164,10 @@ const FinalRanking = ({ id }) => {
 
 
 
-    <div className='overflow-auto min-h-screen-80 inner-shadow p-2'>
-      <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
+    <div className='overflow-auto h-screen-55 bg-gray-900 p-2 rounded-xl'>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3 justify-items-center m-1 ">
         {paginatedApplicants.map((applicant, index) => (
-          <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.totalScore)} overflow-auto `}>
+          <div key={applicant.id} className={`mb-6 card rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.totalScore)} overflow-auto `}>
 
             <div className="flex flex-col">
               <div className="flex items-center gap-2 font-bold text-xl text-white">
