@@ -160,7 +160,7 @@ const ManageApplicants = ({ id }) => {
 
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
-  if (!applicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
+  if (!applicants.length) return <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
     <h1 className="text-2xl font-bold text-white mb-4">Applicants</h1>
           {/* Add Applicant Button */}
           <div className="flex justify-end mb-4">

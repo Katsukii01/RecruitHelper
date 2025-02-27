@@ -26,14 +26,9 @@ import {
   SignIn,
   SignUp,
   HomePage,
-  EmailAccounts,
-  GoogleAccounts,
   Statistics,
   MeetingsCalendar,
   Recruitments,
-  StatisticsExplained,
-  StatisticsKnowHow,
-  Applications,
   ApplyForJob,
 } from "./HelpComponents";
 
@@ -122,8 +117,6 @@ const Help = () => {
               <SignIn />
               <SignUp />
               <HomePage />
-              <EmailAccounts />
-              <GoogleAccounts />
             </>
         ) 
 
@@ -131,24 +124,11 @@ const Help = () => {
       case "Statistics":
       case "MeetingsCalendar":
       case "RecruitmentsBox":
-      case "Applications":
         return (
           <>
             <Statistics />
             <MeetingsCalendar />
             <Recruitments />
-            <Applications />
-          </>
-        );
-
-
-      // Statistics
-      case "StatisticsExplained":
-      case "StatisticsKnowHow":
-        return (
-          <>
-          <StatisticsExplained />
-          <StatisticsKnowHow />
           </>
         );
     }

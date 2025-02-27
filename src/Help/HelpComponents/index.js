@@ -23,14 +23,9 @@ import ApplicationStages from './ApplicationStages';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import HomePage from './HomePage';
-import EmailAccounts from './EmailAccounts';
-import GoogleAccounts from './GoogleAccounts';
 import Statistics from './Statistics';
 import MeetingsCalendar from './MeetingsCalendar';
 import Recruitments from './Recruitments';
-import StatisticsExplained from './StatisticsExplained';
-import StatisticsKnowHow from './StatisticsKnowHow';
-import Applications from './Applications';
 import ApplyForJob from './ApplyForJob';
 
 export {  
@@ -59,13 +54,8 @@ export {
   SignIn, 
   SignUp, 
   HomePage, 
-  EmailAccounts, 
-  GoogleAccounts, 
   Statistics, 
   MeetingsCalendar, 
   Recruitments, 
-  StatisticsExplained, 
-  StatisticsKnowHow, 
-  Applications, 
   ApplyForJob 
 };

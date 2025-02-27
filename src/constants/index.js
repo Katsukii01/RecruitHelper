@@ -190,14 +190,6 @@ export const NavLinks = [
       title: "Home Page",
     },
     {
-      id: "EmailAccounts",
-      title: "Email Accounts",
-    },
-    {
-      id: "GoogleAccounts",
-      title: "Google Accounts",
-    },
-    {
       id: "Statistics",
       title: "Statistics",
     },

@@ -12,6 +12,7 @@ import {
 } from "../ExcelExports"; // Importujemy funkcje
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaFileExport, FaDoorOpen, FaCheckCircle } from "react-icons/fa";
 
 const FinishRecruitment = ({ id }) => {
   const [loading, setLoading] = useState(false);
@@ -141,65 +142,79 @@ const FinishRecruitment = ({ id }) => {
   };
 
   return (
-    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Finish Recruitment</h1>
+    <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card overflow-auto">
+  {/* 🔹 Nagłówek sekcji */}
+  <h1 className="text-3xl font-extrabold text-white mb-6 text-center">Finish Recruitment</h1>
 
-      {/* 📌 Przycisk eksportu do Excela */}
-      <button
+  {/* 🔹 Ostrzeżenie */}
+  <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-3 rounded-md mb-6 text-center font-medium animate-pulse">
+    Once you close the recruitment, you will lose all submitted data! Remember to export before closing.
+  </p>
+
+  {/* 🔹 Kontenery na przyciski */}
+  <div className="flex flex-col md:flex-row justify-center gap-4 mb-8">
+        <button
         onClick={exportDataToExcel}
-        className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
+        className="flex items-center gap-2 p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
         disabled={loading || closing}
       >
-        {loading ? "Exporting..." : "Export Recruitment Data to Excel"}
+        <FaFileExport className="size-5" />
+        {loading ? "Exporting..." : "Export Recruitment Data"}
       </button>
+
       <button
         onClick={handleCloseRecruitment}
-        className="p-2  rounded-lg bg-red-600 text-white font-medium border border-white shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
+        className="flex items-center gap-2 p-2 rounded-lg bg-red-600 text-white font-medium border border-white shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
         disabled={closing || loading}
       >
+        <FaDoorOpen className="size-5" />
         {closing ? "Closing..." : "Close Recruitment"}
       </button>
+  </div>
 
-      {/* 📌 Formularz dodawania opinii */}
-      <div className="bg-glass p-6 rounded-lg shadow-lg ">
-      <div className="flex-col space-y-8">
-        <h2 className="text-lg font-semibold mb-4">Leave a Review</h2>
+{/* 🔹 Formularz opinii */}
+<div className="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700">
+  <h2 className="text-3xl font-extrabold text-white text-center mb-6">Leave a Review</h2>
 
-        <div className="flex flex-col space-y-2">
-          <label className="block text-sm font-medium text-gray-300">
-            Opinion
-          </label>
-        <textarea
-          name="opinion"
-          value={opinionData.opinion}
-          onChange={handleInputChange}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-          placeholder="Write your opinion..."
-          rows="8"
-        ></textarea>
-         {errors.opinion && (
-            <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-              {errors.opinion}
-            </p>
-          )}
-        </div>
+  {/* 🔹 Opinia */}
+  <div className="mb-5">
+    <label className="block text-sm font-medium text-gray-400 mb-2">Your Opinion</label>
+    <textarea
+      name="opinion"
+      value={opinionData.opinion}
+      onChange={handleInputChange}
+      className="w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      placeholder="Write your opinion..."
+      rows="5"
+    />
+    {errors.opinion && (
+      <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 rounded-md mt-2 animate-pulse">
+        {errors.opinion}
+      </p>
+    )}
+  </div>
 
-        <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Rating (0-5 stars)</label>
-          <StarRating onChange={(value) => setOpinionData((prev) => ({ ...prev, stars: value }))} stars={opinionData.stars} />
-        </div>
+  {/* 🔹 Ocena gwiazdkowa */}
+  <div className="mb-6 ">
+    <label className="block text-sm font-medium text-gray-400 mb-2">Rating (0-5 stars)</label>
+    <StarRating onChange={(value) => setOpinionData((prev) => ({ ...prev, stars: value }))} stars={opinionData.stars} />
+  </div>
 
-        </div>
+  {/* 🔹 Przycisk wysyłania */}
+  <div className="text-center">
+    <button
+      onClick={submitOpinion}
+      className="flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 
+      transition focus:outline-none focus:ring-2 focus:ring-green-400 border border-white"
+    >
+      <FaCheckCircle className="size-5" />
+      Submit Opinion
+    </button>
+  </div>
+</div>
 
+</section>
 
-        <button
-          onClick={submitOpinion}
-          className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white mt-8"
-        >
-          Submit Opinion
-        </button>
-      </div>
-    </section>
   );
 };
 
@@ -230,7 +245,7 @@ const StarRating = ({ onChange, stars }) => {
   };
 
   return (
-    <div className="flex text-yellow-300 text-4xl space-x-1">
+    <div className="flex text-4xl space-x-1 ">
       {[...Array(5)].map((_, index) => {
         const starValue = index + 1;
         const halfStarValue = index + 0.5;
@@ -238,17 +253,17 @@ const StarRating = ({ onChange, stars }) => {
         return (
           <span
             key={index}
-            className="relative cursor-pointer"
+            className="relative cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-110 drop-shadow-lg shadow-yellow-500/50"
             onMouseMove={(event) => handleMouseMove(event, index)}
             onMouseLeave={() => setHover(rating)} // Po opuszczeniu wraca do wybranej wartości
             onClick={(event) => handleClick(event, index)}
           >
             {hover >= starValue ? (
-              <FaStar />
+              <FaStar className="text-yellow-400" />
             ) : hover >= halfStarValue ? (
-              <FaStarHalfAlt />
+              <FaStarHalfAlt className="text-yellow-400" />
             ) : (
-              <FaRegStar />
+              <FaRegStar className="text-gray-400" />
             )}
           </span>
         );

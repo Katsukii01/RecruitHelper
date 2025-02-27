@@ -31,11 +31,17 @@ const Opinions = () => {
       const fullStars = Math.floor(rating);
       const halfStar = rating % 1 !== 0;
       return (
-          <div className="flex text-yellow-400 text-3xl mt-2">
-              {[...Array(fullStars)].map((_, i) => <FaStar key={i} />)}
-              {halfStar && <FaStarHalfAlt />}
-              {[...Array(5 - fullStars - (halfStar ? 1 : 0))].map((_, i) => <FaRegStar key={i + fullStars + 1} />)}
-          </div>
+            <div className="flex text-yellow-400 text-3xl mt-2 gap-1">
+            {[...Array(fullStars)].map((_, i) => (
+                <FaStar key={i} className="drop-shadow-lg shadow-yellow-500/50 transition-all duration-200 ease-in-out hover:scale-110" />
+            ))}
+            {halfStar && (
+                <FaStarHalfAlt className="drop-shadow-lg shadow-yellow-500/50 transition-all duration-200 ease-in-out hover:scale-110" />
+            )}
+            {[...Array(5 - fullStars - (halfStar ? 1 : 0))].map((_, i) => (
+                <FaRegStar key={i + fullStars + 1} className="text-gray-400 drop-shadow-lg shadow-gray-500/50 transition-all duration-200 ease-in-out hover:scale-110" />
+            ))}
+            </div>
       );
   };
 
@@ -59,7 +65,7 @@ const Opinions = () => {
                     key={opinions.length} // Force re-render if data updates
                     modules={[Navigation, Pagination, Autoplay]}
                     spaceBetween={30}
-                    slidesPerView={1}
+                    slidesPerView={2}
                     loop={opinions.length > 1}
                     autoplay={{ delay: 4000, disableOnInteraction: false }}
                     navigation

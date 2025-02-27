@@ -11,6 +11,7 @@ import {
   updateTaskPoints,
   deleteTask,
 } from "../../services/RecruitmentServices";
+import { FaUser, FaEnvelope } from "react-icons/fa";
 
 const TasksPoints = ({ id, refresh }) => {
   const [loading, setLoading] = useState(true);
@@ -247,14 +248,14 @@ const TasksPoints = ({ id, refresh }) => {
 
   if (loading)
     return (
-      <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card ">
+      <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card mb-10">
         <Loader />
       </div>
     );
 
   if (!taskSessions.length)
     return (
-      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
         <h1 className="text-2xl font-bold text-white mb-4">Tasks Points</h1>
         <div className="flex justify-end mb-4">
           <button
@@ -271,7 +272,7 @@ const TasksPoints = ({ id, refresh }) => {
     );
 
   return (
-    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
+    <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card mb-10">
       <h1 className="text-2xl font-bold text-white mb-4">Tasks Points</h1>
       <div className="flex justify-end mb-4">
           <button
@@ -311,14 +312,21 @@ const TasksPoints = ({ id, refresh }) => {
                     index % 2 === 0 ? "bg-gray-700" : "bg-gray-800"
                   } text-center`}
                 >
-                  {/* Kolumna z danymi aplikanta */}
-                  <td className="px-4 py-2 border border-gray-700">
-                    <div className="max-h-[120px] overflow-y-auto">
-                      <div className="text-sm">{applicant.name}</div>
-                      <div className="text-sm">{applicant.surname}</div>
-                      <div className="text-sm">{applicant.email}</div>
+
+                {/* Kolumna z danymi aplikanta */}
+                <td className="px-4 py-2 border border-gray-700">
+                  <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1">
+                    
+                    <div className="text-sm flex items-center gap-2">
+                      <FaUser className="text-blue-400 size-4" /> {applicant.name} {applicant.surname}
                     </div>
-                  </td>
+
+                    <div className="text-sm flex items-center gap-2">
+                      <FaEnvelope className="text-gray-400 size-4" /> {applicant.email}
+                    </div>
+
+                  </div>
+                </td>
 
                   {/* Kolumny dla spotkań */}
                   {taskSessions.map((session) => {

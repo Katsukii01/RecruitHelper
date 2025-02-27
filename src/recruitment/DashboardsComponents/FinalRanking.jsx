@@ -4,6 +4,7 @@ import { getApplicantsWithOverallScore, changeCountStatus, getCountStatus } from
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
 import {CircularProgress} from '../';
+import { FaUser, FaEnvelope } from "react-icons/fa";
 
 const FinalRanking = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -163,13 +164,21 @@ const FinalRanking = ({ id }) => {
 
 
 
-    <div className='overflow-auto h-screen-80 inner-shadow p-2'>
+    <div className='overflow-auto min-h-screen-80 inner-shadow p-2'>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
         {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.totalScore)} overflow-auto `}>
-            <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
-                <p className="text-sm text-gray-500">{applicant.email}</p>
-            </h1>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 font-bold text-xl text-white">
+                <FaUser className="text-blue-400 size-5" />
+                {`${applicant.name} ${applicant.surname}`}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <FaEnvelope className="text-gray-500 size-4" />
+                {applicant.email}
+              </div>
+            </div>
 
             <hr className='w-full border-t-2 border-gray-300' />
             

@@ -25,11 +25,6 @@ const sections = [
     "name": "Dashboard", 
     "link": "/help#Statistics",
     "description": "Understand how to navigate your dashboard and access key features."
-  },
-  { 
-    "name": "Statistics", 
-    "link": "/help#StatisticsExplained",
-    "description": "Explore the statistics and analytics tools to gain insights into your hiring process."
   }
 ]
 
@@ -44,7 +39,7 @@ const KnowHow = () => {
         variants={fadeIn("", "", 0.3, 2)}
         className='mt-6 text-secondary text-xl max-w-3xl ml-4'
       >
-        Discover how to make the most of <span className="text-cyan-400 font-semibold">RecruitHelper</span>. Click on a section to access detailed guides and expert tips.
+        Discover how to make the most of RecruitHelper. Click on a section to access detailed guides and expert tips.
       </motion.p>
 
       {/* Cards Container */}
@@ -54,7 +49,7 @@ const KnowHow = () => {
             key={index}
             variants={fadeIn("", "", index * 0.2, 0.8)}
             whileHover={{ scale: 1.05, boxShadow: "0px 0px 20px rgba(0, 255, 255, 0.6)" }}
-            className='bg-gray-800 p-8 rounded-2xl shadow-xl text-center border border-gray-700 transition-transform flex flex-col items-center gap-6 w-80 h-64 shadow-[rgba(0,0,0,0.8)]'
+            className='bg-gray-800 p-8 rounded-2xl shadow-xl text-center border border-gray-700 transition-transform flex flex-col items-center gap-6 w-96 h-64 shadow-[rgba(0,0,0,0.8)]'
           >
             <Link to={section.link} className='flex flex-col items-center gap-4 h-full w-full'>
               <span className='text-2xl font-semibold text-cyan-300'>{section.name}</span>

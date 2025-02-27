@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from 'react-calendar';
-import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase } from "react-icons/bi";
+import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase, BiBook } from "react-icons/bi";
 
 const CalendarMeetings = ({ meetingSessions, applicants,}) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -105,9 +105,9 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
       />
       
       {selectedDate && (
-        <div className="mt-6">
+        <div className="mt-6 pb-10">
           <h2 className="text-2xl text-white mb-4 ">Meetings on {selectedDate.toDateString()}</h2>
-          <div className="space-y-4">
+          <div className="space-y-4 ">
           {meetingsForSelectedDate.length > 0 ? (
             meetingsForSelectedDate.map((meeting, index) => {
 
@@ -117,18 +117,22 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
               return (
                 <div
                   key={index}
-                  className="p-6 bg-gradient-to-br from-blue-900 to-cyan-600 ml-5 rounded-xl shadow-2xl w-5/6 min-w-[250px] border border-white flex flex-col lg:flex-row items-center lg:items-start justify-between min-h-[220px] gap-6 transition-transform hover:scale-105"
+                  className=" bg-gradient-to-br from-black to-slate-900 p-6 shadow-black duration-300 ml-5 rounded-2xl shadow-md w-5/6 min-w-[250px] border border-white flex flex-col lg:flex-row items-center lg:items-start justify-between min-h-[220px] gap-6 transition-transform  hover:scale-105"
                 >
+                  
                   {/* 📅 Lewa sekcja – Informacje o spotkaniu */}
                   <div className="flex-1 space-y-3">
                     <h3 className="text-2xl font-bold text-white flex items-center gap-2">
                       <BiCalendar className="text-3xl text-white" /> {meeting.meetingSessionName}
                     </h3>
-                    <p className="text-sm text-gray-300 italic">{meeting.meetingSessionDescription}</p>
+                    <p className="text-sm text-gray-300 italic break-all whitespace-normal">
+                    {meeting.meetingSessionDescription}
+                  </p>
+
               
-                    <div className="flex items-center space-x-2 text-sm text-gray-400">
-                      <BiTimeFive className="text-lg text-white" />
-                      <span>{meeting.meetingTimeFrom} - {meeting.meetingTimeTo}</span>
+                    <div className="flex items-center space-x-2 text-sm text-white">
+                      <BiTimeFive className="text-lg text-blue-500" />
+                      <span className=" text-white">{meeting.meetingTimeFrom} - {meeting.meetingTimeTo}</span>
                     </div>
               
                     <a
@@ -146,7 +150,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                     {meeting.meetingApplicant && Object.keys(meeting.meetingApplicant).length > 0 ? (
                       <>
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                          <BiUser className="text-xl text-white" /> Applicant:
+                          <BiUser className="text-xl text-blue-500" /> Applicant:
                         </h3>
                         <p className="text-sm text-gray-300">{meeting.meetingApplicant.name || '-'} {meeting.meetingApplicant.surname || '-'}</p>
                         <p className="text-sm text-gray-300 flex items-center gap-2">
@@ -156,7 +160,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                         {/* 📄 Dokumenty */}
                         <div className="mt-3">
                           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                            <BiFile className="text-xl text-white" /> Documents:
+                            <BiFile className="text-xl text-blue-500" /> Documents:
                           </h3>
                           <div className="flex flex-col space-y-2">
                             {cvFileUrls.length > 0 ? (
@@ -184,14 +188,14 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                         </div>
                       </>
                     ) : (
-                      <div className="text-center text-white bg-white/10 p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
+                      <div className="text-center text-white bg-glass-dark p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
                         <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <BiCalendar className="text-xl text-white" /> Recruitment
+                          <BiBook className="text-xl text-blue-500" /> Recruitment
                         </h3>
                         <p className="text-md text-gray-300">{meeting.recruitmentName || "-"}</p>
               
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                          <BiBriefcase className="text-xl text-white" /> Job Title:
+                          <BiBriefcase className="text-xl text-blue-500" /> Job Title:
                         </h3>
                         <p className="text-md text-gray-300">{meeting.recruitmentjobTittle || "-"}</p>
                       </div>

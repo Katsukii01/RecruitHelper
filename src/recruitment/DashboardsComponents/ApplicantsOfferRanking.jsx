@@ -3,6 +3,9 @@ import { DsectionWrapper } from '../../hoc';
 import { getApplicantsRanking} from '../../services/RecruitmentServices';
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
+import { FaUser, FaEnvelope, FaBook, FaTools, FaLanguage, FaBriefcase, FaGraduationCap } from "react-icons/fa";
+import { IoBarChart } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 const ApplicantsOfferRanking = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -92,81 +95,61 @@ const ApplicantsOfferRanking = ({ id }) => {
 
 
   return (
-    <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
+    <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
       <h1 className="text-2xl font-bold text-white mb-1">CV Scores</h1>
     
-      <div className='overflow-auto h-screen-80 inner-shadow p-2'>
+      <div className='overflow-auto h-screen-60 inner-shadow p-2'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">
           {paginatedApplicants.map((applicant, index) => (
-            <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-auto `}>
-              <h1 className="font-bold text-xl mb-0">{`${applicant.name} ${applicant.surname} `}
-                  <p className="text-sm text-gray-500">{applicant.email}</p>
-              </h1>
-            
-
-              <div className="mb-2">
-                <p className="text-md font-bold">Overall CV Score: {applicant.CVscore}%</p>
-                <div className="w-full h-3 bg-gray-300 rounded-full inner-shadow border border-white ">
-                  <div
-                    className={`h-full shadow-inset rounded-full ${getProgressBarColor(applicant.CVscore)}`}
-                    style={{ width: `${applicant.CVscore}%` }}
-                  />
+              <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg w-full bg-gradient-to-tl from-blue-900 to-slate-950 ${getBorderColor(applicant.CVscore)} overflow-hidden p-6`}>
+                
+                {/* Nagłówek z nazwą i emailem */}
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2 font-bold text-xl text-white">
+                    <FaUser className="text-blue-400 size-5" />
+                    {`${applicant.name} ${applicant.surname}`}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <FaEnvelope className="text-gray-500 size-4" />
+                    {applicant.email}
+                  </div>
                 </div>
-              </div>
 
-              <hr className='w-full border-t-2 border-gray-300' />
-            
-              <div className="mb-2">
-                <p className="text-sm">Courses: {applicant.CVscores.courses }%</p>
-                <div className="w-1/2 h-2 bg-gray-300 rounded-full inner-shadow border border-white">
-                  <div
-                    className={`h-full rounded-full shadow-inset ${getProgressBarColor(applicant.CVscores.courses)}` }
-                    style={{width: `${applicant.CVscores.courses}%` }}
-                  />
+                {/* Ogólny wynik CV */}
+                <div className="mb-4">
+                  <p className="text-md font-bold text-white flex items-center gap-2">
+                    <IoBarChart className="text-green-400 size-5" /> Overall CV Score: {applicant.CVscore}%
+                  </p>
+                  <div className="w-full h-3 bg-gray-300 rounded-full border border-white overflow-hidden">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${applicant.CVscore}%` }} transition={{ duration: 1.5, ease: "easeOut" }}  className={`h-full ${getProgressBarColor(applicant.CVscore)}`}  />
+                  </div>
                 </div>
-              </div>
 
-              <div className="mb-2">
-                <p className="text-sm">Skills: {applicant.CVscores.skills}%</p>
-                <div className="w-1/2 h-2 bg-gray-300 rounded-full inner-shadow border border-white">
-                  <div
-                    className={`h-full shadow-inset rounded-full ${getProgressBarColor(applicant.CVscores.skills)}`}
-                    style={{ width: `${applicant.CVscores.skills}%` }}
-                  />
-                </div>
-              </div>
+                <hr className="w-full border-t-2 border-gray-600 my-4" />
 
-              <div className="mb-2">
-                <p className="text-sm">Languages: {applicant.CVscores.languages}%</p>
-                <div className="w-1/2 h-2 bg-gray-300 rounded-full inner-shadow border border-white">
-                  <div
-                    className={`h-full shadow-inset rounded-full ${getProgressBarColor(applicant.CVscores.languages)}`}
-                    style={{ width: `${applicant.CVscores.languages}%` }}
-                  />
+                {/* Poszczególne wyniki */}
+                {[
+                { label: "Courses", value: applicant.CVscores.courses, icon: <FaBook className="text-yellow-400 size-5" /> },
+                { label: "Skills", value: applicant.CVscores.skills, icon: <FaTools className="text-blue-400 size-5" /> },
+                { label: "Languages", value: applicant.CVscores.languages, icon: <FaLanguage className="text-purple-400 size-5" /> },
+                { label: "Experience", value: applicant.CVscores.experience, icon: <FaBriefcase className="text-orange-400 size-5" /> },
+                { label: "Education", value: applicant.CVscores.education, icon: <FaGraduationCap className="text-green-400 size-5" /> }
+              ].map(({ label, value, icon }) => (
+                <div key={label} className="mb-3">
+                  <p className="text-sm text-white flex items-center gap-2">
+                    {icon} {label}: {value}%
+                  </p>
+                  <div className="w-1/2 h-2 bg-gray-300 rounded-full border border-white overflow-hidden">
+                    <motion.div 
+                      className={`h-full ${getProgressBarColor(value)}`} 
+                      initial={{ width: 0 }} 
+                      animate={{ width: `${value}%` }} 
+                      transition={{ duration: 2, ease: "easeOut" }}
+                    />
+                  </div>
                 </div>
+              ))}
               </div>
-
-              <div className="mb-2">
-                <p className="text-sm">Experience: {applicant.CVscores.experience}%</p>
-                <div className="w-1/2 h-2 bg-gray-300 rounded-full inner-shadow border border-white">
-                  <div
-                    className={`h-full shadow-inset rounded-full ${getProgressBarColor(applicant.CVscores.experience)}`}
-                    style={{ width: `${applicant.CVscores.experience}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="mb-2">
-                <p className="text-sm">Education: {applicant.CVscores.education}%</p>
-                <div className="w-1/2 h-2 bg-gray-300 rounded-full inner-shadow border border-white">
-                  <div
-                    className={`h-full shadow-inset rounded-full  ${getProgressBarColor(applicant.CVscores.education)}`}
-                    style={{ width: `${applicant.CVscores.education}%` }}
-                  />
-                </div>
-              </div>
-             
-            </div>
           ))}
         </div>
         </div>

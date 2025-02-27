@@ -169,7 +169,7 @@ const Tasks = ({ id, onRefresh }) => {
     );
 
     return (
-      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card over">
+      <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card over">
         <h1 className="text-2xl font-bold text-white mb-4">Tasks</h1>
         <div className="flex justify-end mb-4">
           <button

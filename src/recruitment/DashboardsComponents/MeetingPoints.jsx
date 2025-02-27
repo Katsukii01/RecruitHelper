@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useLocation } from "react-router-dom";
+import { FaUser, FaEnvelope } from "react-icons/fa";
 
 const MeetingPoints = ({ id, refresh }) => {
   const [loading, setLoading] = useState(true);
@@ -239,14 +240,14 @@ const MeetingPoints = ({ id, refresh }) => {
 
   if (loading)
     return (
-      <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card ">
+      <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center bg-glass card mb-10">
         <Loader />
       </div>
     );
 
   if (!meetingSessions.length)
     return (
-      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+      <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
         <h1 className="text-2xl font-bold text-white mb-4">Meetings Points</h1>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
           No meetings found.
@@ -255,10 +256,10 @@ const MeetingPoints = ({ id, refresh }) => {
     );
 
   return (
-    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
+    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
       <h1 className="text-2xl font-bold text-white mb-4">Meetings Points</h1>
 
-      <div className="h-screen-80 overflow-auto">
+      <div className="min-h-screen-80 overflow-auto">
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white">
@@ -290,10 +291,16 @@ const MeetingPoints = ({ id, refresh }) => {
                 >
                   {/* Kolumna z danymi aplikanta */}
                   <td className="px-4 py-2 border border-gray-700">
-                    <div className="max-h-[120px] overflow-y-auto">
-                      <div className="text-sm">{applicant.name}</div>
-                      <div className="text-sm">{applicant.surname}</div>
-                      <div className="text-sm">{applicant.email}</div>
+                    <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1">
+                      
+                      <div className="text-sm flex items-center gap-2">
+                        <FaUser className="text-blue-400 size-4" /> {applicant.name} {applicant.surname}
+                      </div>
+
+                      <div className="text-sm flex items-center gap-2">
+                        <FaEnvelope className="text-gray-400 size-4" /> {applicant.email}
+                      </div>
+
                     </div>
                   </td>
 
