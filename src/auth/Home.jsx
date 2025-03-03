@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { defaultPfp } from '../assets';
 import { useNavigate } from 'react-router-dom';
-
+import {HelpGuideLink} from '../utils'
 
 const Home = () => {
   const { user, updateName, deleteAccount, updatePassword } = useContext(AuthContext);
@@ -114,6 +114,7 @@ const Home = () => {
           ) : (
             <p className="text-red-500">Email Not Verified</p>
           )}
+          <HelpGuideLink section="HomePage" />
         </div>
        
 

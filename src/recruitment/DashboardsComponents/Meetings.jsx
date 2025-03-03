@@ -1,6 +1,6 @@
 import { useState, useEffect, React } from 'react'
 import { DsectionWrapper } from '../../hoc'
-import { Loader } from '../../utils'
+import { Loader, HelpGuideLink } from '../../utils'
 import { getMeetingSessionsByRecruitmentId, getAllApplicants } from '../../services/RecruitmentServices'
 import { useNavigate } from 'react-router-dom';
 import { CalendarMeetings } from '../'
@@ -51,7 +51,11 @@ useEffect(() => {
 
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
-    <h1 className="text-2xl font-bold text-white mb-4">Meetings</h1>
+    <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+       Meetings
+      <HelpGuideLink section="RecruitmentMeetings" />
+    </h1>
+
     <div className="flex justify-end mb-4">
       <button
         onClick={handleAddMeeting}

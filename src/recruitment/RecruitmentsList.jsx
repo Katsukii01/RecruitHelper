@@ -60,9 +60,7 @@ const RecruitmentList = () => {
   const filteredRecruitments = getFilteredRecruitments();
   const paginatedRecruitments = getPaginatedRecruitments(filteredRecruitments);
 
-  const goToCreateRecruitment = () => {
-    navigate('/RecruitmentCreate');
-  };
+
 
   const skillColors = [
 
@@ -105,26 +103,16 @@ const RecruitmentList = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full p-2 border rounded shadow-sm text-sm focus:ring-2 focus:ring-sky focus:outline-none"
             />
-            <div className="ml-2 flex items-center justify-center">
-              <button
-                onClick={goToCreateRecruitment}
-                className="flex items-center justify-center w-12 h-12 rounded-full bg-sky text-white text-4xl hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 transition border-2 border-white"
-              >
-                +
-              </button>
-              <p className="mt-4 text-gray-600 font-semibold text-lg">
-              </p>
-            </div>
           </div>
           {paginatedRecruitments.length === 0 ? (
             <div className=" flex flex-col items-center justify-center mt-2">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
-                No recruitments found with matching search criteria.
+                No ongoing recruitments found with matching search criteria.
               </p>
             </div>
           ) : (
             <div className="flex flex-wrap justify-center  gap-8 h-auto w-full px-16 py-4">
-              {paginatedRecruitments.map((recruitment, index) => (
+              {paginatedRecruitments.map((recruitment) => (
                 <div
                     key={recruitment.id}
                     className="h-[627px] w-[400px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 

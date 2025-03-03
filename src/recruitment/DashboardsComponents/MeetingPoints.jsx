@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DsectionWrapper } from "../../hoc/index";
-import { Loader } from "../../utils";
+import { Loader, HelpGuideLink } from "../../utils";
 import {
   getMeetingSessionsByRecruitmentId,
   getAllApplicants,
@@ -248,7 +248,11 @@ const MeetingPoints = ({ id, refresh }) => {
   if (!meetingSessions.length)
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-        <h1 className="text-2xl font-bold text-white mb-4">Meetings Points</h1>
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        Meetings Points
+        <HelpGuideLink section="RecruitmentMeetingsPoints" />
+          </h1>
+
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
           No meetings found.
         </div>
@@ -257,7 +261,10 @@ const MeetingPoints = ({ id, refresh }) => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-      <h1 className="text-2xl font-bold text-white mb-4">Meetings Points</h1>
+             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        Meetings Points
+        <HelpGuideLink section="RecruitmentMeetingsPoints" />
+          </h1>
 
       <div className="min-h-screen-80 overflow-auto">
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">

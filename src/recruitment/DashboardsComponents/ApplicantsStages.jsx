@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
 import { getApplicantsWithTotalScores, changeApplicantStage, } from '../../services/RecruitmentServices';
-import { Loader } from '../../utils';
+import { Loader, HelpGuideLink } from '../../utils';
 import Pagination from './Pagination';
 import {applicantStages} from "../../constants/stages";
 import { FaUser, FaEnvelope } from "react-icons/fa";
@@ -99,7 +99,11 @@ const ApplicantsStages = ( {id}) => {
 
       if (!Applicants.length) return (
         <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-        <h1 className="text-2xl font-bold text-white mb-4">Applicants Stages</h1>
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+          Applicants Stages
+          <HelpGuideLink section="RecruitmentApplicantsStages" />
+        </h1>
+
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4 ">
             No Applicants found
           </div>
@@ -108,7 +112,10 @@ const ApplicantsStages = ( {id}) => {
 
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
-    <h1 className="text-2xl font-bold text-white mb-1">Applicants Stages</h1>
+            <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+          Applicants Stages
+          <HelpGuideLink section="RecruitmentApplicantsStages" />
+        </h1>
   
     <div className='overflow-auto h-screen-67 bg-gray-900 inner-shadow '>
       <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 p-2">

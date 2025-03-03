@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import usePreventPageReload from "./usePreventPageReload";
-import {Loader } from "../utils";
+import {Loader, HelpGuideLink } from "../utils";
 import { uploadFile, analyzeCV } from "../services/recruitmentApi";
-import { form } from "framer-motion/client";
+
 
 const AddApplicantsWithHelp = () => {
   const navigate = useNavigate();
@@ -111,7 +111,7 @@ const AddApplicantsWithHelp = () => {
        {isUploading && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-50">
           <div className="flex items-center justify-center w-full h-full">
-            <div className="bg-gradient-to-tl  from-teal-600 to-cyan-700 p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
+            <div className="bg-gradient-to-br from-black to-slate-900 shadow-black hadow-md p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
               <h2 className="text-2xl font-bold text-white mb-6">
                 Extracting data form CV files
               </h2>
@@ -157,7 +157,10 @@ const AddApplicantsWithHelp = () => {
         </div>
       )}
       <div className="relative w-full max-w-2xl p-6 bg-gray-800 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-white mb-4">Upload CVs</h1>
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+            Upload CVs
+          <HelpGuideLink section="RecruitmentAddApplicantsFromFile" />
+        </h1>
 
         {/* Drag & Drop Area */}
         <div 

@@ -3,7 +3,7 @@ import { getApplicants, deleteApplicant } from '../../services/RecruitmentServic
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
-import { Loader } from '../../utils';
+import { Loader, HelpGuideLink } from '../../utils';
 
 const ManageApplicants = ({ id }) => {
   const navigate = useNavigate();
@@ -161,7 +161,11 @@ const ManageApplicants = ({ id }) => {
   if (loading) return <div className="relative w-full h-screen-80 mx-auto flex justify-center items-center  bg-glass card "><Loader /></div>;
 
   if (!applicants.length) return <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
-    <h1 className="text-2xl font-bold text-white mb-4">Applicants</h1>
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+            Manage Applicants
+            <HelpGuideLink section="RecruitmentApplicantsManage" />
+          </h1>
+
           {/* Add Applicant Button */}
           <div className="flex justify-end mb-4">
         <button
@@ -179,7 +183,10 @@ const ManageApplicants = ({ id }) => {
   return (
     <section className="h-auto min-h-screen-80 relative w-full mx-auto bg-glass card ">
       <div>
-        <h1 className="text-2xl font-bold text-white">Manage Applicants</h1>
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+            Manage Applicants
+            <HelpGuideLink section="RecruitmentApplicantsManage" />
+          </h1>
 
         {/* Add Applicant Button */}
         <div className="flex justify-end mb-4">

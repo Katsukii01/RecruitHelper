@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../store/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { google } from '../assets';
+import {HelpGuideLink} from '../utils'
 
 const SignIn = () => {
   const { signIn, googleSignIn, forgotPassword, user  } = useContext(AuthContext);
@@ -69,6 +70,7 @@ const SignIn = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <form onSubmit={handleSubmit} className="p-6 bg-glass rounded-lg card sm:w-1/2 w-5/6">
+      <HelpGuideLink section="SignIn" />
         <h1 className="text-2xl font-bold mb-4">Sign In</h1>
         {error && (
           <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">

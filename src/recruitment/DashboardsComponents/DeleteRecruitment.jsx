@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteRecruitment, getRecruitmentById } from '../../services/RecruitmentServices';
 import { DsectionWrapper } from '../../hoc';
+import { HelpGuideLink } from '../../utils';
 
 const DeleteRecruitment = ({ id }) => {
   const [showModal, setShowModal] = useState(false);
@@ -70,7 +71,10 @@ const DeleteRecruitment = ({ id }) => {
 
   return (
     <section className="relative w-full mx-auto p-4 bg-black border-2 border-red-700 rounded-md flex flex-col items-center justify-center mb-16">
-      <h1 className="text-2xl text-white mb-4">Delete Recruitment</h1>
+     <HelpGuideLink section="RecruitmentDelete" />
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        Delete Recruitment
+      </h1>
       {!showModal && (
       <button
         className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-700 transition"

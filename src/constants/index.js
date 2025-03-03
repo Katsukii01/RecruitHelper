@@ -216,7 +216,12 @@ export const NavLinks = [
     {
       id: "ApplyForJob",
       title: "Apply For Job",
-    }
+    },
+    {
+      id: "RecruitmentCvRanking",
+      title: "Recruitment Cv Ranking",
+    },
+
   ];
   
 

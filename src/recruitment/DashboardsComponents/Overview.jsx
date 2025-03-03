@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DsectionWrapper } from "../../hoc/index";
 import { getRecruitmentStats,changeRecruitmentStage  } from "../../services/RecruitmentServices";
-import { Loader } from "../../utils";
+import { Loader, HelpGuideLink } from "../../utils";
 import {applicantStages, recruitmentStages} from "../../constants/stages";
 import { BiBarChart, BiLineChart, BiCalendar, BiTask, BiUser, BiEnvelope } from "react-icons/bi";
 
@@ -62,8 +62,11 @@ const Overview = ({ id }) => {
 
   return (
     <section className="relative min-h-screen-80 w-full p-2 bg-glass card ">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+          Recruitment Overview
+          <HelpGuideLink section="RecruitmentOverview" />
+        </h1>
 
-      <h1 className="text-3xl font-bold text-white mb-4"> Recruitment Overview</h1>
       <div className="h-screen-70 overflow-auto px-2">
 
         {/* Current Stage */}

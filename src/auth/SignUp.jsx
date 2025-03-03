@@ -3,6 +3,7 @@ import { AuthContext } from '../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { google } from '../assets';
 import ReCAPTCHA from 'react-google-recaptcha';
+import {HelpGuideLink} from '../utils'
 
 const SignUp = () => {
   const { signUp, googleSignIn, user } = useContext(AuthContext);
@@ -93,6 +94,7 @@ const SignUp = () => {
   return (
     <div className="min-h-screen flex items-center justify-center pt-32">
       <form onSubmit={handleSubmit} className="p-6 bg-glass rounded-lg card sm:w-1/2 w-5/6">
+        <HelpGuideLink section="SignUp" />
         <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
         {error && (
           <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">

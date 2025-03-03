@@ -27,6 +27,7 @@ import Statistics from './Statistics';
 import MeetingsCalendar from './MeetingsCalendar';
 import Recruitments from './Recruitments';
 import ApplyForJob from './ApplyForJob';
+import RecruitmentCvRanking from './RecruitmentCvRanking';
 
 export {  
   Navbar, 
@@ -57,5 +58,6 @@ export {
   Statistics, 
   MeetingsCalendar, 
   Recruitments, 
-  ApplyForJob 
+  ApplyForJob,
+  RecruitmentCvRanking,
 };

@@ -51,6 +51,16 @@ const Navbar = () => {
     });
   };
 
+  useEffect(() => {
+    if (active) {
+      const element = document.querySelector(`[id="link-${active}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [active]);
+  
+
   const groupedLinks = [
     {
       title: "Recruitments",
@@ -71,6 +81,7 @@ const Navbar = () => {
         "RecruitmentCoverLettersAnalysis",
         "RecruitmentCoverLettersPoints",
         "RecruitmentAdnationalPoints",
+        "RecruitmentCvRanking",
         "RecruitmentFinalRanking",
         "RecruitmentFinish",
         "RecruitmentEdit",
@@ -153,6 +164,7 @@ const Navbar = () => {
                         <li key={id} className="w-full">
                           <a
                             href={`#${id}`}
+                            id={`link-${link.title}`} // Dodajemy ID dla scrollIntoView
                             className={`w-full text-left block text-[9px] md:text-[16px] font-medium cursor-pointer py-2 px-2 transition-all duration-300 hover:text-sky ${
                               active === link.title ? "text-sky bg-[rgba(85,145,201,0.2)] rounded-lg" : "text-[#a8a8a8]"
                             }`}

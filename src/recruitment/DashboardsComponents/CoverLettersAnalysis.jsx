@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { DsectionWrapper } from "../../hoc/index";
 import Pagination from "./Pagination";
-import { Loader } from "../../utils";
+import { Loader, HelpGuideLink } from "../../utils";
 import {
   getAllApplicants,
 } from "../../services/RecruitmentServices";
@@ -82,7 +82,10 @@ const CoverLetterAnalysis =  ({ id })=> {
     );
 
     if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Analysis</h1>
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+       Cover Letter Analysis
+        <HelpGuideLink section="RecruitmentCoverLettersAnalysis" />
+      </h1>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
           No Applicants found
         </div>
@@ -90,7 +93,10 @@ const CoverLetterAnalysis =  ({ id })=> {
 
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-2xl font-bold text-white mb-4">Cover Letter Analysis</h1>
+            <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+       Cover Letter Analysis
+        <HelpGuideLink section="RecruitmentCoverLettersAnalysis" />
+      </h1>
 
       <div className="h-screen-67 overflow-auto">
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">

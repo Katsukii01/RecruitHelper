@@ -13,6 +13,7 @@ import {
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaFileExport, FaDoorOpen, FaCheckCircle } from "react-icons/fa";
+import { HelpGuideLink } from "../../utils";
 
 const FinishRecruitment = ({ id }) => {
   const [loading, setLoading] = useState(false);
@@ -144,7 +145,10 @@ const FinishRecruitment = ({ id }) => {
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card overflow-auto">
   {/* 🔹 Nagłówek sekcji */}
-  <h1 className="text-3xl font-extrabold text-white mb-6 text-center">Finish Recruitment</h1>
+  <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+       Finish Recruitment
+        <HelpGuideLink section="RecruitmentFinish" />
+      </h1>
 
   {/* 🔹 Ostrzeżenie */}
   <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-3 rounded-md mb-6 text-center font-medium animate-pulse">

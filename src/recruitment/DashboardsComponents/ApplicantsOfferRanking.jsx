@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
 import { getApplicantsRanking} from '../../services/RecruitmentServices';
-import { Loader } from '../../utils';
+import { Loader, HelpGuideLink } from '../../utils';
 import Pagination from './Pagination';
 import { FaUser, FaEnvelope, FaBook, FaTools, FaLanguage, FaBriefcase, FaGraduationCap } from "react-icons/fa";
 import { IoBarChart } from "react-icons/io5";
@@ -67,7 +67,11 @@ const ApplicantsOfferRanking = ({ id }) => {
 
 
   if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-     <h1 className="text-2xl font-bold text-white mb-4">CV Scores</h1>
+     <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      CV Scores
+        <HelpGuideLink section="RecruitmentCvRanking" />
+      </h1>
+
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
            No applicants found.
         </div>
@@ -96,7 +100,10 @@ const ApplicantsOfferRanking = ({ id }) => {
 
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
-      <h1 className="text-2xl font-bold text-white mb-1">CV Scores</h1>
+           <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      CV Scores
+        <HelpGuideLink section="RecruitmentCvRanking" />
+      </h1>
     
       <div className='overflow-auto h-screen-67 bg-gray-900 inner-shadow p-2'>
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-4 gap-3 justify-items-center m-1 ">

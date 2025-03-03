@@ -30,6 +30,7 @@ import {
   MeetingsCalendar,
   Recruitments,
   ApplyForJob,
+  RecruitmentCvRanking,
 } from "./HelpComponents";
 
 const Help = () => {
@@ -69,6 +70,7 @@ const Help = () => {
       case "RecruitmentFinish":
       case "RecruitmentEdit":
       case "RecruitmentDelete":
+      case "RecruitmentCvRanking":
         return (
           <>
             <CreatingRecruitment />
@@ -86,6 +88,7 @@ const Help = () => {
             <RecruitmentCoverLettersAnalysis />
             <RecruitmentCoverLettersPoints />
             <RecruitmentAdnationalPoints />
+            <RecruitmentCvRanking />
             <RecruitmentFinalRanking />
             <RecruitmentFinish />
             <RecruitmentEdit />

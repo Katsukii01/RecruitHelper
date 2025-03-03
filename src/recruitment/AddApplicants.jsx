@@ -6,7 +6,7 @@ import {
 } from "../services/RecruitmentServices";
 import { existingLanguages } from "../constants";
 import usePreventPageReload from "./usePreventPageReload";
-import { Loader } from "../utils";
+import { Loader, HelpGuideLink } from "../utils";
 import { firebaseAuth } from "../firebase/baseconfig";
 import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
 import { handleDeleteSkill, handleDeleteCourse } from "./Validations";
@@ -393,103 +393,88 @@ const AddApplicants = () => {
 
   const handleFinishAdding = async () => {
     const updatedApplicants = saveCurrentApplicant(); // Pobierz zaktualizowaną listę aplikantów
-
+  
     if (userApply) {
       const confirmation = window.confirm(
-        "Are you sure you want to finish application? You cannot edit applicantion after this point."
+        "Are you sure you want to finish application? You cannot edit application after this point."
       );
-      if (!confirmation) {
-        return;
-      }
+      if (!confirmation) return;
     }
-
+  
     if (!updatedApplicants) {
       alert("Please correct the errors in the form before proceeding.");
       return;
     }
-
+  
     if (updatedApplicants.length === 0) {
       alert("You must add at least one applicant.");
       return;
     }
-
-    if(applicantsChecked < applicantsToCheck){
+  
+    if (applicantsChecked < applicantsToCheck) {
       alert("You must check all applicants before proceeding.");
       return;
     }
-
-    let progressInterval;
+  
     setNumberOfApplicantsToSave(updatedApplicants.length);
     setNumberOfSavedApplicants(0);
+    
+    let progressInterval;
+  
     try {
-      setIsSaving(true); // Zablokuj przycisk i rozpocznij proces
+      setIsSaving(true);
       setButtonText("Saving data...");
-
-      // Zmienna dla setInterval
-
-      // Użyj setInterval, aby aktualizować tekst przycisku
+      
+      // Aktualizacja animacji tekstu co sekundę
       progressInterval = setInterval(() => {
-        setButtonText((prevText) => {
-          if (prevText === "Saving data...") {
-            return "Saving data.";
-          } else if (prevText === "Saving data.") {
-            return "Saving data..";
-          } else {
-            return "Saving data...";
-          }
-        });
+        setButtonText((prevText) =>
+          prevText === "Saving data..." ? "Saving data." :
+          prevText === "Saving data." ? "Saving data.." :
+          "Saving data..."
+        );
       }, 1000);
-
-      // Pętla po aplikantach
-      for (const applicant of updatedApplicants) {
-        const cvFiles = applicant.CvPreview; // Tablica plików CV
-        const coverLetterFiles = applicant.CoveringLetterPreview; // Tablica plików Cover Letter
-
-        //wyczyszczenie previews
+  
+      // 🔥 Uruchamiamy wszystkie operacje jednocześnie 🔥
+      await Promise.all(updatedApplicants.map(async (applicant, index) => {
+        const cvFiles = applicant.CvPreview;
+        const coverLetterFiles = applicant.CoveringLetterPreview;
+  
+        // Wyczyść prewki przed zapisem
         applicant.CvPreview = "";
         applicant.CoveringLetterPreview = "";
-
-        // Przekazanie plików do funkcji addApplicant
-        await addApplicant(recruitmentId, applicant, cvFiles, coverLetterFiles);
-
+  
+        // Dodajemy aplikanta i po sukcesie zwiększamy licznik zapisanych
+        await addApplicant(recruitmentId, applicant, cvFiles, coverLetterFiles, index);
         console.log(`Applicant added: ${applicant.name} ${applicant.surname}`);
+        
         setNumberOfSavedApplicants((prev) => prev + 1);
-      }
-
-      // Zatrzymaj interwał po zakończeniu dodawania aplikantów
+      }));
+  
       clearInterval(progressInterval);
-      setButtonText("Data saved successfully!"); // Opcjonalnie, informacja o sukcesie
-
-      // Nawigacja do kolejnego kroku
-      if (userApply) {
-        setTimeout(() => {
-          navigate(`/Dashboard`);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          navigate(`/RecruitmentDashboard#ManageApplicants`, {
-            state: {
-              id: recruitmentId,
-              currentPage: page,
-            },
-          });
-        }, 1000);
-      }
+      setButtonText("Data saved successfully!");
+  
+      setTimeout(() => {
+        userApply
+          ? navigate(`/Dashboard`)
+          : navigate(`/RecruitmentDashboard#ManageApplicants`, {
+              state: { id: recruitmentId, currentPage: page },
+            });
+      }, 1000);
     } catch (error) {
       console.error("Error while saving applicants:", error);
       alert("Error saving applicants. Please try again.");
-      clearInterval(progressInterval); // Zatrzymaj interwał w przypadku błędu
-      setIsSaving(false); // Odblokuj przycisk
-
-      if (userApply) {
-        setButtonText("Finish Application"); // Ustaw tekst przycisku
-      } else if (applicant) {
-        setButtonText("Finish Editing Applicant"); // Ustaw tekst przycisku
-      } else {
-        setButtonText("Finish Adding Applicants"); // Przywróć pierwotny tekst
-      }
+  
+      clearInterval(progressInterval);
+      setIsSaving(false);
+  
+      setButtonText(
+        userApply ? "Finish Application" :
+        applicant ? "Finish Editing Applicant" :
+        "Finish Adding Applicants"
+      );
     }
   };
+  
 
   const handleComeBack = () => {
     if (userApply) {
@@ -587,7 +572,7 @@ const AddApplicants = () => {
       {isSaving && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-50">
           <div className="flex items-center justify-center w-full h-full">
-            <div className="bg-gradient-to-tl  from-teal-600 to-cyan-700 p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
+            <div className="bg-gradient-to-br from-black to-slate-900 shadow-black hadow-md p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
               <h2 className="text-2xl font-bold text-white mb-6">
                 {buttonText}
               </h2>
@@ -655,7 +640,14 @@ const AddApplicants = () => {
         <div className="flex flex-wrap justify-center w-full">
           <div className="w-full md:w-1/2 p-2 pt-0">
             <form className="mx-auto bg-glass card rounded-lg p-6 h-screen overflow-auto">
-              <h3 className="text-lg font-semibold mb-4">Applicant Details</h3>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 whitespace-nowrap">
+                Applicant Details
+                {!userApply ? (
+                  <HelpGuideLink section="RecruitmentAddApplicantsManually" />
+                ) : (
+                  <HelpGuideLink section="ApplyForJob" />
+                )}
+              </h3>
               {/* Name */}
               <div className="mb-4">
                 <label

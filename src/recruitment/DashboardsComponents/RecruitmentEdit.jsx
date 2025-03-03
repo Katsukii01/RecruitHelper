@@ -3,7 +3,7 @@ import { getRecruitmentById, updateRecruitment, addRecruitment } from '../../ser
 import { DsectionWrapper } from '../../hoc';
 import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLanguage, removeLanguage } from '../Validations';
 import {  useNavigate } from 'react-router-dom';
-import { Loader } from '../../utils';
+import { Loader, HelpGuideLink } from '../../utils';
 
 const RecruitmentEdit = ({ id, onRefresh }) => {
   const [recruitment, setRecruitment] = useState(null);
@@ -140,7 +140,21 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-      <h1 className="text-2xl font-bold mb-4">Recruitment</h1>
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        {id ? (
+          <>
+            Recruitment Edit 
+            <HelpGuideLink section="RecruitmentEdit" />
+          </>
+        ) : (
+          <>
+            Create Recruitment 
+            <HelpGuideLink section="CreatingRecruitment" />
+          </>
+        )}
+      </h1>
+
+      
       <form className="space-y-4 overflow-auto p-4">
         {/* Status Toggle */}
         <p className="text-sm font-medium text-gray-300">Status:            
@@ -459,7 +473,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           onClick={handleSave}
           className="flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
         >
-          Save Recruitment
+          {id ? "Save Recruitment" : "Create Recruitment"}
         </button>
       </div>
     </section>

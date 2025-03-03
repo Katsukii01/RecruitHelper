@@ -384,7 +384,8 @@ export const addApplicant = async (
   recruitmentId,
   applicantData,
   cvFiles,
-  coverLetterFiles
+  coverLetterFiles,
+  indedx
 ) => {
   try {
     await checkAuth(); // Ensure the user is logged in
@@ -408,7 +409,7 @@ export const addApplicant = async (
             applicant.id > maxId ? applicant.id : maxId, 0
           ); 
 
-          applicantData.id = highestId + 1;
+          applicantData.id = highestId + 1 + indedx;
     }
 
     console.log("applicantData", applicantData);
