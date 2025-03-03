@@ -832,7 +832,7 @@ export const getApplicantsRanking = async (recruitmentId) => {
     Certificate: 1,
   };
 
-  const calculateScore = (applicant) => {
+  const calculateScore = async (applicant) => {
     let totalScore = 0;
 
     // Zamiana list na zbiory (O(n))
@@ -998,11 +998,7 @@ export const getApplicantsRanking = async (recruitmentId) => {
     };
   };
   // Map applicants and calculate scores
-  const applicantsWithScores = applicants.map((applicant) =>
-    calculateScore(applicant)
-  );
-
-  
+  const applicantsWithScores = await Promise.all(applicants.map(calculateScore));
 
   // Sort applicants by score in descending order
   const rankedApplicants = applicantsWithScores.sort(
@@ -1671,52 +1667,48 @@ export const getUserMeetingSessions = async () => {
 };
 
 
-// 21.**get applicants name ,surname, email, overall score**
 export const getApplicantsWithOverallScore = async (recruitmentId) => {
   try {
-    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    await checkAuth(); // 🔐 Sprawdzenie autoryzacji
+
     const recruitmentRef = doc(db, "recruitments", recruitmentId);
-    const recruitmentSnapshot = await getDoc(recruitmentRef);
+
+    // 📌 Pobieramy dokumenty jednocześnie, aby było szybciej
+    const [recruitmentSnapshot, maxPoints] = await Promise.all([
+      getDoc(recruitmentRef),
+      getMaxPoints(recruitmentId),
+    ]);
 
     if (!recruitmentSnapshot.exists()) {
       throw new Error("Recruitment not found");
     }
 
+    // Pobranie listy aplikantów z rankingiem
     const applicants = await getApplicantsRanking(recruitmentId);
 
-    // Pobieramy maksymalne wartości dopiero po sprawdzeniu istnienia dokumentu
-    const { meetingsPointsWeight, tasksPointsWeight } = await getMaxPoints(recruitmentId);
-
-    // Pobieramy wyniki asynchronicznie
+    // 🔄 Mapujemy aplikantów równocześnie
     const applicantsWithOverallScore = await Promise.all(
       applicants.map(async (applicant) => {
         const Scores = await getApplicantScore(recruitmentId, applicant.id);
 
-        const Meetingsscore = meetingsPointsWeight > 0 ? (Scores.Meetingsscore / meetingsPointsWeight) * 100 : 0;
-        const Tasksscore = tasksPointsWeight > 0 ? (Scores.Tasksscore / tasksPointsWeight) * 100 : 0;
-        
         return {
-          ...applicant,
-          Meetingsscore,
-          Tasksscore,
+          id: applicant.id,
+          stage: applicant.stage,
+          name: applicant.name,
+          surname: applicant.surname,
+          email: applicant.email,
+          CVscore: applicant.CVscore || 0,
+          CLscore: applicant.CLscore || 0,
+          Tasksscore: maxPoints.tasksPointsWeight > 0 ? (Scores.Tasksscore / maxPoints.tasksPointsWeight) * 100 : 0,
+          Meetingsscore: maxPoints.meetingsPointsWeight > 0 ? (Scores.Meetingsscore / maxPoints.meetingsPointsWeight) * 100 : 0,
+          adnationalPoints: Scores.adnationalPoints || 0,
+          coverLetterFileUrls: applicant.coverLetterFileUrls || [],
         };
       })
     );
 
-    // Aktualizujemy dokument w Firestore
-    try {
-      await updateDoc(recruitmentRef, { Applicants: applicantsWithOverallScore });
-    } catch (error) {
-      console.error("Error updating applicants:", error);
-      throw error;
-    }
 
-    // Sortujemy według totalScore malejąco
-    const rankedApplicants = applicantsWithOverallScore.sort(
-      (a, b) => b.totalScore - a.totalScore
-    );
-
-    return rankedApplicants;
+    return applicantsWithOverallScore;
   } catch (error) {
     console.error("Error fetching applicants overall score:", error.message);
     throw error;
@@ -2596,8 +2588,9 @@ export const setAdnationalPoints = async (id, applicantId, updatedValue) => {
       return totalScore;
     };
 
-//34. **get recruitment stats**
-export const getRecruitmentStats = async (recruitmentId) => {
+
+//34.05 **get applicants with overall score**
+export const getApplicantsWithTotalScores = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
@@ -2617,9 +2610,6 @@ export const getRecruitmentStats = async (recruitmentId) => {
         AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
     };
 
-
-
-   
     // Mapujemy aplikantów i liczymy `totalScore`
     const updatedApplicants = await Promise.all(
       applicants.map(async (applicant) => ({
@@ -2627,7 +2617,27 @@ export const getRecruitmentStats = async (recruitmentId) => {
         totalScore: await calculateTotalScore(applicant, countStatus)
       }))
     );
+    const sortedApplicants = updatedApplicants.sort((a, b) => b.totalScore - a.totalScore);
+    return sortedApplicants;
+    } catch (error) {
+      console.error("Error fetching applicants overall score:", error);
+      throw error;
+    }
+  };
 
+
+//34. **get recruitment stats**
+export const getRecruitmentStats = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated asynchronously
+    const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+
+    const updatedApplicants = await getApplicantsWithTotalScores(recruitmentId);
 
     const totalApplicants = updatedApplicants.length || 0;
 
@@ -2647,7 +2657,7 @@ export const getRecruitmentStats = async (recruitmentId) => {
     })()
     : 0;
 
-    const ApplicantsInEachStage = applicants.reduce((acc, applicant) => {
+    const ApplicantsInEachStage = updatedApplicants.reduce((acc, applicant) => {
       const stage = applicant.stage || "To be checked";
       acc[stage] = (acc[stage] || 0) + 1;
       return acc;
@@ -2667,15 +2677,15 @@ export const getRecruitmentStats = async (recruitmentId) => {
     const CurrentStage = recruitmentData.stage || "Collecting applicants";
 
     //count where coverLetterFileUrls is not empty
-    const TotalCoverLetters = applicants.reduce((total, applicant) => {
+    const TotalCoverLetters = updatedApplicants.reduce((total, applicant) => {
       if (applicant.coverLetterFileUrls.length > 0) {
         return total + 1;
       }
       return total;
     }, 0);
 
-    const TotalCoverLettersPercentage = applicants.length > 0 
-      ? (TotalCoverLetters / applicants.length) * 100 
+    const TotalCoverLettersPercentage = updatedApplicants.length > 0 
+      ? (TotalCoverLetters / updatedApplicants.length) * 100 
       : 0;
 
 

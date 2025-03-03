@@ -9,7 +9,7 @@ import usePreventPageReload from "./usePreventPageReload";
 import { Loader } from "../utils";
 import { firebaseAuth } from "../firebase/baseconfig";
 import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
-
+import { handleDeleteSkill, handleDeleteCourse } from "./Validations";
 
 const AddApplicants = () => {
 
@@ -926,6 +926,24 @@ const AddApplicants = () => {
                   placeholder="e.g., JavaScript, React, Node.js"
                   onBlur={handleInputBlur}
                 />
+                                  <div className='h-[200px] overflow-y-auto rounded-lg inner-shadow'> 
+                                  <div className="flex flex-wrap gap-2 m-2">
+                                    {formData.skills.map((skill, index) => (
+                                      skill.trim() !== '' && (
+                                        <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
+                                          <span className='max-w-full overflow-wrap break-words  p-1'>{skill}</span>
+                                          <button
+                                            type="button"
+                                            className=" w-4 h-4 flex items-center justify-center text-white bg-red-500 border-1 border-white rounded-full hover:bg-red-700 hover:border-red-500 transition-all duration-300"
+                                            onClick={() => handleDeleteSkill(formData, setFormData, skill)}
+                                          >
+                                            <span className="text-md font-bold w-6">x</span>
+                                          </button>
+                                        </div>
+                                      )
+                                    ))}
+                                  </div>
+                                  </div>
               </div>
 
               {/* Courses */}
@@ -946,6 +964,24 @@ const AddApplicants = () => {
                   placeholder="e.g., Full Stack Development, React Basics"
                   onBlur={handleInputBlur}
                 />
+                          <div className='h-[200px] overflow-y-auto rounded-lg mt-4 inner-shadow'> 
+                          <div className="flex flex-wrap gap-2 m-2">
+                            {formData.courses.map((course, index) => (
+                             course.trim() !== '' && (
+                                <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
+                                  <span className='max-w-full overflow-wrap break-words  p-1'>{course}</span>
+                                  <button
+                                    type="button"
+                                    className=" w-4 h-4 flex items-center justify-center text-white bg-red-500 border-1 border-white rounded-full hover:bg-red-700 hover:border-red-500 transition-all duration-300 "
+                                    onClick={() => handleDeleteCourse(formData, setFormData, course)}
+                                  >
+                                    <span className="text-md font-bold w-6">x</span>
+                                  </button>
+                                </div>
+                              )
+                            ))}
+                          </div>
+                          </div>
               </div>
 
               {/* Additional Information */}

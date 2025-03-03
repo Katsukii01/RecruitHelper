@@ -43,56 +43,58 @@ const AddApplicantsWithHelp = () => {
     setNumberOfSavedApplicants(0);
     setNumberOfApplicantsToSave(cvFiles.length);
     setIsUploading(true);
-    let uploadedApplicants = [];
   
     console.log("🔄 Rozpoczęcie przesyłania plików CV...");
   
-    for (const file of cvFiles) {
-      try {
-        console.log(`📤 Przesyłanie pliku: ${file.name}`);
-        const response = await uploadFile(file);
-        let analysis = {};
-        console.log('content: ', response.content);
-        if (response.content) {
-          console.log(`📊 Analiza CV: ${file.name}`);
-          analysis = await analyzeCV(response.content);
-        }
-
-        const applicantData = {
-          ...analysis, // Kopiujemy wszystkie pola z `analysis`
-          CvPreview: response.previews || [] // Dodajemy pliki, jeśli istnieją
-      };
-
-      //change all null fields in applicantData to empty string
-      const applicantDataWithEmptyFields = Object.keys(applicantData).reduce((acc, key) => {
-        if (applicantData[key] === null) {
-          acc[key] = "";
-        } else {
-          acc[key] = applicantData[key];
-        }
-        return acc;
-      }, {});
-
-      // 📝 Debugging - sprawdźmy wynikowy obiekt
-      console.log("📝 applicantData:", applicantDataWithEmptyFields);
-
-
-        uploadedApplicants.push(applicantDataWithEmptyFields);
+    try {
+      // Tworzymy tablicę obietnic dla wszystkich plików
+      const uploadPromises = cvFiles.map(async (file) => {
+        try {
+          console.log(`📤 Przesyłanie pliku: ${file.name}`);
+          const response = await uploadFile(file);
+          let analysis = {};
   
-        console.log(`✅ CV dodane do listy przesłanych: ${file.name}`);
-        setNumberOfSavedApplicants((prev) => prev + 1);
-      } catch (error) {
-        console.error(`❌ Błąd podczas wysyłania pliku: ${file.name}`, error);
-        alert("Błąd podczas wysyłania pliku.");
-      }
+          if (response.content) {
+            console.log(`📊 Analiza CV: ${file.name}`);
+            analysis = await analyzeCV(response.content);
+          }
+  
+          const applicantData = {
+            ...analysis, 
+            CvPreview: response.previews || [],
+          };
+  
+          // Zamiana `null` na pusty string
+          const applicantDataWithEmptyFields = Object.fromEntries(
+            Object.entries(applicantData).map(([key, value]) => [key, value ?? ""])
+          );
+  
+          console.log("📝 applicantData:", applicantDataWithEmptyFields);
+          setNumberOfSavedApplicants((prev) => prev + 1);
+          
+          return applicantDataWithEmptyFields; // Zwracamy obiekt, aby Promise.all zebrało wyniki
+        } catch (error) {
+          console.error(`❌ Błąd podczas wysyłania pliku: ${file.name}`, error);
+          alert(`Błąd podczas wysyłania pliku: ${file.name}`);
+          return null; // W razie błędu zwracamy `null`, aby Promise.all miało pełną listę wyników
+        }
+      });
+  
+      // Czekamy na zakończenie wszystkich operacji jednocześnie
+      const uploadedApplicants = (await Promise.all(uploadPromises)).filter(Boolean); // Usuwamy `null`
+  
+      console.log("🎉 Wszystkie pliki przetworzone!", uploadedApplicants);
+  
+      setCvFiles([]);
+      handleGoToAddApplicants(uploadedApplicants);
+    } catch (error) {
+      console.error("❌ Wystąpił błąd podczas przesyłania plików", error);
+      alert("Wystąpił błąd podczas przesyłania plików.");
+    } finally {
+      setIsUploading(false);
     }
-  
-    console.log("🎉 Wszystkie pliki przetworzone!");
-    //console.log("uploadedApplicants: ", uploadedApplicants);
-    setCvFiles([]);
-    handleGoToAddApplicants(uploadedApplicants);
-    setIsUploading(false);
   };
+  
   
 
   const handleGoToAddApplicants = (applicants) => {

@@ -39,6 +39,21 @@ const RecruitmentTasksPoints = () => {
           </p>
         </div>
 
+        {/*Rules for assigning tasks and points*/}
+        <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+          <h2 className="text-xl font-semibold text-yellow-300 flex items-center gap-3">
+            <FaExchangeAlt className="text-yellow-400 text-2xl" /> Rules for Assigning Tasks and Points
+          </h2>
+          <p className="text-gray-300 mt-2">
+            - Applicant can be only assigned to a task only once. <br/>
+            - Applicant can be assigned to multiple tasks.<br />
+            - Only Applicants in stages <span className="text-red-400">(Checked, Invited for interview, Interviewed, Tasks )</span> can be assigned to tasks! <br />
+            - Assigned tasks points are weighted based on the weight distribution defined in the task settings.<br />
+            - Applicants can earn points based on the assigned tasks.<br />
+            - The system calculates the total points based on the weight distribution and applicant's tasks.
+          </p>
+        </div>
+
         {/* Editing Points */}
         <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-blue-500">
           <h2 className="text-xl font-semibold text-blue-300 flex items-center gap-3">
@@ -51,20 +66,7 @@ const RecruitmentTasksPoints = () => {
           </p>
         </div>
 
-        {/*Rules for assigning tasks and points*/}
-        <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
-          <h2 className="text-xl font-semibold text-yellow-300 flex items-center gap-3">
-            <FaExchangeAlt className="text-yellow-400 text-2xl" /> Rules for Assigning Tasks and Points
-          </h2>
-          <p className="text-gray-300 mt-2">
-            - Applicant can be only assigned to a task only once. <br/>
-            - Applicant can be assigned to multiple tasks.<br />
-      
-            - Assigned tasks points are weighted based on the weight distribution defined in the task settings.<br />
-            - Applicants can earn points based on the assigned tasks.<br />
-            - The system calculates the total points based on the weight distribution and applicant's tasks.
-          </p>
-        </div>
+
       </div>
     </section>
   );

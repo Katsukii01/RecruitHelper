@@ -10,6 +10,17 @@ const RecruitmentMeetingsSessions = () => {
       </h1>
 
       <div className="p-6 space-y-6 rounded-lg overflow-auto h-screen-70">
+          {/* Points warning */}
+      <div className="bg-gray-800/90 p-5 rounded-lg shadow-md border-l-4 border-yellow-500">
+        <h2 className="text-xl font-semibold text-yellow-300">
+           Explanation for Points
+        </h2>
+        <p className="text-gray-300 mt-2">
+          - Total Points collected from all meetings are equal to 25% of final ranking score. <br />
+          - You can decide to count <strong>Meeting Points </strong> or not in Final Ranking section (on default counting is enabled). <br />
+        </p>
+      </div>
+
         {/* Creating a Meeting Session */}
         <div className="bg-gray-800/90 p-5 rounded-lg shadow-md border-l-4 border-cyan-500">
           <h2 className="text-xl font-semibold text-cyan-200 flex items-center gap-3">
@@ -17,7 +28,8 @@ const RecruitmentMeetingsSessions = () => {
           </h2>
           <p className="text-gray-300 mt-2">
             - Click on the <strong>Create Meeting Session</strong> button to add a new session.<br />
-            - Provide details such as <strong>Name</strong>, <strong>Description</strong>, and <strong>Points Weight</strong>.
+            - Provide details such as <strong>Name</strong>, <strong>Description</strong>, and <strong>Points Weight</strong>.<br />
+            - <strong>Points Weight </strong> is determinating ratio of points earned in one meeting in contrast to other meeting.<br />
           </p>
         </div>
 

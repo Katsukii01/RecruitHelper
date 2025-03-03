@@ -39,6 +39,22 @@ const RecruitmentMeetingsPoints = () => {
             </li>
           </p>
         </div>
+        
+        {/*Rules for assigning meetings and points*/}
+        <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+          <h2 className="text-xl font-semibold text-yellow-300 flex items-center gap-3">
+            <FaExchangeAlt className="text-yellow-400 text-2xl" /> Rules for Assigning Meetings and Points
+          </h2>
+          <p className="text-gray-300 mt-2">
+            - Applicant can be only assigned to a meeting only once. <br/>
+            - Applicant can be assigned to multiple meetings.<br />
+            - Only Applicants in stages <span className="text-red-400">(Checked, Invited for interview, Interviewed, Tasks )</span> can be assigned to meetings! <br />
+            - Meetings can't be in the same time slot or in past. They must be in the future at least one hour form now.<br />
+            - Assigned meetings points are weighted based on the weight distribution defined in the meeting session settings.<br />
+            - Applicants can earn points based on the assigned meetings.<br />
+            - The system calculates the total points based on the weight distribution and applicant's meetings.
+          </p>
+        </div>
 
         {/* Editing Points */}
         <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-blue-500">
@@ -52,20 +68,7 @@ const RecruitmentMeetingsPoints = () => {
           </p>
         </div>
 
-        {/*Rules for assigning meetings and points*/}
-        <div className="bg-gray-900/90 p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
-          <h2 className="text-xl font-semibold text-yellow-300 flex items-center gap-3">
-            <FaExchangeAlt className="text-yellow-400 text-2xl" /> Rules for Assigning Meetings and Points
-          </h2>
-          <p className="text-gray-300 mt-2">
-            - Applicant can be only assigned to a meeting only once. <br/>
-            - Applicant can be assigned to multiple meetings.<br />
-            - Meetings can't be in the same time slot or in past. They must be in the future at least one hour form now.<br />
-            - Assigned meetings points are weighted based on the weight distribution defined in the meeting session settings.<br />
-            - Applicants can earn points based on the assigned meetings.<br />
-            - The system calculates the total points based on the weight distribution and applicant's meetings.
-          </p>
-        </div>
+
       </div>
     </section>
   )

@@ -60,7 +60,7 @@ const Navbar = () => {
   const groupedLinks = [
     {
       title: "Applicants",
-      links: ["ApplicantsStages", "ApplicantsOfferRanking", "ManageApplicants"],
+      links: ["ApplicantsStages", "ManageApplicants"],
       icon: <BiUser className="text-xl md:text-2xl" />,
     },
     {
@@ -80,7 +80,7 @@ const Navbar = () => {
     },
     {
       title: "Ranking & Points",
-      links: ["AdnationalPoints", "FinalRanking"],
+      links: ["AdnationalPoints", "ApplicantsOfferRanking", "FinalRanking"],
       icon: <BiTrophy className="text-xl md:text-2xl" />,
     },
     {

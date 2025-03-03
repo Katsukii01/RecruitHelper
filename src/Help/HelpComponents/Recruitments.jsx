@@ -8,7 +8,7 @@ const RecruitmentStage = () => {
     <>
         <div className="flex flex-col gap-4 mt-4 p-4 ">
         {recruitmentStages.map((stageItem, index) => (
-           <div key={index} className="flex items-center bg-gray-800/90 p-4 rounded-lg shadow-md border-l-4 border-cyan-500">
+           <div key={index} className="flex items-center bg-gray-800/90 p-4 rounded-lg shadow-md border-l-4 border-cyan-500 w-fit">
             <span className={`flex items-center gap-2 font-normal px-3 py-1 rounded-full ${stageItem.color} text-white`}>
               {stageItem.icon} {stageItem.stage}
             </span>
@@ -40,7 +40,7 @@ const RecruitmentsHelp = () => {
           </p>
         </div>
 
-        <div className="bg-gray-800 p-4 rounded-lg shadow-md border-l-4 border-teal-500">
+        <div className="bg-gray-800 p-4 rounded-lg shadow-md border-l-4 border-teal-500 w-fit">
           <h2 className="text-xl font-semibold text-teal-300 flex items-center gap-2">
             <FaCheckCircle  /> Recruitments Stages Explained
           </h2>

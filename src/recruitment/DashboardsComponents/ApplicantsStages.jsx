@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { DsectionWrapper } from '../../hoc';
-import { getAllApplicants, changeApplicantStage, } from '../../services/RecruitmentServices';
+import { getApplicantsWithTotalScores, changeApplicantStage, } from '../../services/RecruitmentServices';
 import { Loader } from '../../utils';
 import Pagination from './Pagination';
 import {applicantStages} from "../../constants/stages";
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import {CircularProgress} from '../';
 
 const ApplicantsStages = ( {id}) => {
     const [loading, setLoading] = useState();
@@ -39,7 +40,7 @@ const ApplicantsStages = ( {id}) => {
       const fetchApplicants = async () => {
           try {
               setLoading(true);
-              const fetchedApplicants = await getAllApplicants(id);
+              const fetchedApplicants = await getApplicantsWithTotalScores(id);
               setApplicants(fetchedApplicants);
               setLoading(false);
           } catch (error) {
@@ -114,16 +115,26 @@ const ApplicantsStages = ( {id}) => {
         {paginatedApplicants.map((applicant, index) => (
           <div key={applicant.id} className={`mb-6 card inner-shadow rounded-lg  w-full bg-gradient-to-tl  from-blue-900 to-slate-950 border-2 border-blue-200 overflow-auto `}>
 
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-bold text-xl text-white">
-                <FaUser className="text-blue-400 size-5" />
-                {`${applicant.name} ${applicant.surname}`}
+              <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-4">
+                {/* Dane aplikanta */}
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2 font-bold text-xl text-white">
+                    <FaUser className="text-blue-400 size-5" />
+                    {`${applicant.name} ${applicant.surname}`}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <FaEnvelope className="text-gray-500 size-4" />
+                    {applicant.email}
+                  </div>
+                </div>
+
+                {/* Wynik całkowity */}
+                <div className="flex flex-col items-center sm:items-end">
+                  <p className="text-sm text-gray-300">Total Score</p>
+                  <CircularProgress score={applicant.totalScore} size={70} />
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <FaEnvelope className="text-gray-500 size-4" />
-                {applicant.email}
-              </div>
-            </div>
+
 
 
 

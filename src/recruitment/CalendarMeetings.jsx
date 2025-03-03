@@ -117,7 +117,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
               return (
                 <div
                   key={index}
-                  className=" bg-gradient-to-br from-black to-slate-900 p-6 shadow-black duration-300 ml-5 rounded-2xl shadow-md w-5/6 min-w-[250px] border border-white flex flex-col lg:flex-row items-center lg:items-start justify-between min-h-[220px] gap-6 transition-transform  hover:scale-105"
+                  className=" bg-gradient-to-br from-black to-slate-900 p-6 shadow-black duration-300 ml-5 rounded-2xl shadow-md w-5/6 min-w-[250px] border border-white flex flex-col xl:flex-row items-center lg:items-start justify-between min-h-[220px] gap-6 transition-transform  hover:scale-105"
                 >
                   
                   {/* 📅 Lewa sekcja – Informacje o spotkaniu */}

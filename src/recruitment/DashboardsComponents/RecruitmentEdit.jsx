@@ -308,7 +308,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                   <div className="flex flex-wrap gap-2 m-2">
                     {formData.skills.map((skill, index) => (
                       skill.trim() !== '' && (
-                        <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300">  
+                        <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
                           <span className='max-w-full overflow-wrap break-words  p-1'>{skill}</span>
                           <button
                             type="button"
@@ -391,7 +391,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             <button
                 type="button"
                 onClick={() => addLanguage(formData, setFormData)}
-                className="p-2  mt-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
+                className="p-2  mt-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 "
               >
                 Add Language
               </button>
@@ -435,7 +435,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           <div className="flex flex-wrap gap-2 m-2">
             {formData.courses.map((course, index) => (
              course.trim() !== '' && (
-                <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300">  
+                <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
                   <span className='max-w-full overflow-wrap break-words  p-1'>{course}</span>
                   <button
                     type="button"
