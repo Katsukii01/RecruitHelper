@@ -67,8 +67,8 @@ const ApplicantsOfferRanking = ({ id }) => {
 
 
   if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-     <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
-      CV Scores
+     <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
+      CV Ranking
         <HelpGuideLink section="RecruitmentCvRanking" />
       </h1>
 
@@ -100,8 +100,8 @@ const ApplicantsOfferRanking = ({ id }) => {
 
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
-           <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
-      CV Scores
+           <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
+      CV Ranking
         <HelpGuideLink section="RecruitmentCvRanking" />
       </h1>
     

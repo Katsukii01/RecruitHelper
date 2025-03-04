@@ -140,7 +140,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         {id ? (
           <>
             Recruitment Edit 

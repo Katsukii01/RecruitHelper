@@ -150,7 +150,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
   if (!PaginatedSessions.length)
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
             Meeting Sessions
             <HelpGuideLink section="RecruitmentMeetingsSessions" />
           </h1>
@@ -171,7 +171,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
 
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
-             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
             Meeting Sessions
             <HelpGuideLink section="RecruitmentMeetingsSessions" />
           </h1>

@@ -119,7 +119,7 @@ const AdnationalPoints = ({ id }) => {
   };
 
   if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         Adnational Points
         <HelpGuideLink section="RecruitmentAdnationalPoints" />
       </h1>
@@ -138,7 +138,7 @@ const AdnationalPoints = ({ id }) => {
 
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
-           <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+           <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         Adnational Points
         <HelpGuideLink section="RecruitmentAdnationalPoints" />
       </h1>

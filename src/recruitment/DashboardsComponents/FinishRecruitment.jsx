@@ -145,7 +145,7 @@ const FinishRecruitment = ({ id }) => {
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card overflow-auto">
   {/* 🔹 Nagłówek sekcji */}
-  <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+  <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
        Finish Recruitment
         <HelpGuideLink section="RecruitmentFinish" />
       </h1>

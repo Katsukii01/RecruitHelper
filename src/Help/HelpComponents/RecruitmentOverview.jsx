@@ -17,7 +17,7 @@ const RecruitmentOverview = () => {
           <FaQuestionCircle className="text-red-400 text-2xl" /> Recommendations for Recruitment Order
         </h2>
         <p className="text-gray-300 mt-2">
-          - We should proceed with the following recruitment order: <br />
+          We recommend the following steps to follow while recruiting: <br />
           <br />
           <strong>1.</strong> Checking CV scores. <br />
           <strong>1.1</strong> (Optional) Check and score Cover Letters if the applicant has one. <br />

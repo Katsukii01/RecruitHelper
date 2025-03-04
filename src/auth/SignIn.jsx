@@ -23,22 +23,22 @@ const SignIn = () => {
     if (user) {
       navigate('/Dashboard');
     }
-  }, [user, navigate]);
+  }, [user]);
 
 
-  const handleSubmit = async (e) => {
-
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevents the form from reloading the page
     setIsLoading(true);
     try {
-      await signIn(email, password); // Email/Password sign-in
+      await signIn(email, password); // Attempt to sign in
       navigate(from + fragment, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
-
     }
   };
+  
 
   const handleGoogleSignIn = async () => {
     try {

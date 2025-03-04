@@ -248,7 +248,7 @@ const MeetingPoints = ({ id, refresh }) => {
   if (!meetingSessions.length)
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         Meetings Points
         <HelpGuideLink section="RecruitmentMeetingsPoints" />
           </h1>
@@ -261,7 +261,7 @@ const MeetingPoints = ({ id, refresh }) => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         Meetings Points
         <HelpGuideLink section="RecruitmentMeetingsPoints" />
           </h1>

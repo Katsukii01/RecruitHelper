@@ -18,14 +18,16 @@ const ChooseMethod = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center bg-glass pt-32">
-      <h2 className="text-3xl font-bold text-cyan-300 mb-8 text-center">
+      <h2 className="text-3xl font-bold text-cyan-300 mb-8 text-center ">
         Select a Method to Add Applicants 
+
       </h2>
       <p className="text-gray-300 text-lg max-w-2xl text-center mb-12">
         Choose how you want to add applicants to the recruitment process. You can manually input their details or use an automated system powered by NLP and AI technologies to extract data from CVs.
-        <HelpGuideLink section="RecruitmentChooseMethod" />
       </p>
+      
       <div className="flex flex-wrap justify-center gap-10 w-full max-w-4xl">
+      <HelpGuideLink section="RecruitmentChooseMethod" />
         {/* Manual Applicants Card */}
         <div
           className="bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-transparent hover:border-cyan-400 hover:scale-105 transition-all duration-300 cursor-pointer w-full sm:w-2/5 text-center"

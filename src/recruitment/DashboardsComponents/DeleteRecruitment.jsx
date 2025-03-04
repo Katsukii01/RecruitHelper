@@ -72,7 +72,7 @@ const DeleteRecruitment = ({ id }) => {
   return (
     <section className="relative w-full mx-auto p-4 bg-black border-2 border-red-700 rounded-md flex flex-col items-center justify-center mb-16">
      <HelpGuideLink section="RecruitmentDelete" />
-      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         Delete Recruitment
       </h1>
       {!showModal && (

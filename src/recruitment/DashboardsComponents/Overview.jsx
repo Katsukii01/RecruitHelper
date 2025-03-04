@@ -62,7 +62,7 @@ const Overview = ({ id }) => {
 
   return (
     <section className="relative min-h-screen-80 w-full p-2 bg-glass card ">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Recruitment Overview
           <HelpGuideLink section="RecruitmentOverview" />
         </h1>

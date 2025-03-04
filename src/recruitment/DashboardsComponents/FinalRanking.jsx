@@ -116,7 +116,7 @@ const FinalRanking = ({ id }) => {
 
       if (!applicants.length) return (
         <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Final Ranking
           <HelpGuideLink section="RecruitmentFinalRanking" />
         </h1>
@@ -129,7 +129,7 @@ const FinalRanking = ({ id }) => {
 
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Final Ranking
           <HelpGuideLink section="RecruitmentFinalRanking" />
         </h1>
@@ -144,7 +144,7 @@ const FinalRanking = ({ id }) => {
               return (
                 <div key={key} className="flex flex-col items-center">
                   {/* Tekst nad przełącznikiem */}
-                  <span className="text-white font-medium text-sm mb-1">
+                  <span className="text-white font-medium text-sm mb-1 text-center">
                     {formattedKey}
                   </span>
 

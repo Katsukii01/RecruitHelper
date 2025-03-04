@@ -126,7 +126,7 @@ const CoverLettersPoints =  ({ id })=> {
     );
 
     if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Cover Letter Points
           <HelpGuideLink section="RecruitmentCoverLettersPoints" />
         </h1>
@@ -138,7 +138,7 @@ const CoverLettersPoints =  ({ id })=> {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
-            <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+            <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Cover Letter Points
           <HelpGuideLink section="RecruitmentCoverLettersPoints" />
         </h1>

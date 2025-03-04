@@ -153,7 +153,7 @@ const Tasks = ({ id, onRefresh }) => {
   if (!PaginatedSessions.length)
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
-       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Tasks
           <HelpGuideLink section="RecruitmentTasks" />
         </h1>
@@ -174,7 +174,7 @@ const Tasks = ({ id, onRefresh }) => {
 
     return (
       <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card over">
-        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
+        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
           Tasks
           <HelpGuideLink section="RecruitmentTasks" />
         </h1>
