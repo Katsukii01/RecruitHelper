@@ -31,6 +31,7 @@ const ManageUsers = () => {
             const isAdmin = await checkAdmin(user.userId);
             return isAdmin ? null : user; // Return null for admins
           })
+          
         );
         
         // Remove null values (admins) from the array
