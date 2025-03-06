@@ -1,4 +1,4 @@
-import app, { db, storage } from "../firebase/baseconfig";
+import app, { db, storage, firebaseAuth as auth  } from "../firebase/baseconfig";
 import {
   collection,
   addDoc,
@@ -10,6 +10,7 @@ import {
   query,
   where,
   setDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { firebaseAuth } from "../firebase/baseconfig";
 import {
@@ -19,8 +20,8 @@ import {
   deleteObject,
 } from "firebase/storage";
 import sendEmail from "./MailerServices";
-
-
+import { GetIsAdmin } from "../store/AuthContext";
+import { getFirebaseUsers } from "./recruitmentApi";
 
 //fetch all emails with  signInMethod
 export const fetchAllEmails = async () => {
@@ -124,8 +125,6 @@ const base64ToFile = (base64, fileName) => {
   return file;
 };
 
-
-
 // Funkcja do przesyłania pliku do Firebase Storage
 const uploadToStorage = async (file, filePath) => {
   const storageRef = ref(storage, filePath);
@@ -155,28 +154,34 @@ export const addRecruitment = async (recruitmentData) => {
 };
 
 // **2. Get all recruitments (with filtering)**
-export const getRecruitments = async (searchTerm = "") => {
+export const getRecruitments = async ( adminpanel = false) => {
   try {
     checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
     const userId = firebaseAuth.currentUser.uid; // Get the current user's ID
 
     const q = query(recruitmentCollection); // Fetch all documents from the collection
     const snapshot = await getDocs(q);
 
-    // Map and filter recruitments
-    return snapshot.docs
+    if (isAdmin && adminpanel) {
+      return snapshot.docs
       .map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }))
-      .filter(
-        (recruitment) =>
-          recruitment.userId === userId && // Filter by userId
-          Object.values(recruitment)
-            .join(" ")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) // Filter by search term
-      );
+      }));
+
+    } else {
+      // Map and filter recruitments
+      return snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .filter(
+          (recruitment) =>
+            recruitment.userId === userId 
+        );
+    }
   } catch (error) {
     console.error("Error fetching recruitments:", error.message);
     throw error;
@@ -205,7 +210,6 @@ export const getPublicRecruitments = async (searchTerm = "") => {
         const recruitmentData = doc.data();
         const applicants = recruitmentData.Applicants || [];
 
-
         // Check if the current user is already an applicant
         const isAlreadyApplicant = applicants.some(
           (applicant) => applicant.userUid === userId
@@ -227,7 +231,6 @@ export const getPublicRecruitments = async (searchTerm = "") => {
           skills: recruitmentData.skills,
           courses: recruitmentData.courses,
         };
-        
       })
       .filter(
         (recruitment) =>
@@ -318,37 +321,32 @@ export const getUserApplications = async (searchTerm = "") => {
 export const deleteRecruitment = async (recruitmentId) => {
   try {
     await checkAuth();
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
     // Ensure the current user is the owner of the recruitment
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to delete this recruitment");
-    }
 
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to delete this recruitment");
+      }
+    }
     // Delete all CV and Cover Letter files for each applicant
     const applicants = recruitmentData.Applicants || [];
     for (const applicant of applicants) {
-
       // Call deleteOldFiles for CVs
       if (applicant.cvFileUrls && applicant.cvFileUrls.length > 0) {
-        await deleteOldFiles(
-          applicant,
-          "Cv"
-        );
+        await deleteOldFiles(applicant, "Cv");
       }
-      
 
       // Call deleteOldFiles for Cover Letters
       if (
         applicant.coverLetterFileUrls &&
         applicant.coverLetterFileUrls.length > 0
       ) {
-        await deleteOldFiles(
-          applicant,
-          "CoverLetter"
-        );
+        await deleteOldFiles(applicant, "CoverLetter");
       }
     }
 
@@ -363,13 +361,16 @@ export const deleteRecruitment = async (recruitmentId) => {
 export const updateRecruitment = async (recruitmentId, updatedData) => {
   try {
     checkAuth();
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
     // Ensure the current user is the owner of the recruitment
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to update this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to update this recruitment");
+      }
     }
 
     await updateDoc(recruitmentDoc, updatedData);
@@ -389,7 +390,7 @@ export const addApplicant = async (
 ) => {
   try {
     await checkAuth(); // Ensure the user is logged in
-
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -403,38 +404,44 @@ export const addApplicant = async (
       (applicant) => applicant.id === applicantData.id
     );
 
-    if(applicantIndex === -1){
-          // Get highest id from applicants
-          const highestId = currentApplicants.reduce((maxId, applicant) => 
-            applicant.id > maxId ? applicant.id : maxId, 0
-          ); 
+    if (applicantIndex === -1) {
+      // Get highest id from applicants
+      const highestId = currentApplicants.reduce(
+        (maxId, applicant) => (applicant.id > maxId ? applicant.id : maxId),
+        0
+      );
 
-          applicantData.id = highestId + 1 + indedx;
+      applicantData.id = highestId + 1 + indedx;
     }
 
     console.log("applicantData", applicantData);
     console.log("aplicant index", applicantIndex);
 
-    
     if (applicantData.userUid) {
       if (recruitmentData.status == "Private") {
         throw new Error("This recruitment is private, you cant apply");
-      }else{
-        await updateUserStat(applicantData.userUid, "AllTimeApplicationsCount", "increment");
-      }
-    } else {
-      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-        throw new Error(
-          "You are not authorized to add applicants to this recruitment"
+      } else {
+        await updateUserStat(
+          applicantData.userUid,
+          "AllTimeApplicationsCount",
+          "increment"
         );
       }
+    } else {
+      if (!isAdmin) {
+        if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+          throw new Error(
+            "You are not authorized to add applicants to this recruitment"
+          );
+        }
+      }
+
       if (applicantIndex === -1) {
         if (recruitmentData.status == "Public") {
           throw new Error(
             "You need to cahnge recruitment to private  to add applicants by yourself"
           );
-        }else{
-
+        } else {
         }
       }
     }
@@ -456,10 +463,7 @@ export const addApplicant = async (
     } else {
       if (applicantIndex !== -1) {
         // Remove old CV and Cover Letter files from storage (optional, if needed)
-        await deleteOldFiles(
-          currentApplicants[applicantIndex],
-          "Cv"
-        );
+        await deleteOldFiles(currentApplicants[applicantIndex], "Cv");
       }
       // Otherwise, proceed with the conversion and uploading of CV files
       const cvFileUploadPromises = cvFilesArray.map((cvFileBase64, index) => {
@@ -467,15 +471,15 @@ export const addApplicant = async (
           cvFileBase64,
           `${applicantData.id}_cv_${index + 1}.png`
         );
-        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${index + 1}.png`;
+        const cvFilePath = `cv/${recruitmentId}/${applicantData.id}_${
+          index + 1
+        }.png`;
 
         return uploadToStorage(cvFile, cvFilePath);
       });
 
       // Równoczesne przesyłanie plików i oczekiwanie na ich zakończenie
       cvFileUrls = await Promise.all(cvFileUploadPromises);
-
-
     }
 
     // Prepare to upload Cover Letter files (if they exist)
@@ -498,19 +502,22 @@ export const addApplicant = async (
           );
         }
         // Otherwise, proceed with the conversion and uploading of Cover Letter files
-        const coverLetterUploadPromises = coverLetterFiles.map((coverLetterFileBase64, index) => {
-          const coverLetterFile = base64ToFile(
-            coverLetterFileBase64,
-            `${applicantData.id}_coverLetter_${index + 1}.webp`
-          );
-          const coverLetterFilePath = `coveringletters/${recruitmentId}/${applicantData.id}_${index + 1}.webp`;
+        const coverLetterUploadPromises = coverLetterFiles.map(
+          (coverLetterFileBase64, index) => {
+            const coverLetterFile = base64ToFile(
+              coverLetterFileBase64,
+              `${applicantData.id}_coverLetter_${index + 1}.webp`
+            );
+            const coverLetterFilePath = `coveringletters/${recruitmentId}/${
+              applicantData.id
+            }_${index + 1}.webp`;
 
-          return uploadToStorage(coverLetterFile, coverLetterFilePath);
-        });
+            return uploadToStorage(coverLetterFile, coverLetterFilePath);
+          }
+        );
 
         // Równoczesne przesyłanie plików i oczekiwanie na ich zakończenie
         coverLetterFileUrls = await Promise.all(coverLetterUploadPromises);
-
       }
     } else {
       if (applicantIndex !== -1) {
@@ -541,16 +548,14 @@ export const addApplicant = async (
       await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
     } else {
       // New applicant, add to the list
-      const updatedApplicants = [
-        ...currentApplicants,
+      const newApplicant = 
         {
           ...applicantData,
           cvFileUrls,
           coverLetterFileUrls,
-        },
-      ];
-
-      await updateDoc(recruitmentDoc, { Applicants: updatedApplicants });
+        };
+      
+      await updateDoc(recruitmentDoc, { Applicants: arrayUnion(newApplicant), });
     }
   } catch (error) {
     console.error("Error adding or updating applicant:", error.message);
@@ -563,7 +568,10 @@ export const addApplicant = async (
 const deleteOldFiles = async (oldApplicantData, type) => {
   try {
     if (type === "Cv") {
-      if (!oldApplicantData.cvFileUrls || oldApplicantData.cvFileUrls.length === 0) {
+      if (
+        !oldApplicantData.cvFileUrls ||
+        oldApplicantData.cvFileUrls.length === 0
+      ) {
         return;
       }
 
@@ -574,8 +582,10 @@ const deleteOldFiles = async (oldApplicantData, type) => {
         await deleteObject(cvRef);
       }
     } else if (type === "CoverLetter") {
-
-      if (!oldApplicantData.coverLetterFileUrls || oldApplicantData.coverLetterFileUrls.length === 0) {
+      if (
+        !oldApplicantData.coverLetterFileUrls ||
+        oldApplicantData.coverLetterFileUrls.length === 0
+      ) {
         return;
       }
 
@@ -587,18 +597,16 @@ const deleteOldFiles = async (oldApplicantData, type) => {
       }
     } else {
     }
-
   } catch (error) {
     console.error("Error deleting old files:", error);
   }
 };
 
-
 // 6. Delete an applicant from a recruitment (with CV and optional Cover Letter)
 export const deleteApplicant = async (recruitmentId, applicantId) => {
   try {
     await checkAuth(); // Ensure the user is logged in
-
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
     const recruitmentData = recruitmentSnapshot.data();
@@ -611,11 +619,13 @@ export const deleteApplicant = async (recruitmentId, applicantId) => {
 
     // Ensure the user is the owner of the recruitment
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      if (applicantToDelete.userUid !== firebaseAuth.currentUser.uid) {
-        throw new Error(
-          "You are not authorized to delete applicants from this recruitment"
-        );
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        if (applicantToDelete.userUid !== firebaseAuth.currentUser.uid) {
+          throw new Error(
+            "You are not authorized to delete applicants from this recruitment"
+          );
+        }
       }
     }
 
@@ -681,8 +691,6 @@ export const getApplicants = async (recruitmentId, page, limit) => {
 
     // Get total applicants count
     const totalApplicants = applicants.length;
-
-
 
     // Sort applicants by id (ascending order)
     const sortedApplicants = applicants.sort((a, b) => a.id - b.id);
@@ -752,6 +760,7 @@ const getFilePreview = async (fileUrl) => {
 export const getRecruitmentById = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId); // Reference to the specific recruitment document
     const recruitmentSnapshot = await getDoc(recruitmentDoc); // Fetch the document
 
@@ -762,8 +771,10 @@ export const getRecruitmentById = async (recruitmentId) => {
     const recruitmentData = recruitmentSnapshot.data();
 
     // Ensure the current user is the owner of the recruitment
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     return {
@@ -787,7 +798,8 @@ export const getRecruitmentsByUserId = async (userId) => {
     const querySnapshot = await getDocs(q); // Get the documents from the query
 
     if (querySnapshot.empty) {
-      throw new Error("No recruitments found for this user");
+      console.log("No recruitments found for this user");
+      return []; // Return an empty array if no documents are found
     }
 
     // Map through the documents and return the recruitment data
@@ -871,7 +883,6 @@ export const getApplicantsRanking = async (recruitmentId) => {
         : 0;
 
     totalScore += skillsScore;
-
 
     // Languages
     const matchedLanguagesScore = applicant.languages.reduce(
@@ -999,7 +1010,9 @@ export const getApplicantsRanking = async (recruitmentId) => {
     };
   };
   // Map applicants and calculate scores
-  const applicantsWithScores = await Promise.all(applicants.map(calculateScore));
+  const applicantsWithScores = await Promise.all(
+    applicants.map(calculateScore)
+  );
 
   // Sort applicants by score in descending order
   const rankedApplicants = applicantsWithScores.sort(
@@ -1017,6 +1030,7 @@ export const changeApplicantStage = async (
 ) => {
   try {
     await checkAuth();
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1026,8 +1040,10 @@ export const changeApplicantStage = async (
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to change applicant stage");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to change applicant stage");
+      }
     }
 
     const updatedApplicants = recruitmentData.Applicants.map((applicant) => {
@@ -1226,9 +1242,12 @@ export const addMeetings = async (recruitmentId, meetingsData) => {
           (applicant) => applicant.id === applicantId
         );
         if (applicantIndex !== -1) {
-          
-          if(applicants[applicantIndex].userUid){
-            await updateUserStat(applicants[applicantIndex].userUid, "AllTimeMeetingsCount", "increment");
+          if (applicants[applicantIndex].userUid) {
+            await updateUserStat(
+              applicants[applicantIndex].userUid,
+              "AllTimeMeetingsCount",
+              "increment"
+            );
           }
 
           applicants[applicantIndex].stage = "Invited for interview";
@@ -1336,6 +1355,7 @@ export const deleteMeeting = async (id, meetingSessionId, meetingId) => {
 export const getMeetingById = async (recruitmentId, meetingId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1345,8 +1365,10 @@ export const getMeetingById = async (recruitmentId, meetingId) => {
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const meetingSessions = recruitmentData.MeetingSessions || [];
@@ -1378,6 +1400,7 @@ export const getMeetingById = async (recruitmentId, meetingId) => {
 export const getApplicantsByStage = async (recruitmentId, stages) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1387,8 +1410,10 @@ export const getApplicantsByStage = async (recruitmentId, stages) => {
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const applicants = recruitmentData.Applicants || [];
@@ -1412,6 +1437,7 @@ export const createMeetingSession = async (
 ) => {
   try {
     await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1421,8 +1447,10 @@ export const createMeetingSession = async (
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to create meeting session");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to create meeting session");
+      }
     }
 
     // Update the meetings list: check if the meeting with the same ID already exists
@@ -1480,6 +1508,7 @@ export const createMeetingSession = async (
 export const deleteMeetingSession = async (recruitmentId, meetingSessionId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1488,10 +1517,12 @@ export const deleteMeetingSession = async (recruitmentId, meetingSessionId) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error(
-        "You are not authorized to delete meeting session from this recruitment"
-      );
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error(
+          "You are not authorized to delete meeting session from this recruitment"
+        );
+      }
     }
 
     const meetingSessionIndex = recruitmentData.MeetingSessions.findIndex(
@@ -1529,6 +1560,7 @@ export const getMeetingSessionById = async (
 ) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -1538,8 +1570,10 @@ export const getMeetingSessionById = async (
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const meetingIndex = recruitmentData.MeetingSessions.findIndex(
@@ -1667,7 +1701,6 @@ export const getUserMeetingSessions = async () => {
   }
 };
 
-
 export const getApplicantsWithOverallScore = async (recruitmentId) => {
   try {
     await checkAuth(); // 🔐 Sprawdzenie autoryzacji
@@ -1700,14 +1733,19 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
           email: applicant.email,
           CVscore: applicant.CVscore || 0,
           CLscore: applicant.CLscore || 0,
-          Tasksscore: maxPoints.tasksPointsWeight > 0 ? (Scores.Tasksscore / maxPoints.tasksPointsWeight) * 100 : 0,
-          Meetingsscore: maxPoints.meetingsPointsWeight > 0 ? (Scores.Meetingsscore / maxPoints.meetingsPointsWeight) * 100 : 0,
-          adnationalPoints: Scores.adnationalPoints || 0,
+          Tasksscore:
+            maxPoints.tasksPointsWeight > 0
+              ? (Scores.Tasksscore / maxPoints.tasksPointsWeight) * 100
+              : 0,
+          Meetingsscore:
+            maxPoints.meetingsPointsWeight > 0
+              ? (Scores.Meetingsscore / maxPoints.meetingsPointsWeight) * 100
+              : 0,
+          adnationalPoints: applicant.adnationalPoints || 0,
           coverLetterFileUrls: applicant.coverLetterFileUrls || [],
         };
       })
     );
-
 
     return applicantsWithOverallScore;
   } catch (error) {
@@ -1742,114 +1780,122 @@ export const getMaxPoints = async (recruitmentId) => {
     });
 
     return { meetingsPointsWeight, tasksPointsWeight };
+  } catch (error) {
+    console.error("Error fetching max points:", error.message);
+    throw error;
+  }
+};
 
-    } catch (error) {
-      console.error("Error fetching max points:", error.message);
-      throw error;
+//21.2 **get applicant score for meetings and tasks**
+export const getApplicantScore = async (recruitmentId, applicantId) => {
+  try {
+    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    const recruitmentRef = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentRef);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
     }
-  };
 
-  //21.2 **get applicant score for meetings and tasks**
-  export const getApplicantScore = async (recruitmentId, applicantId) => {
-    try {
-      await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
-      const recruitmentRef = doc(db, "recruitments", recruitmentId);
-      const recruitmentSnapshot = await getDoc(recruitmentRef);
-  
-      if (!recruitmentSnapshot.exists()) {
-        throw new Error("Recruitment not found");
-      }
-  
-      const recruitmentData = recruitmentSnapshot.data();
-  
-      const meetingSessions = recruitmentData.MeetingSessions || [];
-      const taskSessions = recruitmentData.TaskSessions || [];
-  
-      let Meetingsscore = 0;
-      let Tasksscore = 0;
-  
-      meetingSessions.forEach((session) => {
-        (session.meetings || []).forEach((meeting) => {
-          if (meeting.applicantId && String(meeting.applicantId) === String(applicantId)) {
-            Meetingsscore += parseFloat(session.meetingSessionPointsWeight) * (meeting.points *0.01) || 0;
-          }
-        });
+    const recruitmentData = recruitmentSnapshot.data();
+
+    const meetingSessions = recruitmentData.MeetingSessions || [];
+    const taskSessions = recruitmentData.TaskSessions || [];
+
+    let Meetingsscore = 0;
+    let Tasksscore = 0;
+
+    meetingSessions.forEach((session) => {
+      (session.meetings || []).forEach((meeting) => {
+        if (
+          meeting.applicantId &&
+          String(meeting.applicantId) === String(applicantId)
+        ) {
+          Meetingsscore +=
+            parseFloat(session.meetingSessionPointsWeight) *
+              (meeting.points * 0.01) || 0;
+        }
       });
-  
-      taskSessions.forEach((session) => {
-        (session.tasks || []).forEach((task) => {
-          if (task.applicantId && String(task.applicantId) === String(applicantId)) {
-            Tasksscore += parseFloat(session.taskSessionPointsWeight) * (task.points *0.01) || 0;
-          }
-        });
+    });
+
+    taskSessions.forEach((session) => {
+      (session.tasks || []).forEach((task) => {
+        if (
+          task.applicantId &&
+          String(task.applicantId) === String(applicantId)
+        ) {
+          Tasksscore +=
+            parseFloat(session.taskSessionPointsWeight) *
+              (task.points * 0.01) || 0;
+        }
       });
-  
-      return { Meetingsscore, Tasksscore };
-    } catch (error) {
-      console.error("Error fetching applicant score:", error.message);
-      throw error;
+    });
+
+    return { Meetingsscore, Tasksscore };
+  } catch (error) {
+    console.error("Error fetching applicant score:", error.message);
+    throw error;
+  }
+};
+
+//21.3 **change count status**
+export const changeCountStatus = async (recruitmentId, field) => {
+  try {
+    await checkAuth(); // Sprawdzenie autoryzacji
+    const recruitmentRef = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentRef);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
     }
-  };
 
-  //21.3 **change count status** 
-  export const changeCountStatus = async (recruitmentId, field) => {
-    try {
-      await checkAuth(); // Sprawdzenie autoryzacji
-      const recruitmentRef = doc(db, "recruitments", recruitmentId);
-      const recruitmentSnapshot = await getDoc(recruitmentRef);
-  
-      if (!recruitmentSnapshot.exists()) {
-        throw new Error("Recruitment not found");
-      }
-  
-      const recruitmentData = recruitmentSnapshot.data();
-  
-      // Jeśli pole nie istnieje, ustaw domyślnie na false
-      const currentValue = recruitmentData[field] ?? true;
-      const updatedValue = !currentValue; // Odwracamy wartość
-  
-      // Aktualizacja tylko jednego pola w Firestore
-      await updateDoc(recruitmentRef, { [field]: updatedValue });
-  
-      return updatedValue; // Zwracamy nową wartość
-    } catch (error) {
-      console.error("Error updating count status:", error.message);
-      throw error;
+    const recruitmentData = recruitmentSnapshot.data();
+
+    // Jeśli pole nie istnieje, ustaw domyślnie na false
+    const currentValue = recruitmentData[field] ?? true;
+    const updatedValue = !currentValue; // Odwracamy wartość
+
+    // Aktualizacja tylko jednego pola w Firestore
+    await updateDoc(recruitmentRef, { [field]: updatedValue });
+
+    return updatedValue; // Zwracamy nową wartość
+  } catch (error) {
+    console.error("Error updating count status:", error.message);
+    throw error;
+  }
+};
+
+//21.4 **get count status**
+export const getCountStatus = async (recruitmentId) => {
+  try {
+    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    const recruitmentRef = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentRef);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
     }
-  };
-  
-      
-
-  //21.4 **get count status** 
-  export const getCountStatus = async (recruitmentId) => {
-    try {
-        await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
-        const recruitmentRef = doc(db, "recruitments", recruitmentId);
-        const recruitmentSnapshot = await getDoc(recruitmentRef);
-
-        if (!recruitmentSnapshot.exists()) {
-          throw new Error("Recruitment not found");
-          }
-          const recruitmentData = recruitmentSnapshot.data();
-          return {
-            ClCountStatus: recruitmentData.ClCountStatus ?? true,
-            CvCountStatus: recruitmentData.CvCountStatus ?? true,
-            TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
-            MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
-            AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
-            };
-          } catch (error) {
-            console.error("Error fetching count status:", error.message);
-            throw error;
-            }
-      };
-
+    const recruitmentData = recruitmentSnapshot.data();
+    return {
+      ClCountStatus: recruitmentData.ClCountStatus ?? true,
+      CvCountStatus: recruitmentData.CvCountStatus ?? true,
+      TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+      MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+      AdnationalPointsCountStatus:
+        recruitmentData.AdnationalPointsCountStatus ?? true,
+    };
+  } catch (error) {
+    console.error("Error fetching count status:", error.message);
+    throw error;
+  }
+};
 
 // 22.**get applicant name ,surname, email, overall score by ID**
 
 export const getAllApplicants = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitment = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitment);
     if (!recruitmentSnapshot.exists()) {
@@ -1857,8 +1903,10 @@ export const getAllApplicants = async (recruitmentId) => {
     }
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const applicants = recruitmentData.Applicants || [];
@@ -1906,7 +1954,10 @@ export const updateMeetingPoints = async (
       meetingIndex
     ].points = updatedValue;
 
-    const applicantId = recruitmentData.MeetingSessions[meetingSessionIndex].meetings[meetingIndex].applicantId;
+    const applicantId =
+      recruitmentData.MeetingSessions[meetingSessionIndex].meetings[
+        meetingIndex
+      ].applicantId;
     await changeApplicantStage(id, applicantId, "Interviewed");
 
     await updateDoc(recruitmentDoc, {
@@ -1994,6 +2045,7 @@ export const countApplicantMeetings = async (userId, recruitmentId) => {
 export const createTaskSession = async (recruitmentId, taskSessionData) => {
   try {
     await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -2003,8 +2055,10 @@ export const createTaskSession = async (recruitmentId, taskSessionData) => {
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to create task session");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to create task session");
+      }
     }
 
     // Update the tasks list: check if the task with the same ID already exists
@@ -2061,6 +2115,7 @@ export const createTaskSession = async (recruitmentId, taskSessionData) => {
 export const deleteTaskSession = async (recruitmentId, taskSessionId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -2069,10 +2124,12 @@ export const deleteTaskSession = async (recruitmentId, taskSessionId) => {
     }
 
     const recruitmentData = recruitmentSnapshot.data();
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error(
-        "You are not authorized to delete task session from this recruitment"
-      );
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error(
+          "You are not authorized to delete task session from this recruitment"
+        );
+      }
     }
 
     const taskSessionIndex = recruitmentData.TaskSessions.findIndex(
@@ -2385,6 +2442,7 @@ export const deleteTask = async (id, taskSessionId, taskId) => {
 export const getTaskById = async (recruitmentId, taskId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -2394,8 +2452,10 @@ export const getTaskById = async (recruitmentId, taskId) => {
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const taskSessions = recruitmentData.TaskSessions || [];
@@ -2452,6 +2512,7 @@ export const countApplicantTasks = async (userId, recruitmentId) => {
 export const getTasksSessionsByRecruitmentId = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
 
@@ -2461,8 +2522,10 @@ export const getTasksSessionsByRecruitmentId = async (recruitmentId) => {
 
     const recruitmentData = recruitmentSnapshot.data();
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to view this recruitment");
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to view this recruitment");
+      }
     }
 
     const taskSessions = recruitmentData.TaskSessions || [];
@@ -2563,32 +2626,45 @@ export const setAdnationalPoints = async (id, applicantId, updatedValue) => {
   }
 };
 
-    const calculateTotalScore = (applicant, countStatus) => {
-      if (!countStatus) return 0;
-  
-      const { AdnationalPointsCountStatus, ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus } =
-        countStatus;
-  
-      const Cvscore = CvCountStatus ? applicant.CVscore || 0 : 0;
-      const CLscore = ClCountStatus ? applicant.CLscore || 0 : 0;
-      const adnationalPoints = applicant.adnationalPoints || 0;
-      const AddMeetingscore = MeetingsCountStatus ? applicant.Meetingsscore || 0 : 0;
-      const AddTasksscore = TasksCountStatus ? applicant.Tasksscore || 0 : 0;
-  
-  
-      // Liczba aktywnych czynników
-      const activeFactors = [ClCountStatus, CvCountStatus, MeetingsCountStatus, TasksCountStatus].filter(Boolean).length;
-      const baseScore = activeFactors > 0 ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors : 0;
-      let totalScore = parseFloat(baseScore);
-  
-      // Dodatkowe punkty
-      if (AdnationalPointsCountStatus) {
-        totalScore += adnationalPoints * 0.2;
-      }
-  
-      return totalScore;
-    };
+const calculateTotalScore = (applicant, countStatus) => {
+  if (!countStatus) return 0;
 
+  const {
+    AdnationalPointsCountStatus,
+    ClCountStatus,
+    CvCountStatus,
+    MeetingsCountStatus,
+    TasksCountStatus,
+  } = countStatus;
+
+  const Cvscore = CvCountStatus ? applicant.CVscore || 0 : 0;
+  const CLscore = ClCountStatus ? applicant.CLscore || 0 : 0;
+  const adnationalPoints = applicant.adnationalPoints || 0;
+  const AddMeetingscore = MeetingsCountStatus
+    ? applicant.Meetingsscore || 0
+    : 0;
+  const AddTasksscore = TasksCountStatus ? applicant.Tasksscore || 0 : 0;
+
+  // Liczba aktywnych czynników
+  const activeFactors = [
+    ClCountStatus,
+    CvCountStatus,
+    MeetingsCountStatus,
+    TasksCountStatus,
+  ].filter(Boolean).length;
+  const baseScore =
+    activeFactors > 0
+      ? (Cvscore + CLscore + AddTasksscore + AddMeetingscore) / activeFactors
+      : 0;
+  let totalScore = parseFloat(baseScore);
+
+  // Dodatkowe punkty
+  if (AdnationalPointsCountStatus) {
+    totalScore += adnationalPoints * 0.2;
+  }
+
+  return totalScore;
+};
 
 //34.05 **get applicants with overall score**
 export const getApplicantsWithTotalScores = async (recruitmentId) => {
@@ -2602,30 +2678,31 @@ export const getApplicantsWithTotalScores = async (recruitmentId) => {
     const recruitmentData = recruitmentSnapshot.data();
     const applicants = await getApplicantsWithOverallScore(recruitmentId);
 
-
-      const countStatus = {
-        ClCountStatus: recruitmentData.ClCountStatus ?? true,
-        CvCountStatus: recruitmentData.CvCountStatus ?? true,
-        TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
-        MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
-        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
+    const countStatus = {
+      ClCountStatus: recruitmentData.ClCountStatus ?? true,
+      CvCountStatus: recruitmentData.CvCountStatus ?? true,
+      TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+      MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+      AdnationalPointsCountStatus:
+        recruitmentData.AdnationalPointsCountStatus ?? true,
     };
 
     // Mapujemy aplikantów i liczymy `totalScore`
     const updatedApplicants = await Promise.all(
       applicants.map(async (applicant) => ({
         ...applicant,
-        totalScore: await calculateTotalScore(applicant, countStatus)
+        totalScore: await calculateTotalScore(applicant, countStatus),
       }))
     );
-    const sortedApplicants = updatedApplicants.sort((a, b) => b.totalScore - a.totalScore);
+    const sortedApplicants = updatedApplicants.sort(
+      (a, b) => b.totalScore - a.totalScore
+    );
     return sortedApplicants;
-    } catch (error) {
-      console.error("Error fetching applicants overall score:", error);
-      throw error;
-    }
-  };
-
+  } catch (error) {
+    console.error("Error fetching applicants overall score:", error);
+    throw error;
+  }
+};
 
 //34. **get recruitment stats**
 export const getRecruitmentStats = async (recruitmentId) => {
@@ -2646,34 +2723,34 @@ export const getRecruitmentStats = async (recruitmentId) => {
       return applicant.totalScore > max ? applicant.totalScore : max;
     }, 0);
 
-    const averageTotalScore = updatedApplicants.length > 0 
-    ? (() => {
-        const totalScore = updatedApplicants.reduce((total, applicant) => {
-            const score = applicant.totalScore ?? 0;
-            return total + score;
-        }, 0);
+    const averageTotalScore =
+      updatedApplicants.length > 0
+        ? (() => {
+            const totalScore = updatedApplicants.reduce((total, applicant) => {
+              const score = applicant.totalScore ?? 0;
+              return total + score;
+            }, 0);
 
-        if (totalScore === 0 || updatedApplicants.length === 0) return 0;
-        return totalScore / updatedApplicants.length;
-    })()
-    : 0;
+            if (totalScore === 0 || updatedApplicants.length === 0) return 0;
+            return totalScore / updatedApplicants.length;
+          })()
+        : 0;
 
     const ApplicantsInEachStage = updatedApplicants.reduce((acc, applicant) => {
       const stage = applicant.stage || "To be checked";
       acc[stage] = (acc[stage] || 0) + 1;
       return acc;
-  }, {});
-  
+    }, {});
 
     let totalMeetings = 0;
-    if(recruitmentData.MeetingSessions){
-    totalMeetings = recruitmentData.MeetingSessions.length ;
-    } 
+    if (recruitmentData.MeetingSessions) {
+      totalMeetings = recruitmentData.MeetingSessions.length;
+    }
 
     let totalTasks = 0;
-    if(recruitmentData.TaskSessions){
-     totalTasks = recruitmentData.TaskSessions.length ;
-    } 
+    if (recruitmentData.TaskSessions) {
+      totalTasks = recruitmentData.TaskSessions.length;
+    }
 
     const CurrentStage = recruitmentData.stage || "Collecting applicants";
 
@@ -2685,10 +2762,10 @@ export const getRecruitmentStats = async (recruitmentId) => {
       return total;
     }, 0);
 
-    const TotalCoverLettersPercentage = updatedApplicants.length > 0 
-      ? (TotalCoverLetters / updatedApplicants.length) * 100 
-      : 0;
-
+    const TotalCoverLettersPercentage =
+      updatedApplicants.length > 0
+        ? (TotalCoverLetters / updatedApplicants.length) * 100
+        : 0;
 
     return {
       totalApplicants,
@@ -2700,7 +2777,6 @@ export const getRecruitmentStats = async (recruitmentId) => {
       CurrentStage,
       TotalCoverLettersPercentage,
     };
-
   } catch (error) {
     console.error("Error fetching recruitment stats:", error.message);
     throw error;
@@ -2728,57 +2804,59 @@ export const setCoverLetterPoints = async (id, applicantId, updatedValue) => {
     console.error("Error updating cover letter points:", error.message);
     throw error;
   }
-  };
+};
 
-  //36 **set/update recruitment stage**
-  export const changeRecruitmentStage = async (id, newStage) => {
-    try {
-      await checkAuth(); // Ensure the user is authenticated
-      const recruitmentDoc = doc(db, "recruitments", id);
-      const recruitmentSnapshot = await getDoc(recruitmentDoc);
-  
-      if (!recruitmentSnapshot.exists()) {
-        throw new Error("Recruitment not found");
-      }
-  
-      const recruitmentData = recruitmentSnapshot.data();
-  
+//36 **set/update recruitment stage**
+export const changeRecruitmentStage = async (id, newStage) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
+    const recruitmentDoc = doc(db, "recruitments", id);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
+    }
+
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (!isAdmin) {
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
         throw new Error("You are not authorized to change recruitment stage");
       }
-  
-      recruitmentData.stage = newStage;
-  
-      await updateDoc(recruitmentDoc, {
-        stage: newStage,
-      });
-    } catch (error) {
-      console.error("Error changing recruitment stage:", error.message);
-      throw error;
     }
-  };
 
+    recruitmentData.stage = newStage;
 
-  //37 **get user stats**
-  export const getUserStats = async () => {
-    try {
-      const userId = firebaseAuth.currentUser.uid;
-      const userStatsCollection = collection(db, "userStats");
-      const q = query(userStatsCollection, where("id", "==", userId));
-      const querySnapshot = await getDocs(q);
-  
-      if (querySnapshot.empty) {
-        return null; // Jeśli nie ma rekordu, nie tworzymy nowego
-      }
-  
-      const userStatsData = querySnapshot.docs[0].data();
-      return { id: querySnapshot.docs[0].id, ...userStatsData };
-    } catch (error) {
-      console.error("Error getting user stats:", error);
-      return null;
+    await updateDoc(recruitmentDoc, {
+      stage: newStage,
+    });
+  } catch (error) {
+    console.error("Error changing recruitment stage:", error.message);
+    throw error;
+  }
+};
+
+//37 **get user stats**
+export const getUserStats = async () => {
+  try {
+    const userId = firebaseAuth.currentUser.uid;
+    const userStatsCollection = collection(db, "userStats");
+    const q = query(userStatsCollection, where("id", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return null; // Jeśli nie ma rekordu, nie tworzymy nowego
     }
-  };
-  
+
+    const userStatsData = querySnapshot.docs[0].data();
+    return { id: querySnapshot.docs[0].id, ...userStatsData };
+  } catch (error) {
+    console.error("Error getting user stats:", error);
+    return null;
+  }
+};
+
 // 38 **create user stats**
 export const createUserStats = async (userId) => {
   try {
@@ -2814,7 +2892,11 @@ export const checkAndCreateUserStats = async () => {
 };
 
 // 40 **update user stats**
-export const updateUserStat = async (userId, whatToCount, action = "increment") => {
+export const updateUserStat = async (
+  userId,
+  whatToCount,
+  action = "increment"
+) => {
   try {
     const userStatsCollection = collection(db, "userStats");
     const q = query(userStatsCollection, where("id", "==", userId));
@@ -2831,10 +2913,15 @@ export const updateUserStat = async (userId, whatToCount, action = "increment") 
     const currentCount = userData[whatToCount] || 0;
 
     // Decyzja o akcji
-    const newCount = action === "increment" ? currentCount + 1 : Math.max(0, currentCount - 1);
+    const newCount =
+      action === "increment" ? currentCount + 1 : Math.max(0, currentCount - 1);
 
     await updateDoc(userDoc, { [whatToCount]: newCount });
-    console.log(`${action === "increment" ? "Incremented" : "Decremented"} ${whatToCount} for user ${userId}`);
+    console.log(
+      `${
+        action === "increment" ? "Incremented" : "Decremented"
+      } ${whatToCount} for user ${userId}`
+    );
   } catch (error) {
     console.error("Error updating user stats:", error);
   }
@@ -2850,10 +2937,10 @@ export const getRecruitmentOfferData = async (recruitmentId) => {
     if (!recruitmentSnapshot.exists()) {
       throw new Error("Recruitment not found");
     }
-    
+
     const recruitmentData = recruitmentSnapshot.data();
 
-    const DataToExport ={ 
+    const DataToExport = {
       recruitmentjobTittle: recruitmentData.jobTittle,
       recruitmentCourses: recruitmentData.courses,
       recruitmentSkills: recruitmentData.skills,
@@ -2861,9 +2948,8 @@ export const getRecruitmentOfferData = async (recruitmentId) => {
       recruitmentExperience: recruitmentData.experienceNeeded,
       recruitmentEducationField: recruitmentData.educationField,
       recruitmentEducationLevel: recruitmentData.educationLevel,
-    }
+    };
     return DataToExport;
-
   } catch (error) {
     console.error("Error fetching recruitment offer data:", error.message);
     throw error;
@@ -2874,153 +2960,165 @@ export const getRecruitmentOfferData = async (recruitmentId) => {
 export const finishRecruitment = async (recruitmentId) => {
   try {
     await checkAuth(); // Ensure the user is authenticated asynchronously
+    const isAdmin = GetIsAdmin();
     const recruitmentDoc = doc(db, "recruitments", recruitmentId);
     const recruitmentSnapshot = await getDoc(recruitmentDoc);
     if (!recruitmentSnapshot.exists()) {
       throw new Error("Recruitment not found");
+    }
+    const recruitmentData = recruitmentSnapshot.data();
+
+    if (!isAdmin) {
+      if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
+        throw new Error("You are not authorized to finish recruitment");
       }
-      const recruitmentData = recruitmentSnapshot.data();
+    }
 
-    if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
-      throw new Error("You are not authorized to finish recruitment");
-      }
+    const recruitmentStats = await getRecruitmentStats(recruitmentId);
 
-      const recruitmentStats = await getRecruitmentStats(recruitmentId);
-
-      const countStatus = {
-        ClCountStatus: recruitmentData.ClCountStatus ?? true,
-        CvCountStatus: recruitmentData.CvCountStatus ?? true,
-        TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
-        MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
-        AdnationalPointsCountStatus: recruitmentData.AdnationalPointsCountStatus ?? true,
+    const countStatus = {
+      ClCountStatus: recruitmentData.ClCountStatus ?? true,
+      CvCountStatus: recruitmentData.CvCountStatus ?? true,
+      TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
+      MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
+      AdnationalPointsCountStatus:
+        recruitmentData.AdnationalPointsCountStatus ?? true,
     };
 
-      const applicants =  await getApplicantsWithOverallScore(recruitmentId);
+    const applicants = await getApplicantsWithOverallScore(recruitmentId);
 
-      // Mapujemy aplikantów i liczymy `totalScore`
-      const updatedApplicants = await Promise.all(
-        applicants.map(async (applicant) => ({
-          ...applicant,
-          totalScore: await calculateTotalScore(applicant, countStatus)
-        }))
-      );
+    // Mapujemy aplikantów i liczymy `totalScore`
+    const updatedApplicants = await Promise.all(
+      applicants.map(async (applicant) => ({
+        ...applicant,
+        totalScore: await calculateTotalScore(applicant, countStatus),
+      }))
+    );
 
-      const sortedApplicants = updatedApplicants.sort((a, b) => b.totalScore - a.totalScore);
+    const sortedApplicants = updatedApplicants.sort(
+      (a, b) => b.totalScore - a.totalScore
+    );
 
-      const meetings = recruitmentData.MeetingSessions || [];
-      const tasks =  recruitmentData.TaskSessions || [];
-      const offerData = {
-        jobTittle: recruitmentData.jobTittle,
-        experienceNeeded: recruitmentData.experienceNeeded,
-        educationLevel: recruitmentData.educationLevel,
-        educationField: recruitmentData.educationField,
-        courses: recruitmentData.courses,
-        skills: recruitmentData.skills,
-        languages: recruitmentData.languages,
-      }
-   
+    const meetings = recruitmentData.MeetingSessions || [];
+    const tasks = recruitmentData.TaskSessions || [];
+    const offerData = {
+      jobTittle: recruitmentData.jobTittle,
+      experienceNeeded: recruitmentData.experienceNeeded,
+      educationLevel: recruitmentData.educationLevel,
+      educationField: recruitmentData.educationField,
+      courses: recruitmentData.courses,
+      skills: recruitmentData.skills,
+      languages: recruitmentData.languages,
+    };
 
-      await updateDoc(recruitmentDoc, { stage: "Finished" });
+    await updateDoc(recruitmentDoc, { stage: "Finished" });
 
-      return {
-        recruitmentStats,
-        sortedApplicants,
-        meetings,
-        tasks,
-        offerData,
-      };
-    } catch (error) {
-      console.error("Error finishing recruitment:", error);
-      throw error;
+    return {
+      recruitmentStats,
+      sortedApplicants,
+      meetings,
+      tasks,
+      offerData,
+    };
+  } catch (error) {
+    console.error("Error finishing recruitment:", error);
+    throw error;
+  }
+};
+
+export const addOpinion = async (recruitmentId, opinion) => {
+  try {
+    await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+    const isAdmin = GetIsAdmin();
+    // Pobranie dokumentu rekrutacji
+    const recruitmentDoc = doc(db, "recruitments", recruitmentId);
+    const recruitmentSnapshot = await getDoc(recruitmentDoc);
+
+    if (!recruitmentSnapshot.exists()) {
+      throw new Error("Recruitment not found");
     }
-  };
 
-  export const addOpinion = async (recruitmentId, opinion) => {
-    try {
-      await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
-  
-      // Pobranie dokumentu rekrutacji
-      const recruitmentDoc = doc(db, "recruitments", recruitmentId);
-      const recruitmentSnapshot = await getDoc(recruitmentDoc);
-  
-      if (!recruitmentSnapshot.exists()) {
-        throw new Error("Recruitment not found");
-      }
-  
-      const recruitmentData = recruitmentSnapshot.data();
+    const recruitmentData = recruitmentSnapshot.data();
+    if (!isAdmin) {
       if (recruitmentData.userId !== firebaseAuth.currentUser.uid) {
         throw new Error("You are not authorized to add an opinion");
       }
-  
-      const opinionsCollection = collection(db, "opinions");
-  
-      // Pobranie wszystkich opinii, aby znaleźć największe ID
-      const opinionsSnapshot = await getDocs(opinionsCollection);
-      let maxId = 0;
-  
-      opinionsSnapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.id && data.id > maxId) {
-          maxId = data.id;
-        }
-      });
-  
-      if (opinion.id === undefined) {
-        opinion.id = maxId + 1; // Jeśli nie ma opinii, zacznie od 1
-      }
-  
-      // Sprawdzenie, czy opinia już istnieje
-      const opinionQuery = query(opinionsCollection, where("id", "==", opinion.id));
-      const opinionSnapshot = await getDocs(opinionQuery);
-  
-      const formattedDate = new Date().toLocaleString("pl-PL", {
-        hour: "2-digit",
-        minute: "2-digit",
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-  
-      if (opinionSnapshot.empty) {
-        // Dodanie nowej opinii
-        const newOpinion = {
-          ...opinion,
-          recruitmentName: recruitmentData.name,
-          recruitmentId: recruitmentId,
-          jobTittle: recruitmentData.jobTittle,
-          date: formattedDate, // Sformatowana data
-        };
-        await addDoc(opinionsCollection, newOpinion);
-        return newOpinion;
-      } else {
-        // Aktualizacja istniejącej opinii
-        const existingOpinionRef = opinionSnapshot.docs[0].ref;
-        const updatedOpinion = {
-          ...opinion,
-          recruitmentId: recruitmentId,
-          recruitmentName: recruitmentData.name,
-          jobTittle: recruitmentData.jobTittle,
-          date: formattedDate, // Sformatowana data
-        };
-        await updateDoc(existingOpinionRef, updatedOpinion);
-        return updatedOpinion;
-      }
-    } catch (error) {
-      console.error("Error adding opinion:", error.message);
-      throw error;
     }
-  };
 
+    const opinionsCollection = collection(db, "opinions");
+
+    // Pobranie wszystkich opinii, aby znaleźć największe ID
+    const opinionsSnapshot = await getDocs(opinionsCollection);
+    let maxId = 0;
+
+    opinionsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.id && data.id > maxId) {
+        maxId = data.id;
+      }
+    });
+
+    if (opinion.id === undefined) {
+      opinion.id = maxId + 1; // Jeśli nie ma opinii, zacznie od 1
+    }
+
+    // Sprawdzenie, czy opinia już istnieje
+    const opinionQuery = query(
+      opinionsCollection,
+      where("id", "==", opinion.id)
+    );
+    const opinionSnapshot = await getDocs(opinionQuery);
+
+    const formattedDate = new Date().toLocaleString("pl-PL", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    if (opinionSnapshot.empty) {
+      // Dodanie nowej opinii
+      const newOpinion = {
+        ...opinion,
+        recruitmentName: recruitmentData.name,
+        recruitmentId: recruitmentId,
+        jobTittle: recruitmentData.jobTittle,
+        date: formattedDate, // Sformatowana data
+      };
+      await addDoc(opinionsCollection, newOpinion);
+      return newOpinion;
+    } else {
+      // Aktualizacja istniejącej opinii
+      const existingOpinionRef = opinionSnapshot.docs[0].ref;
+      const updatedOpinion = {
+        ...opinion,
+        recruitmentId: recruitmentId,
+        recruitmentName: recruitmentData.name,
+        jobTittle: recruitmentData.jobTittle,
+        date: formattedDate, // Sformatowana data
+      };
+      await updateDoc(existingOpinionRef, updatedOpinion);
+      return updatedOpinion;
+    }
+  } catch (error) {
+    console.error("Error adding opinion:", error.message);
+    throw error;
+  }
+};
 
 //45 **get opinion by recruitmentId**
 export const findOpinionById = async (recruitmentId) => {
   try {
     await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
     const opinionsCollection = collection(db, "opinions");
-    const opinionQuery = query(opinionsCollection, where("recruitmentId", "==", recruitmentId));
+    const opinionQuery = query(
+      opinionsCollection,
+      where("recruitmentId", "==", recruitmentId)
+    );
     const opinionSnapshot = await getDocs(opinionQuery);
     if (opinionSnapshot.empty) {
-      return null; 
+      return null;
     }
     return opinionSnapshot.docs[0].data();
   } catch (error) {
@@ -3037,8 +3135,8 @@ export const getRandomOpinions = async () => {
       return []; // Return an empty array if no opinions exist
     }
 
-    const allOpinions = opinionsSnapshot.docs.map(opinion => opinion.data());
-    
+    const allOpinions = opinionsSnapshot.docs.map((opinion) => opinion.data());
+
     // Shuffle array and get up to 9 random opinions
     const shuffledOpinions = allOpinions.sort(() => Math.random() - 0.5);
     const randomOpinions = shuffledOpinions.slice(0, 9);
@@ -3062,27 +3160,183 @@ export const closeRecruitment = async (recruitmentId) => {
     const applicants = recruitmentData.Applicants || [];
 
     for (const applicant of applicants) {
-      
-      if(applicant.stage == "Hired")
-        {
-          await updateUserStat(firebaseAuth.currentUser.uid, "AllTimeHiredApplicants", "increment");
-          if(applicant.userUid){
-          await updateUserStat(applicant.userUid, "AllTimeApplicationHired", "increment");
-          }
-        }else{
-          if(applicant.userUid){
-           await updateUserStat(applicant.userUid, "AllTimeApplicationRejected", "increment");
-            }
+      if (applicant.stage == "Hired") {
+        await updateUserStat(
+          firebaseAuth.currentUser.uid,
+          "AllTimeHiredApplicants",
+          "increment"
+        );
+        if (applicant.userUid) {
+          await updateUserStat(
+            applicant.userUid,
+            "AllTimeApplicationHired",
+            "increment"
+          );
         }
-
+      } else {
+        if (applicant.userUid) {
+          await updateUserStat(
+            applicant.userUid,
+            "AllTimeApplicationRejected",
+            "increment"
+          );
+        }
       }
-      // Delete recruitment
-      await deleteRecruitment(recruitmentId);
+    }
+    // Delete recruitment
+    await deleteRecruitment(recruitmentId);
   } catch (error) {
     console.error("Error closing recruitment:", error.message);
     throw error;
   }
 };
 
+//48 **delete user stats**
+export const deleteUserStats = async (userId) => {
+  try {
+    const userStatsCollection = collection(db, "userStats");
+    const q = query(userStatsCollection, where("id", "==", userId));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      console.log("User stats not found");
+      return;
+    }
+    const userDoc = querySnapshot.docs[0].ref;
+    await deleteDoc(userDoc);
+    console.log(`Deleted user stats for user ${userId}`);
+  } catch (error) {
+    console.error("Error deleting user stats:", error);
+  }
+};
 
+//49 **get all users stats with user name and email**
+export const getAllUsersStats = async () => {
+  try {
+    // Fetch users from Firebase Authentication
+    const firebaseUsers = await getFirebaseUsers();  // Assumes this returns an array of users
+    console.log(firebaseUsers);
+
+    // Store users and their stats
+    const usersStats = [];
+
+    // Loop through each Firebase user and fetch their stats from Firestore
+    for (const user of firebaseUsers) {
+      const userId = user.uid;
+      const email = user.email;
+      const userName = user.displayName || 'No Name';  // Default to 'No Name' if no displayName
+
+      // 1. Fetch user stats by userId (in userStats collection)
+      const userStatsRef = collection(db, "userStats"); // Reference to the 'userStats' collection
+      const q = query(userStatsRef, where("id", "==", userId)); // Query filtering by 'id' field
+
+      // Fetch the documents that match the query
+      const userStatsSnapshot = await getDocs(q);
+
+      // Process the snapshot
+      let userStatsData = {
+        AllTimeApplicationHired: 0,
+        AllTimeApplicationRejected: 0,
+        AllTimeApplicationsCount: 0,
+        AllTimeHiredApplicants: 0,
+        AllTimeMeetingsCount: 0,
+        AllTimeRecruitmentsCount: 0,
+      };
+
+      // If a matching document exists
+      if (!userStatsSnapshot.empty) {
+        const statsData = userStatsSnapshot.docs[0].data(); // Assuming only one document matches
+        userStatsData = {
+          AllTimeApplicationHired: statsData.AllTimeApplicationHired || 0,
+          AllTimeApplicationRejected: statsData.AllTimeApplicationRejected || 0,
+          AllTimeApplicationsCount: statsData.AllTimeApplicationsCount || 0,
+          AllTimeHiredApplicants: statsData.AllTimeHiredApplicants || 0,
+          AllTimeMeetingsCount: statsData.AllTimeMeetingsCount || 0,
+          AllTimeRecruitmentsCount: statsData.AllTimeRecruitmentsCount || 0,
+        };
+      }
+
+      // 2. Check the 'signInMethod' from the 'emails' collection by email
+      const emailRef = doc(db, "emails", email);  // Assuming you store emails in 'emails' collection
+      const emailSnapshot = await getDoc(emailRef);
+
+      let signInMethod = 'Unknown'; // Default value if not found
+      if (emailSnapshot.exists()) {
+        const emailData = emailSnapshot.data();
+        signInMethod = emailData.signInMethod || 'Unknown';
+      }
+
+      // Add user and their stats to the list
+      usersStats.push({
+        userId,
+        userName,
+        email,
+        signInMethod,  // Add signInMethod to the stats
+        ...userStatsData, // Merge user stats
+      });
+    }
+
+    console.log("Users stats:", usersStats);
+    return usersStats;
+
+  } catch (error) {
+    console.error("Error getting users stats:", error);
+    return [];  // Return an empty array in case of an error
+  }
+};
+
+
+//50 **update user stats**
+export const updateUserStats = async (stats) => {
+  try {
+    await checkAuth(); // Ensure the user is authenticated
+    const isAdmin = GetIsAdmin();
+    if (!isAdmin) {
+      throw new Error("You are not authorized to update user stats.");
+    }
+
+    if (!stats.id) {
+      throw new Error("User ID is missing in the stats data.");
+    }
+
+    // Reference the collection
+    const userStatsQuery = query(collection(db, "userStats"), where("id", "==", stats.id));
+    const querySnapshot = await getDocs(userStatsQuery);
+
+    if (!querySnapshot.empty) {
+      // If the document exists, update it
+      const userStatsDoc = querySnapshot.docs[0];
+      const userStatsRef = userStatsDoc.ref;
+
+      await updateDoc(userStatsRef, {
+        AllTimeApplicationHired: stats.AllTimeApplicationHired || 0,
+        AllTimeApplicationRejected: stats.AllTimeApplicationRejected || 0,
+        AllTimeApplicationsCount: stats.AllTimeApplicationsCount || 0,
+        AllTimeHiredApplicants: stats.AllTimeHiredApplicants || 0,
+        AllTimeMeetingsCount: stats.AllTimeMeetingsCount || 0,
+        AllTimeRecruitmentsCount: stats.AllTimeRecruitmentsCount || 0,
+      });
+
+      console.log(`User stats updated successfully for ID: ${stats.id}`);
+    } else {
+      // If the document does not exist, create a new one
+      const newStatsRef = doc(collection(db, "userStats")); // Generate a new document reference
+
+      await setDoc(newStatsRef, {
+        id: stats.id,
+        AllTimeApplicationHired: stats.AllTimeApplicationHired || 0,
+        AllTimeApplicationRejected: stats.AllTimeApplicationRejected || 0,
+        AllTimeApplicationsCount: stats.AllTimeApplicationsCount || 0,
+        AllTimeHiredApplicants: stats.AllTimeHiredApplicants || 0,
+        AllTimeMeetingsCount: stats.AllTimeMeetingsCount || 0,
+        AllTimeRecruitmentsCount: stats.AllTimeRecruitmentsCount || 0,
+      });
+
+      console.log(`User stats created successfully for ID: ${stats.id}`);
+    }
+
+  } catch (error) {
+    console.error("Error updating/creating user stats:", error);
+    return { success: false, error: error.message };
+  }
+};
 

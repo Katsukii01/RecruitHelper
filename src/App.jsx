@@ -11,6 +11,7 @@ import {
   Dashboard,
   Opinions,
   Footer,
+  Faq,
 } from "./components";
 import {
   CreateRecruitment,
@@ -28,6 +29,9 @@ import {
 import Help  from "./Help/Help.jsx";
 import { StarsCanvas, ProtectedRoute } from "./utils";
 import { Home, SignIn, SignUp } from "./auth";
+import AdminPanel from "./admin/AdminPanel.jsx";
+import EditFirebaseUserAdmin from "./admin/EditFirebaseUserAdmin.jsx";
+
 
 const App = () => {
   return (
@@ -193,6 +197,28 @@ const App = () => {
             path="/Help"
             element={
                 <Help />
+            }
+            />
+            <Route
+            path="/Faq"
+            element={
+                <Faq />
+            }
+            />
+            <Route
+            path="/Admin"
+            element={
+              <ProtectedRoute>
+                  <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/EditUserData"
+            element={
+              <ProtectedRoute>
+                  <EditFirebaseUserAdmin />
+              </ProtectedRoute>
             }
             />
         </Routes>

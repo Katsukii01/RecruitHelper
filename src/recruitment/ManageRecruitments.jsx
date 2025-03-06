@@ -3,7 +3,7 @@ import { getRecruitments } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from '../utils';
 
-const ManageRecruitments = () => {
+const ManageRecruitments = ({adminpanel=false}) => {
   const [recruitments, setRecruitments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const ManageRecruitments = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getRecruitments();
+        const data = await getRecruitments(adminpanel); 
         setRecruitments(data);
       } catch (error) {
         console.error('Error fetching recruitments:', error);
@@ -78,12 +78,14 @@ const ManageRecruitments = () => {
   ];
 
   const stageColors = {
+    'Paused': 'bg-red-500',
     'Collecting applicants': 'bg-gray-500',
     'Checking applications': 'bg-blue-500 ',
     'Interviewing applicants': 'bg-yellow-500 ',
+    'Scoring tasks': 'bg-pink-500 ',
     'Offering jobs': 'bg-purple-500 ',
     'Hiring employees': 'bg-green-500 ',
-    'Paused': 'bg-red-500',
+    'Finished': 'bg-green-500',
   }
   
   const goToRecruitmentDashboard = (id) => {

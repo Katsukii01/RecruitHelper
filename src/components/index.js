@@ -8,6 +8,7 @@ import Terms from './Terms';;
 import Dashboard from './Dashboard';
 import Opinions from './Opinions';
 import Footer from './Footer';
+import Faq from './Faq';
 
 
 
@@ -23,4 +24,5 @@ export {
     Dashboard,
     Opinions,
     Footer,
+    Faq,
 }

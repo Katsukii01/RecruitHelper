@@ -6,7 +6,7 @@ import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
 
 const Navbar = () => {
-  const { user, signOut } = useContext(AuthContext);
+  const { user, isAdmin, signOut } = useContext(AuthContext);
   const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
@@ -56,7 +56,7 @@ const Navbar = () => {
         }
       } else {
         const pathname = location.pathname;
-        const validPaths = ['/SignIn', '/SignUp', '/Home', '/Dashboard','/'];
+        const validPaths = ['/SignIn', '/SignUp', '/Home', '/Dashboard', '/Admin','/'];
     
         if (!validPaths.includes(pathname)) {
           setActive('');
@@ -78,7 +78,7 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = (e) => {
       if (e.matches && active) {
-        if(active === "Dashboard" || active === "Home" || active === "SignIn" || active === "SignUp"){
+        if(active === "Dashboard" || active === "Home" || active === "SignIn" || active === "SignUp" || active === "Admin"){
           setUnderlineToNone();
         }else{
           setUnderline(active);
@@ -113,6 +113,11 @@ const Navbar = () => {
       setUnderlineToNone();
       setActive("");
       handleLogout();
+    }
+    else if (link === "Admin") {
+      setActive("Admin");
+      setUnderlineToNone();
+      navigate("/Admin");
     }
     else {
       navigate("/");
@@ -240,6 +245,21 @@ const Navbar = () => {
                         </svg>
                       </a>
                     </li>
+                    {isAdmin && (
+                      <li
+                        key={"Admin"}
+                        className={`cursor-pointer border-2  p-2 rounded-full hover:bg-indigo-500 hover:text-white ${
+                          active === "Admin" ? "text-white border-white bg-indigo-500" : "text-[#a8a8a8] border-[#a8a8a8]"
+                        }`}
+                        onClick={() => handleActive("Admin")}
+                      >
+                        <a className="flex items-center justify-center w-full h-full" >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                          </svg>
+                        </a>
+                      </li>
+                    )}
 
                     <li
                       key={"Logout"}
@@ -393,7 +413,21 @@ const Navbar = () => {
                       </svg>
                     </a>
                   </div>
-                
+                  {isAdmin && (
+                      <li
+                        key={"Admin"}
+                        className={`cursor-pointer border-2 p-2 rounded-full flex items-center justify-center hover:bg-indigo-500 hover:text-white ${
+                          active === "Admin" ? "text-white border-white bg-indigo-500" : "text-[#323232] border-[#323232]"
+                        }`}
+                        onClick={() => handleActive("Admin")}
+                      >
+                        <a className="flex items-center justify-center w-full h-full" >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                          </svg>
+                        </a>
+                      </li>
+                    )}
                   <div
                     key={"Logout"}
                     className={`cursor-pointer bg-red-600 text-white p-2 rounded-full flex items-center justify-center hover:bg-red-700 border-white border-2 ${

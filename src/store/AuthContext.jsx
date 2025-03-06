@@ -16,13 +16,18 @@ import {
    reauthenticateWithPopup,
    updatePassword as firebaseUpdatePassword,
 } from 'firebase/auth';
-import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, fetchAllEmails, addEmail, deleteEmail, getMeetingsByUserId, deleteMeeting } from '../services/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
+import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, fetchAllEmails, addEmail, deleteEmail, getMeetingsByUserId, deleteMeeting , deleteUserStats} from '../services/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
 
+const checkAdmin = async (userUID) => {
+  const adminUIDs = import.meta.env.VITE_ADMIN_UIDS?.split(",") || [];
+  return adminUIDs.includes(userUID);
+};
 
 // Create AuthContext
 export const AuthContext = createContext({
   user: null,
   loading: true,
+  isAdmin: false,
   signIn: () => {},
   signUp: () => {},
   signOut: () => {},
@@ -30,11 +35,17 @@ export const AuthContext = createContext({
   deleteAccount: () => {},
   updateName: () => {},
   googleSignIn: () => {},
+  checkAdmin: () => {}
 });
+
+export const GetIsAdmin = async () => {
+  return checkAdmin(firebaseAuth.currentUser.uid);
+};
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isAdmin, setIsAdmin] = useState(false);
 
 // Google Sign-In function
 const googleSignIn = async () => {
@@ -43,6 +54,7 @@ const googleSignIn = async () => {
     const result = await signInWithPopup(firebaseAuth, provider);
     const user = result.user;
     setCurrentUser(user); // Set the signed-in user
+    setIsAdmin(checkAdmin(user.uid));
     console.log('Google sign-in successful');
 
     // Save email and sign-in method (Google) to Firestore
@@ -72,7 +84,7 @@ const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
     setCurrentUser(userCredential.user);
     console.log('Email/password sign-in successful');
-
+    setIsAdmin(checkAdmin(user.uid));
     console.log('User saved to Firestore');
   } catch (error) {
     let userFriendlyMessage = 'An error occurred during sign-in.';
@@ -119,6 +131,7 @@ const signUp = async (email, password, username) => {
 
     console.log('Email verification sent successfully');
     setCurrentUser(user); // Set the user in the app context state
+    setIsAdmin(checkAdmin(user.uid));
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
       console.error('The email address is already in use by another account.');
@@ -154,6 +167,7 @@ const signUp = async (email, password, username) => {
     try {
       await firebaseSignOut(firebaseAuth);
       setCurrentUser(null); // Clear current user
+      setIsAdmin(false); // Reset admin status
     } catch (error) {
       console.error('Error during sign-out:', error);
       throw error;
@@ -297,11 +311,11 @@ const signUp = async (email, password, username) => {
 
 
 
-
   
         // 7. Delete the user account after all recruitments and applications are handled
         await deleteUser(currentUser);
         await deleteEmail(currentUser.email);
+        await deleteUserStats(currentUser.uid);
         setCurrentUser(null); // Clear the current user after deletion
         console.log("Account deleted successfully.");
       } else {
@@ -405,11 +419,11 @@ const updatePassword = async (oldPassword, newPassword) => {
   }
 };
 
-
   // Monitor Authentication State
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setCurrentUser(user);
+      setIsAdmin(checkAdmin(user.uid));
       setIsLoading(false); // Stop loading once user is retrieved
     });
 
@@ -420,6 +434,7 @@ const updatePassword = async (oldPassword, newPassword) => {
   const authValues = {
     user: currentUser,
     loading: isLoading,
+    isAdmin: isAdmin,
     signIn,
     signUp,
     signOut,
@@ -428,6 +443,7 @@ const updatePassword = async (oldPassword, newPassword) => {
     updateName: updateDisplayName, // Add the updateName function
     updatePassword, // Add the updatePassword function
     googleSignIn,
+    checkAdmin 
   };
 
   return <AuthContext.Provider value={authValues}>{children}</AuthContext.Provider>;

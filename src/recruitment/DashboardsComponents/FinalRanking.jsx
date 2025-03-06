@@ -214,7 +214,7 @@ const FinalRanking = ({ id }) => {
 
             {/* Dodatkowe punkty */}
             <div className="flex flex-col items-center">
-              <p className="text-sm text-gray-300">Additional Points</p>
+              <p className="text-sm text-gray-300">Adnational Points</p>
               <p className="text-lg font-semibold text-white">{applicant.adnationalPoints || 0}</p>
             </div>
             

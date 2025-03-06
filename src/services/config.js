@@ -8,4 +8,7 @@ export const apiEndpoints = {
   analyzeCoverLetter: "/api/analyze_letter",
   submitApplicants: "/api/submit-applicants",
   analyzeCV: "/api/analyze_cv",
+  getFirebaseUsers: "/api/get-users",
+  updateFirebaseUser: "/api/update-user",
+  deleteFirebaseUser: "/api/delete-user",
 }
