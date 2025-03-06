@@ -3,6 +3,5 @@ import ManageOpinions from './ManageOpinions'
 
 export {
   ManageUsers,
-  ManageRecruitments,
   ManageOpinions
 }
