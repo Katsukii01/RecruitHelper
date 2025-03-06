@@ -18,7 +18,7 @@ import {
 } from 'firebase/auth';
 import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, fetchAllEmails, addEmail, deleteEmail, getMeetingsByUserId, deleteMeeting , deleteUserStats} from '../services/RecruitmentServices'; // Funkcje do pobierania i usuwania rekrutacji
 
-const checkAdmin = async (userUID) => {
+const checkAdmin = (userUID) => {
   const adminUIDs = import.meta.env.VITE_ADMIN_UIDS?.split(",") || [];
   return adminUIDs.includes(userUID);
 };

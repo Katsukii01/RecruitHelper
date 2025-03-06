@@ -5,15 +5,17 @@ import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
 
+
+
 const Navbar = () => {
-  const { user, isAdmin, signOut } = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+  const { user, isAdmin, signOut } = auth;
   const navigate = useNavigate();
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
   const allowedHashes = NavLinks.map(link => link.id);
   const location = useLocation();
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
-
 
   const setUnderline = (linkId) => {
     const underline = document.getElementById('underline');
@@ -36,9 +38,12 @@ const Navbar = () => {
   };
   
 
+
   useEffect(() => {
     const handleLocationChange = () => {
-     
+      
+      console.log(auth);
+      
       const hash = window.location.hash.slice(1); // Get hash without the '#' character
   
       if (hash) {
@@ -165,7 +170,7 @@ const Navbar = () => {
             </li>
           ))}
             <li className=' relative text-[18px] font-medium cursor-pointer m-2'>|</li>
-            {!user ? (
+            {user === null ? (
                <>
                   <li
                     key={"signIn"}
@@ -245,7 +250,7 @@ const Navbar = () => {
                         </svg>
                       </a>
                     </li>
-                    {isAdmin && (
+                    {isAdmin === true && (
                       <li
                         key={"Admin"}
                         className={`cursor-pointer border-2  p-2 rounded-full hover:bg-indigo-500 hover:text-white ${
@@ -332,7 +337,7 @@ const Navbar = () => {
     
               <hr className='border-s-[80px] border-white w-max h-max'/>
 
-              {!user ? (
+              {user === null ? (
                <div className="grid grid-cols-2 gap-2 p-1">
                   <div
                     key={"signIn"}
@@ -413,7 +418,7 @@ const Navbar = () => {
                       </svg>
                     </a>
                   </div>
-                  {isAdmin && (
+                  {isAdmin === true && (
                       <li
                         key={"Admin"}
                         className={`cursor-pointer border-2 p-2 rounded-full flex items-center justify-center hover:bg-indigo-500 hover:text-white ${
