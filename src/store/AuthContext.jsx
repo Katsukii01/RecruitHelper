@@ -38,7 +38,7 @@ export const AuthContext = createContext({
   checkAdmin: () => {}
 });
 
-export const GetIsAdmin = async () => {
+export const GetIsAdmin = () => {
   return checkAdmin(firebaseAuth.currentUser.uid);
 };
 

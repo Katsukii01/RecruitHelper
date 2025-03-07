@@ -2,6 +2,8 @@ import { updateFirebaseUser } from '../services/recruitmentApi';
 import { updateUserStats } from '../services/RecruitmentServices';
 import React ,{ useState, useEffect } from 'react';
 import { useNavigate,  useLocation  } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../store/AuthContext';
 
 const EditFirebaseUserAdmin = () => {
     const navigate = useNavigate();
@@ -9,7 +11,26 @@ const EditFirebaseUserAdmin = () => {
     const { userData } = state || {};
     const [formData, setFormData] = useState(userData || {}); // Initialize with userData or empty object
     const [errors, setErrors] = useState({});
+    const { isAdmin } = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
 
+
+  useEffect(() => {
+    if (isAdmin === false) {
+      navigate('/'); 
+    }
+  }, [isAdmin, navigate]); // Zależność dodana
+
+  // Jeśli użytkownik nie jest adminem, zwróć komunikat o braku dostępu
+  if (isAdmin === false) {
+    return (
+      <section className="flex flex-col items-center justify-center pt-28 min-h-screen">
+        <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
+          You are not authorized to access this page
+        </p>
+      </section>
+    );
+  }
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -105,7 +126,9 @@ const EditFirebaseUserAdmin = () => {
 
 
     const handleSubmit = async (e) => {
+        try {
         e.preventDefault()
+        setIsLoading(true);
 
         // Validate form data
         const validationErrors = validateForm(formData)
@@ -155,8 +178,13 @@ const EditFirebaseUserAdmin = () => {
           
           console.log(user);
           await updateFirebaseUser(user);
-
-        navigate(`/Admin`)
+          alert("User updated successfully!");
+          navigate(`/Admin`)
+        } catch (error) {
+            console.error("Error updating user:", error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
   return (
@@ -285,6 +313,7 @@ const EditFirebaseUserAdmin = () => {
         {/*submit button*/}
         <div className="flex justify-center">
         <button
+            disabled={isLoading}
             type="submit"
             className="bg-green-500 text-white rounded-lg m-2 p-2 font-medium border border-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
 
@@ -292,6 +321,7 @@ const EditFirebaseUserAdmin = () => {
             Save Changes
         </button>
         <button
+            disabled={isLoading}
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
           >

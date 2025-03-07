@@ -1,28 +1,32 @@
-import { EXRExporter } from "three/examples/jsm/Addons.js";
-
 export const NavLinks = [
-    {
-      id: "About",
-      title: "About",
-    },
-    {
-      id: "Know-how",
-      title: "Know-how",
-    },
-    {
-      id: "Recruitments",
-      title: "Recruitments",
-    },
-    {
-      id: "Opinions",
-      title: "Opinions",
-    },
-    {
-      id: "Contact",
-      title: "Contact",
-    },
+  {
+    id: "About",
+    titleKey: "nav.about", 
+    title: "About", 
+  },
+  {
+    id: "Know-how",
+    titleKey: "nav.knowHow",
+    title: "Know-how",
 
-  ];
+  },
+  {
+    id: "Recruitments",
+    titleKey: "nav.recruitments",
+    title: "Recruitments",
+  },
+  {
+    id: "Opinions",
+    titleKey: "nav.opinions",
+    title: "Opinions",
+  },
+  {
+    id: "Contact",
+    titleKey: "nav.contact",
+    title: "Contact",
+  },
+];
+
 
   export const RecruitmentDashboardLinks = [
     {

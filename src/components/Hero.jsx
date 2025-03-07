@@ -2,8 +2,10 @@ import React from 'react';
 import { styles } from '../styles';
 import { motion } from 'framer-motion';
 import { HiUser, HiChevronDoubleRight, HiOutlineDocumentText, HiCog } from "react-icons/hi2";
+import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
   return (
     <section className='relative w-full h-screen mx-auto  '>
 
@@ -11,12 +13,10 @@ const Hero = () => {
       {/* Header Section */}
       <div className="text-center">
       <h1 className={`${styles.heroHeadText} text-snow`}>
-        Welcome to <span className="bg-clip-text bg-gradient-to-br to-teal-500 from-sky  border-text">RecruitHelper</span>
+      {t('Welcome to')} <span className="bg-clip-text bg-gradient-to-br to-teal-500 from-sky  border-text">RecruitHelper</span>
       </h1>
       <p className={`${styles.heroSubText} mt-4 text-breeze`}>
-        Empowering you to navigate your recruitment process with our innovative 
-         solutions. Our platform is designed to simplify every aspect of the recruitment journey,
-        from attracting the best talent to making seamless hiring decisions. 
+        {t('heroHeadText')}
         <br className="sm:block hidden" />
       </p>
     </div>

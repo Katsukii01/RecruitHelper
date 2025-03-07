@@ -21,7 +21,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
           meetingSessionName: session.meetingSessionName,
           meetingSessionDescription: session.meetingSessionDescription,
           recruitmentName: session.recruitmentName,
-          recruitmentjobTittle: session.recruitmentjobTittle,
+          recruitmentjobTitle: session.recruitmentjobTitle,
           ...(applicant && { meetingApplicant: applicant }) // Dodajemy tylko jeśli istnieje
         };
       })
@@ -197,7 +197,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                           <BiBriefcase className="text-xl text-blue-500" /> Job Title:
                         </h3>
-                        <p className="text-md text-gray-300">{meeting.recruitmentjobTittle || "-"}</p>
+                        <p className="text-md text-gray-300">{meeting.recruitmentjobTitle || "-"}</p>
                       </div>
                     )}
                   </div>

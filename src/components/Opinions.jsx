@@ -10,8 +10,10 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { useTranslation } from 'react-i18next';
 
 const Opinions = () => {
+    const { t } = useTranslation();
     const [opinions, setOpinions] = useState([]);
 
     useEffect(() => {
@@ -49,7 +51,7 @@ const Opinions = () => {
         <section className="relative w-full min-h-screen mx-auto">
             <motion.div variants={textVariant()}>
                 <h2 className={`${styles.sectionHeadText} `}>
-                   Opinions
+                   {t('Opinions')}
                 </h2>
             </motion.div>
 
@@ -57,7 +59,7 @@ const Opinions = () => {
               variants={fadeIn("", "", 0.3, 2)}
               className='mt-6 text-secondary text-xl max-w-3xl ml-4'
             >
-                See what users are saying about their experience with our platform. We value your feedback and strive to improve our services based on your suggestions and experiences.
+                {t('Opinions_Desc')}
             </motion.p>
 
             {opinions.length > 0 ? (
@@ -84,7 +86,7 @@ const Opinions = () => {
                     ))}
                 </Swiper>
             ) : (
-                <p className="text-center text-gray-500 mt-10">No opinions available at the moment.</p>
+                <p className="text-center text-gray-500 mt-10">{t('No Opinions available at the moment.')}</p>
             )}
         </section>
     );

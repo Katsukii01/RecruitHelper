@@ -151,7 +151,7 @@ export const exportOfferDataToExcel = (workbook, offerData) => {
   const formattedOfferData = Array.isArray(offerData) ? offerData[0] : offerData;
 
   const offerSheetData = Object.entries({
-    "Job Title": formattedOfferData.jobTittle || "N/A",
+    "Job Title": formattedOfferData.jobTitle || "N/A",
     "Experience Needed": formattedOfferData.experienceNeeded || "N/A",
     "Education Level": formattedOfferData.educationLevel || "N/A",
     "Education Field": formattedOfferData.educationField || "N/A",

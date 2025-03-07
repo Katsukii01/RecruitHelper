@@ -1,6 +1,7 @@
 import apiClient from "./apiClient";
 import { apiEndpoints } from "./config";
 import { getRecruitmentsByUserId, deleteRecruitment,  getUserApplications, deleteApplicant, deleteEmail, getMeetingsByUserId, deleteMeeting , deleteUserStats} from '../services/RecruitmentServices'; // Funkcje do po
+import { GetIsAdmin } from '../store/AuthContext';
 
 export const uploadFile = async (file) => {
   const formData = new FormData();
@@ -74,6 +75,11 @@ export const analyzeCV = async (cvContent) => {
 
 export const getFirebaseUsers = async () => {
   try {
+    const isAdmin = GetIsAdmin();
+    if (!isAdmin) {
+      throw new Error("You are not authorized to access this data.");
+      return ;
+      }
     const response = await apiClient.get(apiEndpoints.getFirebaseUsers);
     return response.data;
   } catch (error) {
@@ -84,6 +90,11 @@ export const getFirebaseUsers = async () => {
 
 export const updateFirebaseUser = async (userData) => {
   try {
+    const isAdmin = GetIsAdmin();
+    if (!isAdmin) {
+      throw new Error("You are not authorized to access this data.");
+      return ;
+      }
     const response = await apiClient.put(apiEndpoints.updateFirebaseUser, 
       userData
     );
@@ -97,7 +108,11 @@ export const updateFirebaseUser = async (userData) => {
 
 export const deleteFirebaseUser = async (userId, email) => {
   try {
-
+    const isAdmin = GetIsAdmin();
+    if (!isAdmin) {
+      throw new Error("You are not authorized to access this data.");
+      return ;
+      }
         // 1. Fetch all recruitments associated with the user
         let recruitments = [];
         try {

@@ -11,7 +11,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
   const [formData, setFormData] = useState({
     status: 'Private',
     name: '',
-    jobTittle: '',
+    jobTitle: '',
     skills: [],
     weightOfSkills: '',
     languages: [{ language: '', level: '' }],
@@ -38,7 +38,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           setFormData({
             status: data.status || 'Private',
             name: data.name || '',
-            jobTittle: data.jobTittle || '',
+            jobTitle: data.jobTitle || '',
             skills: data.skills || [],
             weightOfSkills: data.weightOfSkills || 0,
             experienceNeeded: data.experienceNeeded || '',
@@ -200,13 +200,13 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           <label className="block text-sm font-medium text-gray-300">Job Title</label>
           <input
             type="text"
-            name="jobTittle"
-            value={formData.jobTittle}
+            name="jobTitle"
+            value={formData.jobTitle}
             onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="up to 30 signs"
           />
-          {errors.jobTittle &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.jobTittle}</p>}
+          {errors.jobTitle &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.jobTitle}</p>}
         </div>
 
         <div className='border-2 border-gray-500 rounded-md p-2'>

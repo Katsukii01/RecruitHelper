@@ -125,12 +125,42 @@ const base64ToFile = (base64, fileName) => {
   return file;
 };
 
+
+
 // Funkcja do przesyłania pliku do Firebase Storage
 const uploadToStorage = async (file, filePath) => {
   const storageRef = ref(storage, filePath);
   const uploadSnapshot = await uploadBytes(storageRef, file);
   const fileUrl = await getDownloadURL(uploadSnapshot.ref);
   return fileUrl;
+};
+
+export const checkRecruitmentOwnership = (recruitmentId) => {
+  try {
+    checkAuth(); // Verify authentication
+
+    const isAdmin = GetIsAdmin();
+    if (isAdmin) {
+      return true;
+    }
+
+    const userId = firebaseAuth.currentUser.uid; // Get current user's ID
+    const docRef = doc(db, "recruitments", recruitmentId);
+    const docSnap = getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (data.ownerId === userId) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    return false;
+  }
 };
 
 // Reference to the recruitment collection
@@ -224,7 +254,7 @@ export const getPublicRecruitments = async (searchTerm = "") => {
           isOwner,
           name: recruitmentData.name,
           status: recruitmentData.status,
-          jobTittle: recruitmentData.jobTittle,
+          jobTitle: recruitmentData.jobTitle,
           educationLevel: recruitmentData.educationLevel,
           educationField: recruitmentData.educationField,
           languages: recruitmentData.languages,
@@ -278,7 +308,7 @@ export const getUserApplications = async (searchTerm = "") => {
         if (applicant) {
           // Exclude other applicants from recruitmentData, and only keep the status and stage
           const { Applicants, ...filteredRecruitmentData } = recruitmentData;
-          const { status, stage, name, jobTittle } = filteredRecruitmentData;
+          const { status, stage, name, jobTitle } = filteredRecruitmentData;
 
           return {
             id: doc.id,
@@ -286,7 +316,7 @@ export const getUserApplications = async (searchTerm = "") => {
               status, // Only include the status and stage from recruitmentData
               stage,
               name,
-              jobTittle,
+              jobTitle,
               // Include the name from recruitmentData
             },
             applicantData: applicant, // Include applicant's data
@@ -1686,7 +1716,7 @@ export const getUserMeetingSessions = async () => {
                 meetingSessionDescription: session.meetingSessionDescription, // Only session description
                 meetings: filteredMeetings,
                 recruitmentName: recruitmentData.name,
-                recruitmentjobTittle: recruitmentData.jobTittle,
+                recruitmentjobTitle: recruitmentData.jobTitle,
               });
             }
           });
@@ -2941,7 +2971,7 @@ export const getRecruitmentOfferData = async (recruitmentId) => {
     const recruitmentData = recruitmentSnapshot.data();
 
     const DataToExport = {
-      recruitmentjobTittle: recruitmentData.jobTittle,
+      recruitmentjobTitle: recruitmentData.jobTitle,
       recruitmentCourses: recruitmentData.courses,
       recruitmentSkills: recruitmentData.skills,
       recruitmentLanguages: recruitmentData.languages,
@@ -3002,7 +3032,7 @@ export const finishRecruitment = async (recruitmentId) => {
     const meetings = recruitmentData.MeetingSessions || [];
     const tasks = recruitmentData.TaskSessions || [];
     const offerData = {
-      jobTittle: recruitmentData.jobTittle,
+      jobTitle: recruitmentData.jobTitle,
       experienceNeeded: recruitmentData.experienceNeeded,
       educationLevel: recruitmentData.educationLevel,
       educationField: recruitmentData.educationField,
@@ -3025,6 +3055,43 @@ export const finishRecruitment = async (recruitmentId) => {
     throw error;
   }
 };
+
+export const editOpinion = async (updatedOpinion) => {
+  try {
+  await checkAuth(); // Upewnij się, że użytkownik jest zalogowany
+  const isAdmin = GetIsAdmin();
+
+  if (!isAdmin) {
+      throw new Error("You are not authorized to add an opinion");
+  }
+
+  const opinionsCollection = collection(db, "opinions");
+    // Sprawdzenie, czy opinia już istnieje
+    const opinionQuery = query(
+      opinionsCollection,
+      where("id", "==", updatedOpinion.id)
+    );
+    const opinionSnapshot = await getDocs(opinionQuery);
+
+    const existingOpinionRef = opinionSnapshot.docs[0].ref;
+    
+    const formattedDate = new Date().toLocaleString("pl-PL", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    updatedOpinion.date = formattedDate;
+
+    await updateDoc(existingOpinionRef, updatedOpinion);
+  } catch (error) {
+    console.error("Error adding opinion:", error.message);
+    throw error;
+  }
+};
+
 
 export const addOpinion = async (recruitmentId, opinion) => {
   try {
@@ -3083,7 +3150,7 @@ export const addOpinion = async (recruitmentId, opinion) => {
         ...opinion,
         recruitmentName: recruitmentData.name,
         recruitmentId: recruitmentId,
-        jobTittle: recruitmentData.jobTittle,
+        jobTitle: recruitmentData.jobTitle,
         date: formattedDate, // Sformatowana data
       };
       await addDoc(opinionsCollection, newOpinion);
@@ -3095,7 +3162,7 @@ export const addOpinion = async (recruitmentId, opinion) => {
         ...opinion,
         recruitmentId: recruitmentId,
         recruitmentName: recruitmentData.name,
-        jobTittle: recruitmentData.jobTittle,
+        jobTitle: recruitmentData.jobTitle,
         date: formattedDate, // Sformatowana data
       };
       await updateDoc(existingOpinionRef, updatedOpinion);
@@ -3214,7 +3281,6 @@ export const getAllUsersStats = async () => {
   try {
     // Fetch users from Firebase Authentication
     const firebaseUsers = await getFirebaseUsers();  // Assumes this returns an array of users
-    console.log(firebaseUsers);
 
     // Store users and their stats
     const usersStats = [];
@@ -3275,7 +3341,6 @@ export const getAllUsersStats = async () => {
       });
     }
 
-    console.log("Users stats:", usersStats);
     return usersStats;
 
   } catch (error) {
@@ -3340,3 +3405,151 @@ export const updateUserStats = async (stats) => {
   }
 };
 
+//51 **get all opinions**
+export const getAllOpinions = async () => {
+  try {
+    const opinionsSnapshot = await getDocs(collection(db, "opinions"));
+    if (opinionsSnapshot.empty) {
+      return []; // Return an empty array if no opinions exist
+    }
+    const allOpinions = opinionsSnapshot.docs.map((opinion) => opinion.data());
+    return allOpinions;
+  } catch (error) {
+    console.error("Error getting all opinions:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+//52 **delete opinion**
+export const deleteOpinion = async (opinionId) => {
+  try {
+    console.log("Deleting opinion with ID:", opinionId);
+    
+    // Pobieramy kolekcję opinii
+    const opinionsSnapshot = await getDocs(collection(db, "opinions"));
+
+    if (opinionsSnapshot.empty) {
+      throw new Error("No opinions found");
+    }
+
+    console.log("Opinions snapshot:", opinionsSnapshot.docs.map(doc => doc.data())); // Log all document data for debugging
+    
+    // Check if opinion exists in the snapshot based on a field (e.g. `opinionId`)
+    const opinionDoc = opinionsSnapshot.docs.find(doc => doc.data().id === opinionId);
+    
+    if (!opinionDoc) {
+      throw new Error("Opinion not found");
+    }
+
+    // Usuwamy opinię z kolekcji
+    await deleteDoc(opinionDoc.ref);
+    console.log(`Opinion with ID ${opinionId} deleted successfully`);
+
+  } catch (error) {
+    console.error("Error deleting opinion:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+const generateRandomOpinion = (index) => {
+  // List of random job titles and recruitment names
+  const jobTitles = [
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Graphic Designer",
+    "Software Engineer",
+    "Data Scientist",
+    "UI/UX Designer",
+    "Product Manager",
+    "Project Manager",
+    "QA Engineer",
+    "Machine Learning Engineer",
+    "DevOps Engineer",
+    "System Administrator",
+    "Business Analyst",
+    "Mobile Developer",
+  ];
+
+  const recruitmentNames = [
+    "TechCorp",
+    "Creative Studio",
+    "Innovative Solutions",
+    "NextGen Technologies",
+    "SmartRecruit",
+    "FutureWorks",
+    "CloudTech",
+    "DesignStudio",
+    "IT Experts",
+    "Global Partners",
+    "DataTech",
+    "Visionary Studios",
+    "Startup Hub",
+    "FutureCoders",
+    "TechVision",
+  ];
+
+  // Randomly pick a job title and recruitment name
+  const jobTitle = jobTitles[Math.floor(Math.random() * jobTitles.length)];
+  const recruitmentName = recruitmentNames[Math.floor(Math.random() * recruitmentNames.length)];
+
+  // Generate a random date in the past 30 days
+  const randomDate = new Date();
+  randomDate.setDate(randomDate.getDate() - Math.floor(Math.random() * 30));
+
+  // Define opinion texts with more variety
+  const opinionTexts = [
+    `The recruitment process for the ${jobTitle} position at ${recruitmentName} was seamless. The interviewers were friendly and gave clear instructions. Highly recommend!`,
+    `I had an amazing experience applying for the ${jobTitle} role at ${recruitmentName}. The team was professional and transparent throughout the process.`,
+    `The recruitment process was a bit long, but overall, I felt supported and guided in every step. The ${jobTitle} position is a great fit for me.`,
+    `I loved the interview process at ${recruitmentName} for the ${jobTitle} role. The team was helpful, and the process was straightforward.`,
+    `I was thoroughly impressed with the recruitment process for the ${jobTitle} role. ${recruitmentName} makes sure to treat every candidate with respect.`,
+    `As a ${jobTitle}, it was a pleasure working with the recruitment team at ${recruitmentName}. They kept me updated and answered all my questions professionally.`,
+    `While I didn’t get the job, I appreciated the feedback and the professionalism from the team at ${recruitmentName}. Looking forward to other opportunities.`,
+    `Great experience overall applying for the ${jobTitle} role. The communication with ${recruitmentName} was excellent. I felt respected and valued throughout.`,
+    `I applied for the ${jobTitle} position at ${recruitmentName} and was very impressed with the company's process. Very transparent and honest.`,
+    `The ${jobTitle} role at ${recruitmentName} had a very thorough recruitment process. Though challenging, it was fair and gave me a good sense of the company culture.`,
+  ];
+
+  // Randomly choose an opinion
+  const opinion = opinionTexts[Math.floor(Math.random() * opinionTexts.length)];
+
+  // Randomly generate a star rating between 1 and 5
+  const stars = Math.floor(Math.random() * 5) + 1;
+
+  // Generate unique ID if not provided
+  const opinionId = `opinion-${index + 1}`;
+
+  return {
+    opinion, // Random opinion text
+    stars, // Random stars
+    recruitmentName, // Random recruitment name
+    jobTitle, // Random job title
+    recruitmentId: `recruitment-${index + 1}`, // Generating a unique recruitment ID
+    date: randomDate.toLocaleString("pl-PL", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }),
+    id: opinionId, // Unique opinion ID
+  };
+};
+
+export const addRandomOpinions = async () => {
+  try {
+    const opinionsCollection = collection(db, "opinions");
+
+    for (let i = 0; i < 30; i++) {
+      const randomOpinion = generateRandomOpinion(i);
+      // Add the random opinion to the Firestore collection
+      await addDoc(opinionsCollection, randomOpinion);
+      console.log(`Added opinion #${i + 1}:`, randomOpinion);
+    }
+
+    console.log("20 random opinions added successfully!");
+  } catch (error) {
+    console.error("Error adding random opinions:", error.message);
+  }
+};

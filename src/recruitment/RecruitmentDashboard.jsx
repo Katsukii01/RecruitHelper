@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, RecruitmentEdit, ManageApplicants, ApplicantsOfferRanking, Meetings, FinalRanking, FinishRecruitment, DeleteRecruitment, Overview, AdnationalPoints, Tasks, TasksPoints, CoverLettersAnalysis, CoverLettersPoints, MeetingPoints, MeetingSessions, ApplicantsStages } from "./DashboardsComponents";
 import { useLocation } from 'react-router-dom';
+import { checkRecruitmentOwnership } from "../services/RecruitmentServices";
+import { useNavigate } from "react-router-dom";
+
 
 const RecruitmentDashboard = () => {
+  const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [hash, setHash] = useState(window.location.hash.replace("#", "") || "Overview");
   const location = useLocation();
@@ -30,6 +34,17 @@ const RecruitmentDashboard = () => {
       localStorage.setItem("recruitmentId", id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      const isOwner = checkRecruitmentOwnership(id);
+      console.log("isOwner value:", isOwner);
+      if (!isOwner) {
+        navigate("/");
+        return;
+      }
+    }
+  }, []);
 
   if (!id) {
     return (

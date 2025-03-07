@@ -31,6 +31,7 @@ import { StarsCanvas, ProtectedRoute } from "./utils";
 import { Home, SignIn, SignUp } from "./auth";
 import AdminPanel from "./admin/AdminPanel.jsx";
 import EditFirebaseUserAdmin from "./admin/EditFirebaseUserAdmin.jsx";
+import EditOpinionAdmin from "./admin/EditOpinionAdmin.jsx";
 
 
 const App = () => {
@@ -218,6 +219,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                   <EditFirebaseUserAdmin />
+              </ProtectedRoute>
+            }
+            />
+            <Route
+            path="/EditOpinion"
+            element={
+              <ProtectedRoute>
+                  <EditOpinionAdmin />
               </ProtectedRoute>
             }
             />

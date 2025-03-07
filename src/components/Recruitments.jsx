@@ -3,15 +3,16 @@ import { styles } from '../styles';
 import { SectionWrapper } from '../hoc';
 import { motion } from 'framer-motion';
 import { fadeIn, textVariant } from '../utils/motion';
-import { FaBriefcase } from 'react-icons/fa';
 import { recruitmentsShowcase } from '../assets';
+import { useTranslation } from 'react-i18next';
 
 const Recruitments = () => {
+  const { t } = useTranslation();
   return (
     <section className='relative w-full min-h-screen'>
       <motion.div variants={textVariant()}>
         <h2 className={`${styles.sectionHeadText} text-4xl sm:text-5xl font-bold`}>
-          Recruitments
+          {t('Recruitments')}
         </h2>
       </motion.div>
 
@@ -20,9 +21,7 @@ const Recruitments = () => {
         variants={fadeIn("", "", 0.3, 2)}
         className='mt-6 text-secondary text-xl max-w-3xl leading-relaxed ml-4'
       >
-        Discover the latest job opportunities and recruitment openings. 
-        Find the perfect role that fits your skills and experience with our 
-        comprehensive hiring platform.
+       {t('Recruitments_Desc')}
       </motion.p>
 
       {/* Image with Effects */}
@@ -55,7 +54,7 @@ const Recruitments = () => {
         >
           <span className='absolute inset-0 w-full h-0 bg-teal-500 transition-all duration-300 ease-out transform group-hover:h-full'></span>
           <span className='relative z-10 flex items-center gap-2 group-hover:text-white text-2xl'>
-            Take Me There 
+            {t('Take_me_there')}
             <motion.span 
               whileHover={{ x: [0, 10], opacity: [1, 0] }} 
               transition={{ duration: 0.4 }} 

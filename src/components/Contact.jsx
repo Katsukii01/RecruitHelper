@@ -5,8 +5,10 @@ import { styles } from '../styles';
 import { SectionWrapper } from '../hoc';
 import { fadeIn, textVariant } from '../utils/motion';
 import {Waves} from '../utils';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const formRef = useRef(null);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,24 +18,24 @@ const Contact = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('name_required');
     }
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('email_required');
     } else if (!formData.email.includes('@')) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = t('email_invalid');
     }
 
     if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
+      newErrors.subject = t('subject_required');
     }else if (formData.subject.trim().length < 4) {
-      newErrors.subject = 'Subject must be at least 5 characters long';
+      newErrors.subject = t('subject_length');
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
+      newErrors.message = t('message_required');
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters long';
+      newErrors.message = t('message_length');
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -55,7 +57,7 @@ const Contact = () => {
       setIsSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
     }).catch(() => {
-      alert('Failed to send message.');
+      alert(t('failed_to_send'));
       setIsSubmitting(false);
     });
 
@@ -64,7 +66,7 @@ const Contact = () => {
   return (
     <section className='w-full min-h-screen mx-auto mb-6'>
       <motion.div variants={textVariant()}>
-        <h2 className={styles.sectionHeadText}>Contact</h2>
+        <h2 className={styles.sectionHeadText}>{t('contact')}</h2>
       </motion.div>
 
       <motion.div variants={fadeIn("", "", 0.3, 2)}>
@@ -80,7 +82,7 @@ const Contact = () => {
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 block z-10  relative ">
          
             <div >
-              <label className="block text-sm font-medium text-blue-100 ">Name</label>
+              <label className="block text-sm font-medium text-blue-100 ">{t('name')}</label>
               <input
                 type="text"
                 name="name"
@@ -95,7 +97,7 @@ const Contact = () => {
                 )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-blue-100">Email</label>
+              <label className="block text-sm font-medium text-blue-100">{t('email')}</label>
               <input
                 type="email"
                 name="email"
@@ -111,7 +113,7 @@ const Contact = () => {
                 )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-blue-100">Subject</label>
+              <label className="block text-sm font-medium text-blue-100">{t('subject')}</label>
               <input
                 type="text"
                 name="subject"
@@ -127,7 +129,7 @@ const Contact = () => {
                 )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-blue-100">Message</label>
+              <label className="block text-sm font-medium text-blue-100">{t('message')}</label>
               <textarea
                 name="message"
                 rows="6"
@@ -146,7 +148,7 @@ const Contact = () => {
             <div className="flex items-center justify-center">
   <motion.button
     type="submit"
-    disabled={isSubmitting}
+    disabled={isSubmitting || isSuccess}
     className={`relative flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg text-white font-medium border shadow-md transition-all overflow-hidden h-12 ${
       isSuccess ? 'bg-green-500 border-green-600' : 'bg-sky border-white hover:bg-cyan-600 focus:ring-cyan-600'
     }`}
@@ -161,7 +163,7 @@ const Contact = () => {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="absolute"
         >
-          Send Message
+          {t('message_sent')}
         </motion.span>
 
         {/* Ikonka pojawia się na środku, zachowując wysokość przycisku */}
@@ -189,7 +191,7 @@ const Contact = () => {
         animate={isSubmitting ? { x: "100%", opacity: 0 } : { x: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        Send Message
+        {t('send_message')}
       </motion.span>
     )}
   </motion.button>

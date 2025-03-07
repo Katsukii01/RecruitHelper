@@ -10,12 +10,10 @@ const AdminPanel = () => {
   const navigate = useNavigate(); // Lepsza metoda niż window.location.href
 
   useEffect(() => {
-    console.log("isAdmin value:", isAdmin);
     if (isAdmin === false) {
       navigate('/'); 
     }
   }, [isAdmin, navigate]); // Zależność dodana
-
   // Jeśli użytkownik nie jest adminem, zwróć komunikat o braku dostępu
   if (isAdmin === false) {
     return (
@@ -26,6 +24,7 @@ const AdminPanel = () => {
       </section>
     );
   }
+
 
   // Główna zawartość panelu administratora
   return (

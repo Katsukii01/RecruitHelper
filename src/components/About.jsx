@@ -4,60 +4,54 @@ import { SectionWrapper } from '../hoc';
 import { motion } from 'framer-motion';
 import { fadeIn, textVariant } from '../utils/motion';
 import { FaSearch, FaUserCheck, FaClipboardList, FaCalendarAlt, FaEnvelopeOpenText, FaFileExport, FaTasks, FaBrain } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 const features = [
   {
-    icon: <FaSearch className="text-4xl text-teal-400" />, 
-    title: "Advanced Job Search",
-    description: "Find the best job opportunities tailored to your skills and preferences. Our platform offers powerful search and filtering options."
+    icon: <FaSearch className="text-4xl text-teal-400" />,
+    key: "search"
   },
   {
-    icon: <FaUserCheck className="text-4xl text-cyan-400" />, 
-    title: "Candidate Screening",
-    description: "Efficiently review and shortlist candidates using recommendations and automated screening tools."
+    icon: <FaUserCheck className="text-4xl text-cyan-400" />,
+    key: "candidate_screening"
   },
   {
-    icon: <FaClipboardList className="text-4xl text-blue-400" />, 
-    title: "Streamlined Hiring Process",
-    description: "Manage job postings, track applications, and simplify your hiring workflow with our intuitive tools."
+    icon: <FaClipboardList className="text-4xl text-blue-400" />,
+    key: "hiring_process"
   },
   {
-    icon: <FaCalendarAlt className="text-4xl text-yellow-400" />, 
-    title: "Calendar with Meetings",
-    description: "Schedule and manage interviews effortlessly with an integrated calendar. No more missed calls or missed meetings!"
+    icon: <FaCalendarAlt className="text-4xl text-yellow-400" />,
+    key: "calendar"
   },
   {
-    icon: <FaEnvelopeOpenText className="text-4xl text-purple-400" />, 
-    title: "Automated Emails",
-    description: "Send task and meeting reminders automatically to candidates, keeping everyone on track."
+    icon: <FaEnvelopeOpenText className="text-4xl text-purple-400" />,
+    key: "automated_emails"
   },
   {
-    icon: <FaFileExport className="text-4xl text-orange-400" />, 
-    title: "Export Data to XLSX",
-    description: "Easily export recruitment data, candidate lists, and reports to Excel for further analysis and documentation."
+    icon: <FaFileExport className="text-4xl text-orange-400" />,
+    key: "export_data"
   },
   {
-    icon: <FaTasks className="text-4xl text-red-400" />, 
-    title: "Candidate Stage Updates",
-    description: "Keep candidates informed about their current recruitment stage with automated updates and notifications."
+    icon: <FaTasks className="text-4xl text-red-400" />,
+    key: "stage_updates"
   },
   {
-    icon: <FaBrain className="text-4xl text-pink-400" />, 
-    title: "AI-powered CV & Cover Letter Analysis",
-    description: "Analyze resumes and cover letters with AI to extract key skills and match candidates to job requirements."
+    icon: <FaBrain className="text-4xl text-pink-400" />,
+    key: "ai_analysis"
   },
   {
-    icon: <FaTasks className="text-4xl text-green-400" />, 
-    title: "Automated Scoring System",
-    description: "Define what’s important for you, and our system will calculate accurate scores for each candidate based on your criteria."
+    icon: <FaTasks className="text-4xl text-green-400" />,
+    key: "scoring_system"
   }
 ];
 
 const About = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className='relative w-full min-h-screen mx-auto'>
       <motion.div variants={textVariant()}>  
-        <h2 className={`${styles.sectionHeadText} text-5xl `}>About</h2>
+        <h2 className={`${styles.sectionHeadText} text-5xl `}>{t('about_title')}</h2>
       </motion.div>
       
       {/* Opis sekcji */}
@@ -65,8 +59,7 @@ const About = () => {
         variants={fadeIn("", "", 0.3, 2)}
         className='mt-6 text-secondary text-lg max-w-4xl ml-4'
       >
-        Ultimate platform designed to streamline the recruitment process.
-        Our innovative tools help you find, evaluate, and hire top talent with ease.
+        {t('about_description')}
       </motion.p>
       
       {/* Karty funkcjonalności */}
@@ -80,8 +73,8 @@ const About = () => {
             <div className="flex justify-center mb-4 group-hover:animate-pulse">
               {feature.icon}
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-            <p className="text-gray-300 text-sm">{feature.description}</p>
+            <h3 className="text-xl font-semibold text-white mb-2 text-center">{t(`features.${feature.key}.title`)}</h3>
+            <p className="text-gray-300 text-sm">{t(`features.${feature.key}.description`)}</p>
             <div className="absolute inset-0 bg-gradient-to-br from-transparent to-white opacity-0 group-hover:opacity-10 transition-opacity" />
           </motion.div>
         ))}

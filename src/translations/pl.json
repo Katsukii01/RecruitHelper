@@ -1,0 +1,231 @@
+{
+  "Welcome to": "Witaj w",
+  "heroHeadText": "Umożliwiamy Ci nawigację po procesie rekrutacyjnym dzięki naszym innowacyjnym rozwiązaniom. Nasza platforma została zaprojektowana, aby uprościć każdy aspekt podróży rekrutacyjnej, od przyciągania najlepszych talentów po podejmowanie bezproblemowych decyzji o zatrudnieniu.",
+
+  "features": {
+    "search": {
+      "title": "Zaawansowane wyszukiwanie ofert pracy",
+      "description": "Znajdź najlepsze oferty pracy dopasowane do Twoich umiejętności i preferencji. Nasza platforma oferuje potężne opcje wyszukiwania i filtrowania."
+    },
+    "candidate_screening": {
+      "title": "Selekcja kandydatów",
+      "description": "Skutecznie przeglądaj i wybieraj kandydatów, korzystając z rekomendacji i zautomatyzowanych narzędzi do selekcji."
+    },
+    "hiring_process": {
+      "title": "Uproszczony proces rekrutacji",
+      "description": "Zarządzaj ogłoszeniami o pracę, śledź aplikacje i uprość swój proces rekrutacji dzięki naszym intuicyjnym narzędziom."
+    },
+    "calendar": {
+      "title": "Kalendarz z spotkaniami",
+      "description": "Planuj i zarządzaj rozmowami kwalifikacyjnymi bez wysiłku dzięki zintegrowanemu kalendarzowi. Koniec z pominiętymi rozmowami i spotkaniami!"
+    },
+    "automated_emails": {
+      "title": "Automatyczne maile",
+      "description": "Wysyłaj przypomnienia o zadaniach i spotkaniach automatycznie do kandydatów, utrzymując wszystkich na właściwej drodze."
+    },
+    "export_data": {
+      "title": "Eksport danych do XLSX",
+      "description": "Łatwo eksportuj dane rekrutacyjne, listy kandydatów i raporty do Excela w celu dalszej analizy i dokumentacji."
+    },
+    "stage_updates": {
+      "title": "Aktualizacje statusu kandydatów",
+      "description": "Informuj kandydatów o ich bieżącym etapie rekrutacji za pomocą zautomatyzowanych aktualizacji i powiadomień."
+    },
+    "ai_analysis": {
+      "title": "Analiza CV i listów motywacyjnych z wykorzystaniem AI",
+      "description": "Analizuj CV i listy motywacyjne za pomocą AI, aby wyodrębnić kluczowe umiejętności i dopasować kandydatów do wymagań pracy."
+    },
+    "scoring_system": {
+      "title": "Zautomatyzowany system oceny",
+      "description": "Określ, co jest dla Ciebie ważne, a nasz system obliczy dokładne oceny dla każdego kandydata na podstawie Twoich kryteriów."
+    }
+  },
+  "about_description": "Zaawansowana platforma zaprojektowana w celu uproszczenia procesu rekrutacji. Nasze innowacyjne narzędzia pomogą Ci łatwo znaleźć, ocenić i zatrudnić najlepszych kandydatów.",
+  "about_title": "O nas",
+
+  "know_how_title": "Jak to zrobić",
+  "know_how_description": "Dowiedz się, jak w pełni wykorzystać możliwości RecruitHelper. Kliknij na sekcję, aby uzyskać szczegółowe przewodniki i porady ekspertów.",
+  "sections": {
+    "recruitments": {
+      "name": "Rekrutacje",
+      "description": "Dowiedz się, jak tworzyć oferty pracy i optymalizować swój proces rekrutacyjny."
+    },
+    "applications": {
+      "name": "Aplikacje",
+      "description": "Dowiedz się, jak aplikować na oferty pracy i śledzić swoje postępy w procesie rekrutacji."
+    },
+    "account": {
+      "name": "Konto",
+      "description": "Dowiedz się, jak ustawić swój profil i zarządzać ustawieniami konta."
+    },
+    "dashboard": {
+      "name": "Panel",
+      "description": "Zrozum, jak nawigować po swoim panelu i uzyskać dostęp do kluczowych funkcji."
+    }
+  },
+  "go_there": "Przejdz do sekcji",
+
+  "Recruitments": "Rekrutacje",
+  "Recruitments_Desc": "Odkryj najnowsze oferty pracy i otwarte rekrutacje.Znajdź idealną rolę, która pasuje do Twoich umiejętności i doświadczenia, dzięki naszej kompleksowej platformie rekrutacyjnej.",
+  "Take_me_there": "Zabierz mnie tam",
+
+  "Opinions": "Opinie",
+  "Opinions_Desc": "Zobacz, co użytkownicy mówią o swoim doświadczeniu z naszą platformą. Cenimy Twoją opinię i dążymy do doskonalenia naszych usług na podstawie Twoich sugestii i doświadczeń.",
+  "No Opinions available at the moment.": "Brak dostępnych opinii.",
+
+  "contact": "Kontakt",
+  "name": "Imię",
+  "email": "Email",
+  "subject": "Temat",
+  "message": "Wiadomość",
+  "send_message": "Wyślij wiadomość",
+  "message_sent": "Wiadomość wysłana!",
+  "name_required": "Imię jest wymagane",
+  "email_required": "Email jest wymagany",
+  "email_invalid": "Email jest nieprawidłowy",
+  "subject_required": "Temat jest wymagany",
+  "subject_length": "Temat musi mieć co najmniej 5 znaków",
+  "message_required": "Wiadomość jest wymagana",
+  "message_length": "Wiadomość musi mieć co najmniej 10 znaków",
+  "failed_to_send": "Nie udało się wysłać wiadomości.",
+
+  "statistics": "Statystyki",
+  "calendar": "Kalendarz",
+  "recruitments": "Rekrutacje",
+  "applications": "Aplikacje",
+  "recruitment_meetings": "Spotkania rekrutacyjne",
+  "application_meetings": "Spotkania aplikacyjne",
+  "both_types": "Obydwa typy",
+
+  "faq_title": "Najczęściej Zadawane Pytania",
+  "faq_1_question": "Czym jest RecruitHelper?",
+  "faq_1_answer": "RecruitHelper to usługa, która umożliwia rekruterom efektywne tworzenie i zarządzanie rekrutacjami, a także umożliwia kandydatom aplikowanie na otwarte stanowiska, automatyzację procesów i centralizację wszystkich potrzeb rekrutacyjnych w jednym miejscu.",
+  "faq_2_question": "Jakie korzyści płyną z korzystania z RecruitHelper?",
+  "faq_2_answer": "RecruitHelper zapewnia bezproblemowe doświadczenie rekrutacyjne, oferując narzędzia do ogłoszeń o pracę, śledzenia kandydatów, automatycznego przeglądu CV, analizy listów motywacyjnych i wglądu w rekrutację w czasie rzeczywistym.",
+  "faq_3_question": "Czym różni się RecruitHelper od wyszukiwarek pracy?",
+  "faq_3_answer": "W przeciwieństwie do tradycyjnych wyszukiwarek pracy, RecruitHelper skupia się na rekruterach i kandydatach, oferując kompleksowy system zarządzania rekrutacjami, w tym automatyzację i dopasowywanie kandydatów.",
+  "faq_4_question": "Czy RecruitHelper jest darmowy?",
+  "faq_4_answer": "Tak, RecruitHelper oferuje darmową wersję z podstawowymi funkcjami, a opcje premium zapewniają zaawansowane funkcje dla większych potrzeb rekrutacyjnych.",
+  "faq_5_question": "Czy mogę eksportować dane rekrutacyjne?",
+  "faq_5_answer": "Tak, RecruitHelper umożliwia eksport danych rekrutacyjnych w formacie XLSX do dalszej analizy i archiwizacji.",
+  "faq_6_question": "Jak założyć konto w RecruitHelper?",
+  "faq_6_answer": "Możesz założyć konto, rejestrując się za pomocą swojego adresu e-mail i ustawiając hasło. Można również zarejestrować się za pomocą Google dla wygody.",
+  "faq_7_question": "Czy mogę śledzić moje aplikacje w RecruitHelper?",
+  "faq_7_answer": "Tak, RecruitHelper oferuje pulpit nawigacyjny, na którym możesz śledzić swoje aplikacje, zobaczyć ich status i otrzymywać aktualizacje od rekruterów.",
+  "faq_8_question": "Jak skontaktować się z pomocą techniczną RecruitHelper?",
+  "faq_8_answer": "Możesz skontaktować się z naszym zespołem wsparcia poprzez e-mail na recruithelpercontact@gmail.com lub skorzystać z formularza na naszej stronie internetowej.",
+  "faq_9_question": "Czy RecruitHelper oferuje narzędzie do umawiania spotkań rekrutacyjnych?",
+  "faq_9_answer": "Tak, RecruitHelper oferuje zintegrowane narzędzie do umawiania spotkań, umożliwiając rekruterom łatwe ustalanie i zarządzanie spotkaniami.",
+
+  
+    "footer": {
+      "contact": {
+        "title": "Kontakt"
+      },
+      "links": {
+        "title": "Linki",
+        "faq": "FAQ",
+        "terms": "Regulamin",
+        "help": "Pomoc",
+        "contact": "Kontakt"
+      },
+      "All rights reserved.": "© 2025 RecruitHelper. Wszelkie prawa zastrzeżone."
+    },
+    
+        "terms": {
+          "title": "Regulamin",
+          "content": [
+            {
+              "title": "Akceptacja Regulaminu",
+              "text": "Korzystając z Usługi, akceptujesz niniejszy Regulamin. Jeśli nie zgadzasz się z jego warunkami, nie możesz korzystać z Usługi."
+            },
+            {
+              "title": "Zmiany w Regulaminie",
+              "text": "Zastrzegamy sobie prawo do aktualizacji lub modyfikacji niniejszego Regulaminu w dowolnym momencie. Kontynuowanie korzystania z Usługi po zmianach oznacza ich akceptację."
+            },
+            {
+              "title": "Wymagania",
+              "text": "Aby korzystać z Usługi, musisz mieć ukończone 18 lat i posiadać zdolność do zawierania umów zgodnie z polskim prawem."
+            },
+            {
+              "title": "Zabronione działania",
+              "text": "Nie możesz korzystać z Usługi w sposób nielegalny lub nieautoryzowany, ani naruszać żadnych obowiązujących przepisów prawa, w tym polskich regulacji."
+            },
+            {
+              "title": "Własność intelektualna",
+              "text": "Usługa oraz jej oryginalna zawartość (z wyłączeniem treści dostarczanych przez użytkowników), funkcje i funkcjonalności pozostają wyłączną własnością RecruitHelper i jego licencjodawców."
+            },
+            {
+              "title": "Zakończenie",
+              "text": "RecruitHelper zastrzega sobie prawo do zakończenia Twojego dostępu do Usługi w dowolnym momencie, bez podania przyczyny."
+            },
+            {
+              "title": "Wyłączenie odpowiedzialności",
+              "text": "RecruitHelper nie gwarantuje, że Usługa będzie wolna od błędów ani że jakiekolwiek usterki zostaną naprawione. Wyłączamy wszelkie gwarancje, zarówno wyraźne, jak i dorozumiane."
+            },
+            {
+              "title": "Ograniczenie odpowiedzialności",
+              "text": "RecruitHelper ani jego dostawcy nie ponoszą odpowiedzialności za jakiekolwiek szkody pośrednie, przypadkowe, specjalne, czy wynikowe."
+            },
+            {
+              "title": "Odszkodowanie",
+              "text": "Zobowiązujesz się chronić RecruitHelper oraz jego pracowników przed wszelkimi roszczeniami, szkodami, kosztami i wydatkami."
+            },
+            {
+              "title": "Prawo właściwe",
+              "text": "Niniejszy Regulamin podlega prawu Rzeczypospolitej Polskiej, bez względu na przepisy kolizyjne."
+            },
+            {
+              "title": "Całość umowy",
+              "text": "Niniejszy Regulamin stanowi całość porozumienia pomiędzy Tobą a RecruitHelper i zastępuje wszelkie wcześniejsze umowy."
+            },
+            {
+              "title": "Kontakt",
+              "text": "Jeśli masz jakiekolwiek pytania dotyczące Regulaminu, skontaktuj się z nami pod adresem recruithelpercontact@gmail.com."
+            }
+          ]
+        },
+        
+            "nav": {
+              "about": "O nas",
+              "knowHow": "Pomoc",
+              "recruitments": "Rekrutacje",
+              "opinions": "Opinie",
+              "contact": "Kontakt"
+            },
+
+            "HomePage": {
+            "The name has been updated": "Nazwa została zaktualizowana",
+            "An error occurred while updating the name": "Wystąpił błąd podczas aktualizacji nazwy",
+            "The passwords do not match": "Hasła nie są identyczne",
+            "The password has been updated": "Hasło zostało zaktualizowane",
+            "Please provide all required details.": "Proszę podać wszystkie wymagane informacje.",
+            "The provided account name is incorrect.": "Podana nazwa konta jest niepoprawna.",
+            "Are you sure you want to delete your account? This action cannot be undone.": "Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć.",
+            "The account has been deleted": "Konto zostało usunięte",
+            "Email Verified": "Email zweryfikowany",
+            "Email Not Verified": "Email niezweryfikowany",
+            "Manage your account": "Zarządzaj swoim kontem",
+            "Update Name": "Zaktualizuj nazwę",
+            "Old Password": "Stare hasło",
+            "New Password": "Nowe hasło",
+            "Confirm New Password": "Potwierdź nowe hasło",
+            "Update Password": "Zaktualizuj hasło",
+            "Delete Account": "Usuń konto",
+            "This action will delete your account and cannot be undone.": "Ta operacja usunie Twoje konto i nie można jej cofnąć.",
+            "And all your recruitment data will be deleted. Do you want to proceed?": "Wszystkie Twoje dane rekrutacyjne zostaną usunięte. Czy chcesz kontynuować?",
+            "Yes, Delete Account": "Tak, usuń konto",
+            "Cancel": "Anuluj",
+            "Enter your password to confirm": "Wpisz swoje hasło, aby potwierdzić",
+            "Enter your username to confirm": "Wpisz swoją nazwę użytkownika, aby potwierdzić"
+            }
+
+
+          
+          
+      
+      
+      
+      
+  
+}

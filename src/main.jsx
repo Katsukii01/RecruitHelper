@@ -6,6 +6,7 @@ import './index.css';
 import App from './App.jsx';
 
 import * as Sentry from '@sentry/react';
+import './i18n'; 
 
 Sentry.init({
   dsn: 'https://36fe5b7cac04aaa988c3975d118a23bc@o4508839674707969.ingest.de.sentry.io/4508839675101264',

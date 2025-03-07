@@ -4,10 +4,12 @@ import { Link , useNavigate, useLocation } from 'react-router-dom';
 import { NavLinks } from '../constants'; // Ensure NavLinks is defined
 import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
-
+import { useTranslation } from 'react-i18next';
+import Flag from 'react-world-flags'; 
 
 
 const Navbar = () => {
+  const { t, i18n } = useTranslation();
   const auth = useContext(AuthContext);
   const { user, isAdmin, signOut } = auth;
   const navigate = useNavigate();
@@ -16,6 +18,15 @@ const Navbar = () => {
   const allowedHashes = NavLinks.map(link => link.id);
   const location = useLocation();
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang); // Zmiana języka
+  };
+
+  useEffect(() => {
+    setActive(location.hash.slice(1));
+    setUnderline(location.hash.slice(1));
+  }, [i18n.language]); // Uruchomi się po każdej zmianie języka
 
   const setUnderline = (linkId) => {
     const underline = document.getElementById('underline');
@@ -41,8 +52,6 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleLocationChange = () => {
-      
-      console.log(auth);
       
       const hash = window.location.hash.slice(1); // Get hash without the '#' character
   
@@ -93,7 +102,7 @@ const Navbar = () => {
 
     mdToLgQuery.addEventListener('change', handleResize);
     return () => mdToLgQuery.removeEventListener('change', handleResize);
-  }, [active]);
+  }, [active, ]);
 
 
   const handleActive = (link) => {
@@ -137,7 +146,8 @@ const Navbar = () => {
     navigate("/SignIn");
   };
 
-  return (
+  return (  
+  <>
     <nav className="w-full flex items-center fixed top-0 z-20">
       <div className="navbar w-full flex justify-between items-center max-w-7xl mx-auto m-1 p-4 bg-glass rounded-3xl">
         {/* Logo */}
@@ -155,7 +165,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Links */}
-        <ul className="list-none hidden xl:flex flex-row gap-10 nav-menu">
+        <ul className="list-none hidden 2xl:flex flex-row gap-10 nav-menu">
           {NavLinks.map((link) => (
             <li
               key={link.id}
@@ -165,7 +175,7 @@ const Navbar = () => {
               onClick={() => handleActive(link)}
             >
               <a className="block w-full h-full" href={`#${link.id}`}>
-                {link.title}
+                {t(link.titleKey)}
               </a>
             </li>
           ))}
@@ -300,7 +310,7 @@ const Navbar = () => {
         </ul>
 
         {/* Mobile Menu */}
-        <div className="xl:hidden flex flex-1 justify-end items-center">
+        <div className="2xl:hidden flex flex-1 justify-end items-center">
           <input
             id="checkbox2"
             type="checkbox"
@@ -331,7 +341,7 @@ const Navbar = () => {
                   } font-medium cursor-pointer text-[16px]`}
                   onClick={() => handleActive(link)}
                 >
-                  <a href={`#${link.id}`}>{link.title}</a>
+                  <a href={`#${link.id}`}>{t(link.titleKey)}</a>
                 </li>
               ))}
     
@@ -458,14 +468,52 @@ const Navbar = () => {
                     </a>
                   </div>
                 </div>
-                
                 )}
-              
+              <div className=" flex space-x-4 z-50 bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white border-2">
+              <button
+                onClick={() => changeLanguage('pl')}
+                className={`p-1 rounded-md ${
+                  i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                } hover:bg-blue-400 transition duration-200`}
+              >
+                <Flag code="PL" alt="Polska" width={32} height={32} />
+              </button>
+              <button
+                onClick={() => changeLanguage('en')}
+                className={`p-1 rounded-md ${
+                  i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                } hover:bg-blue-400 transition duration-200`}
+              >
+                <Flag code="GB" alt="Anglia" width={32} height={32} />
+              </button>
+            </div>
+
               </ul>
           </div>
-        </div>
-      </div>
+        </div>      
+      </div> 
     </nav>
+    <nav className="relative hidden 2xl:flex "> 
+    <div className="fixed top-2 right-2 flex space-x-4 z-50 bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white border-2">
+    <button
+      onClick={() => changeLanguage('pl')}
+      className={`p-1 rounded-md ${
+        i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+      } hover:bg-blue-400 transition duration-200`}
+    >
+      <Flag code="PL" alt="Polska" width={32} height={32} />
+    </button>
+    <button
+      onClick={() => changeLanguage('en')}
+      className={`p-1 rounded-md ${
+        i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+      } hover:bg-blue-400 transition duration-200`}
+    >
+      <Flag code="GB" alt="Anglia" width={32} height={32} />
+    </button>
+  </div>
+</nav>
+  </>
   );
 };
 

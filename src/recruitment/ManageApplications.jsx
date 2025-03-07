@@ -163,7 +163,7 @@ const ManageApplications = () => {
                     </span>
                     </p>
                     <p className="text-sm text-white mt-1 font-semibold m-4">Job Title: 
-                      <span className='pl-1 text-teal-400 font-normal'>{application.recruitmentData.jobTittle}</span>
+                      <span className='pl-1 text-teal-400 font-normal'>{application.recruitmentData.jobTitle}</span>
                     </p>
                     <hr className="border-gray-300 border-1 m-4" />
                     <p className="text-sm text-white mt-1 font-semibold m-4 flex-wrap flex">Your current stage: 

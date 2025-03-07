@@ -129,7 +129,7 @@ const ManageUsers = () => {
 
   return (
     <div className=" bg-gray-800 rounded-lg shadow-md p-2">
-      <div  style={{ minHeight: `${limit * 120}px` }}  className="overflow-x-auto">
+      <div  style={{ minHeight: `${limit * 130}px` }}  className="overflow-x-auto">
       <table 
           className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm " 
         >

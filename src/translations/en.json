@@ -1,0 +1,223 @@
+{
+  "Welcome to": "Welcome to",
+  "heroHeadText": "Empowering you to navigate your recruitment process with our innovative solutions. Our platform is designed to simplify every aspect of the recruitment journey, from attracting the best talent to making seamless hiring decisions. ",
+
+  "features": {
+    "search": {
+      "title": "Advanced Job Search",
+      "description": "Find the best job opportunities tailored to your skills and preferences. Our platform offers powerful search and filtering options."
+    },
+    "candidate_screening": {
+      "title": "Candidate Screening",
+      "description": "Efficiently review and shortlist candidates using recommendations and automated screening tools."
+    },
+    "hiring_process": {
+      "title": "Streamlined Hiring Process",
+      "description": "Manage job postings, track applications, and simplify your hiring workflow with our intuitive tools."
+    },
+    "calendar": {
+      "title": "Calendar with Meetings",
+      "description": "Schedule and manage interviews effortlessly with an integrated calendar. No more missed calls or missed meetings!"
+    },
+    "automated_emails": {
+      "title": "Automated Emails",
+      "description": "Send task and meeting reminders automatically to candidates, keeping everyone on track."
+    },
+    "export_data": {
+      "title": "Export Data to XLSX",
+      "description": "Easily export recruitment data, candidate lists, and reports to Excel for further analysis and documentation."
+    },
+    "stage_updates": {
+      "title": "Candidate Stage Updates",
+      "description": "Keep candidates informed about their current recruitment stage with automated updates and notifications."
+    },
+    "ai_analysis": {
+      "title": "AI-powered CV & Cover Letter Analysis",
+      "description": "Analyze resumes and cover letters with AI to extract key skills and match candidates to job requirements."
+    },
+    "scoring_system": {
+      "title": "Automated Scoring System",
+      "description": "Define what’s important for you, and our system will calculate accurate scores for each candidate based on your criteria."
+    }
+  },
+  "about_description": "Ultimate platform designed to streamline the recruitment process.Our innovative tools help you find, evaluate, and hire top talent with ease.",
+  "about_title": "About Us",
+
+  "know_how_title": "Know How",
+  "know_how_description": "Discover how to make the most of RecruitHelper. Click on a section to access detailed guides and expert tips.",
+  "sections": {
+    "recruitments": {
+      "name": "Recruitments",
+      "description": "Learn how to create job postings, and optimize your hiring process."
+    },
+    "applications": {
+      "name": "Applications",
+      "description": "Discover how to apply for jobs, and stay updated on your hiring journey."
+    },
+    "account": {
+      "name": "Account",
+      "description": "Learn how to set up your profile and manage your account settings."
+    },
+    "dashboard": {
+      "name": "Dashboard",
+      "description": "Understand how to navigate your dashboard and access key features."
+    }
+  },
+  "go_there": "Go there",
+
+  "Recruitments": "Recruitments",
+  "Recruitments_Desc": "Discover the latest job opportunities and recruitment openings. Find the perfect role that fits your skills and experience with our comprehensive hiring platform.",
+  "Take_me_there": "Take me there",
+
+  "Opinions": "Opinions",
+  "Opinions_Desc": "See what users are saying about their experience with our platform. We value your feedback and strive to improve our services based on your suggestions and experiences.",
+  "No Opinions available at the moment.": "No Opinions available at the moment.",
+
+  "contact": "Contact",
+  "name": "Name",
+  "email": "Email",
+  "subject": "Subject",
+  "message": "Message",
+  "send_message": "Send Message",
+  "message_sent": "Message Sent!",
+  "name_required": "Name is required",
+  "email_required": "Email is required",
+  "email_invalid": "Email is invalid",
+  "subject_required": "Subject is required",
+  "subject_length": "Subject must be at least 5 characters long",
+  "message_required": "Message is required",
+  "message_length": "Message must be at least 10 characters long",
+  "failed_to_send": "Failed to send message.",
+
+  "statistics": "Statistics",
+  "calendar": "Calendar",
+  "recruitments": "Recruitments",
+  "applications": "Applications",
+  "recruitment_meetings": "Recruitment Meetings",
+  "application_meetings": "Application Meetings",
+  "both_types": "Both Types",
+
+  "faq_title": "Frequently Asked Questions",
+  "faq_1_question": "What is RecruitHelper?",
+  "faq_1_answer": "RecruitHelper is a service that allows recruiters to create and manage recruitments efficiently while also enabling job seekers to apply for open positions, automate processes, and centralize all recruitment needs in one place.",
+  "faq_2_question": "What are the benefits of using RecruitHelper?",
+  "faq_2_answer": "RecruitHelper provides a seamless recruitment experience by offering tools for job postings, candidate tracking, automated CV screening, cover letter analysis, and real-time recruitment insights.",
+  "faq_3_question": "What is the difference between RecruitHelper and job search engines?",
+  "faq_3_answer": "Unlike traditional job search engines, RecruitHelper focuses on both recruiters and job seekers by providing an all-in-one recruitment management system, including automation and candidate matching features.",
+  "faq_4_question": "Is RecruitHelper free to use?",
+  "faq_4_answer": "Yes, RecruitHelper offers a free version with essential features, while premium options provide advanced functionalities for larger recruitment needs.",
+  "faq_5_question": "Can I export my recruitment data?",
+  "faq_5_answer": "Yes, RecruitHelper allows you to export recruitment data in XLSX format for further analysis and record-keeping.",
+  "faq_6_question": "How do I create an account on RecruitHelper?",
+  "faq_6_answer": "You can create an account by signing up with your email and setting a password. You may also sign up using Google for convenience.",
+  "faq_7_question": "Can I track my job applications on RecruitHelper?",
+  "faq_7_answer": "Yes, RecruitHelper provides a dashboard where you can track your job applications, see their status, and receive updates from recruiters.",
+  "faq_8_question": "How do I contact RecruitHelper support?",
+  "faq_8_answer": "You can reach out to our support team via email at recruithelpercontact@gmail.com or use the form on our website.",
+  "faq_9_question": "Does RecruitHelper offer interview scheduling?",
+  "faq_9_answer": "Yes, RecruitHelper provides an integrated interview scheduling tool, allowing recruiters to set up and manage interviews seamlessly.",
+
+    "footer": {
+      "contact": {
+        "title": "Contact"
+      },
+      "links": {
+        "title": "Links",
+        "faq": "FAQ",
+        "terms": "Terms of Service",
+        "help": "Help",
+        "contact": "Contact"
+      },
+      "All rights reserved.": "© 2025 RecruitHelper. All rights reserved."
+    },
+
+    "terms": {
+      "title": "Terms and Conditions",
+      "content": [
+        {
+          "title": "Acceptance of Terms and Conditions",
+          "text": "By accessing or using the Service, you are deemed to have accepted these Terms and Conditions. If you do not agree to these Terms and Conditions, you must not access or use the Service."
+        },
+        {
+          "title": "Changes to Terms and Conditions",
+          "text": "We reserve the right to update or modify these Terms and Conditions at any time. Your continued use of the Service after the posting of any changes to these Terms and Conditions constitutes your acceptance of those changes."
+        },
+        {
+          "title": "Eligibility",
+          "text": "To use the Service, you must be at least 18 years old and have legal capacity to enter into binding agreements according to Polish law."
+        },
+        {
+          "title": "Prohibited Uses",
+          "text": "You may not use the Service for any illegal or unauthorized purpose. You may not use the Service to engage in any activity that violates any applicable local, state, national, or international law or regulation, including but not limited to Polish laws."
+        },
+        {
+          "title": "Intellectual Property",
+          "text": "The Service and its original content (excluding Content provided by users), features, and functionality are and will remain the exclusive property of RecruitHelper and its licensors. The Service is protected by copyright, trademark, and other laws of both the Republic of Poland and foreign countries. Your access to the Service and Content is subject to these Terms and Conditions."
+        },
+        {
+          "title": "Termination",
+          "text": "RecruitHelper reserves the right to terminate your access to the Service at any time, for any reason or no reason at all. Upon termination, your right to use the Service will immediately cease."
+        },
+        {
+          "title": "Disclaimer of Warranties",
+          "text": "RecruitHelper does not guarantee that the Service will be error-free or uninterrupted, or that any defects or errors will be corrected. RecruitHelper disclaims all warranties, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement."
+        },
+        {
+          "title": "Limitation of Liability",
+          "text": "In no event shall RecruitHelper or its suppliers be liable for any direct, indirect, incidental, special, exemplary, or consequential damages."
+        },
+        {
+          "title": "Indemnification",
+          "text": "You agree to indemnify and hold harmless RecruitHelper and its officers, directors, employees, and agents from and against any and all claims, damages, liabilities, costs, and expenses."
+        },
+        {
+          "title": "Governing Law",
+          "text": "These Terms and Conditions shall be governed by and construed in accordance with the laws of the Republic of Poland, without regard to its conflict of law provisions."
+        },
+        {
+          "title": "Entire Agreement",
+          "text": "These Terms and Conditions constitute the entire agreement between you and RecruitHelper with respect to the Service and supersede any prior agreements."
+        },
+        {
+          "title": "Contact Us",
+          "text": "If you have any questions or concerns about these Terms and Conditions, please contact us at recruithelpercontact@gmail.com."
+        }
+      ]
+    },
+    "nav": {
+        "about": "About",
+        "knowHow": "Know-how",
+        "recruitments": "Recruitments",
+        "opinions": "Opinions",
+        "contact": "Contact"
+      },
+
+      "HomePage": {
+        "The name has been updated": "The name has been updated",
+        "An error occurred while updating the name": "An error occurred while updating the name",
+        "The password has been updated": "The password has been updated",
+        "The passwords do not match": "The passwords do not match",
+        "Please provide all required details." : "Please provide all required details.",
+        "The provided account name is incorrect.": "The provided account name is incorrect.",
+        "Are you sure you want to delete your account? This action cannot be undone.": "Are you sure you want to delete your account? This action cannot be undone.",
+        "The account has been deleted": "The account has been deleted",
+        "Email Verified": "Email Verified",
+        "Email Not Verified": "Email Not Verified",
+        "Manage your account": "Manage your account",
+        "Update Name": "Update Name",
+        "Old Password": "Old Password",
+        "New Password": "New Password",
+        "Confirm New Password": "Confirm New Password",
+        "Update Password": "Update Password",
+        "Delete Account": "Delete Account",
+        "This action will delete your account and cannot be undone.": "This action will delete your account and cannot be undone.",
+        "And all your recruitment data will be deleted. Do you want to proceed?": "And all your recruitment data will be deleted. Do you want to proceed?",
+        "Yes, Delete Account": "Yes, Delete Account", 
+        "Cancel": "Cancel",
+        "Enter your password to confirm": "Enter your password to confirm",
+        "Enter your username to confirm": "Enter your username to confirm"
+      }
+  
+
+}
+

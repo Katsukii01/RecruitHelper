@@ -1,7 +1,9 @@
 import React from 'react'
 import { BlueMoon } from '../utils';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation(); 
   return (
     <footer className="text-white w-full h-full relative">
       
@@ -12,7 +14,7 @@ const Footer = () => {
         {/* Linki po lewej */}
         <div className="md:space-x-16 flex flex-col md:flex-row items-start">
         <div> 
-            <h2 className="text-2xl font-bold text-sky">Contact</h2>
+            <h2 className="text-2xl font-bold text-sky">{t('footer.contact.title')}</h2>
             <ul className="space-y-2 mt-2">
             <li className="hover:underline hover:text-blue-300">
                 <a href="mailto:recruithelpercontact@gmail.com" className="hover:underline">recruithelpercontact@gmail.com</a>
@@ -24,19 +26,19 @@ const Footer = () => {
         </div>
 
         <div className="mt-4 md:mt-0 ml-0">
-            <h2 className="text-2xl font-bold text-sky">Links</h2>
+            <h2 className="text-2xl font-bold text-sky">{t('footer.links.title')}</h2>
             <ul className="space-y-2 mt-2">
             <li className="hover:underline hover:text-blue-300">
-                <a href="/FAQ" className="hover:underline">FAQ</a>
+                <a href="/FAQ" className="hover:underline">{t('footer.links.faq')}</a>
             </li>
             <li className="hover:underline hover:text-blue-300">
-                <a href="/terms" className="hover:underline">Terms of Service</a>
+                <a href="/terms" className="hover:underline">{t('footer.links.terms')}</a>
             </li>
             <li className="hover:underline hover:text-blue-300">
-                <a href="/help" className="hover:underline">Help</a>
+                <a href="/help" className="hover:underline">{t('footer.links.help')}</a>
             </li>
             <li className="hover:underline hover:text-blue-300">
-                <a href="/#Contact" className="hover:underline">Contact</a>
+                <a href="/#Contact" className="hover:underline">{t('footer.links.contact')}</a>
             </li>
             </ul>
         </div>
@@ -93,7 +95,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <p className="text-sm text-center mt-6">© 2024 RecruitHelper. All rights reserved.</p>
+      <p className="text-sm text-center mt-6">{t('footer.All rights reserved.')}</p>
       </section>
     </footer>
   )

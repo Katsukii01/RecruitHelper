@@ -1,57 +1,50 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaChevronDown } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next'; // Importujemy useTranslation
 
 const faqs = [
-    {
-      question: "What is RecruitHelper?",
-      answer:
-        "RecruitHelper is a service that allows recruiters to create and manage recruitments efficiently while also enabling job seekers to apply for open positions, automate processes, and centralize all recruitment needs in one place."
-    },
-    {
-      question: "What are the benefits of using RecruitHelper?",
-      answer:
-        "RecruitHelper provides a seamless recruitment experience by offering tools for job postings, candidate tracking, automated CV screening, cover letter analysis, and real-time recruitment insights."
-    },
-    {
-      question: "What is the difference between RecruitHelper and job search engines?",
-      answer:
-        "Unlike traditional job search engines, RecruitHelper focuses on both recruiters and job seekers by providing an all-in-one recruitment management system, including automation and candidate matching features."
-    },
-    {
-      question: "Is RecruitHelper free to use?",
-      answer:
-        "Yes, RecruitHelper offers a free version with essential features, while premium options provide advanced functionalities for larger recruitment needs."
-    },
-    {
-      question: "Can I export my recruitment data?",
-      answer:
-        "Yes, RecruitHelper allows you to export recruitment data in XLSX format for further analysis and record-keeping."
-    },
-    {
-      question: "How do I create an account on RecruitHelper?",
-      answer:
-        "You can create an account by signing up with your email and setting a password. You may also sign up using Google for convenience."
-    },
-    {
-      question: "Can I track my job applications on RecruitHelper?",
-      answer:
-        "Yes, RecruitHelper provides a dashboard where you can track your job applications, see their status, and receive updates from recruiters."
-    },
-    {
-      question: "How do I contact RecruitHelper support?",
-      answer:
-        "You can reach out to our support team via email at recruithelpercontact@gmail.com or use the form on our website."
-    },
-    {
-      question: "Does RecruitHelper offer interview scheduling?",
-      answer:
-        "Yes, RecruitHelper provides an integrated interview scheduling tool, allowing recruiters to set up and manage interviews seamlessly."
-    },
-  ];
+  {
+    questionKey: "faq_1_question",
+    answerKey: "faq_1_answer"
+  },
+  {
+    questionKey: "faq_2_question",
+    answerKey: "faq_2_answer"
+  },
+  {
+    questionKey: "faq_3_question",
+    answerKey: "faq_3_answer"
+  },
+  {
+    questionKey: "faq_4_question",
+    answerKey: "faq_4_answer"
+  },
+  {
+    questionKey: "faq_5_question",
+    answerKey: "faq_5_answer"
+  },
+  {
+    questionKey: "faq_6_question",
+    answerKey: "faq_6_answer"
+  },
+  {
+    questionKey: "faq_7_question",
+    answerKey: "faq_7_answer"
+  },
+  {
+    questionKey: "faq_8_question",
+    answerKey: "faq_8_answer"
+  },
+  {
+    questionKey: "faq_9_question",
+    answerKey: "faq_9_answer"
+  }
+];
 
 const Faq = () => {
   const [openIndexes, setOpenIndexes] = useState([]);
+  const { t } = useTranslation(); // Funkcja do tłumaczeń
 
   const toggleFaq = (index) => {
     setOpenIndexes((prev) =>
@@ -61,7 +54,7 @@ const Faq = () => {
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen pt-28 px-4'>
-      <h1 className='text-2xl md:text-3xl font-bold mb-6 text-center'>Frequently Asked Questions</h1>
+      <h1 className='text-2xl md:text-3xl font-bold mb-6 text-center'>{t('faq_title')}</h1>
       <div className='w-full max-w-3xl'>
         {faqs.map((faq, index) => (
           <div
@@ -73,7 +66,7 @@ const Faq = () => {
               onClick={() => toggleFaq(index)}
             >
               <span className='flex items-center gap-1'>
-                {faq.question}
+                {t(faq.questionKey)}
               </span>
               <span
                 className={`transition-transform duration-300 ${openIndexes.includes(index) ? "rotate-180" : "rotate-0"}`}
@@ -82,15 +75,14 @@ const Faq = () => {
               </span>
             </button>
             <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: openIndexes.includes(index) ? "auto" : 0, opacity: openIndexes.includes(index) ? 1 : 0 }}
-                exit={{ height: 0, opacity: 0 }} // Dodaj animację zwijania
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="overflow-hidden text-[17px] leading-[26px] text-gray-300 pt-2"
-                >
-                <p>{faq.answer}</p>
-                </motion.div>
-
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: openIndexes.includes(index) ? "auto" : 0, opacity: openIndexes.includes(index) ? 1 : 0 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden text-[17px] leading-[26px] text-gray-300 pt-2"
+            >
+              <p>{t(faq.answerKey)}</p>
+            </motion.div>
           </div>
         ))}
       </div>
