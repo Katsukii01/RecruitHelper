@@ -24,8 +24,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    setActive(location.hash.slice(1));
-    setUnderline(location.hash.slice(1));
+    setActive(active);
+    setUnderline(active);
   }, [i18n.language]); // Uruchomi się po każdej zmianie języka
 
   const setUnderline = (linkId) => {
