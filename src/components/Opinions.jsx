@@ -77,7 +77,7 @@ const Opinions = () => {
                     {opinions.map((opinion, index) => (
                         <SwiperSlide key={opinion.id || index} className="p-12 ">
                             <div className="flex flex-col gap-4 p-6 rounded-lg shadow-lg bg-gray-900 text-white mx-4 shadow-[rgba(0,0,0,0.8)] border border-gray-700 transition-transform duration-300 hover:scale-105">
-                                <p className="text-2xl font-semibold">{opinion.jobTittle || "No Title"}</p>
+                                <p className="text-2xl font-semibold">{opinion.jobTitle || "No Title"}</p>
                                 <p className="text-gray-400 text-sm">{opinion.recruitmentName || "Unknown"} - {opinion.date || "No Date"}</p>
                                 {renderStars(opinion.stars)}
                                 <p className="text-gray-300 text-lg italic mt-2">"{opinion.opinion || "No opinion available"}"</p>
