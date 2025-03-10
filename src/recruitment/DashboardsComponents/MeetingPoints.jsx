@@ -266,8 +266,8 @@ const MeetingPoints = ({ id, refresh }) => {
         <HelpGuideLink section="RecruitmentMeetingsPoints" />
           </h1>
 
-      <div className="min-h-screen-80 overflow-auto">
-      <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-2">
+      <div className="h-screen-60 overflow-auto">
+      <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white">
             <tr>
