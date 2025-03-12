@@ -377,10 +377,20 @@
           "Total Applications Hired": "Total Applications Hired"
       },
 
-         "Calendar" : {
-          "locale": "en-GB",
-          "meetings on": "Meetings on"
-        }
+      "Calendar": {
+            "locale": "en-GB",
+            "meetings on": "Meetings on",
+            "applicant": "Applicant",
+            "documents": "Documents",
+            "join meeting": "Join meeting",
+            "open cv": "Open CV",
+            "open cover letter": "Open cover letter",
+            "No Cover Letter uploaded": "No cover letter uploaded",
+            "Recruitment": "Recruitment",
+            "Job Title": "Job Title",
+            "No meetings scheduled for this day.": "No meetings scheduled for this day."
+          }
+
 
       
       
