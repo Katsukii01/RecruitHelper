@@ -31,6 +31,7 @@ export const exportApplicantsToExcel = (workbook, applicants) => {
     cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } };
     cell.alignment = { horizontal: "center", vertical: "middle" };
     cell.border = { top: { style: "thick" }, bottom: { style: "thick" }, left: { style: "thin" }, right: { style: "thin" } };
+    
   });
 
 
