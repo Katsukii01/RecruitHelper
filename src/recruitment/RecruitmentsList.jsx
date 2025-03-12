@@ -146,6 +146,10 @@ const RecruitmentList = () => {
                     <span className='text-teal-400 font-normal'> {recruitment.jobTitle}</span>
                   </p>
 
+                  <p className="text-sm text-white mt-1 font-semibold m-4">Location:
+                    <span className='text-teal-400 font-normal'> {recruitment.location}</span>
+                  </p>
+
                   <p className="text-sm text-white mt-1 font-semibold m-4">
                     Education Level: 
                     <span className="text-teal-400 font-normal pl-1">

@@ -748,3 +748,62 @@ code, pre, .code-block {
     padding: 1.5rem;
     border-radius: 12px;
 }
+
+/* ------------------------------------------- */
+
+/* Geocoder Autocomplete Styles */
+
+/* 🔴 Przycisk zamykania - czerwony */
+.geoapify-close-button{
+  position: absolute !important;
+  right: 10px !important; /* Przesunięcie do prawej */
+  top: 25px !important;
+  transform: translateY(-50%) !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #c93030 !important; /* Intensywna czerwień */
+  font-size: 20px !important;
+  cursor: pointer !important;
+  transition: color 0.2s ease-in-out !important;
+}
+.geoapify-close-button:hover {
+  color: #ff4444 !important; /* Czerwona czerwień */
+  cursor: pointer !important;
+  transition: color 0.2s ease-in-out !important;
+}
+
+/* 🔵 Input - max szerokość, ciemne tło */
+.geoapify-autocomplete-input {
+  width: 100% !important; /* Pełna szerokość */
+  background-color: #121212 !important; /* Czarne tło */
+  border: 1px solid white !important; /* Niebieska ramka */
+  color: #ffffff !important; /* Biały tekst */
+  padding: 12px !important;
+  border-radius: 6px !important;
+  font-size: 16px !important;
+}
+
+
+/* 🔵 Lista podpowiedzi */
+.geocoder-container {
+  width: 100% !important; /* Pełna szerokość */
+  background-color: #1a1a1a !important; /* Ciemnoszare tło */
+  border-radius: 6px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 🔵 Pojedynczy element listy */
+.geocoder-container div {
+  padding: 10px !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+}
+
+.geoapify-autocomplete-item:hover {
+  background-color: #0D223A !important; /* Niebieski tło przy najechaniu */
+  color: #ffffff !important; /* Biały tekst */
+  border-radius: 8px !important;
+  transition: background-color 0.3s ease-in-out !important;
+}
+
+

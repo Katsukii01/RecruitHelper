@@ -260,6 +260,7 @@ export const getPublicRecruitments = async (searchTerm = "") => {
           languages: recruitmentData.languages,
           skills: recruitmentData.skills,
           courses: recruitmentData.courses,
+          location: recruitmentData.location,
         };
       })
       .filter(

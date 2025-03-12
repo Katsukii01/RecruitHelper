@@ -4,6 +4,7 @@ import { getRecruitmentStats,changeRecruitmentStage  } from "../../services/Recr
 import { Loader, HelpGuideLink } from "../../utils";
 import {applicantStages, recruitmentStages} from "../../constants/stages";
 import { BiBarChart, BiLineChart, BiCalendar, BiTask, BiUser, BiEnvelope } from "react-icons/bi";
+import InviteLink from "./InviteLink";
 
 const Overview = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -68,6 +69,9 @@ const Overview = ({ id }) => {
         </h1>
 
       <div className="h-screen-70 overflow-auto px-2">
+        
+        {/* Invite Link */}
+        <InviteLink id={id} />
 
         {/* Current Stage */}
 

@@ -4,6 +4,7 @@ import { DsectionWrapper } from '../../hoc';
 import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLanguage, removeLanguage } from '../Validations';
 import {  useNavigate } from 'react-router-dom';
 import { Loader, HelpGuideLink } from '../../utils';
+import LocationInput from '../LocationInput.jsx';
 
 const RecruitmentEdit = ({ id, onRefresh }) => {
   const [recruitment, setRecruitment] = useState(null);
@@ -23,7 +24,9 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
     educationLevel: '',
     weightOfEducationLevel: '',
     educationField: '',
+    location : '',
   });
+
 
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
@@ -50,6 +53,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             weightOfLanguages: data.weightOfLanguages || 0,
             courses: data.courses || [],
             weightOfCourses: data.weightOfCourses || 0,
+            location: data.location || '',
           });
         } catch (error) {
           console.error('Error fetching recruitment:', error);
@@ -207,6 +211,12 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             placeholder="up to 30 signs"
           />
           {errors.jobTitle &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.jobTitle}</p>}
+        </div>
+
+        {/* Location */}
+        <div>
+            <LocationInput formData={formData} setFormData={setFormData} />
+            {errors.location &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.location}</p>}
         </div>
 
         <div className='border-2 border-gray-500 rounded-md p-2'>

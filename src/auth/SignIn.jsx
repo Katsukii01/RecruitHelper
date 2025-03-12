@@ -16,8 +16,7 @@ const SignIn = () => {
   const [resetEmail, setResetEmail] = useState(''); // E-mail do resetu hasła
   const location = useLocation();
   
-  const from = location.state?.from?.pathname || "/Home"; 
-  const fragment = location.state?.from?.hash || "";  
+  const from = location.state?.from || "/Home";
 
   useEffect(() => {
     if (user) {
@@ -31,7 +30,7 @@ const SignIn = () => {
     setIsLoading(true);
     try {
       await signIn(email, password); // Attempt to sign in
-      navigate(from + fragment, { replace: true });
+      navigate(from, { replace: true }); // Pełne przekierowanie
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,7 +42,7 @@ const SignIn = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn(); // Google sign-in;
-      navigate(from +'#'+ fragment, { replace: true });
+      navigate(from, { replace: true }); // Pełne przekierowanie
     } catch (err) {
       setError(err.message);
     }finally {

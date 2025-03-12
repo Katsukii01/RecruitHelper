@@ -28,6 +28,9 @@ export const RecruitmentValidateForm = (formData) => {
       }
       }
     
+      if(!formData.location){
+        newErrors.location = 'Location is required';
+      }
 
     if (!formData.weightOfExperience) {
       newErrors.weightOfExperience = 'Weight of experience is required';

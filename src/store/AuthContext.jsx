@@ -84,7 +84,7 @@ const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
     setCurrentUser(userCredential.user);
     console.log('Email/password sign-in successful');
-    setIsAdmin(checkAdmin(user.uid));
+    setIsAdmin(checkAdmin(userCredential.user.uid));
     console.log('User saved to Firestore');
   } catch (error) {
     let userFriendlyMessage = 'An error occurred during sign-in.';
@@ -423,7 +423,7 @@ const updatePassword = async (oldPassword, newPassword) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setCurrentUser(user);
-      setIsAdmin(checkAdmin(user.uid));
+      setIsAdmin(false);
       setIsLoading(false); // Stop loading once user is retrieved
     });
 

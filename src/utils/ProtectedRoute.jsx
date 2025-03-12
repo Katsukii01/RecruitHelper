@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../store/AuthContext';
-import Loader from './loader';
+import React, { useContext } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../store/AuthContext";
+import Loader from "./loader";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -9,19 +9,19 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className='flex w-full h-screen justify-center items-center bg-glass'>
+      <div className="flex w-full h-screen justify-center items-center bg-glass">
         <Loader />
       </div>
     );
   }
 
-  // Sprawdź, czy użytkownik jest zalogowany
   if (!user) {
-    // Zachowaj fragment URL, jeśli istnieje, w stanie
-    return <Navigate to="/SignIn" replace state={{ from: location }} />;
+    // Pobierz pełny URL (ścieżka, query params i hash)
+    const fullPath = location.pathname + location.search + location.hash;
+
+    return <Navigate to="/SignIn" replace state={{ from: fullPath }} />;
   }
 
-  // Jeśli użytkownik jest zalogowany, renderuj dzieci
   return children;
 };
 

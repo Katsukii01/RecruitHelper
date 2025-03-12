@@ -11,11 +11,20 @@ import { firebaseAuth } from "../firebase/baseconfig";
 import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
 import { handleDeleteSkill, handleDeleteCourse } from "./Validations";
 
-const AddApplicants = () => {
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
 
+const AddApplicants = () => {
+  const query = useQuery();
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { recruitmentId, applicant, currentPage, userApply, CVapplicants } = state || {};
+  const location = useLocation();
+  const state = location.state || {};
+  const recruitmentId = state?.recruitmentId || query.get("recruitmentId") || "";
+  const applicant = state.applicant || "";
+  const currentPage = state.currentPage || 1;
+  const userApply = state.userApply || {};
+  const CVapplicants = state.CVapplicants || [];
   const [applicants, setApplicants] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [CvfilePreviews, setCvfilePreviews] = useState("");
@@ -31,6 +40,7 @@ const AddApplicants = () => {
   const [applicantsToCheck, setApplicantsToCheck] = useState(0);
   const [applicantsChecked, setApplicantsChecked] = useState(0);
 
+  console.log("RecruitmentData: ", recruitmentId );
   usePreventPageReload(true);
   // If currentPage is undefined, set it to 1
   const page = currentPage ?? 1;
@@ -461,8 +471,11 @@ const AddApplicants = () => {
             });
       }, 1000);
     } catch (error) {
-      console.error("Error while saving applicants:", error);
-      alert("Error saving applicants. Please try again.");
+      if (error.message === "This recruitment is private, you cant apply") {
+        alert("This recruitment is private, you can't apply. Please contact the recruitment owner.");
+      } else {
+        alert("Error saving applicants. Please try again.");
+      }
   
       clearInterval(progressInterval);
       setIsSaving(false);
@@ -560,9 +573,9 @@ const AddApplicants = () => {
     setFormData({ ...formData, languages: updatedLanguages });
   };
 
-  if (recruitmentId === undefined)
+  if (recruitmentId == "")
     return (
-      <section className="relative w-full h-screen mx-auto p-4 bg-glass border-4 border-gray-400 rounded-lg shadow-lg shadow-black bg-gradient-to-br from-slate-800 to-slate-900">
+      <section className="w-full min-h-screen flex flex-col items-center bg-glass pt-32">
         No recruitment found
       </section>
     );
