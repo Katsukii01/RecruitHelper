@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { getUserApplications, deleteApplicant } from '../services/RecruitmentServices';
 import { Loader } from '../utils';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 const ManageApplications = () => {
+  const { t } = useTranslation();
   const [applications, setApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -36,20 +38,20 @@ const ManageApplications = () => {
   
   const handleDeleteApplication = async (Recruitmentid, Applicantid) => {
     const userConfirmed = window.confirm(
-      "Are you sure you want to quit this recruitment? You might not be able to apply again. Click 'OK' to continue or 'Cancel' to abort."
+       t("ManageApplication.Are you sure you want to delete this application?")
     );
   
     if (userConfirmed) {
       try {
         await deleteApplicant(Recruitmentid, Applicantid); // Await the async operation
-        alert("Your application has been deleted successfully.");
+        alert(t("ManageApplication.Your application has been deleted successfully."));
         
          //refresh the applicant list after deletion
          setApplications((prevApplications) => prevApplications.filter((app) => app.id !== Recruitmentid));
          
       } catch (error) {
         console.error('Error deleting application:', error.message);
-        alert("An error occurred while deleting your application. Please try again later.");
+        alert(t("ManageApplication.An error occurred while deleting your application. Please try again later."));
       }
     }
   };
@@ -82,19 +84,24 @@ const ManageApplications = () => {
 
   const statusColors = {
     'To be checked': 'bg-gray-500',
-    'Approved': 'bg-green-500 ',
-    'Invited for interview': 'bg-yellow-500 ',
     'Rejected': 'bg-red-500 ',
-    'Checked': 'bg-blue-500 ',  // Możesz dodać więcej stanów w przyszłości
+    'Checked': 'bg-blue-500 ',
+    'Invited for interview': 'bg-yellow-500 ',
+    'Interviewed': 'bg-orange-500 ',
+    'Tasks': 'bg-pink-500 ',
+    'Offered': 'bg-purple-500 ',
+    "Hired" : 'bg-green-500 ',
   };
   
   const stageColors = {
+    'Paused': 'bg-red-500',
     'Collecting applicants': 'bg-gray-500',
     'Checking applications': 'bg-blue-500 ',
     'Interviewing applicants': 'bg-yellow-500 ',
+    'Scoring tasks': 'bg-pink-500 ',
     'Offering jobs': 'bg-purple-500 ',
-    'Hiring employees': 'bg-green-500 ',
-    'Paused': 'bg-red-500',
+    'Finished': 'bg-green-500 ',
+ 
   }
   
 
@@ -108,7 +115,7 @@ const ManageApplications = () => {
            <div className="mb-4 flex flex-row items-center justify-center ">
             <input
               type="text"
-              placeholder="Search applications..."
+              placeholder= {t("ManageApplication.Search Applications")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
              className="w-full p-2 border rounded shadow-sm text-sm focus:ring-2 focus:ring-sky focus:outline-none"
@@ -128,7 +135,7 @@ const ManageApplications = () => {
           {paginatedApplications.length === 0 ? (
             <div className="flex flex-col items-center justify-center mt-2 h-[680px] inner-shadow">
               <p className="mt-4 text-gray-600 font-semibold text-lg">
-                No applications found with matching search criteria.
+               {t("ManageApplication.no applications found")}
               </p>
             </div>
           ) : (
@@ -136,7 +143,7 @@ const ManageApplications = () => {
               {paginatedApplications.map((application) => (
                 <div
                   key={application.id}
-                  className="h-[310px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+                  className="h-[334px] relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
                     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
                  
                 > 
@@ -144,9 +151,9 @@ const ManageApplications = () => {
                     {application.recruitmentData.name}
                   </h3>
 
-                  <div className="h-[186.2px] overflow-auto">
+                  <div className="h-[210.2px] overflow-auto">
                     <p className="text-sm text-white mt-1 font-semibold m-4">
-                      Status:
+                       {t("ManageApplication.Status")}:
                       <span 
                         className={`font-normal px-2 py-1 rounded-full m-1 ${application.recruitmentData.status === 'Private' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}
                       >
@@ -154,7 +161,7 @@ const ManageApplications = () => {
                       </span>
                     </p> 
                     <p className="text-sm text-white mt-1 font-semibold m-4 flex flex-wrap">
-                      Stage:
+                      {t("ManageApplication.Stage")}:
       
                       <span 
                       className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${stageColors[application.recruitmentData.stage] || stageColors['Collecting applicants']}`}
@@ -162,11 +169,14 @@ const ManageApplications = () => {
                       {application.recruitmentData.stage || 'Collecting applicants'}
                     </span>
                     </p>
-                    <p className="text-sm text-white mt-1 font-semibold m-4">Job Title: 
+                    <p className="text-sm text-white mt-1 font-semibold m-4"> {t("ManageApplication.Job Title")}:
                       <span className='pl-1 text-teal-400 font-normal'>{application.recruitmentData.jobTitle}</span>
+                    </p>                   
+                    <p className="text-sm text-white mt-1 font-semibold m-4"> {t("ManageApplication.Location")}:
+                      <span className='pl-1 text-teal-400 font-normal'>{application.recruitmentData.location}</span>
                     </p>
                     <hr className="border-gray-300 border-1 m-4" />
-                    <p className="text-sm text-white mt-1 font-semibold m-4 flex-wrap flex">Your current stage: 
+                    <p className="text-sm text-white mt-1 font-semibold m-4 flex-wrap flex"> {t("ManageApplication.Your current stage")}:
   
                       <span 
                         className={`overflow-wrap break-words font-normal px-2 py-0.5 rounded-full ml-1  ${statusColors[application.applicantData.stage] || statusColors['To be checked']}`}
@@ -180,7 +190,7 @@ const ManageApplications = () => {
                           onClick={() => handleDeleteApplication(application.id, application.applicantData.id)}
                           className="mt-1 border-t-white border-t-2 p-2 text-center font-bold justify-center flex-col rounded-b-md w-full  bg-red-500 text-white   shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
                         >
-                          Quit
+                          {t("ManageApplication.quit")}
                   </button>
                 </div>
               ))}

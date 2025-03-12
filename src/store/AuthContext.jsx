@@ -39,7 +39,8 @@ export const AuthContext = createContext({
 });
 
 export const GetIsAdmin = () => {
-  return checkAdmin(firebaseAuth.currentUser.uid);
+  if (!firebaseAuth.currentUser) return false;
+  return checkAdmin(firebaseAuth.currentUser.uid || null );
 };
 
 const AuthProvider = ({ children }) => {

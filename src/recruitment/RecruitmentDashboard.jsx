@@ -50,7 +50,7 @@ const RecruitmentDashboard = () => {
     return (
       <div className="z-0 w-full bg-glass flex justify-center items-center min-h-screen">
         <p className="text-xl text-red-500">
-          Recruitment ID not provided. Please go back and select a recruitment.
+          {t("RecruitmentDashboardError")}
         </p>
       </div>
     );

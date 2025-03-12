@@ -309,7 +309,7 @@ export const getUserApplications = async (searchTerm = "") => {
         if (applicant) {
           // Exclude other applicants from recruitmentData, and only keep the status and stage
           const { Applicants, ...filteredRecruitmentData } = recruitmentData;
-          const { status, stage, name, jobTitle } = filteredRecruitmentData;
+          const { status, stage, name, jobTitle, location } = filteredRecruitmentData;
 
           return {
             id: doc.id,
@@ -318,6 +318,7 @@ export const getUserApplications = async (searchTerm = "") => {
               stage,
               name,
               jobTitle,
+              location,
               // Include the name from recruitmentData
             },
             applicantData: applicant, // Include applicant's data

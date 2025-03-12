@@ -363,7 +363,22 @@
                   "language_invalid": "Nieprawidłowy lub nieistniejący język",
                   "language_level_required": "Poziom języka jest wymagany",
                   "language_level_invalid": "Nieprawidłowy poziom języka",
-                  "additional_info_max": "Dodatkowe informacje nie mogą przekraczać 200 znaków"
+                  "additional_info_max": "Dodatkowe informacje nie mogą przekraczać 200 znaków",
+                  "jobTitle_required": "Nazwa stanowiska jest wymagana",
+                  "jobTitle_max": "Nazwa stanowiska nie może przekraczać 45 znaków",
+                  "location_required": "Lokalizacja jest wymagana",
+                  "weight_of_education_required": "Waga wykształcenia jest wymagana",
+                  "weight_of_education_invalid": "Waga wykształcenia musi wynosić od 0 do 100",
+                  "weight_of_experience_required": "Waga doświadczenia jest wymagana",
+                  "weight_of_experience_invalid": "Waga doświadczenia musi wynosić od 0 do 100",
+                  "weight_of_language_required": "Waga języka jest wymagana",
+                  "weight_of_language_invalid": "Waga języka musi wynosić od 0 do 100",
+                  "weight_of_skills_required": "Waga umiejętności jest wymagana",
+                  "weight_of_skills_invalid": "Waga umiejętności musi wynosić od 0 do 100",
+                  "weight_of_courses_required": "Waga kursów jest wymagana",
+                  "weight_of_courses_invalid": "Waga kursów musi wynosić od 0 do 100",
+                  "sum_of_weights_invalid": "Suma wszystkich wag musi wynosić 100"
+           
                 }
               },
               "UserStats": {
@@ -386,7 +401,46 @@
               "Recruitment": "Rekrutacja",
               "Job Title": "Nazwa stanowiska",
               "No meetings scheduled for this day.": "Brak spotkań tego dnia."
+            },
+            "RecruitmentCard": {
+              "Status": "Status",
+              "Stage": "Etap",
+              "Job Title": "Stanowisko",
+              "Location": "Lokalizacja",
+              "Education Level": "Poziom wykształcenia",
+              "Languages Required": "Wymagane języki",
+              "Experience Required": "Wymagane doświadczenie",
+              "Skills Required": "Wymagane umiejętności",
+              "Courses Required": "Wymagane kursy/certyfikaty",
+              "not provided": "Nie podano",
+              "manage recruitment": "Zarządzaj rekrutacją",
+              "apply for job": "Aplikuj na stanowisko",
+              "search recruitments": "Szukaj rekrutacji...",
+              "no recruitments found": "Nie znaleziono rekrutacji",
+              "load more": "Załaduj więcej"
+            },
+            "PublicRecruitments": {
+              "Open Recruitments": "Otwarte rekrutacje",
+              "This page": " Ta strona wyświetli wszystkie otwarte procesy rekrutacyjne. Możesz aplikować na dowolne z nich.",
+              "You can also": " Możesz również utworzyć własny proces rekrutacyjny poprzez swoją stronę główną."
+            },
+            "RecruitmentDashboardError": "Nie podano ID rekrutacji. Wróć i wybierz rekrutację.",
+            "ManageApplication": {
+              "Your application has been deleted successfully.": "Twoja aplikacja została pomyślnie usunięta.",
+              "An error occurred while deleting your application. Please try again later.": "Wystąpił błąd podczas usuwania aplikacji. Spróbuj ponownie później.",
+              "Search Applications": "Wyszukaj aplikacje...",
+              "no applications found": "Nie znaleziono aplikacji",
+              "load more": "Załaduj więcej",
+              "Status": "Status",
+              "Stage": "Etap",
+              "Job Title": "Stanowisko",
+              "Location": "Lokalizacja",
+              "Your current stage": "Twój aktualny etap",
+              "Are you sure you want to delete this application?": "Czy na pewno chcesz zrezygnować z tej rekrutacji? Możesz nie mieć możliwości ponownego aplikowania. Kliknij 'OK', aby kontynuować, lub 'Anuluj', aby przerwać.",
+              "quit": "Zrezygnuj z rekrutacji"
             }
+
+
 
 
 

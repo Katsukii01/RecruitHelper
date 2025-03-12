@@ -5,8 +5,10 @@ import { RecruitmentValidateForm, handleDeleteSkill, handleDeleteCourse, addLang
 import {  useNavigate } from 'react-router-dom';
 import { Loader, HelpGuideLink } from '../../utils';
 import LocationInput from '../LocationInput.jsx';
+import { useTranslation } from 'react-i18next';
 
 const RecruitmentEdit = ({ id, onRefresh }) => {
+  const { t } = useTranslation();
   const [recruitment, setRecruitment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -101,7 +103,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
   };
 
   const handleSave = async () => {
-    const validationErrors = RecruitmentValidateForm(formData);
+    const validationErrors = RecruitmentValidateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       alert('Please correct the errors before saving recruitment.');
       setErrors(validationErrors);
@@ -476,7 +478,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         </div>
         </div>
       </form>
-      {errors.sumOfWeights && <p className="text-red-500 text-md font-bold">{errors.sumOfWeights}</p>}
+      {errors.sumOfWeights &&  <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.sumOfWeights} !!!</p>}
       <div className="flex flex-col items-center">
         <button
           type="button"

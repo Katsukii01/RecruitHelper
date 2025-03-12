@@ -363,8 +363,22 @@
                 "language_invalid": "Invalid or non-existent language",
                 "language_level_required": "Language level is required",
                 "language_level_invalid": "Invalid language level",
-                "additional_info_max": "Additional information cannot exceed 200 characters"
-            }
+                "additional_info_max": "Additional information cannot exceed 200 characters",
+                "jobTitle_required": "Job Title is required",
+                "jobTitle_max": "Job Title cannot exceed 45 characters",
+                "location_required": "Location is required",
+                "weight_of_education_required": "Weight of education is required",
+                "weight_of_education_invalid": "Weight of education must be between 0 and 100",
+                "weight_of_experience_required": "Weight of experience is required",
+                "weight_of_experience_invalid": "Weight of experience must be between 0 and 100",
+                "weight_of_language_required": "Weight of language is required",
+                "weight_of_language_invalid": "Weight of language must be between 0 and 100",
+                "weight_of_skills_required": "Weight of skills is required",
+                "weight_of_skills_invalid": "Weight of skills must be between 0 and 100",
+                "weight_of_courses_required": "Weight of courses is required",
+                "weight_of_courses_invalid": "Weight of courses must be between 0 and 100",
+                "sum_of_weights_invalid": "The sum of all weights must be 100"
+              }
 
         },
 
@@ -389,10 +403,46 @@
             "Recruitment": "Recruitment",
             "Job Title": "Job Title",
             "No meetings scheduled for this day.": "No meetings scheduled for this day."
+          },
+
+          "RecruitmentCard": {
+            "Status": "Status",
+            "Stage": "Stage",
+            "Job Title": "Job Title",
+            "Location": "Location",
+            "Education Level": "Education Level",
+            "Languages Required": "Languages Required",
+            "Experience Required": "Experience Required",
+            "Skills Required": "Skills Required",
+            "Courses Required": "Courses/Certifications Required",
+            "not provided": "Not provided",
+            "manage recruitment": "Manage recruitment",
+            "apply for job": "Apply for job",
+            "search recruitments": "Search recruitments...",
+            "no recruitments found": "No recruitments found",
+            "load more": "Load more"
+          },
+
+          "PublicRecruitments": {
+            "Open Recruitments": "Open Recruitments",
+            "This page": " This page will display all the open recruitment processes. You can apply to any of them.",
+            "You can also": " You can also create your own recruitment process through your home page."
+          },
+          "RecruitmentDashboardError": "Recruitment ID not provided. Please go back and select a recruitment.",
+          "ManageApplication": {
+            "Your application has been deleted successfully." : "Your application has been deleted successfully.",
+            "An error occurred while deleting your application. Please try again later." : "An error occurred while deleting your application. Please try again later.",
+            "Search Applications": "Search Applications...",
+            "no applications found": "No applications found",
+            "load more": "Load more",
+            "Status" : "Status",
+            "Stage" : "Stage",
+            "Job Title" : "Job Title",
+            "Location" : "Location",
+            "Your current stage" : "Your current stage",
+            "Are you sure you want to delete this application?": "Are you sure you want to quit this recruitment? You might not be able to apply again. Click 'OK' to continue or 'Cancel' to abort.",
+            "quit" : "Quit Recruitment"
           }
-
-
-      
       
 
     

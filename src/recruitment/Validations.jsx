@@ -1,65 +1,65 @@
 import { existingLanguages } from "../constants";
 
 //recuitment validation
-export const RecruitmentValidateForm = (formData) => {
+export const RecruitmentValidateForm = (formData, t) => {
     const newErrors = {};
 
     if (!formData.name) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('AddApplicants.ValidationErrors.name_required');
     } else if (formData.name.length > 45) {
-      newErrors.name = 'Name cannot exceed 45 characters';
+      newErrors.name = t('AddApplicants.ValidationErrors.name_max');
     }
 
     if (!formData.jobTitle) {
-      newErrors.jobTitle = 'Job Title is required';
+      newErrors.jobTitle = t('AddApplicants.ValidationErrors.jobTitle_required')
     } else if (formData.jobTitle.length > 45) {
-      newErrors.jobTitle = 'Job Title cannot exceed 45 characters';
+      newErrors.jobTitle = t('AddApplicants.ValidationErrors.jobTitle_max');
     }
 
     if (!formData.experienceNeeded) {
     
-    } else if (Number(formData.experienceNeeded) < 0 || Number(formData.experienceNeeded) > 60) {
-      newErrors.experienceNeeded = 'Experience needed must be between 0 and 60 years';
+    } else if (Number(formData.experienceNeeded) < 0 || Number(formData.experienceNeeded) > 99) {
+      newErrors.experienceNeeded = t('AddApplicants.ValidationErrors.experience_invalid');
     }
     
     if(formData.educationLevel){
       if(!formData.educationField){
-        newErrors.educationField = 'Education field is required';
+        newErrors.educationField = t('AddApplicants.ValidationErrors.education_field_required');
       }
       }
     
       if(!formData.location){
-        newErrors.location = 'Location is required';
+        newErrors.location = t('AddApplicants.ValidationErrors.location_required');
       }
 
     if (!formData.weightOfExperience) {
-      newErrors.weightOfExperience = 'Weight of experience is required';
+      newErrors.weightOfExperience =  t('AddApplicants.ValidationErrors.weight_of_experience_required');
     } else if (Number(formData.weightOfExperience) < 0 || Number(formData.weightOfExperience) > 100) {
-      newErrors.weightOfExperience = 'Weight of experience must be between 0 and 100';
+      newErrors.weightOfExperience =  t('AddApplicants.ValidationErrors.weight_of_experience_invalid');
     }
 
     if (!formData.weightOfSkills) {
-      newErrors.weightOfSkills = 'Weight of skills is required';
+      newErrors.weightOfSkills =  t('AddApplicants.ValidationErrors.weight_of_skills_required');
     } else if (Number(formData.weightOfSkills) < 0|| Number(formData.weightOfSkills) > 100) {
-      newErrors.weightOfSkills = 'Weight of skills must be between 0 and 100';
+      newErrors.weightOfSkills = t('AddApplicants.ValidationErrors.weight_of_skills_invalid');
     }
 
     if(!formData.weightOfEducationLevel) {
-       newErrors.weightOfEducationLevel = 'Weight of education level is required';
+       newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_level_required');
     } else if (Number(formData.weightOfEducationLevel) < 0 || Number(formData.weightOfEducationLevel) > 100) {
-      newErrors.weightOfEducationLevel = 'Weight of education level must be between 0 and 100';
+      newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_level_invalid');
     }
 
     if(!formData.weightOfCourses) {
-       newErrors.weightOfCourses = 'Weight of courses is required';
+       newErrors.weightOfCourses = t('AddApplicants.ValidationErrors.weight_of_courses_required');
     } else if (Number(formData.weightOfCourses) < 0 || Number(formData.weightOfCourses) > 100) {
-      newErrors.weightOfCourses = 'Weight of courses must be between 0 and 100';
+      newErrors.weightOfCourses = t('AddApplicants.ValidationErrors.weight_of_courses_invalid');
     }
 
     if(!formData.weightOfLanguages) {
-       newErrors.weightOfLanguages = 'Weight of languages is required';
+       newErrors.weightOfLanguages = t('AddApplicants.ValidationErrors.weight_of_languages_required');
     } else if (Number(formData.weightOfLanguages) < 0 || Number(formData.weightOfLanguages) > 100) {
-      newErrors.weightOfLanguages = 'Weight of languages must be between 0 and 100';
+      newErrors.weightOfLanguages = t('AddApplicants.ValidationErrors.weight_of_languages_invalid');
     }
 
     let sumOfWeights = 
@@ -71,14 +71,14 @@ export const RecruitmentValidateForm = (formData) => {
   
   
   if (sumOfWeights < 100 || sumOfWeights > 100) {
-    newErrors.sumOfWeights = "Sum of weights must be equal to 100";
+    newErrors.sumOfWeights = t('AddApplicants.ValidationErrors.sum_of_weights_invalid');
   }
   
     if (!formData.experienceNeeded) {
     } else if (Number(formData.experienceNeeded) < 0 || Number(formData.experienceNeeded) > 99) {
-      newErrors.experienceNeeded = "Experience must be between 0 and 99 years";
+      newErrors.experienceNeeded = t('AddApplicants.ValidationErrors.experience_needed_invalid');
     } else if (!/^(\d+(\.\d{1})?)$/.test(formData.experienceNeeded)) {
-      newErrors.experienceNeeded = "Experience must be a number, e.g., 1, 1.5, 20";
+      newErrors.experienceNeeded =  t('AddApplicants.ValidationErrors.experience_needed_format');
     }
 
     
@@ -91,14 +91,14 @@ export const RecruitmentValidateForm = (formData) => {
     
         // Sprawdzenie, czy język znajduje się na liście (po zamianie na małe litery)
         if (!language.language) {
-          newErrors[`languages-${index}-language`] = "Language name is required";
+          newErrors[`languages-${index}-language`] = t('AddApplicants.ValidationErrors.language_name_required');
         } else if (!existingLanguages.includes(languageName)) {
-          newErrors[`languages-${index}-language`] = "Invalid or non-existent language";
+          newErrors[`languages-${index}-language`] = t('AddApplicants.ValidationErrors.language_invalid');
         }
     
         // Sprawdzenie poprawności poziomu
         if (!language.level) {
-          newErrors[`languages-${index}-level`] = "Language level is required";
+          newErrors[`languages-${index}-level`] = t('AddApplicants.ValidationErrors.language_level_required');
         } else if (
           ![
             "A1 (Beginner)",
@@ -109,7 +109,7 @@ export const RecruitmentValidateForm = (formData) => {
             "C2 (Proficient)",
           ].includes(language.level)
         ) {
-          newErrors[`languages-${index}-level`] = "Invalid language level";
+          newErrors[`languages-${index}-level`] = t('AddApplicants.ValidationErrors.language_level_invalid');
         }
       });
 

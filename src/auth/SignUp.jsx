@@ -178,7 +178,7 @@ const SignUp = () => {
           <div className="pt-10 border-b-2 border-gray-400 w-1/3 text-center">{t('SignUp.Signup with')}</div>
           <button
             type="button"
-            className="flex items-center justify-center py-2 mt-4 rounded-lg bg-blue-700 text-white font-medium border border-white shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 w-1/2"
+            className="flex items-center justify-center py-2 mt-4 rounded-lg bg-slate-900 text-white font-medium border border-white shadow-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 w-1/2"
             onClick={handleGoogleSignUp}
           >
             <span className="flex items-center">
