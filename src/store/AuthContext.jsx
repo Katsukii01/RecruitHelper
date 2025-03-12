@@ -423,7 +423,7 @@ const updatePassword = async (oldPassword, newPassword) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
       setCurrentUser(user);
-      setIsAdmin(false);
+      setIsAdmin(GetIsAdmin());
       setIsLoading(false); // Stop loading once user is retrieved
     });
 

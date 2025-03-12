@@ -216,7 +216,183 @@
         "Cancel": "Cancel",
         "Enter your password to confirm": "Enter your password to confirm",
         "Enter your username to confirm": "Enter your username to confirm"
-      }
+      },
+
+      "SignIn": {
+        "title": "Sign In",
+        "password": "Password",
+        "forgot_password": "Forgot your password?",
+        "sign_in_with": "Sign in with",
+        "Signing In": "Signing in...",
+        "Reset Password": "Reset Password",
+        "Enter your email": "Enter your email",
+        "Send Reset Link": "Send Reset Link",
+        "Cancel": "Cancel",
+        "Sending...": "Sending...",
+        "Email sent": "A password reset email has been sent. Check your inbox."
+      },
+
+      "SignUp": {
+        "Signing Up": "Signing Up...",
+        "Emails do not match.": "Emails do not match.",
+        "Passwords do not match.": "Passwords do not match.",
+        "You must accept the terms and conditions.": "You must accept the terms and conditions.",
+        "Please verify that you are a human.": "Please verify that you are a human.",
+        "Sign up successful!": "Sign up successful!",
+        "The email address is already in use by another account.": "The email address is already in use by another account.",
+        "The password is too weak.": "The password is too weak.",
+        "The email address is not valid.": "The email address is not valid.",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "confirm password": "Confirm Password",
+        "confirm email": "Confirm Email",
+        "I accept the ": "I accept the ",
+        "terms and conditions": "terms and conditions",
+        "Sign Up": "Sign Up",
+        "Signing Up...": "Signing Up...",
+        "Signup with": "Sign up with"
+      },
+
+      "ChooseMethod": {
+        "title": "Select a Method to Add Applicants",
+        "description": "Choose how you want to add applicants to the recruitment process. You can manually input their details or use an automated system powered by NLP and AI technologies to extract data from CVs.",
+        "manual": {
+          "title": "Add Applicants Manually",
+          "description": "Input applicant details manually. Suitable for cases where structured CVs are not available or when adding candidates individually."
+        },
+        "cv": {
+          "title": "Add Applicants Using CV",
+          "description": "Upload CVs and let our AI-powered system extract key information using advanced Regex, NLP, and LLM technologies."
+        }
+      },
+        "UploadCV": {
+          "extracting": "Extracting data from CV files",
+          "progress": "Please wait while we extract data from the uploaded CVs. This process can take some time, depending on the number of CVs and the complexity of the data.",
+          "redirect": "Once completed successfully, you will get redirected to the Add Applicants page where you can add the extracted data and check if the data is correct.",
+          "warning": "Warning: Do not interrupt the process!",
+          "interruption": "Please do not interrupt the process. If interrupted, the unsaved progress will not be saved, and you will need to start over.",
+          "upload_title": "Upload CVs",
+          "drag_drop": "Drag & Drop PDF files here or click to select",
+          "no_files": "No files yet",
+          "process cv data": "Process CVs data",
+          "uploading": "Uploading...",
+          "error while sending file": "Error while sending files",
+          "error while uploading file": "Error while uploading file ",
+          "Please upload at least one CV." : "Please upload at least one CV.",
+          "Only PDF files are allowed." : "Only PDF files are allowed."
+        },
+        "AddApplicants": {
+            "applicant_details": "Applicant details",
+            "name": "Name",
+            "surname": "Surname",
+            "email": "Email",
+            "phone": "Phone",
+            "education": "Education",
+            "education_level": "Education level",
+            "education_field": "Field of study",
+            "institution_name": "Institution name",
+            "experience_years": "Experience (years)",
+            "languages": "Languages",
+            "language": "Language",
+            "Select level": "Select level",
+            "A1 (Beginner)": "A1 (Beginner)",
+            "A2 (Elementary)": "A2 (Elementary)",
+            "B1 (Intermediate)": "B1 (Intermediate)",
+            "B2 (Upper Intermediate)": "B2 (Upper Intermediate)",
+            "C1 (Advanced)": "C1 (Advanced)",
+            "C2 (Proficient)": "C2 (Proficient)",
+            "add_language": "Add language",
+            "skills_comma_separated": "Skills (comma-separated)",
+            "courses_comma_separated": "Courses (comma-separated)",
+            "additional_information": "Additional information",
+            "cover_letter": "Cover letter",
+            "cover_letter_preview_not_available": "Cover letter preview not available.",
+            "remove_cover_letter": "Remove cover letter",
+            "upload_cv_file": "Upload CV file (PDF only)",
+            "cv_preview_not_available": "CV preview not available.",
+            "Finish Editing Applicant": "Finish Editing Applicant",
+            "Finish Application": "Finish Application",
+            "previous_applicant": "Previous applicant",
+            "remove": "Remove",
+            "remove_applicant": "Remove applicant",
+            "finish_adding_applicants": "Finish adding applicants",
+            "next_applicant": "Next applicant",
+            "come_back": "Go back",
+          
+            "finish_application_confirmation": "Are you sure you want to finish the application? After this step, it will no longer be editable.",
+            "only_pdf_allowed": "Only PDF files are allowed.",
+            "only_pdf_for_covering_letter": "Only PDF files are allowed for the cover letter.",
+            "correct_errors_next": "Correct the errors before proceeding to the next applicant.",
+            "correct_errors_previous": "Correct the errors before going back to the previous applicant.",
+            "correct_errors_form": "Correct the errors in the form before continuing.",
+            "must_add_at_least_one": "You must add at least one applicant.",
+            "check_all_applicants": "You must review all applicants before continuing.",
+            "recruitment_private": "This recruitment is private, you cannot apply. Contact the recruitment owner.",
+            "error_saving_applicants": "Error saving applicants. Please try again.",
+            "error_sending_file": "Error uploading the file.",
+            "Saving data...": "Saving data...",
+            "Saving data..": "Saving data..",
+            "Saving data.": "Saving data.",
+            "data saved successfully": "Data saved successfully",
+            "saving_application": "Please wait while we save your application. This process may take a while, depending on the size of the CV and cover letter files.",
+            "saving_applicant": "Please wait while we save this applicant's data. This process may take a while.",
+            "saving_applicants": "Please wait while we save your applicants. This process may take a while, depending on the number of applicants.",
+            "auto_refresh": "The page will automatically refresh after the data is successfully saved.",
+            "do_not_interrupt": "Please do not interrupt the process. If interrupted, unsaved progress will be lost, and you will have to start over.",
+            "warning": "Warning: Do not interrupt the process!",
+
+            "ValidationErrors": {
+                "name_required": "First name is required",
+                "name_max": "First name cannot exceed 25 characters",
+                "surname_required": "Last name is required",
+                "surname_max": "Last name cannot exceed 25 characters",
+                "email_required": "Email is required",
+                "email_invalid": "Invalid email format",
+                "phone_required": "Phone number is required",
+                "phone_invalid": "Phone number must contain between 9 and 15 digits",
+                "cv_required": "CV file is required",
+                "education_field_required": "Field of study is required",
+                "education_field_max": "Field of study cannot exceed 40 characters",
+                "education_level_required": "Education level is required",
+                "education_level_max": "Education level cannot exceed 25 characters",
+                "institution_max": "Institution name cannot exceed 100 characters",
+                "experience_invalid": "Experience must be between 0 and 99 years",
+                "experience_format": "Experience must be a number, e.g., 1, 1.5, 20",
+                "language_name_required": "Language name is required",
+                "language_invalid": "Invalid or non-existent language",
+                "language_level_required": "Language level is required",
+                "language_level_invalid": "Invalid language level",
+                "additional_info_max": "Additional information cannot exceed 200 characters"
+            }
+
+        },
+
+        "UserStats": {
+          "Total Recruitments": "Total Recruitments",
+          "Total Hired Applicants": "Total Hired Applicants",
+          "Total Meetings": "Total Meetings",
+          "Total Applications": "Total Applications",
+          "Total Applications Rejected": "Total Applications Rejected",
+          "Total Applications Hired": "Total Applications Hired"
+      },
+
+         "Calendar" : {
+          "locale": "en-GB",
+          "meetings on": "Meetings on"
+        }
+
+      
+      
+
+    
+
+
+
+
+
+
+
   
 
 }

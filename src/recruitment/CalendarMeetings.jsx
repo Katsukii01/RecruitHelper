@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from 'react-calendar';
 import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase, BiBook } from "react-icons/bi";
+import { useTranslation } from 'react-i18next';
 
 const CalendarMeetings = ({ meetingSessions, applicants,}) => {
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(null);
   const [meetingsForSelectedDate, setMeetingsForSelectedDate] = useState([]);
 
@@ -97,7 +99,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
   return (
     <section className="relative w-full  h-screen-64 p-4 rounded-lg">
       <Calendar
-        locale="en-GB"
+        locale={t("Calendar.locale")}
         onChange={onDateChange}
         value={selectedDate}
         tileClassName={tileClassName}
@@ -106,7 +108,9 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
       
       {selectedDate && (
         <div className="mt-6 pb-10">
-          <h2 className="text-2xl text-white mb-4 ">Meetings on {selectedDate.toDateString()}</h2>
+          <h2 className="text-2xl text-white mb-4 ">
+          {t("Calendar.meetings on")} {selectedDate.toLocaleDateString(t("Calendar.locale"), { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+        </h2>
           <div className="space-y-4 ">
           {meetingsForSelectedDate.length > 0 ? (
             meetingsForSelectedDate.map((meeting, index) => {
@@ -141,7 +145,8 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
                     >
-                      <BiLinkExternal className="text-lg" /> Join Meeting
+                      <BiLinkExternal className="text-lg" /> 
+                       {t("Calendar.join meeting")}
                     </a>
                   </div>
               
@@ -150,7 +155,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                     {meeting.meetingApplicant && Object.keys(meeting.meetingApplicant).length > 0 ? (
                       <>
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                          <BiUser className="text-xl text-blue-500" /> Applicant:
+                          <BiUser className="text-xl text-blue-500" /> {t("Calendar.applicant")}:
                         </h3>
                         <p className="text-sm text-gray-300">{meeting.meetingApplicant.name || '-'} {meeting.meetingApplicant.surname || '-'}</p>
                         <p className="text-sm text-gray-300 flex items-center gap-2">
@@ -160,7 +165,7 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                         {/* 📄 Dokumenty */}
                         <div className="mt-3">
                           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                            <BiFile className="text-xl text-blue-500" /> Documents:
+                            <BiFile className="text-xl text-blue-500" /> {t("Calendar.documents")}:
                           </h3>
                           <div className="flex flex-col space-y-2">
                             {cvFileUrls.length > 0 ? (
@@ -168,7 +173,8 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                                 onClick={() => openFilesPreview(cvFileUrls)}
                                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
                               >
-                                <BiFile className="text-lg" /> Open CV
+                                <BiFile className="text-lg" /> 
+                                {t("Calendar.open cv")}
                               </button>
                             ) : (
                               <p className="text-sm text-gray-400">No CV uploaded</p>
@@ -179,10 +185,13 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                                 onClick={() => openFilesPreview(coverLetterFileUrls)}
                                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
                               >
-                                <BiFile className="text-lg" /> Open Cover Letter
+                                <BiFile className="text-lg" />
+                                {t("Calendar.open cover letter")}
                               </button>
                             ) : (
-                              <p className="text-sm text-gray-400">No Cover Letter uploaded</p>
+                              <p className="text-sm text-gray-400">
+                                 {t("Calendar.No Cover Letter uploaded")}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -190,12 +199,12 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                     ) : (
                       <div className="text-center text-white bg-glass-dark border border-blue-400 p-4 rounded-lg shadow-md flex flex-col items-center space-y-2">
                         <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <BiBook className="text-xl text-blue-500" /> Recruitment
+                          <BiBook className="text-xl text-blue-500" /> {t("Calendar.Recruitment")}:
                         </h3>
                         <p className="text-md text-gray-300">{meeting.recruitmentName || "-"}</p>
               
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                          <BiBriefcase className="text-xl text-blue-500" /> Job Title:
+                          <BiBriefcase className="text-xl text-blue-500" /> {t("Calendar.Job Title")}:
                         </h3>
                         <p className="text-md text-gray-300">{meeting.recruitmentjobTitle || "-"}</p>
                       </div>
@@ -207,7 +216,9 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
               
             })
           ) : (
-            <p className="text-white">No meetings scheduled for this day.</p>
+            <p className="text-white">
+              {t("Calendar.No meetings scheduled for this day.")}
+            </p>
           )}
         </div>
         </div>

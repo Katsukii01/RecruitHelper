@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { checkAndCreateUserStats } from '../services/RecruitmentServices';
 import { Loader } from '../utils';
 import { BiUserCheck, BiBriefcase, BiCalendarCheck, BiFile, BiXCircle, BiCheckCircle } from "react-icons/bi";
+import { useTranslation } from 'react-i18next';
 
 const UserStats = () => {
+    const { t } = useTranslation();
     const [userStats, setUserStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -34,12 +36,12 @@ const UserStats = () => {
             <div className="p-4 xl:p-6 h-screen overflow-auto inner-shadow">
             <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
                 {[
-                    { label: "Total Recruitments", icon: <BiBriefcase className=" text-gray-500" />, value: userStats.AllTimeRecruitmentsCount }, // Rekrutacje -> Walizka
-                    { label: "Total Hired Applicants", icon: <BiUserCheck className=" text-green-500" />, value: userStats.AllTimeHiredApplicants }, // Zatrudnieni -> Użytkownik z checkiem
-                    { label: "Total Meetings", icon: <BiCalendarCheck className=" text-blue-500" />, value: userStats.AllTimeMeetingsCount }, // Spotkania -> Kalendarz z checkiem
-                    { label: "Total Applications", icon: <BiFile className=" text-gray-500" />, value: userStats.AllTimeApplicationsCount }, // Aplikacje -> Plik/dokument
-                    { label: "Total Applications Rejected", icon: <BiXCircle className=" text-red-500" />, value: userStats.AllTimeApplicationRejected }, // Odrzucone -> Ikona X
-                    { label: "Total Applications Hired", icon: <BiCheckCircle className=" text-green-500" />, value: userStats.AllTimeApplicationHired }, // Przyjęte -> Check circle
+                    { label: t("UserStats.Total Recruitments"), icon: <BiBriefcase className=" text-gray-500" />, value: userStats.AllTimeRecruitmentsCount }, // Rekrutacje -> Walizka
+                    { label: t("UserStats.Total Hired Applicants"), icon: <BiUserCheck className=" text-green-500" />, value: userStats.AllTimeHiredApplicants }, // Zatrudnieni -> Użytkownik z checkiem
+                    { label: t("UserStats.Total Meetings"), icon: <BiCalendarCheck className=" text-blue-500" />, value: userStats.AllTimeMeetingsCount }, // Spotkania -> Kalendarz z checkiem
+                    { label: t("UserStats.Total Applications"), icon: <BiFile className=" text-gray-500" />, value: userStats.AllTimeApplicationsCount }, // Aplikacje -> Plik/dokument
+                    { label: t("UserStats.Total Applications Rejected"), icon: <BiXCircle className=" text-red-500" />, value: userStats.AllTimeApplicationRejected }, // Odrzucone -> Ikona X
+                    { label: t("UserStats.Total Applications Hired"), icon: <BiCheckCircle className=" text-green-500" />, value: userStats.AllTimeApplicationHired }, // Przyjęte -> Check circle
                 ].map((item, index) => (
                 <div
                     key={index}

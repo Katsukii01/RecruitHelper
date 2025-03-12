@@ -4,9 +4,10 @@ import { useDropzone } from "react-dropzone";
 import usePreventPageReload from "./usePreventPageReload";
 import {Loader, HelpGuideLink } from "../utils";
 import { uploadFile, analyzeCV } from "../services/recruitmentApi";
-
+import { useTranslation } from "react-i18next";
 
 const AddApplicantsWithHelp = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { recruitmentId } = state || {};
@@ -20,7 +21,7 @@ const AddApplicantsWithHelp = () => {
   const onDrop = (acceptedFiles) => {
     const pdfFiles = acceptedFiles.filter(file => file.type === "application/pdf");
     if (pdfFiles.length === 0) {
-      alert("Only PDF files are allowed.");
+      alert( t("UploadCV.Only PDF files are allowed."));
       return;
     }
     setCvFiles((prevFiles) => [...prevFiles, ...pdfFiles]);
@@ -38,7 +39,7 @@ const AddApplicantsWithHelp = () => {
 
 
   const handleUploadFiles = async () => {
-    if (cvFiles.length === 0) return alert("Please upload at least one CV.");
+    if (cvFiles.length === 0) return alert(t("UploadCV.Please upload at least one CV."));
   
     setNumberOfSavedApplicants(0);
     setNumberOfApplicantsToSave(cvFiles.length);
@@ -75,7 +76,7 @@ const AddApplicantsWithHelp = () => {
           return applicantDataWithEmptyFields; // Zwracamy obiekt, aby Promise.all zebrało wyniki
         } catch (error) {
           console.error(`❌ Błąd podczas wysyłania pliku: ${file.name}`, error);
-          alert(`Błąd podczas wysyłania pliku: ${file.name}`);
+          alert(`${t('UploadCV.error_while_uploading_file')}: ${file.name}`);
           return null; // W razie błędu zwracamy `null`, aby Promise.all miało pełną listę wyników
         }
       });
@@ -89,7 +90,7 @@ const AddApplicantsWithHelp = () => {
       handleGoToAddApplicants(uploadedApplicants);
     } catch (error) {
       console.error("❌ Wystąpił błąd podczas przesyłania plików", error);
-      alert("Wystąpił błąd podczas przesyłania plików.");
+      alert( t("UploadCV.error while sending file"));
     } finally {
       setIsUploading(false);
     }
@@ -113,7 +114,7 @@ const AddApplicantsWithHelp = () => {
           <div className="flex items-center justify-center w-full h-full">
             <div className="bg-gradient-to-br from-black to-slate-900 shadow-black hadow-md p-8 rounded-lg shadow-md w-full sm:w-3/4 md:w-1/2 lg:w-1/3 border-4 border-white">
               <h2 className="text-2xl font-bold text-white mb-6">
-                Extracting data form CV files
+                {t('UploadCV.extracting')}
               </h2>
 
               <div className="flex flex-col items-center mb-6">
@@ -138,19 +139,12 @@ const AddApplicantsWithHelp = () => {
                   </span>
                 </p>
               </div>
-                <p className="text-white mb-3">
-                  Please wait while we extract data from the uploaded CVs. This process can take some time, depending on the number of CVs and the complexity of the data.
-                </p>
-                <p className="text-white mb-3">
-                Once completed successfully, you will get redirected to the Add Applicants page where you can add the extracted data and check if the data is correct.
-                </p>
-              <p className="text-white mb-3">
-                Please do not interrupt the process. If interrupted, the unsaved
-                progress will not be saved, and you will need to start over.
-              </p>
+              <p className="text-white mb-3">{t('UploadCV.progress')}</p>
+              <p className="text-white mb-3">{t('UploadCV.redirect')}</p>
+              <p className="text-white mb-3">{t('UploadCV.interruption')}</p>
 
               <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-                Warning: Do not interrupt the process!
+                {t('UploadCV.warning')}
               </p>
             </div>
           </div>
@@ -158,7 +152,7 @@ const AddApplicantsWithHelp = () => {
       )}
       <div className="relative w-full max-w-2xl p-6 bg-gray-800 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 whitespace-nowrap">
-            Upload CVs
+          {t('UploadCV.upload_title')}
           <HelpGuideLink section="RecruitmentAddApplicantsFromFile" />
         </h1>
 
@@ -168,7 +162,7 @@ const AddApplicantsWithHelp = () => {
           className="w-full h-40 border-2 border-dashed border-gray-400 flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer bg-gray-700 hover:bg-gray-600 transition"
         >
           <input {...getInputProps()} />
-          <p className="text-gray-300">Drag & Drop PDF files here or click to select</p>
+          <p className="text-gray-300">{t('UploadCV.drag_drop')}</p>
         </div>
 
         {/* File Cards */}
@@ -188,7 +182,7 @@ const AddApplicantsWithHelp = () => {
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-center py-8">No files yet</p>
+            <p className="text-gray-400 text-center py-8">{t('UploadCV.no_files')}</p>
           )}
         </div>
 
@@ -197,9 +191,9 @@ const AddApplicantsWithHelp = () => {
         <button 
           onClick={handleUploadFiles} 
           className=" mt-4 w-full bg-green-500 text-white py-2 rounded-lg transition font-medium border border-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 "
-          disabled={cvFiles.length === 0 || isUploading}
+          disabled={isUploading}
         >
-          {isUploading ? "Uploading..." : "Process CVs data"}
+          {isUploading ? t('UploadCV.uploading') : t('UploadCV.process cv data')}
         </button>
       </div>
     </section>

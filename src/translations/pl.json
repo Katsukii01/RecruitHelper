@@ -218,14 +218,184 @@
             "Cancel": "Anuluj",
             "Enter your password to confirm": "Wpisz swoje hasło, aby potwierdzić",
             "Enter your username to confirm": "Wpisz swoją nazwę użytkownika, aby potwierdzić"
+            },
+
+            "SignIn" : {
+              "title": "Zaloguj się",
+              "password": "Hasło",
+              "forgot_password": "Zapomniałeś hasła?",
+              "sign_in_with": "Zaloguj się za pomocą",
+              "Signing In": "Logowanie...",
+              "Reset Password": "Resetuj hasło",
+              "Enter your email" : "Wpisz swój email",
+              "Send Reset Link": "Wyślij link resetujący",
+              "Cancel": "Anuluj",
+              "Sending...": "Wysyłanie...",
+              "Email sent": "Email do resetu hasła został wysłany. Sprawdź swoją skrzynkę pocztową."
+            },
+
+            "SignUp": {
+              "Signing Up": "Rejestracja...",
+              "Emails do not match.": "Adresy e-mail nie pasują do siebie.",
+              "Passwords do not match.": "Hasła nie pasują do siebie.",
+              "You must accept the terms and conditions.": "Musisz zaakceptować regulamin.",
+              "Please verify that you are a human.": "Proszę potwierdzić, że jesteś człowiekiem.",
+              "Sign up successful!": "Rejestracja zakończona sukcesem!",
+              "The email address is already in use by another account.": "Adres e-mail jest już używany przez inne konto.",
+              "The password is too weak.": "Hasło jest zbyt słabe.",
+              "The email address is not valid.": "Adres e-mail jest nieprawidłowy.",
+              "username": "Nazwa użytkownika",
+              "email": "E-mail",
+              "password": "Hasło",
+              "confirm password": "Potwierdź hasło",
+              "confirm email": "Potwierdź e-mail",
+              "I accept the ": "Akceptuję ",
+              "terms and conditions": "regulamin",
+              "Sign Up": "Zarejestruj się",
+              "Signing Up...": "Rejestrowanie...",
+              "Signup with": "Zarejestruj się za pomocą"
+            },      
+              "ChooseMethod": {
+                "title": "Wybierz metodę dodawania kandydatów",
+                "description": "Wybierz, w jaki sposób chcesz dodać kandydatów do procesu rekrutacji. Możesz wprowadzić ich dane ręcznie lub skorzystać z automatycznego systemu opartego na NLP i AI do ekstrakcji danych z CV.",
+                "manual": {
+                  "title": "Dodaj kandydatów ręcznie",
+                  "description": "Wprowadź dane kandydatów ręcznie. Odpowiednie w przypadkach, gdy CV nie są dostępne lub gdy dodajesz kandydatów indywidualnie."
+                },
+                "cv": {
+                  "title": "Dodaj kandydatów za pomocą CV",
+                  "description": "Prześlij CV i pozwól naszemu systemowi AI wyodrębnić kluczowe informacje za pomocą zaawansowanych technologii Regex, NLP i LLM."
+                }
+              },
+              "UploadCV": {
+                "extracting": "Ekstrakcja danych z plików CV",
+                "progress": "Proszę czekać, aż wyodrębnimy dane z przesłanych CV. Proces może potrwać dłużej, w zależności od liczby CV i złożoności danych.",
+                "redirect": "Po pomyślnym zakończeniu procesu zostaniesz przekierowany na stronę Dodawania Kandydatów, gdzie możesz dodać wyodrębnione dane i sprawdzić ich poprawność.",
+                "warning": "Ostrzeżenie: Nie przerywaj procesu!",
+                "interruption": "Proszę nie przerywać procesu. Jeśli zostanie przerwany, niezapisane postępy nie zostaną zachowane i będziesz musiał zacząć od nowa.",
+                "upload_title": "Prześlij CV",
+                "drag_drop": "Przeciągnij i upuść pliki PDF tutaj lub kliknij, aby wybrać",
+                "no_files": "Brak plików",
+                "process cv data": "Przetwórz dane z CV",
+                "uploading": "Przesyłanie...",
+                "error while sending file": "Błąd podczas wysyłania plików ",
+                "error while uploading file": "Błąd podczas przesyłania pliku ",
+                "Please upload at least one CV." : "Proszę prześlij przynajmniej jedno CV.",
+                "Only PDF files are allowed." : "Dozwolone są tylko pliki PDF."
+              },
+              "AddApplicants": {
+                "applicant_details": "Szczegóły kandydata",
+                "name": "Imię",
+                "surname": "Nazwisko",
+                "email": "E-mail",
+                "phone": "Telefon",
+                "education": "Wykształcenie",
+                "education_level": "Poziom wykształcenia",
+                "education_field": "Kierunek studiów",
+                "institution_name": "Nazwa instytucji",
+                "experience_years": "Doświadczenie (lata)",
+                "languages": "Języki",
+                "language" : "Język",
+                "Select level": "Wybierz poziom",
+                "A1 (Beginner)" : "A1 (Początkujący)",
+                "A2 (Elementary)" : "A2 (Podstawowy)",
+                "B1 (Intermediate)" : "B1 (Średni)",
+                "B2 (Upper Intermediate)" : "B2 (Wyższy średni)",
+                "C1 (Advanced)" : "C1 (Zaawansowany)",
+                "C2 (Proficient)" : "C2 (Biegły)",
+                "add_language" : "Dodaj język",
+                "skills_comma_separated": "Umiejętności (oddzielone przecinkami)",
+                "courses_comma_separated": "Kursy (oddzielone przecinkami)",
+                "additional_information": "Dodatkowe informacje",
+                "cover_letter": "List motywacyjny",
+                "cover_letter_preview_not_available": "Podgląd listu motywacyjnego niedostępny.",
+                "remove_cover_letter": "Usuń list motywacyjny",
+                "upload_cv_file": "Prześlij plik CV (tylko PDF)",
+                "cv_preview_not_available": "Podgląd CV niedostępny.",
+                "Finish Editing Applicant": "Zakończ edycję kandydata",
+                "Finish Application": "Zakończ aplikację",
+                "previous_applicant": "Poprzedni kandydat",
+                "remove": "Usuń",
+                "remove_applicant": "Usuń kandydata",
+                "finish_adding_applicants": "Zakończ dodawanie kandydatów",
+                "next_applicant": "Następny kandydat",
+                "come_back": "Wróć",
+
+                "finish_application_confirmation": "Czy na pewno chcesz zakończyć aplikację? Po tym etapie nie będzie można jej edytować.",
+                "only_pdf_allowed": "Dozwolone są tylko pliki PDF.",
+                "only_pdf_for_covering_letter": "Dozwolone są tylko pliki PDF dla listu motywacyjnego.",
+                "correct_errors_next": "Popraw błędy przed przejściem do następnego kandydata.",
+                "correct_errors_previous": "Popraw błędy przed przejściem do poprzedniego kandydata.",
+                "correct_errors_form": "Popraw błędy w formularzu przed kontynuowaniem.",
+                "must_add_at_least_one": "Musisz dodać przynajmniej jednego kandydata.",
+                "check_all_applicants": "Musisz sprawdzić wszystkich kandydatów przed kontynuowaniem.",
+                "recruitment_private": "Ta rekrutacja jest prywatna, nie możesz aplikować. Skontaktuj się z właścicielem rekrutacji.",
+                "error_saving_applicants": "Błąd podczas zapisywania kandydatów. Spróbuj ponownie.",
+                "error_sending_file": "Błąd podczas wysyłania pliku.",
+                "Saving data...": "Zapisywanie danych...",
+                "Saving data..": "Zapisywanie danych..",
+                "Saving data.": "Zapisywanie danych.",
+                "data saved successfully": "Dane zapisane pomyślnie",
+                "saving_application": "Proszę czekać, aż zapisujemy Twoją aplikację. Proces ten może potrwać chwilę, w zależności od rozmiaru plików CV i listu motywacyjnego.",
+                "saving_applicant": "Proszę czekać, aż zapisujemy dane tego kandydata. Proces ten może potrwać chwilę.",
+                "saving_applicants": "Proszę czekać, aż zapisujemy Twoich kandydatów. Proces ten może potrwać chwilę, w zależności od liczby kandydatów.",
+                "auto_refresh": "Strona automatycznie odświeży się po pomyślnym zapisaniu danych.",
+                "do_not_interrupt": "Proszę nie przerywać procesu. Jeśli zostanie przerwany, niezapisany postęp zostanie utracony i trzeba będzie rozpocząć od nowa.",
+                "warning": "Uwaga: Nie przerywaj procesu!",
+                "ValidationErrors": {
+                  "name_required": "Imię jest wymagane",
+                  "name_max": "Imię nie może przekraczać 25 znaków",
+                  "surname_required": "Nazwisko jest wymagane",
+                  "surname_max": "Nazwisko nie może przekraczać 25 znaków",
+                  "email_required": "Email jest wymagany",
+                  "email_invalid": "Nieprawidłowy format adresu e-mail",
+                  "phone_required": "Numer telefonu jest wymagany",
+                  "phone_invalid": "Numer telefonu musi zawierać od 9 do 15 cyfr",
+                  "cv_required": "Plik CV jest wymagany",
+                  "education_field_required": "Kierunek edukacji jest wymagane",
+                  "education_field_max": "Kierunek edukacji nie może przekraczać 40 znaków",
+                  "education_level_required": "Poziom edukacji jest wymagany",
+                  "education_level_max": "Poziom edukacji nie może przekraczać 25 znaków",
+                  "institution_max": "Nazwa instytucji nie może przekraczać 100 znaków",
+                  "experience_invalid": "Doświadczenie musi być w zakresie 0-99 lat",
+                  "experience_format": "Doświadczenie musi być liczbą, np. 1, 1.5, 20",
+                  "language_name_required": "Nazwa języka jest wymagana",
+                  "language_invalid": "Nieprawidłowy lub nieistniejący język",
+                  "language_level_required": "Poziom języka jest wymagany",
+                  "language_level_invalid": "Nieprawidłowy poziom języka",
+                  "additional_info_max": "Dodatkowe informacje nie mogą przekraczać 200 znaków"
+                }
+              },
+              "UserStats": {
+                "Total Recruitments": "Łączna liczba rekrutacji",
+                "Total Hired Applicants": "Łączna liczba zatrudnionych kandydatów",
+                "Total Meetings": "Łączna liczba spotkań",
+                "Total Applications": "Łączna liczba aplikacji",
+                "Total Applications Rejected": "Łączna liczba odrzuconych aplikacji",
+                "Total Applications Hired": "Łączna liczba zatrudnionych aplikacji"
+            },
+            "Calendar" : {
+              "locale": "pl-PL",
+              "meetings on": "Spotkania w dniu",
+              "applicant" : "Kandydat",
+              "documents": "Dokumenty",
+              "join meeting": "Dołącz do spotkania",
+              "open cv": "Otwórz CV",
+              "open cover letter": "Otwórz list motywacyjny",
+              "No Cover Letter uploaded": "Nie przesłano listu motywacyjnego",
+              "Recruitment": "Rekrutacja",
+              "Job Title": "Nazwa stanowiska",
+              "No meetings scheduled for this day.": "Brak spotkań tego dnia."
             }
 
 
+
+            
+            
+
+
           
           
-      
-      
-      
       
   
 }

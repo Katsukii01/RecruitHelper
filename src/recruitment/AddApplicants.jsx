@@ -10,12 +10,14 @@ import { Loader, HelpGuideLink } from "../utils";
 import { firebaseAuth } from "../firebase/baseconfig";
 import { uploadFile, analyzeCoverLetter } from "../services/recruitmentApi";
 import { handleDeleteSkill, handleDeleteCourse } from "./Validations";
+import { useTranslation } from 'react-i18next';
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
 const AddApplicants = () => {
+  const { t } = useTranslation();
   const query = useQuery();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +25,7 @@ const AddApplicants = () => {
   const recruitmentId = state?.recruitmentId || query.get("recruitmentId") || "";
   const applicant = state.applicant || "";
   const currentPage = state.currentPage || 1;
-  const userApply = state.userApply || {};
+  const userApply = state.userApply || null;
   const CVapplicants = state.CVapplicants || [];
   const [applicants, setApplicants] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,7 +35,7 @@ const AddApplicants = () => {
   const [isSaving, setIsSaving] = useState(false); // Stan do kontrolowania przycisku
   const [isLoadingCv, setIsLoadingCv] = useState(false); // Stan do kontrolowania podglądów CV
   const [isLoadingCoveringLetter, setIsLoadingCoveringLetter] = useState(false); // Stan do kontrolowania podglądu covering letter
-  const [buttonText, setButtonText] = useState("Finish Adding Applicants"); // Tekst na przycisku
+  const [buttonText, setButtonText] = useState( t("AddApplicants.finish_adding_applicants")); // Tekst na przycisku
   const [NumberOfSavedApplicants, setNumberOfSavedApplicants] = useState(0); // licznik zapisanych aplikantów
   const [NumberOfApplicantsToSave, setNumberOfApplicantsToSave] = useState(0); // Liczba aplikantów do zapisania
   const [RecruitmentData, setRecruitmentData] = useState({});
@@ -44,6 +46,10 @@ const AddApplicants = () => {
   usePreventPageReload(true);
   // If currentPage is undefined, set it to 1
   const page = currentPage ?? 1;
+
+  useEffect(() => {
+   setButtonText(t("AddApplicants.finish_adding_applicants"));
+  }, [t]);
 
   // Jeśli aplikant do edycji został przekazany, ustawiamy dane w formularzu
   const [formData, setFormData] = useState({
@@ -70,10 +76,10 @@ const AddApplicants = () => {
     if (applicant) {
       setCvfilePreviews(applicant.cvFileUrls || ""); // Jeśli aplikant ma plik CV, ustawiamy go
       setCoveringLetterPreviews(applicant.coverLetterFileUrls || ""); // Jeśli aplikant ma plik Listu Motywacyjnego, ustawiamy go
-      setButtonText("Finish Editing Applicant"); // Ustawiamy tekst przycisku
+      setButtonText( t("AddApplicants.Finish Editing Applicant")); // Ustawiamy tekst przycisku
     }
     if (userApply) {
-      setButtonText("Finish Application "); // Ustawiamy tekst przycisku
+      setButtonText( t("AddApplicants.Finish Application"));
     }
   }, [applicant]);
 
@@ -147,7 +153,7 @@ const AddApplicants = () => {
       setCvfilePreviews(""); // Clear previous preview when a new file is selected
       handleUpload(file, "cv"); // Upload the selected file
     } else {
-      alert("Only PDF files are allowed.");
+      alert(t("AddApplicants.only_pdf_allowed"));
       return;
     }
   };
@@ -161,7 +167,7 @@ const AddApplicants = () => {
       document.getElementById("coveringLetter").value = "";
       handleUpload(file, "coveringLetter"); // Upload the covering letter
     } else {
-      alert("Only PDF files are allowed for the covering letter.");
+      alert(t("AddApplicants.only_pdf_for_covering_letter"));
       return;
     }
   };
@@ -170,49 +176,49 @@ const AddApplicants = () => {
     const newErrors = {};
 
     if (!formData.name) {
-      newErrors.name = "Name is required";
+      newErrors.name = t("AddApplicants.ValidationErrors.name_required");
     } else if (formData.name.length > 25) {
-      newErrors.name = "Name cannot exceed 25 characters";
+      newErrors.name = t("AddApplicants.ValidationErrors.name_max");
     }
 
     if (!formData.surname) {
-      newErrors.surname = "Surname is required";
+      newErrors.surname = t("AddApplicants.ValidationErrors.surname_required");
     } else if (formData.surname.length > 25) {
-      newErrors.surname = "Surname cannot exceed 25 characters";
+      newErrors.surname = t("AddApplicants.ValidationErrors.surname_max");
     }
 
     if (!formData.email) {
-      newErrors.email = "Email is required";
+      newErrors.email =  t("AddApplicants.ValidationErrors.email_required");
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = t("AddApplicants.ValidationErrors.email_invalid");
     }
 
     if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
+      newErrors.phone = t("AddApplicants.ValidationErrors.phone_required");
     } else if (!/^\d{9,15}$/.test(formData.phone)) {
-      newErrors.phone = "Phone number must contain 9-15 digits";
+      newErrors.phone = t("AddApplicants.ValidationErrors.phone_invalid");
     }
 
     if (!CvfilePreviews) {
-      newErrors.CvfilePreviews = "CV file is required";
+      newErrors.CvfilePreviews = t("AddApplicants.ValidationErrors.cv_required");
     }
 
     if (!formData.educationField) {
-      newErrors.educationField = "Education field is required";
+      newErrors.educationField = t("AddApplicants.ValidationErrors.education_field_required");
     } else if (formData.educationField.length > 40) {
-      newErrors.educationField = "Education field cannot exceed 40 characters";
+      newErrors.educationField = t("AddApplicants.ValidationErrors.education_field_max");
     }
 
     if (!formData.educationLevel) {
-      newErrors.educationLevel = "Education level is required";
+      newErrors.educationLevel = t("AddApplicants.ValidationErrors.education_level_required");
     }else if (formData.educationLevel.length > 25) {
-      newErrors.educationLevel = "Education level cannot exceed 25 characters";
+      newErrors.educationLevel = t("AddApplicants.ValidationErrors.education_level_max");
     }
 
    if (!formData.institutionName) {
       } else if (formData.institutionName.length > 100) {
         newErrors.institutionName =
-          "Institution name cannot exceed 100 characters";
+          t("AddApplicants.ValidationErrors.institution_max");
       }
 
 
@@ -222,9 +228,9 @@ const AddApplicants = () => {
       Number(formData.experience) < 0 ||
       Number(formData.experience) > 99
     ) {
-      newErrors.experience = "Experience must be between 0 and 99 years";
+      newErrors.experience = t("AddApplicants.ValidationErrors.experience_invalid");
     } else if (!/^(\d+(\.\d{1})?)$/.test(formData.experience)) {
-      newErrors.experience = "Experience must be a number, e.g., 1, 1.5, 20";
+      newErrors.experience = t("AddApplicants.ValidationErrors.experience_format");
     }
 
     if (formData.languages.length === 0) {
@@ -236,15 +242,15 @@ const AddApplicants = () => {
         // Sprawdzenie, czy język znajduje się na liście (po zamianie na małe litery)
         if (!language.language) {
           newErrors[`languages-${index}-language`] =
-            "Language name is required";
+            t("AddApplicants.ValidationErrors.language_name_required");
         } else if (!existingLanguages.includes(languageName)) {
           newErrors[`languages-${index}-language`] =
-            "Invalid or non-existent language";
+            t("AddApplicants.ValidationErrors.language_name_invalid");
         }
 
         // Sprawdzenie poprawności poziomu
         if (!language.level) {
-          newErrors[`languages-${index}-level`] = "Language level is required";
+          newErrors[`languages-${index}-level`] = t("AddApplicants.ValidationErrors.language_level_required");
         } else if (
           ![
             "A1 (Beginner)",
@@ -255,14 +261,14 @@ const AddApplicants = () => {
             "C2 (Proficient)",
           ].includes(language.level)
         ) {
-          newErrors[`languages-${index}-level`] = "Invalid language level";
+          newErrors[`languages-${index}-level`] =  t("AddApplicants.ValidationErrors.language_level_invalid");
         }
       });
     }
 
     if (formData.additionalInformation.length > 200) {
       newErrors.additionalInformation =
-        "Additional Information cannot exceed 200 characters";
+        t("AddApplicants.ValidationErrors.additional_information_max");
     }
 
     return newErrors;
@@ -272,7 +278,7 @@ const AddApplicants = () => {
     // Sprawdzenie walidacji obecnego aplikanta
     if (!saveCurrentApplicant()) {
       alert(
-        "Please correct the errors before proceeding to the next applicant."
+        t("AddApplicants.correct_errors_next")
       );
       return;
     }
@@ -317,7 +323,7 @@ const AddApplicants = () => {
     if (currentIndex > 0) {
       if (!saveCurrentApplicant()) {
         alert(
-          "Please correct the errors before going to the previous applicant."
+          t("AddApplicants.correct_errors_previous")
         );
         return;
       }
@@ -406,23 +412,23 @@ const AddApplicants = () => {
   
     if (userApply) {
       const confirmation = window.confirm(
-        "Are you sure you want to finish application? You cannot edit application after this point."
+        t("AddApplicants.finish_application_confirmation")
       );
       if (!confirmation) return;
     }
   
     if (!updatedApplicants) {
-      alert("Please correct the errors in the form before proceeding.");
+      alert(t("AddApplicants.correct_errors_form"));
       return;
     }
   
     if (updatedApplicants.length === 0) {
-      alert("You must add at least one applicant.");
+      alert(t("AddApplicants.must_add_at_least_one"));
       return;
     }
   
     if (applicantsChecked < applicantsToCheck) {
-      alert("You must check all applicants before proceeding.");
+      alert(t("AddApplicants.check_all_applicants"));
       return;
     }
   
@@ -433,14 +439,14 @@ const AddApplicants = () => {
   
     try {
       setIsSaving(true);
-      setButtonText("Saving data...");
+      setButtonText( t("AddApplicants.Saving data..."));
       
       // Aktualizacja animacji tekstu co sekundę
       progressInterval = setInterval(() => {
         setButtonText((prevText) =>
-          prevText === "Saving data..." ? "Saving data." :
-          prevText === "Saving data." ? "Saving data.." :
-          "Saving data..."
+          prevText === t("AddApplicants.Saving data...") ? t("AddApplicants.Saving data.") :
+          prevText === t("AddApplicants.Saving data.") ? t("AddApplicants.Saving data..") :
+          t("AddApplicants.Saving data...")
         );
       }, 1000);
   
@@ -461,7 +467,7 @@ const AddApplicants = () => {
       }));
   
       clearInterval(progressInterval);
-      setButtonText("Data saved successfully!");
+      setButtonText(t("AddApplicants.data saved successfully"));
   
       setTimeout(() => {
         userApply
@@ -472,18 +478,18 @@ const AddApplicants = () => {
       }, 1000);
     } catch (error) {
       if (error.message === "This recruitment is private, you cant apply") {
-        alert("This recruitment is private, you can't apply. Please contact the recruitment owner.");
+        alert(t("AddApplicants.recruitment_private"));
       } else {
-        alert("Error saving applicants. Please try again.");
+        alert(t("AddApplicants.error_saving_applicants"));
       }
   
       clearInterval(progressInterval);
       setIsSaving(false);
   
       setButtonText(
-        userApply ? "Finish Application" :
-        applicant ? "Finish Editing Applicant" :
-        "Finish Adding Applicants"
+        userApply ? t("AddApplicants.Finish Application") :
+        applicant ? t("AddApplicants.Finish Editing Applicant") :
+        t("AddApplicants.Finish Adding Applicants")
       );
     }
   };
@@ -534,7 +540,7 @@ const AddApplicants = () => {
             }
           }
         } catch (error) {
-          alert("Błąd podczas wysyłania pliku.");
+          alert(t("AddApplicants.error_sending_file"));
         } finally {
           if (fileType === "cv") {
             setIsLoadingCv(false);
@@ -615,34 +621,28 @@ const AddApplicants = () => {
 
               {userApply ? (
                 <p className="text-white mb-3">
-                  Please wait while we save your application. This process may
-                  take some time, depending on the size of your CV and Cover
-                  Letter files.
+                  {t("AddApplicants.saving_application")}
                 </p>
               ) : applicant ? (
                 <p className="text-white mb-3">
-                  Please wait while we save this applicant's data. This process
-                  may take some time.
+                  {t("AddApplicants.saving_applicant")}
                 </p>
               ) : (
                 <p className="text-white mb-3">
-                  Please wait while we save your applicants. This process may
-                  take some time, depending on the number of applicants.
+                  {t("AddApplicants.saving_applicants")}
                 </p>
               )}
 
               <p className="text-white mb-3">
-                Your page will automatically refresh once the data is saved
-                successfully.
+                {t("AddApplicants.auto_refresh")}
               </p>
 
               <p className="text-white mb-3">
-                Please do not interrupt the process. If interrupted, the unsaved
-                progress will not be saved, and you will need to start over.
+              {t("AddApplicants.do_not_interrupt")}
               </p>
 
               <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-                Warning: Do not interrupt the process!
+                {t("AddApplicants.warning")}
               </p>
             </div>
           </div>
@@ -654,7 +654,7 @@ const AddApplicants = () => {
           <div className="w-full md:w-1/2 p-2 pt-0">
             <form className="mx-auto bg-glass card rounded-lg p-6 h-screen overflow-auto">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 whitespace-nowrap">
-                Applicant Details
+                {t("AddApplicants.applicant_details")}
                 {!userApply ? (
                   <HelpGuideLink section="RecruitmentAddApplicantsManually" />
                 ) : (
@@ -667,7 +667,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium text-gray-300"
                   htmlFor="name"
                 >
-                  Name
+                  {t("AddApplicants.name")}
                 </label>
                 <input
                   type="text"
@@ -689,7 +689,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium text-gray-300"
                   htmlFor="surname"
                 >
-                  Surname
+                  {t("AddApplicants.surname")}
                 </label>
                 <input
                   type="text"
@@ -733,7 +733,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="phone"
                 >
-                  Phone
+                  {t("AddApplicants.phone")}
                 </label>
                 <input
                   type="text"
@@ -754,14 +754,14 @@ const AddApplicants = () => {
                 className="block text-sm font-medium mb-2"
                 htmlFor="educationLevel"
               >
-                Education
+                {t("AddApplicants.education")}
               </label>
               <div className="mb-4 border-2 border-gray-500 rounded-md p-2">
                 <label
                   className="block text-sm font-medium mb-2"
                   htmlFor="educationLevel"
                 >
-                  Education Level
+                  {t("AddApplicants.education_level")}
                 </label>
                 <input 
                 type="text"
@@ -780,7 +780,7 @@ const AddApplicants = () => {
                 {/* Education Field */}
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                    Education Field
+                     {t("AddApplicants.education_field")}
                   </label>
                   <input 
                     type="text"
@@ -802,7 +802,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2 mt-4"
                   htmlFor="institutionName"
                 >
-                  Institution Name
+                  {t("AddApplicants.institution_name")}
                 </label>
                 <input
                   type="text"
@@ -824,7 +824,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="experience"
                 >
-                  Experience (years)
+                  {t("AddApplicants.experience_years")}
                 </label>
                 <input
                   type="number"
@@ -847,7 +847,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="languages"
                 >
-                  Languages
+                 {t("AddApplicants.languages")}
                 </label>
                 <div className="flex flex-col space-y-2">
                   {formData.languages.map((language, index) => (
@@ -859,7 +859,7 @@ const AddApplicants = () => {
                           value={language.language}
                           onChange={handleInputChange}
                           className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                          placeholder="Language"
+                          placeholder={t("AddApplicants.language")}
                         />
                         <select
                           name={`languages-${index}-level`}
@@ -867,20 +867,24 @@ const AddApplicants = () => {
                           onChange={handleInputChange}
                           className="w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                         >
-                          <option value="">Select level</option>
-                          <option value="A1 (Beginner)">A1 (Beginner)</option>
+                          <option value="">{t("AddApplicants.Select level")}</option>
+                          <option value="A1 (Beginner)">
+                             {t("AddApplicants.A1 (Beginner)")}
+                          </option>
                           <option value="A2 (Elementary)">
-                            A2 (Elementary)
+                              {t("AddApplicants.A2 (Elementary)")}
                           </option>
                           <option value="B1 (Intermediate)">
-                            B1 (Intermediate)
+                            {t("AddApplicants.B1 (Intermediate)")}
                           </option>
                           <option value="B2 (Upper Intermediate)">
-                            B2 (Upper Intermediate)
+                              {t("AddApplicants.B2 (Upper Intermediate)")}
                           </option>
-                          <option value="C1 (Advanced)">C1 (Advanced)</option>
+                          <option value="C1 (Advanced)">
+                            {t("AddApplicants.C1 (Advanced)")}
+                          </option>
                           <option value="C2 (Proficient)">
-                            C2 (Proficient)
+                             {t("AddApplicants.C2 (Proficient)")}
                           </option>
                         </select>
                         <button
@@ -888,7 +892,7 @@ const AddApplicants = () => {
                           onClick={() => removeLanguage(index)}
                           className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600   font-medium border border-white shadow-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                         >
-                          Remove
+                          {t("AddApplicants.remove")}
                         </button>
                       </div>
                       {errors[`languages-${index}-language`] && (
@@ -908,7 +912,7 @@ const AddApplicants = () => {
                     onClick={addLanguage}
                     className="mt-2  tx-4 py-2 rounded-md p-2   bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                   >
-                    Add Language
+                    {t("AddApplicants.add_language")}
                   </button>
                 </div>
               </div>
@@ -919,7 +923,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="skills"
                 >
-                  Skills (comma separated)
+                  {t("AddApplicants.skills_comma_separated")}
                 </label>
                 <input
                   type="text"
@@ -957,7 +961,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="courses"
                 >
-                  Courses (comma separated)
+                  {t("AddApplicants.courses_comma_separated")}
                 </label>
                 <input
                   type="text"
@@ -995,7 +999,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="additionalInformation"
                 >
-                  Additional Information
+                  {t("AddApplicants.additional_information")}
                 </label>
                 <textarea
                   id="additionalInformation"
@@ -1018,7 +1022,7 @@ const AddApplicants = () => {
                   className="block text-sm font-medium mb-2"
                   htmlFor="coveringLetter"
                 >
-                  Cover Letter
+                  {t("AddApplicants.cover_letter")}
                 </label>
 
                 <label className="w-16 h-16 p-2  bg-sky  font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 text-white rounded-full flex items-center justify-center cursor-pointer mb-4 ">
@@ -1052,7 +1056,7 @@ const AddApplicants = () => {
                       onClick={handleRemoveCoverLetter}
                       className="bg-red-500 p-2  m-2 rounded-lg  text-white font-medium border border-white shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
                     >
-                      Remove Cover Letter
+                      {t("AddApplicants.remove_cover_letter")}
                     </button>
                     {CoveringLetterPreviews.map((preview, index) => (
                       <div
@@ -1075,7 +1079,7 @@ const AddApplicants = () => {
                         <Loader />
                       </p> // Show Loading message when the file is being processed
                     ) : (
-                      <p>Cover Letter preview not available.</p> // Default message if no preview is available
+                      <p>{t("AddApplicants.cover_letter_preview_not_available")}</p> // Default message if no preview is available
                     )}
                   </>
                 )}
@@ -1085,7 +1089,7 @@ const AddApplicants = () => {
           <div className="w-full md:w-1/2 p-2 pt-0 h-screen">
             <div className="flex flex-col items-center bg-glass card rounded-lg p-6 h-screen">
               <h3 className="text-lg font-semibold mb-1">
-                Upload CV file (PDF only)
+                {t("AddApplicants.upload_cv_file")}
               </h3>
               {errors.CvfilePreviews && (
                 <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
@@ -1143,7 +1147,7 @@ const AddApplicants = () => {
                       <Loader />
                     </p> // Show Loading message when the file is being processed
                   ) : (
-                    <p>Cv preview not available.</p> // Default message if no preview is available
+                    <p>{t("AddApplicants.cv_preview_not_available")}</p> // Default message if no preview is available
                   )}
                 </>
               )}
@@ -1164,13 +1168,13 @@ const AddApplicants = () => {
                 : "bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-600"
             }`}
               >
-                Previous Applicant
+               {t("AddApplicants.previous_applicant")}
               </button>
               <button
                 onClick={removeCurrentApplicant}
                 className="bg-red-500 p-2  m-2 rounded-lg  text-white font-medium border border-white shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
               >
-                Remove Applicant
+                {t("AddApplicants.remove_applicant")}
               </button>
             </>
           )}
@@ -1186,7 +1190,7 @@ const AddApplicants = () => {
               onClick={handleNextApplicant}
               className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 m-2"
             >
-              Next Applicant
+              {t("AddApplicants.next_applicant")}
             </button>
           )}
         </div>
@@ -1196,7 +1200,7 @@ const AddApplicants = () => {
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
           >
-            Come Back
+            {t("AddApplicants.come_back")}
           </button>
         </div>
       </div>

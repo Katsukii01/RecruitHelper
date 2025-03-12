@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { google } from '../assets';
 import ReCAPTCHA from 'react-google-recaptcha';
 import {HelpGuideLink} from '../utils'
+import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const { signUp, googleSignIn, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -29,22 +31,22 @@ const SignUp = () => {
     e.preventDefault();
   
     if (email !== confirmEmail) {
-      setError("Emails do not match.");
+      setError(t("SignUp.Emails do not match."));
       return;
     }
     
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("SignUp.Passwords do not match."));
       return;
     }
 
     if (!termsAccepted) {
-      setError("You must accept the terms and conditions.");
+      setError(t("SignUp.You must accept the terms and conditions."));
       return;
     }
   
     if (!recaptchaToken) {
-      setError("Please verify that you are a human.");
+      setError( t("SignUp.Please verify that you are a human."));
       return;
     }
   
@@ -53,7 +55,7 @@ const SignUp = () => {
     try {
       // Call the signUp function to create the user
       await signUp(email, password, username); // Include username
-      alert('Sign up successful!');
+      alert(t('SignUp.Sign up successful!'));
       
       // Force reload of the page to ensure you are on Home with the correct state
       navigate('/Home');
@@ -61,11 +63,11 @@ const SignUp = () => {
     } catch (err) {
       // Handle different errors based on Firebase's error codes
       if (err.code === 'auth/email-already-in-use') {
-        setError('The email address is already in use by another account.');
+        setError( t('SignUp.The email address is already in use by another account.'));
       } else if (err.code === 'auth/weak-password') {
-        setError('The password is too weak.');
+        setError( t('SignUp.The password is too weak.'));
       } else if (err.code === 'auth/invalid-email') {
-        setError('The email address is not valid.');
+        setError( t('SignUp.The email address is not valid.'));
       } else {
         setError(err.message); // Generic error handling
       }
@@ -95,7 +97,7 @@ const SignUp = () => {
     <div className="min-h-screen flex items-center justify-center pt-32">
       <form onSubmit={handleSubmit} className="p-6 bg-glass rounded-lg card sm:w-1/2 w-5/6">
         <HelpGuideLink section="SignUp" />
-        <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
+        <h1 className="text-2xl font-bold mb-4">{t('SignUp.Sign Up')}</h1>
         {error && (
           <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
             {error}
@@ -103,7 +105,7 @@ const SignUp = () => {
         )}
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t('SignUp.username')}
           className="input bg-glass rounded-lg p-2 mb-4 w-full"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -119,7 +121,7 @@ const SignUp = () => {
         />
         <input
           type="email"
-          placeholder="Confirm Email"
+          placeholder={t('SignUp.confirm email')}
           className="input bg-glass rounded-lg p-2 mb-4 w-full"
           value={confirmEmail}
           onChange={(e) => setConfirmEmail(e.target.value)}
@@ -127,7 +129,7 @@ const SignUp = () => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t('SignUp.password')}
           className="input bg-glass rounded-lg p-2 mb-4 w-full"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -135,7 +137,7 @@ const SignUp = () => {
         />
         <input 
           type="password"
-          placeholder="Confirm Password"
+          placeholder={t('SignUp.confirm password')}
           className="input bg-glass rounded-lg p-2 mb-4 w-full"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -150,7 +152,7 @@ const SignUp = () => {
             onChange={(e) => setTermsAccepted(e.target.checked)}
           />
         <label htmlFor="terms" className="text-sm">
-            I accept the <a href="/terms" className="text-blue-500 ">terms and conditions</a>
+            { t('SignUp.I accept the ')} <a href="/terms" className="text-blue-500 ">{t('SignUp.terms and conditions')}</a>
           </label>
         </div>
 
@@ -171,9 +173,9 @@ const SignUp = () => {
             className="flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
             disabled={isLoading}
           >
-            {isLoading ? 'Signing Up...' : 'Sign Up'}
+            {isLoading ? t('SignUp.Signing Up...') : t('SignUp.Sign Up')}
           </button>
-          <div className="pt-10 border-b-2 border-gray-400 w-1/3 text-center">Sign up with</div>
+          <div className="pt-10 border-b-2 border-gray-400 w-1/3 text-center">{t('SignUp.Signup with')}</div>
           <button
             type="button"
             className="flex items-center justify-center py-2 mt-4 rounded-lg bg-blue-700 text-white font-medium border border-white shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 w-1/2"
