@@ -14,8 +14,10 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaFileExport, FaDoorOpen, FaCheckCircle } from "react-icons/fa";
 import { HelpGuideLink } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const FinishRecruitment = ({ id }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [opinionData, setOpinionData] = useState({
     opinion: "",
@@ -35,7 +37,6 @@ const FinishRecruitment = ({ id }) => {
       }
     } catch (error) {
       console.error("❌ Error fetching opinion:", error);
-      alert("Error fetching opinion");
     }
   };
 
@@ -60,11 +61,11 @@ const FinishRecruitment = ({ id }) => {
       const workbook = new ExcelJS.Workbook();
 
       // Wywołujemy funkcje eksportujące, które dodają podskoroszyty
-      exportRecruitmentStats(workbook, recruitmentStats);
-      exportOfferDataToExcel(workbook, offerData);
-      exportApplicantsToExcel(workbook, sortedApplicants);
-      exportMeetings(workbook, meetings);
-      exportTasks(workbook, tasks);
+      exportRecruitmentStats(workbook, recruitmentStats, t);
+      exportOfferDataToExcel(workbook, offerData, t);
+      exportApplicantsToExcel(workbook, sortedApplicants, t);
+      exportMeetings(workbook, meetings, t);
+      exportTasks(workbook, tasks, t);
 
       // Eksportowanie pliku
       const buffer = await workbook.xlsx.writeBuffer();
@@ -74,10 +75,10 @@ const FinishRecruitment = ({ id }) => {
 
       saveAs(excelBlob, "recruitment.xlsx");
 
-      alert("Data exported successfully");
+      alert(t("Finish Recruitment.Data exported successfully"));
     } catch (error) {
       console.error("❌ Error exporting data:", error);
-      alert("Error exporting data");
+      alert(t("Finish Recruitment.Error exporting data"));
     } finally {
       setLoading(false);
     }
@@ -92,11 +93,11 @@ const FinishRecruitment = ({ id }) => {
     const errors = {};
 
     if (!opinionData.opinion) {
-      errors.opinion = "Opinion is required";
+      errors.opinion = t("Finish Recruitment.Opinion is required");
     }else if(opinionData.opinion.length > 1000){
-      errors.opinion = "Opinion cannot be longer than 1000 characters";
+      errors.opinion = t("Finish Recruitment.Opinion cannot be longer than 1000 characters");
     }else if(opinionData.opinion.length < 10){
-      errors.opinion = "Opinion must be at least 10 characters";
+      errors.opinion = t("Finish Recruitment.Opinion must be at least 10 characters");
     }
 
 
@@ -114,10 +115,10 @@ const FinishRecruitment = ({ id }) => {
     try {
       console.log(opinionData);
       await addOpinion(id, opinionData);
-      alert("Opinion set successfully! Thank you for your feedback!");
+      alert(  t("Finish Recruitment.Opinion set successfully! Thank you for your feedback!"));
     } catch (error) {
       console.error("❌ Error adding opinion:", error);
-      alert("Error adding opinion");
+      alert(t("Finish Recruitment.Error adding opinion"));
     }
   };
 
@@ -125,17 +126,17 @@ const FinishRecruitment = ({ id }) => {
     try {
       setClosing(true);
       const confirmation = window.confirm(
-        "Are you sure you want to close this recruitment? You will lose all your data that has been submitted so far. Rememeber to export your data before closing the recruitment!"
+       t("Finish Recruitment.Are you sure you want to close this recruitment? You will lose all your data that has been submitted so far. Rememeber to export your data before closing the recruitment!")
       );
       if (!confirmation) {
         return;
       }
       await closeRecruitment(id);
-      alert("Recruitment closed successfully!");
+      alert(  t("Finish Recruitment.Recruitment closed successfully!"));
       navigate("/Dashboard");
     } catch (error) {
       console.error("❌ Error closing recruitment:", error);
-      alert("Error closing recruitment");
+      alert(  t("Finish Recruitment.Error while closing recruitment"));
     }
     finally {
       setClosing(false);
@@ -146,13 +147,15 @@ const FinishRecruitment = ({ id }) => {
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card overflow-auto">
   {/* 🔹 Nagłówek sekcji */}
   <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-       Finish Recruitment
+    {t("DashboardNavbar.FinishRecruitment")}
         <HelpGuideLink section="RecruitmentFinish" />
       </h1>
 
   {/* 🔹 Ostrzeżenie */}
   <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-3 rounded-md mb-6 text-center font-medium animate-pulse">
-    Once you close the recruitment, you will lose all submitted data! Remember to export before closing.
+    {
+      t("Finish Recruitment.Are you sure you want to close this recruitment? You will lose all your data that has been submitted so far. Rememeber to export your data before closing the recruitment!")
+    }
   </p>
 
   {/* 🔹 Kontenery na przyciski */}
@@ -163,7 +166,7 @@ const FinishRecruitment = ({ id }) => {
         disabled={loading || closing}
       >
         <FaFileExport className="size-5" />
-        {loading ? "Exporting..." : "Export Recruitment Data"}
+        {loading ? t("Finish Recruitment.Exporting...") : t("Finish Recruitment.Export Recuitment Data")}
       </button>
 
       <button
@@ -172,23 +175,31 @@ const FinishRecruitment = ({ id }) => {
         disabled={closing || loading}
       >
         <FaDoorOpen className="size-5" />
-        {closing ? "Closing..." : "Close Recruitment"}
+        {closing ?  t("Finish Recruitment.Closing...") : t("Finish Recruitment.Close Recruitment")}
       </button>
   </div>
 
 {/* 🔹 Formularz opinii */}
 <div className="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700">
-  <h2 className="text-3xl font-extrabold text-white text-center mb-6">Leave a Review</h2>
+  <h2 className="text-3xl font-extrabold text-white text-center mb-6">
+      {
+        t("Finish Recruitment.Leave a Review")
+      }
+  </h2>
 
   {/* 🔹 Opinia */}
   <div className="mb-5">
-    <label className="block text-sm font-medium text-gray-400 mb-2">Your Opinion</label>
+    <label className="block text-sm font-medium text-gray-400 mb-2">
+        {
+          t("Finish Recruitment.Your Opinion")
+        }
+      </label>
     <textarea
       name="opinion"
       value={opinionData.opinion}
       onChange={handleInputChange}
       className="w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-      placeholder="Write your opinion..."
+      placeholder= {t("Finish Recruitment.write your opinion...")}
       rows="5"
     />
     {errors.opinion && (
@@ -200,7 +211,9 @@ const FinishRecruitment = ({ id }) => {
 
   {/* 🔹 Ocena gwiazdkowa */}
   <div className="mb-6 ">
-    <label className="block text-sm font-medium text-gray-400 mb-2">Rating (0-5 stars)</label>
+    <label className="block text-sm font-medium text-gray-400 mb-2">
+    {t("Finish Recruitment.Rating (0-5 stars)")}   
+    </label>
     <StarRating onChange={(value) => setOpinionData((prev) => ({ ...prev, stars: value }))} stars={opinionData.stars} />
   </div>
 
@@ -212,7 +225,7 @@ const FinishRecruitment = ({ id }) => {
       transition focus:outline-none focus:ring-2 focus:ring-green-400 border border-white"
     >
       <FaCheckCircle className="size-5" />
-      Submit Opinion
+      {t("Finish Recruitment.Submit Opinion")}
     </button>
   </div>
 </div>

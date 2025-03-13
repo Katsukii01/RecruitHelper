@@ -5,8 +5,10 @@ import { Loader, HelpGuideLink } from '../../utils';
 import Pagination from './Pagination';
 import {CircularProgress} from '../';
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 const FinalRanking = ({ id }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [applicants, setApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -117,20 +119,20 @@ const FinalRanking = ({ id }) => {
       if (!applicants.length) return (
         <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Final Ranking
+        {t("DashboardNavbar.FinalRanking")}
           <HelpGuideLink section="RecruitmentFinalRanking" />
         </h1>
 
 
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-            No Applicants found
+          {t("Applicants stages.No applicants found")}
           </div>
         </section>); 
 
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Final Ranking
+        {t("DashboardNavbar.FinalRanking")}
           <HelpGuideLink section="RecruitmentFinalRanking" />
         </h1>
 
@@ -145,7 +147,7 @@ const FinalRanking = ({ id }) => {
                 <div key={key} className="flex flex-col items-center">
                   {/* Tekst nad przełącznikiem */}
                   <span className="text-white font-medium text-sm mb-1 text-center">
-                    {formattedKey}
+                    {t(`Final Ranking.${formattedKey}`)}
                   </span>
 
                   {/* Przełącznik */}
@@ -188,19 +190,21 @@ const FinalRanking = ({ id }) => {
             <hr className='w-full border-t-2 border-gray-300' />
             
             <div className="flex flex-col items-center">
-              <p className="text-xl font-bold text-white mb-2">Overall Score</p>
+              <p className="text-xl font-bold text-white mb-2">
+                {t("Final Ranking.Total Score")}
+              </p>
                 <CircularProgress score={applicant.totalScore} size={150}/>
             </div>
 
             <hr className="w-full border-t-2 border-gray-600 my-3" />
 
             {/* Siatka dla podkategorii wyników */}
-            <div className="grid grid-cols-2 gap-4 justify-center">
+            <div className="grid grid-cols-2 gap-4 justify-center text-center">
               {[
-                { score: applicant.CVscore, label: "CV Score" },
-                { score: applicant.CLscore, label: "CL Score" },
-                { score: applicant.Tasksscore, label: "Tasks Score" },
-                { score: applicant.Meetingsscore, label: "Meetings Score" },
+                { score: applicant.CVscore, label: t("Final Ranking.CV Score") },
+                { score: applicant.CLscore, label: t("Final Ranking.Cover Letter Score") },
+                { score: applicant.Tasksscore, label: t("Final Ranking.Tasks Score") },
+                { score: applicant.Meetingsscore, label: t("Final Ranking.Meetings Score") },
               ].map(({ score, label }, index) => (
                 <div key={index} className="flex flex-col items-center">
                 
@@ -214,7 +218,9 @@ const FinalRanking = ({ id }) => {
 
             {/* Dodatkowe punkty */}
             <div className="flex flex-col items-center">
-              <p className="text-sm text-gray-300">Adnational Points</p>
+              <p className="text-sm text-gray-300">
+              {t("Final Ranking.Adnational Points")}
+              </p>
               <p className="text-lg font-semibold text-white">{applicant.adnationalPoints || 0}</p>
             </div>
             

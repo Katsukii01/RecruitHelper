@@ -4,8 +4,10 @@ import { getAllOpinions, deleteOpinion, addRandomOpinions } from '../../services
 import { Pagination } from '../../recruitment/DashboardsComponents';
 import { Loader } from '../../utils';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ManageOpinions = () => {
+  const { t } = useTranslation();
   const [opinions, setOpinions] = useState([]);
   const [paginatedOpinions, setPaginatedOpinions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,15 +114,15 @@ const ManageOpinions = () => {
         <thead className="bg-gray-900 text-white">
           <tr>
             {[
-              'JobTitle',
-              'RecruitmentName',
+              'Job Title',
+              'Recruitment Name',
               'Date',
               'Opinion',
               'Stars',
               'Actions',
          ].map((header) => (
               <th key={header} className="px-4 py-2 border border-gray-700 text-center">
-                {header}
+                {t(`Manage opinions.${header}`)}
               </th>
             ))}
           </tr>
@@ -146,7 +148,7 @@ const ManageOpinions = () => {
                       }
                       className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                     >
-                      Edit
+                       {t("ManageApplicants.Edit")}
                     </button>
                     <button
                       onClick={() =>
@@ -154,7 +156,7 @@ const ManageOpinions = () => {
                       }
                       className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition  border-white border"
                     >
-                      Delete
+                     {t("ManageApplicants.Delete")}
                     </button>
                   </div>
                 </td>

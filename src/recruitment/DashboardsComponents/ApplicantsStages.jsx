@@ -6,8 +6,11 @@ import Pagination from './Pagination';
 import {applicantStages} from "../../constants/stages";
 import { FaUser, FaEnvelope } from "react-icons/fa";
 import {CircularProgress} from '../';
+import { useTranslation } from 'react-i18next';
+import { displayName } from 'react-world-flags';
 
 const ApplicantsStages = ( {id}) => {
+   const { t } = useTranslation();
     const [loading, setLoading] = useState();
     const [Applicants, setApplicants] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -100,7 +103,7 @@ const ApplicantsStages = ( {id}) => {
       if (!Applicants.length) return (
         <section className=" relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Applicants Stages
+          {t("Applicants stages")}
           <HelpGuideLink section="RecruitmentApplicantsStages" />
         </h1>
 
@@ -113,7 +116,7 @@ const ApplicantsStages = ( {id}) => {
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Applicants Stages
+            {t("Applicants stages")}
           <HelpGuideLink section="RecruitmentApplicantsStages" />
         </h1>
   
@@ -136,8 +139,10 @@ const ApplicantsStages = ( {id}) => {
                 </div>
 
                 {/* Wynik całkowity */}
-                <div className="flex flex-col items-center sm:items-end">
-                  <p className="text-sm text-gray-300">Total Score</p>
+                <div className="flex flex-col items-center sm:items-end  text-center">
+                  <p className="text-sm text-gray-300">
+                    {t("Total Score")}
+                  </p>
                   <CircularProgress score={applicant.totalScore} size={70} />
                 </div>
               </div>
@@ -151,7 +156,7 @@ const ApplicantsStages = ( {id}) => {
               
 
             <div className="flex flex-wrap justify-center gap-6">
-              {applicantStages.map(({ status, icon, stageColor }) => (
+              {applicantStages.map(({ status, displayName, icon, stageColor }) => (
                 <button
                 key={status}
                 onClick={() => handleStageChange(applicant.id, status)}
@@ -184,7 +189,7 @@ const ApplicantsStages = ( {id}) => {
                   ${stageColor === "pink" ? "text-pink-600" : ""}`}
                 style={{ left: '50%', transform: 'translateX(-50%)' }}
               >
-                {status}
+                {t(displayName)}
               </div>
                 )}
 

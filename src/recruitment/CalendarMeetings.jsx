@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Calendar from 'react-calendar';
-import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase, BiBook } from "react-icons/bi";
+import { BiCalendar, BiTimeFive, BiLinkExternal, BiUser, BiEnvelope, BiFile, BiBriefcase, BiBook, BiMap } from "react-icons/bi";
 import { useTranslation } from 'react-i18next';
 
 const CalendarMeetings = ({ meetingSessions, applicants,}) => {
@@ -139,15 +139,23 @@ const CalendarMeetings = ({ meetingSessions, applicants,}) => {
                       <span className=" text-white">{meeting.meetingTimeFrom} - {meeting.meetingTimeTo}</span>
                     </div>
               
-                    <a
-                      href={meeting.meetingLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
-                    >
-                      <BiLinkExternal className="text-lg" /> 
-                       {t("Calendar.join meeting")}
-                    </a>
+                    {/^https?:\/\/[\w-]+(\.[\w-]+)+[/#?]?.*$/.test(meeting.meetingLink) ? (
+                      <a
+                        href={meeting.meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 transition-all border border-white"
+                      >
+                        <BiLinkExternal className="text-lg" />
+                        {t("Calendar.join meeting")}
+                      </a>
+                    ) : (
+                      <div className="flex items-center space-x-2 text-sm text-white">
+                        <BiMap className="text-lg text-blue-500" />
+                        <span className=" text-white">{meeting.meetingLink}</span>
+                      </div>
+                    )}
+
                   </div>
               
                   {/* Prawa sekcja – Dane aplikanta lub Rekrutacja */}

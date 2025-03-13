@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useLocation } from "react-router-dom";
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const MeetingPoints = ({ id, refresh }) => {
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,7 @@ const MeetingPoints = ({ id, refresh }) => {
   const [applicants, setApplicants] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const { currentPageMeetings } = location.state || {};
   const [currentPage, setCurrentPage] = currentPageMeetings
@@ -249,7 +251,7 @@ const MeetingPoints = ({ id, refresh }) => {
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-        Meetings Points
+        {t("DashboardNavbar.MeetingsPoints")}
         <HelpGuideLink section="RecruitmentMeetingsPoints" />
           </h1>
 
@@ -262,7 +264,7 @@ const MeetingPoints = ({ id, refresh }) => {
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
              <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-        Meetings Points
+             {t("DashboardNavbar.MeetingsPoints")}
         <HelpGuideLink section="RecruitmentMeetingsPoints" />
           </h1>
 
@@ -272,7 +274,7 @@ const MeetingPoints = ({ id, refresh }) => {
           <thead className="bg-gray-900 text-white">
             <tr>
               <th className="px-4 py-2 border border-gray-700 text-center">
-                Applicant
+              {t("Add Tasks.Applicant")}
               </th>
               {meetingSessions.map((session) => (
                 <th
@@ -281,7 +283,7 @@ const MeetingPoints = ({ id, refresh }) => {
                 >
                   <div>{session.meetingSessionName}</div>
                   <div className="text-sm">
-                    Weight: {session.meetingSessionPointsWeight}
+                  {t("Create Task Session.Points weight")}: {session.meetingSessionPointsWeight}
                   </div>
                 </th>
               ))}
@@ -298,7 +300,7 @@ const MeetingPoints = ({ id, refresh }) => {
                 >
                   {/* Kolumna z danymi aplikanta */}
                   <td className="px-4 py-2 border border-gray-700">
-                    <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1">
+                    <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1 text-left">
                       
                       <div className="text-sm flex items-center gap-2">
                         <FaUser className="text-blue-400 size-4" /> {applicant.name} {applicant.surname}
@@ -345,7 +347,7 @@ const MeetingPoints = ({ id, refresh }) => {
                                 }
                                 className="p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                               >
-                                Edit
+                                {t("ManageApplicants.Edit")}
                               </button>
                               <button
                                 onClick={() =>
@@ -356,12 +358,14 @@ const MeetingPoints = ({ id, refresh }) => {
                                 }
                                 className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
                               >
-                                Delete
+                                {t("ManageApplicants.Delete")}
                               </button>
                             </div>
                           </>
                         ) : (
-                          <div>No meeting</div>
+                          <div>
+                            {t("Add Tasks.Not assigned yet")}
+                          </div>
                         )}
                       </td>
                     );
@@ -390,17 +394,17 @@ const MeetingPoints = ({ id, refresh }) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-md shadow-md w-96">
             <h2 className="text-lg font-bold text-white mb-4">
-              Confirm Delete
+               {t("Add Meetings.Confirm Delete")}
             </h2>
             <p className="text-white">
-              Are you sure you want to delete this meeting?
+            {t("Add Meetings.Are you sure you want to delete this meeting?")}
             </p>
             <div className="flex justify-end gap-4 mt-4">
               <button
                 onClick={handleCloseDeleteConfirmation}
                 className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
               >
-                Cancel
+                 {t("Add Meetings.Cancel")}
               </button>
               <button
                 onClick={() =>
@@ -408,7 +412,7 @@ const MeetingPoints = ({ id, refresh }) => {
                 }
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
               >
-                Delete
+                {t("Add Meetings.Delete")}
               </button>
             </div>
           </div>

@@ -4,8 +4,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { DsectionWrapper } from '../../hoc';
 import Pagination from './Pagination';
 import { Loader, HelpGuideLink } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 const ManageApplicants = ({ id }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [recruitmentId, setRecruitmentId] = useState(id);
@@ -86,7 +88,7 @@ const ManageApplicants = ({ id }) => {
         }
       });
     }else{
-      alert("You can't add applicants to this recruitment unitl it's Private");
+      alert( t("ManageApplicants.You can't add applicants to this recruitment unitl it's Private"));
     }
 
   };
@@ -162,7 +164,7 @@ const ManageApplicants = ({ id }) => {
 
   if (!applicants.length) return <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Manage Applicants
+          {t("ManageApplicants.Manage applicants")}
             <HelpGuideLink section="RecruitmentApplicantsManage" />
           </h1>
 
@@ -172,11 +174,11 @@ const ManageApplicants = ({ id }) => {
           onClick={handleManualApplicants}
           className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
         >
-          Add Applicant
+           {t("ManageApplicants.Add applicants")}
         </button>
       </div>
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-           No applicants found.
+           {t("ManageApplicants.No applicants found")}
         </div>
     </section>;
 
@@ -184,7 +186,7 @@ const ManageApplicants = ({ id }) => {
     <section className="h-auto min-h-screen-80 relative w-full mx-auto bg-glass card ">
       <div>
       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Manage Applicants
+      {t("ManageApplicants.Manage applicants")}
             <HelpGuideLink section="RecruitmentApplicantsManage" />
           </h1>
 
@@ -194,7 +196,7 @@ const ManageApplicants = ({ id }) => {
             onClick={handleManualApplicants}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
           >
-            Add Applicant
+           {t("ManageApplicants.Add applicants")}
           </button>
         </div>
       </div>
@@ -203,29 +205,29 @@ const ManageApplicants = ({ id }) => {
       <div className="overflow-x-auto  bg-gray-800 rounded-lg shadow-md p-2">
         <table className="table-auto w-full border-collapse border border-gray-700 text-white rounded-lg text-sm">
           <thead className="bg-gray-900 text-white ">
-            <tr>
-              {[
-                'Name',
-                'Surname',
-                'Email',
-                'Phone',
-                'Education Level',
-                'Field of Study',
-                'Institution Name',
-                'Languages',
-                'Experience',
-                'Skills',
-                'Courses',
-                'Additional Information',
-                'CV',
-                'Cover Letter',
-                'Actions',
-              ].map((header) => (
-                <th key={header} className="px-4 py-2 border border-gray-700 text-center">
-                  {header}
-                </th>
-              ))}
-            </tr>
+          <tr>
+            {[
+              'Name',
+              'Surname',
+              'Email',
+              'Phone',
+              'Education Level',
+              'Education Field',
+              'Institution Name',
+              'Languages',
+              'Experience',
+              'Skills',
+              'Courses',
+              'Additional Information',
+              'CV',
+              'CoverLetter',
+              'Actions',
+            ].map((key) => (
+              <th key={key} className="px-4 py-2 border border-gray-700 text-center">
+                {t(`ExcelExport.${key}`)}
+              </th>
+            ))}
+          </tr>
           </thead>
           <tbody>
             {applicants.map((applicant, index) => (
@@ -235,37 +237,37 @@ const ManageApplicants = ({ id }) => {
               >
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto ">
-                    {applicant.name || <span className="text-gray-400">Not provided</span>}
+                    {applicant.name || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.surname || <span className="text-gray-400">Not provided</span>}
+                    {applicant.surname || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.email || <span className="text-gray-400">Not provided</span>}
+                    {applicant.email || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.phone || <span className="text-gray-400">Not provided</span>}
+                    {applicant.phone || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.educationLevel || <span className="text-gray-400">Not provided</span>}
+                    {applicant.educationLevel || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.educationField || <span className="text-gray-400">Not provided</span>}
+                    {applicant.educationField || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.institutionName || <span className="text-gray-400">Not provided</span>}
+                    {applicant.institutionName || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
@@ -283,14 +285,14 @@ const ManageApplicants = ({ id }) => {
                       </div>
                     ) : (
                       <span className="text-gray-400 ">
-                        Not provided
+                        {t("RecruitmentCard.not provided")}
                       </span>
                     )}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700 ">
                   <div className="max-h-[120px] overflow-y-auto ">
-                    {applicant.experience || <span className="text-gray-400">Not provided</span>}
+                    {applicant.experience || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
@@ -307,7 +309,7 @@ const ManageApplicants = ({ id }) => {
                         ))}
                       </div>
                     ) : (
-                      <span className="text-gray-400">Not provided</span>
+                      <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>
                     )}
                   </div>
                 </td>
@@ -325,14 +327,14 @@ const ManageApplicants = ({ id }) => {
                         ))}
                       </div>
                     ) : (
-                      <span className="text-gray-400">Not Provided</span>
+                      <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>
                     )}
                   </div>
                 </td>
 
                 <td className="px-4 py-2 border border-gray-700">
                   <div className="max-h-[120px] overflow-y-auto">
-                    {applicant.additionalInformation || <span className="text-gray-400">Not provided</span>}
+                    {applicant.additionalInformation || <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>}
                   </div>
                 </td>
                 <td className="px-4 py-2 border border-gray-700">
@@ -342,10 +344,10 @@ const ManageApplicants = ({ id }) => {
                         onClick={() => handleImagePreview(applicant.cvFileUrls)}
                         className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                       >
-                        View CV
+                        {t("ManageApplicants.View CV")}
                       </button>
                     ) : (
-                       <span className="text-gray-400">No CV Provided</span>
+                       <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>
                     )}
                   </div>
                 </td>
@@ -356,10 +358,10 @@ const ManageApplicants = ({ id }) => {
                         onClick={() => handleImagePreview(applicant.coverLetterFileUrls)}
                         className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                       >
-                        View Cover Letter
+                         {t("ManageApplicants.View Cover Letter")}
                       </button>
                     ) : (
-                      <span className="text-gray-400">No Cover Letter Provided</span>
+                      <span className="text-gray-400">{t("RecruitmentCard.not provided")}</span>
                     )}
                   </div>
                 </td>
@@ -370,14 +372,14 @@ const ManageApplicants = ({ id }) => {
                       onClick={() => handleEditApplicant(applicant.id)}
                       className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                     >
-                      Edit
+                       {t("ManageApplicants.Edit")}
                     </button>
                    
                     <button
                       onClick={() => handleOpenDeleteConfirmation(applicant.id)}
                       className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
                     >
-                      Delete
+                      {t("ManageApplicants.Delete")}
                     </button>
 
                   </div>
@@ -400,20 +402,24 @@ const ManageApplicants = ({ id }) => {
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-md shadow-md w-96">
-            <h2 className="text-lg font-bold text-white mb-4">Confirm Delete</h2>
-            <p className="text-white">Are you sure you want to delete this applicant?</p>
+            <h2 className="text-lg font-bold text-white mb-4">
+                {t("Add Meetings.Confirm Delete")}
+            </h2>
+            <p className="text-white">
+            {t("Add Meetings.Are you sure you want to delete this applicant?")}
+            </p>
             <div className="flex justify-end gap-4 mt-4">
               <button
                 onClick={handleCloseDeleteConfirmation}
                 className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
               >
-                Cancel
+                {t("Add Meetings.Cancel")}
               </button>
               <button
                 onClick={() => handleDeleteApplicant(applicantToDelete)}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
               >
-                Delete
+                {t("Add Meetings.Delete")}
               </button>
             </div>
           </div>

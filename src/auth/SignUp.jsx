@@ -54,7 +54,7 @@ const SignUp = () => {
   
     try {
       // Call the signUp function to create the user
-      await signUp(email, password, username); // Include username
+      await signUp(email, password, username, t); // Include username
       alert(t('SignUp.Sign up successful!'));
       
       // Force reload of the page to ensure you are on Home with the correct state
@@ -80,7 +80,7 @@ const SignUp = () => {
   
   const handleGoogleSignUp = async () => {
     try {
-      await googleSignIn(); // Google sign-up
+      await googleSignIn(t); // Google sign-up
       navigate('/Home');
     } catch (err) {
       setError(err.message);

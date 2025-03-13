@@ -10,7 +10,10 @@ import {
   deleteTaskSession,
 } from "../../services/RecruitmentServices";
 
+import { useTranslation } from "react-i18next";
+
 const Tasks = ({ id, onRefresh }) => {
+  const { t } = useTranslation();
   const location = useLocation();
   const { page } = location.state || {};
   const [loading, setLoading] = useState(true);
@@ -93,7 +96,6 @@ const Tasks = ({ id, onRefresh }) => {
       });
     } catch (error) {
       console.error("Error adding Tasks session:", error);
-      alert("Error adding Tasks session. Please try again later.");
     }
   };
 
@@ -108,7 +110,6 @@ const Tasks = ({ id, onRefresh }) => {
       });
     } catch (error) {
       console.error("Error adding Tasks session:", error);
-      alert("Error adding Tasks session. Please try again later.");
     }
   };
 
@@ -116,7 +117,7 @@ const Tasks = ({ id, onRefresh }) => {
     try {
       if (taskSessionId !== undefined && id) {
         const confirmed = confirm(
-          "Are you sure you want to delete this task session?"
+          t("Add Tasks.Are you sure you want to delete this task session?")
         );
         if (confirmed) {
           await deleteTaskSession(id, taskSessionId);
@@ -154,7 +155,7 @@ const Tasks = ({ id, onRefresh }) => {
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
        <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Tasks
+          {t("Add Tasks.Tasks")}
           <HelpGuideLink section="RecruitmentTasks" />
         </h1>
 
@@ -163,11 +164,11 @@ const Tasks = ({ id, onRefresh }) => {
             onClick={handleAddTaskSession}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white ml-4"
           >
-            Create Task 
+          {t("Add Tasks.Create Task")}
           </button>
         </div>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          No Tasks found.
+           {t("Add Tasks.No Tasks found.")}
         </div>
       </section>
     );
@@ -175,7 +176,7 @@ const Tasks = ({ id, onRefresh }) => {
     return (
       <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card over">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Tasks
+           {t("Add Tasks.Tasks")}
           <HelpGuideLink section="RecruitmentTasks" />
         </h1>
         <div className="flex justify-end mb-4">
@@ -183,7 +184,7 @@ const Tasks = ({ id, onRefresh }) => {
             onClick={handleAddTaskSession}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white ml-4"
           >
-            Create Task
+            {t("Add Tasks.Create Task")}
           </button>
         </div>
         <div className="h-screen-60 overflow-auto">
@@ -195,34 +196,34 @@ const Tasks = ({ id, onRefresh }) => {
                   scope="col"
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Name
+                  {t("Create Task Session.Name")}
                 </th>
                 <th
                   scope="col"
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Description
+                  {t("Create Task Session.Description")}
                 </th>
                 <th
                   scope="col"
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Deadline Date
+                  {t("Create Task Session.Deadline date")}
                 </th>
                 <th scope="col" className="px-4 py-2 border border-gray-700 text-center">
-                  Deadline Time
+                  {t("Create Task Session.Deadline time")}
                 </th>
                 <th
                   scope="col"
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Points Weight
+                  {t("Create Task Session.Points weight")}
                 </th>
                 <th
                   scope="col"
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Actions
+                  {t("ExcelExport.Actions")}
                 </th>
               </tr>
             </thead>
@@ -257,7 +258,7 @@ const Tasks = ({ id, onRefresh }) => {
                         }
                         className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                       >
-                        Edit
+                         {t("ManageApplicants.Edit")}
                       </button>
                       <button
                         onClick={() =>
@@ -265,7 +266,7 @@ const Tasks = ({ id, onRefresh }) => {
                         }
                         className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition  border-white border"
                       >
-                        Delete
+                        {t("ManageApplicants.Delete")}
                       </button>
                     </div>
                   </td>

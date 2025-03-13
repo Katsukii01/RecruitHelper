@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {RecruitmentEdit} from './DashboardsComponents';
 const CreateRecruitment = () => {
   return (

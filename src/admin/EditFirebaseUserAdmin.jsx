@@ -4,8 +4,10 @@ import React ,{ useState, useEffect } from 'react';
 import { useNavigate,  useLocation  } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../store/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const EditFirebaseUserAdmin = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { state } = useLocation();
     const { userData } = state || {};
@@ -21,16 +23,6 @@ const EditFirebaseUserAdmin = () => {
     }
   }, [isAdmin, navigate]); // Zależność dodana
 
-  // Jeśli użytkownik nie jest adminem, zwróć komunikat o braku dostępu
-  if (isAdmin === false) {
-    return (
-      <section className="flex flex-col items-center justify-center pt-28 min-h-screen">
-        <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-          You are not authorized to access this page
-        </p>
-      </section>
-    );
-  }
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -39,92 +31,76 @@ const EditFirebaseUserAdmin = () => {
         navigate(`/Admin`)
     }
     
-    const validateForm = (formData) => {
-        let errors = {}
-        // Validate username
-        if (!formData.userName) {
-            errors.name = 'Name is required';
-            } 
-        else if (formData.userName.length > 25) {
-            errors.name = 'Name must be less than 25 characters';
-            }
-
-        // Validate password
-        if (formData.password) {
-            if (formData.password.length < 8) {
-                errors.password = 'Password must be at least 8 characters long';
-            } else if (!/[A-Z]/.test(formData.password)) {
-                errors.password = 'Password must contain at least one uppercase letter';
-            } else if (!/[a-z]/.test(formData.password)) {
-                errors.password = 'Password must contain at least one lowercase letter';
-                } else if (!/\d/.test(formData.password)) {
-                    errors.password = 'Password must contain at least one number';
-                    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
-                        errors.password = 'Password must contain at least one special character';
-                        }                 
-        }
-
-        //validate stats - AllTimeApplicationHired
-        if(formData.AllTimeApplicationHired < 0){
-            errors.AllTimeApplicationHired = 'All Time Application Hired cannot be less than 0';
-
-        }
-        //check if stats - AllTimeApplicationHired is integer
-        else if(formData.AllTimeApplicationHired % 1 !== 0){
-            errors.AllTimeApplicationHired = 'All Time Application Hired must be an integer';
-        }
-
-        //validate stats - AllTimeApplicationRejected
-        if(formData.AllTimeApplicationRejected < 0){
-            errors.AllTimeApplicationRejected = 'All Time Application Rejected cannot be less than 0';
-        }
-        //check if stats - AllTimeApplicationRejected is integer
-        else if(formData.AllTimeApplicationRejected % 1 !== 0){
-            errors.AllTimeApplicationRejected = 'All Time Application Rejected must be an integer';
-        }   
-
-        //validate stats - AllTimeApplicationsCount
-        if(formData.AllTimeApplicationsCount < 0){
-            errors.AllTimeApplicationsCount = 'All Time Applications Count cannot be less than 0';
-        }
-        //check if stats - AllTimeApplicationsCount is integer
-        else if(formData.AllTimeApplicationsCount % 1 !== 0){
-            errors.AllTimeApplicationsCount = 'All Time Applications Count must be an integer';
-        }
-
-        //validate stats - AllTimeHiredApplicantsCount
-        if(formData.AllTimeHiredApplicants < 0){
-            errors.AllTimeHiredApplicants = 'All Time Hired Applicants cannot be less than 0';
-        }
-        //check if stats - AllTimeHiredApplicantsCount is integer
-        else if(formData.AllTimeHiredApplicants % 1 !== 0){
-            errors.AllTimeHiredApplicants = 'All Time Hired Applicants must be an integer';
-        }
-
-        //validate stats - AllTimeMeetingsCount
-        if(formData.AllTimeMeetingsCount < 0){
-            errors.AllTimeMeetingsCount = 'All Time Meetings Count cannot be less than 0';
-        }
-        //check if stats - AllTimeMeetingsCount is integer
-        else if(formData.AllTimeMeetingsCount % 1 !== 0){
-            errors.AllTimeMeetingsCount = 'All Time Meetings Count must be an integer';
-                }
-
-        //validate stats - AllTimeRecruitmentsCount
-        if(formData.AllTimeRecruitmentsCount < 0){
-            errors.AllTimeRecruitmentsCount = 'All Time Recruitments Count cannot be less than 0';
-        }
-        //check if stats - AllTimeRecruitmentsCount is integer
-        else if(formData.AllTimeRecruitmentsCount % 1 !== 0){
-            errors.AllTimeRecruitmentsCount = 'All Time Recruitments Count must be an integer';
-            }
-
-        return errors
-    }
-
-
-
-
+    const validateForm = (formData, t) => {
+      let errors = {};
+  
+      // Validate username
+      if (!formData.userName) {
+          errors.name = t("Manage users.Validation Errors.Name is required");
+      } else if (formData.userName.length > 25) {
+          errors.name = t("Manage users.Validation Errors.Name must be less than 25 characters");
+      }
+  
+      // Validate password
+      if (formData.password) {
+          if (formData.password.length < 8) {
+              errors.password = t("Manage users.Validation Errors.Password must be at least 8 characters long");
+          } else if (!/[A-Z]/.test(formData.password)) {
+              errors.password = t("Manage users.Validation Errors.Password must contain at least one uppercase letter");
+          } else if (!/[a-z]/.test(formData.password)) {
+              errors.password = t("Manage users.Validation Errors.Password must contain at least one lowercase letter");
+          } else if (!/\d/.test(formData.password)) {
+              errors.password = t("Manage users.Validation Errors.Password must contain at least one number");
+          } else if (!/[!@#$%^&*(),.?\":{}|<>]/.test(formData.password)) {
+              errors.password = t("Manage users.Validation Errors.Password must contain at least one special character");
+          }
+      }
+  
+      // Validate AllTimeApplicationHired
+      if (formData.AllTimeApplicationHired < 0) {
+          errors.AllTimeApplicationHired = t("Manage users.Validation Errors.All Time Application Hired cannot be less than 0");
+      } else if (formData.AllTimeApplicationHired % 1 !== 0) {
+          errors.AllTimeApplicationHired = t("Manage users.Validation Errors.All Time Application Hired must be an integer");
+      }
+  
+      // Validate AllTimeApplicationRejected
+      if (formData.AllTimeApplicationRejected < 0) {
+          errors.AllTimeApplicationRejected = t("Manage users.Validation Errors.All Time Application Rejected cannot be less than 0");
+      } else if (formData.AllTimeApplicationRejected % 1 !== 0) {
+          errors.AllTimeApplicationRejected = t("Manage users.Validation Errors.All Time Application Rejected must be an integer");
+      }
+  
+      // Validate AllTimeApplicationsCount
+      if (formData.AllTimeApplicationsCount < 0) {
+          errors.AllTimeApplicationsCount = t("Manage users.Validation Errors.All Time Applications Count cannot be less than 0");
+      } else if (formData.AllTimeApplicationsCount % 1 !== 0) {
+          errors.AllTimeApplicationsCount = t("Manage users.Validation Errors.All Time Applications Count must be an integer");
+      }
+  
+      // Validate AllTimeHiredApplicants
+      if (formData.AllTimeHiredApplicants < 0) {
+          errors.AllTimeHiredApplicants = t("Manage users.Validation Errors.All Time Hired Applicants cannot be less than 0");
+      } else if (formData.AllTimeHiredApplicants % 1 !== 0) {
+          errors.AllTimeHiredApplicants = t("Manage users.Validation Errors.All Time Hired Applicants must be an integer");
+      }
+  
+      // Validate AllTimeMeetingsCount
+      if (formData.AllTimeMeetingsCount < 0) {
+          errors.AllTimeMeetingsCount = t("Manage users.Validation Errors.All Time Meetings Count cannot be less than 0");
+      } else if (formData.AllTimeMeetingsCount % 1 !== 0) {
+          errors.AllTimeMeetingsCount = t("Manage users.Validation Errors.All Time Meetings Count must be an integer");
+      }
+  
+      // Validate AllTimeRecruitmentsCount
+      if (formData.AllTimeRecruitmentsCount < 0) {
+          errors.AllTimeRecruitmentsCount = t("Manage users.Validation Errors.All Time Recruitments Count cannot be less than 0");
+      } else if (formData.AllTimeRecruitmentsCount % 1 !== 0) {
+          errors.AllTimeRecruitmentsCount = t("Manage users.Validation Errors.All Time Recruitments Count must be an integer");
+      }
+  
+      return errors;
+  };
+  
     const handleSubmit = async (e) => {
         try {
         e.preventDefault()
@@ -178,7 +154,9 @@ const EditFirebaseUserAdmin = () => {
           
           console.log(user);
           await updateFirebaseUser(user);
-          alert("User updated successfully!");
+          alert(
+            t("Manage users.User updated successfully!")
+          );
           navigate(`/Admin`)
         } catch (error) {
             console.error("Error updating user:", error);
@@ -194,11 +172,13 @@ const EditFirebaseUserAdmin = () => {
             onSubmit={handleSubmit}
         >
          <h2 className='text-2xl font-bold text-white mb-6'>
-            Edit User Data
+            {t("Manage users.Edit User Data")}
          </h2>
          {/*Username */}
         <div className=''>
-          <label className="block text-sm font-medium text-gray-300">Name</label>
+          <label className="block text-sm font-medium text-gray-300">
+              {t("Manage users.User Name")}
+            </label>
           <input
             type="text"
             name="userName"
@@ -213,7 +193,9 @@ const EditFirebaseUserAdmin = () => {
             {/* Password */}
             {formData.signInMethod === 'email/password' && (
             <div className="">
-                <label className="block text-sm font-medium text-gray-300">Password</label>
+                <label className="block text-sm font-medium text-gray-300">
+                    {t("Manage users.Password")}
+                </label>
                 <input
                 type="password"
                 name="password"
@@ -221,7 +203,7 @@ const EditFirebaseUserAdmin = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                 maxLength={25} 
-                placeholder="If you dont want to change password leave it blank"
+                placeholder={t("Manage users.If you dont want to change password leave it blank")}
                 />
                 {errors.password && (
                 <p className="text-red-500 bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
@@ -234,7 +216,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Application Hired */}
         <div className='border-2 border-gray-500 rounded-md p-2'>
-          <label className="block text-sm font-medium text-blue-300">All Time Application Hired</label>
+          <label className="block text-sm font-medium text-blue-300">
+              {t("Manage users.All Time Application Hired")}
+          </label>
           <input
             type="number"
             name="AllTimeApplicationHired"
@@ -247,7 +231,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Application Rejected */}
         <div className='border-2 border-gray-500 rounded-md p-2'>        
-          <label className="block text-sm font-medium text-blue-300">All Time Application Rejected</label>
+          <label className="block text-sm font-medium text-blue-300">
+              {t("Manage users.All Time Application Rejected")}
+          </label>
           <input
             type="number"
             name="AllTimeApplicationRejected"
@@ -260,7 +246,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Applications Count*/}
         <div className='border-2 border-gray-500 rounded-md p-2'>
-            <label className="block text-sm font-medium text-blue-300">All Time Applications Count</label>
+            <label className="block text-sm font-medium text-blue-300">
+                {t("Manage users.All Time Applications Count")}
+            </label>
             <input
               type="number"
               name="AllTimeApplicationsCount"
@@ -273,7 +261,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Hired Applicants*/}
         <div className='border-2 border-gray-500 rounded-md p-2'>
-            <label className="block text-sm font-medium text-blue-300">All Time Hired Applicants</label>
+            <label className="block text-sm font-medium text-blue-300">
+                    {t("Manage users.All Time Hired Applicants")}
+            </label>
             <input
               type="number"
               name="AllTimeHiredApplicants"
@@ -286,7 +276,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Meetings Count*/}
         <div className='border-2 border-gray-500 rounded-md p-2'>
-            <label className="block text-sm font-medium text-blue-300">All Time Meetings Count</label>
+            <label className="block text-sm font-medium text-blue-300">
+                      {t("Manage users.All Time Meetings Count")}
+            </label>
             <input
               type="number"
               name="AllTimeMeetingsCount"
@@ -299,7 +291,9 @@ const EditFirebaseUserAdmin = () => {
 
         {/*Stats - All Time Recruitments Coun*/}
         <div className='border-2 border-gray-500 rounded-md p-2'>
-            <label className="block text-sm font-medium text-blue-300">All Time Recruitments Count</label>
+            <label className="block text-sm font-medium text-blue-300">
+                  {t("Manage users.All Time Recruitments Count")}
+            </label>
             <input
               type="number"
               name="AllTimeRecruitmentsCount"
@@ -318,14 +312,14 @@ const EditFirebaseUserAdmin = () => {
             className="bg-green-500 text-white rounded-lg m-2 p-2 font-medium border border-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
 
         >
-            Save Changes
+            {t("Manage users.Save Changes")}
         </button>
         <button
             disabled={isLoading}
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
           >
-            Come Back
+            {t("Manage users.Come Back")}
           </button>
        </div>
         </form>

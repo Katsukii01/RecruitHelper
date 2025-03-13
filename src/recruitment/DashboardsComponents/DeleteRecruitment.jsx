@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { deleteRecruitment, getRecruitmentById } from '../../services/RecruitmentServices';
 import { DsectionWrapper } from '../../hoc';
 import { HelpGuideLink } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 const DeleteRecruitment = ({ id }) => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [recruitmentName, setRecruitmentName] = useState('');
   const [actualRecruitmentName, setActualRecruitmentName] = useState('');
@@ -15,6 +17,7 @@ const DeleteRecruitment = ({ id }) => {
   const [isCountdownFinished, setIsCountdownFinished] = useState(false);
   const [showCustomAlert, setShowCustomAlert] = useState(false); // nowy stan do obsługi customowego alertu
   const navigate = useNavigate();
+
 
   // Fetch recruitment name by ID
   useEffect(() => {
@@ -54,7 +57,7 @@ const DeleteRecruitment = ({ id }) => {
     } finally {
       setLoading(false);
       setShowModal(false);
-      alert ('Recruitment deleted successfully!');
+      alert (t("Delete Recruitment.Recruitment deleted successfully!"));
     }
   };
 
@@ -73,14 +76,14 @@ const DeleteRecruitment = ({ id }) => {
     <section className="relative w-full mx-auto p-4 bg-black border-2 border-red-700 rounded-md flex flex-col items-center justify-center mb-16">
      <HelpGuideLink section="RecruitmentDelete" />
       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-        Delete Recruitment
+        {t("Delete Recruitment.Delete Recruitment")}
       </h1>
       {!showModal && (
       <button
         className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-700 transition"
         onClick={() => setShowModal(true)}
       >
-        Begin Recruitment Deletion Process
+        {t("Delete Recruitment.Begin Recruitment Deletion Process")}
       </button>
         )}
 
@@ -88,14 +91,15 @@ const DeleteRecruitment = ({ id }) => {
       {showModal && !showCustomAlert && (
         <div className="mt-5 w-full h-full bg-black bg-opacity-70  justify-center z-50 flex flex-col items-center">
           <div className="bg-white p-6 rounded-md shadow-lg w-full">
-            <h2 className="text-xl font-bold text-red-600 mb-4">Confirm Recruitment Name</h2>
+            <h2 className="text-xl font-bold text-red-600 mb-4">
+              {t("Delete Recruitment.Confirm Recruitment Name")}
+            </h2>
             <p className="text-gray-600 mb-4">
-              Please type the recruitment name to confirm deletion:
+              {t("Delete Recruitment.Please type the recruitment name to confirm deletion")}:
             </p>
             <input
               type="text"
               className="w-full p-2 border rounded-md mb-4"
-              placeholder="Enter recruitment name"
               value={recruitmentName}
               onChange={(e) => {
                 setRecruitmentName(e.target.value);
@@ -107,7 +111,7 @@ const DeleteRecruitment = ({ id }) => {
                 className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition"
                 onClick={() => setShowModal(false)}
               >
-                Cancel
+                {t("Delete Recruitment.Cancel")}
               </button>
               <button
                 className={`px-4 py-2 rounded-md transition ${
@@ -118,7 +122,7 @@ const DeleteRecruitment = ({ id }) => {
                 onClick={handleFinalConfirmation}
                 disabled={!isNameCorrect}
               >
-               Proceed
+               {t("Delete Recruitment.Proceed")}
               </button>
             </div>
             {error && <p className="text-red-500 mt-4">{error}</p>}
@@ -130,17 +134,19 @@ const DeleteRecruitment = ({ id }) => {
           {showCustomAlert && (
             <div className="bg-black bg-opacity-70 flex justify-center items-center z-50 p-4">
               <div className="bg-white p-6 rounded-md shadow-lg w-full">
-                <h2 className="text-xl font-bold text-red-600 mb-4">Are you sure?</h2>
+                <h2 className="text-xl font-bold text-red-600 mb-4">
+                  {t("Delete Recruitment.Are you sure?")}
+                </h2>
                 <p className="text-gray-600 mb-4">
-                  This action will delete the recruitment and cannot be undone. Do you want to proceed?
+                  {t("Delete Recruitment.This action will delete the recruitment and cannot be undone. Do you want to proceed?")}
                 </p>
-                <p className="text-gray-600 mb-4">You have {countdown} seconds to confirm.</p>
+                <p className="text-gray-600 mb-4">{t("Delete Recruitment.You have")} {countdown} {t("Delete Recruitment.seconds to confirm.")}</p>
                 <div className="flex justify-end space-x-4">
                   <button
                     className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition"
                     onClick={handleCancelDelete}
                   >
-                    Cancel
+                    {t("Delete Recruitment.Cancel")}
                   </button>
                   <button
                     className={`px-4 py-2 rounded-md transition ${
@@ -151,7 +157,7 @@ const DeleteRecruitment = ({ id }) => {
                     onClick={handleDelete}
                     disabled={!isCountdownFinished}
                   >
-                    {isCountdownFinished ? 'Confirm Delete' : `${countdown} seconds`}
+                    {isCountdownFinished ? t("Delete Recruitment.Confirm Delete") : `${countdown} ${t("Delete Recruitment.seconds")}`}
                   </button>
                 </div>
               </div>

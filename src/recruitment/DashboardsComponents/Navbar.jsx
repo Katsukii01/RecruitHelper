@@ -10,8 +10,10 @@ import {
   BiBriefcase, 
   BiBarChart
 } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [active, setActive] = useState("");
   const [openCategories, setOpenCategories] = useState({});
 
@@ -46,9 +48,9 @@ const Navbar = () => {
     updateActiveFromHash();
     window.addEventListener("hashchange", updateActiveFromHash);
     return () => window.removeEventListener("hashchange", updateActiveFromHash);
-  }, []);
+  }, [t]);
 
-  const toggleCategory = (title, firstLink) => {
+  const toggleCategory = (title) => {
     setOpenCategories((prev) => {
       const isOpening = !prev[title];
 
@@ -59,32 +61,32 @@ const Navbar = () => {
 
   const groupedLinks = [
     {
-      title: "Applicants",
+      title: t("DashboardNavbar.Titles.Applicants"),
       links: ["ApplicantsStages", "ManageApplicants"],
       icon: <BiUser className="text-xl md:text-2xl" />,
     },
     {
-      title: "Tasks",
+      title: t("DashboardNavbar.Titles.Tasks"),
       links: ["Tasks", "TasksPoints"],
       icon: <BiTask className="text-xl md:text-2xl" />,
     },
     {
-      title: "Meetings",
+      title: t("DashboardNavbar.Titles.Meetings"),
       links: ["MeetingSessions", "Meetings", "MeetingsPoints"],
       icon: <BiCalendar className="text-xl md:text-2xl" />,
     },
     {
-      title: "Cover Letters",
+      title: t("DashboardNavbar.Titles.Cover Letters"),
       links: ["CoverLettersAnalysis", "CoverLettersPoints"],
       icon: <BiFile className="text-xl md:text-2xl" />,
     },
     {
-      title: "Ranking & Points",
+      title: t("DashboardNavbar.Titles.Ranking & Points"),
       links: ["AdnationalPoints", "ApplicantsOfferRanking", "FinalRanking"],
       icon: <BiTrophy className="text-xl md:text-2xl" />,
     },
     {
-      title: "Recruitment",
+      title: t("DashboardNavbar.Titles.Recruitment"),
       links: ["FinishRecruitment", "RecruitmentEdit", "DeleteRecruitment"],
       icon: <BiBriefcase className="text-xl md:text-2xl" />,
     },
@@ -102,7 +104,9 @@ const Navbar = () => {
               }`}
             >
               <BiBarChart className="text-2xl md:text-5xl" />
-              <span>Overview</span>
+              <span>
+               {t("DashboardNavbar.Titles.Overview")}
+              </span>
             </a>
           </li>
 
@@ -147,7 +151,7 @@ const Navbar = () => {
                             }`}
                             onClick={() => setActive(link.title)}
                           >
-                            {link.title}
+                            {t(link.titleKey)}
                           </a>
                         </li>
                       )

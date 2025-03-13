@@ -4,8 +4,10 @@ import { ManageUsers, ManageOpinions } from './AdminPanelComponents';
 import { BiUser, BiClipboard, BiMessageSquareDetail } from 'react-icons/bi'; 
 import { AuthContext } from '../store/AuthContext';
 import { ManageRecruitments } from '../recruitment';
+import { useTranslation } from 'react-i18next';
 
 const AdminPanel = () => {
+  const { t } = useTranslation();
   const { isAdmin } = useContext(AuthContext);
   const navigate = useNavigate(); // Lepsza metoda niż window.location.href
 
@@ -14,17 +16,6 @@ const AdminPanel = () => {
       navigate('/'); 
     }
   }, [isAdmin, navigate]); // Zależność dodana
-  // Jeśli użytkownik nie jest adminem, zwróć komunikat o braku dostępu
-  if (isAdmin === false) {
-    return (
-      <section className="flex flex-col items-center justify-center pt-28 min-h-screen">
-        <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">
-          You are not authorized to access this page
-        </p>
-      </section>
-    );
-  }
-
 
   // Główna zawartość panelu administratora
   return (
@@ -34,7 +25,9 @@ const AdminPanel = () => {
         {/* Manage Users */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full h-screen-80 overflow-auto">
           <h2 className="text-2xl font-semibold flex items-center space-x-2">
-            <BiUser className="text-3xl text-gray-600" /> <span>Manage Users</span>
+            <BiUser className="text-3xl text-gray-600" /> <span>
+              {t("Admin Panel.Manage users")}
+            </span>
           </h2>
           <ManageUsers />
         </div>
@@ -42,7 +35,9 @@ const AdminPanel = () => {
         {/* Manage Opinions */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full">
           <h2 className="text-2xl font-semibold flex items-center space-x-2">
-            <BiMessageSquareDetail className="text-3xl text-gray-600" /> <span>Manage Opinions</span>
+            <BiMessageSquareDetail className="text-3xl text-gray-600" /> <span>
+              {t("Admin Panel.Manage opinions")}
+            </span>
           </h2>
           <ManageOpinions />
         </div>
@@ -50,7 +45,9 @@ const AdminPanel = () => {
         {/* Manage Recruitments */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full">
           <h2 className="text-2xl font-semibold flex items-center space-x-2">
-            <BiClipboard className="text-3xl text-gray-600" /> <span>Manage Recruitments</span>
+            <BiClipboard className="text-3xl text-gray-600" /> <span>
+              {t("Admin Panel.Manage recruitments")}
+            </span>
           </h2>
           <ManageRecruitments adminpanel={true} />
         </div>
@@ -58,7 +55,7 @@ const AdminPanel = () => {
         {/* Placeholder for future features */}
         <div className="card bg-white shadow-lg rounded-lg p-6 w-full">
           <h2 className="text-2xl font-semibold flex items-center space-x-2">
-            Coming soon...
+            {t("Admin Panel.Coming soon...")}
           </h2>
         </div>
 

@@ -1,28 +1,30 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const exportApplicantsToExcel = (workbook, applicants) => {
+export const exportApplicantsToExcel = (workbook, applicants, t) => {
   if (!applicants || !Array.isArray(applicants) || applicants.length === 0) {
     console.warn("⚠ No applicants data to export.");
     return;
   }
 
   // 🔹 Tworzymy nowy arkusz
-  const sheet = workbook.addWorksheet("Applicants");
+  const sheet = workbook.addWorksheet( t("ExcelExport.Applicants"));
 
   // 🔹 Definiujemy kolumny
   sheet.columns = [
-    { header: "Name", key: "name", width: 15 },
-    { header: "Surname", key: "surname", width: 15 },
-    { header: "Email", key: "email", width: 25 },
-    { header: "Phone", key: "phone", width: 15 },
-    { header: "Education Level", key: "educationLevel", width: 20 },
-    { header: "Institution Name", key: "institutionName", width: 25 },
-    { header: "Education Field", key: "educationField", width: 20 },
-    { header: "Experience", key: "experience", width: 15 },
-    { header: "Skills", key: "skills", width: 40 },
-    { header: "Courses", key: "courses", width: 40 },
-    { header: "Languages", key: "languages", width: 40 },
-    { header: "Additional Info", key: "additionalInformation", width: 30 },
+    { header: "ID", key: "id", width: 5 },
+    { header: t("ExcelExport.Name"), key: "name", width: 15 },
+    { header: t("ExcelExport.Surname"), key: "surname", width: 15 },
+    { header: t("ExcelExport.Email"), key: "email", width: 25 },
+    { header: t("ExcelExport.Phone"), key: "phone", width: 15 },
+    { header: t("ExcelExport.Education Level"), key: "educationLevel", width: 20 },
+    { header: t("ExcelExport.Institution Name"), key: "institutionName", width: 25 },
+    { header: t("ExcelExport.Education Field"), key: "educationField", width: 20 },
+    { header: t("ExcelExport.Experience"), key: "experience", width: 15 },
+    { header: t("ExcelExport.Skills"), key: "skills", width: 40 },
+    { header: t("ExcelExport.Courses"), key: "courses", width: 40 },
+    { header: t("ExcelExport.Languages"), key: "languages", width: 40 },
+    { header: t("ExcelExport.Additional Information"), key: "additionalInformation", width: 30 },
   ];
+  
 
   // 🔹 Stylizacja nagłówków (ciemnogranatowy dla lepszego kontrastu)
   const headerRow = sheet.getRow(1);
@@ -38,6 +40,7 @@ export const exportApplicantsToExcel = (workbook, applicants) => {
 // 🔹 Dodanie danych aplikantów
 applicants.forEach((app, index) => {
   const rowData = {
+    id: app.id || "N/A",
     name: app.name || "N/A",
     surname: app.surname || "N/A",
     email: app.email || "N/A",
@@ -84,18 +87,19 @@ applicants.forEach((app, index) => {
   
   // 🔹 Definicja wyników
   const scoreFields = [
-    { field: "totalScore", label: "Total Score (%)" },
-    { field: "CVscore", label: "CV Score (%)" },
-    { field: "CLscore", label: "Cover Letter Score (%)" },
-    { field: "Meetingsscore", label: "Meetings Score (%)" },
-    { field: "Tasksscore", label: "Tasks Score (%)" },
-    { field: "adnationalPoints", label: "Adnational Points (%)" }
+    { field: "totalScore", label: t("ExcelExport.Total Score (%)") },
+    { field: "CVscore", label: t("ExcelExport.CV Score (%)") },
+    { field: "CLscore", label: t("ExcelExport.Cover Letter Score (%)") },
+    { field: "Meetingsscore", label: t("ExcelExport.Meetings Score (%)") },
+    { field: "Tasksscore", label: t("ExcelExport.Tasks Score (%)") },
+    { field: "adnationalPoints", label: t("ExcelExport.Adnational Points (%)") }
   ];
+  
 
   // 🔹 Dodanie tabeli wyników
   scoreFields.forEach((scoreField) => {
     // Dodajemy nagłówki dla wyników
-    const row = sheet.addRow(["Applicant", scoreField.label]);
+    const row = sheet.addRow([ t("ExcelExport.Applicant"), scoreField.label]);
 
     // Stylizacja nagłówków
     row.eachCell(cell => {
@@ -143,7 +147,7 @@ applicants.forEach((app, index) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const exportOfferDataToExcel = (workbook, offerData) => {
+export const exportOfferDataToExcel = (workbook, offerData, t) => {
   if (!offerData || typeof offerData !== "object") {
     console.warn("⚠ offerData is not an object or is undefined:", offerData);
     return;
@@ -152,24 +156,31 @@ export const exportOfferDataToExcel = (workbook, offerData) => {
   const formattedOfferData = Array.isArray(offerData) ? offerData[0] : offerData;
 
   const offerSheetData = Object.entries({
-    "Job Title": formattedOfferData.jobTitle || "N/A",
-    "Experience Needed": formattedOfferData.experienceNeeded || "N/A",
-    "Education Level": formattedOfferData.educationLevel || "N/A",
-    "Education Field": formattedOfferData.educationField || "N/A",
-    "Courses": Array.isArray(formattedOfferData.courses) ? formattedOfferData.courses.join(", ") : "N/A",
-    "Skills": Array.isArray(formattedOfferData.skills) ? formattedOfferData.skills.join(", ") : "N/A",
-    "Languages": Array.isArray(formattedOfferData.languages)
+    [t("ExcelExport.Job Title")]: formattedOfferData.jobTitle || "N/A",
+    [t("ExcelExport.Experience")]: formattedOfferData.experienceNeeded || "N/A",
+    [t("ExcelExport.Education Level")]: formattedOfferData.educationLevel || "N/A",
+    [t("ExcelExport.Education Field")]: formattedOfferData.educationField || "N/A",
+    [t("ExcelExport.Courses")]: Array.isArray(formattedOfferData.courses) 
+      ? formattedOfferData.courses.join(", ") 
+      : "N/A",
+    [t("ExcelExport.Skills")]: Array.isArray(formattedOfferData.skills) 
+      ? formattedOfferData.skills.join(", ") 
+      : "N/A",
+    [t("ExcelExport.Languages")]: Array.isArray(formattedOfferData.languages)
       ? formattedOfferData.languages.map(lang => `${lang.language} (${lang.level})`).join(", ")
       : "N/A",
+    [t("ExcelExport.Location")]: formattedOfferData.location || "N/A",
   });
+  
 
-  const sheet = workbook.addWorksheet("Offer Data");
+  const sheet = workbook.addWorksheet( t("ExcelExport.Offer Data"));
 
   // 🔹 Definiujemy kolumny
   sheet.columns = [
-    { header: "Category", key: "category", width: 35 },
-    { header: "Details", key: "details", width: 70 },
+    { header: t("ExcelExport.Category"), key: "category", width: 35 },
+    { header: t("ExcelExport.Details"), key: "details", width: 70 },
   ];
+  
 
   // 🔹 Stylizacja nagłówków (ciemnogranatowy dla lepszego kontrastu)
   const headerRow = sheet.getRow(1);
@@ -217,7 +228,7 @@ export const exportOfferDataToExcel = (workbook, offerData) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const exportRecruitmentStats = (workbook, recruitmentStats) => {
+export const exportRecruitmentStats = (workbook, recruitmentStats, t) => {
   if (!recruitmentStats || typeof recruitmentStats !== "object") {
     console.warn("⚠ recruitmentStats is not an object or is undefined:", recruitmentStats);
     return;
@@ -226,17 +237,17 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
   const formattedRecruitmentStats = Array.isArray(recruitmentStats) ? recruitmentStats[0] : recruitmentStats;
 
   const recruitmentStatsSheetData = [
-    ["Total Applicants", formattedRecruitmentStats.totalApplicants || 0],
-    ["Total Meetings Sessions", formattedRecruitmentStats.totalMeetings || 0],
-    ["Total Tasks Sessions", formattedRecruitmentStats.totalTasks || 0],
-    ["Highest Total Score", formattedRecruitmentStats.highestTotalScore || 0],
-    ["Average Total Score", formattedRecruitmentStats.averageTotalScore || 0],
-    ["Current Stage", formattedRecruitmentStats.CurrentStage || "N/A"],
-    ["Total Cover Letters Percentage", formattedRecruitmentStats.TotalCoverLettersPercentage || "0%"],
+    [t("ExcelExport.Total Applicants"), formattedRecruitmentStats.totalApplicants || 0],
+    [t("ExcelExport.Total Meetings"), formattedRecruitmentStats.totalMeetings || 0],
+    [t("ExcelExport.Total Tasks"), formattedRecruitmentStats.totalTasks || 0],
+    [t("ExcelExport.Highest Total Score"), formattedRecruitmentStats.highestTotalScore || 0],
+    [t("ExcelExport.Average Total Score"), formattedRecruitmentStats.averageTotalScore || 0],
+    [t("ExcelExport.Current Stage"), formattedRecruitmentStats.CurrentStage || "N/A"],
+    [t("ExcelExport.Total Cover Letters Percentage"), formattedRecruitmentStats.TotalCoverLettersPercentage || "0%"],
     ["", ""], // Pusta linia dla czytelności
-    ["Applicants in Each Stage", ""], // 🔹 Ten wiersz dostaje styl nagłówka
+    [t("ExcelExport.Applicants in Each Stage"), ""], // 🔹 Ten wiersz dostaje styl nagłówka
   ];
-
+  
   const stages = [
     "Checked",
     "To be checked",
@@ -250,16 +261,15 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
 
   stages.forEach(stage => {
     const count = formattedRecruitmentStats.ApplicantsInEachStage?.[stage] || 0;
-    recruitmentStatsSheetData.push([`Applicants in ${stage}`, count]);
+    recruitmentStatsSheetData.push([t(`ExcelExport.Applicants in ${stage}`), count]);
   });
 
-  const sheet = workbook.addWorksheet("Recruitment Stats");
+  const sheet = workbook.addWorksheet( t("ExcelExport.Recruitment Statistics"));
 
   sheet.columns = [
-    { header: "Category", key: "category", width: 35 },
-    { header: "Details", key: "details", width: 25 },
+    { header: t("ExcelExport.Category"), key: "category", width: 35 },
+    { header: t("ExcelExport.Details"), key: "details", width: 25 },
   ];
-
   // 🔹 Stylizacja nagłówka (ciemnogranatowy)
   const headerRow = sheet.getRow(1);
   headerRow.eachCell(cell => {
@@ -274,7 +284,7 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
     const row = sheet.addRow({ category, details });
 
     row.eachCell(cell => {
-      if (category === "Applicants in Each Stage") {
+      if (category === "Applicants in Each Stage" || category === "Kandydaci na każdym etapie") {
         // 🔹 Stylizacja nagłówka dla "Applicants in Each Stage"
         cell.font = { bold: true, color: { argb: "FFFFFF" } };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } };
@@ -307,17 +317,21 @@ export const exportRecruitmentStats = (workbook, recruitmentStats) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export const exportMeetings = (workbook, meetings) => {
+export const exportMeetings = (workbook, meetings, t) => {
   if (!meetings || !Array.isArray(meetings) || meetings.length === 0) {
     console.warn("⚠ Meetings data is missing or not an array:", meetings);
     return;
   }
 
-  const worksheet = workbook.addWorksheet("Meetings");
+  const worksheet = workbook.addWorksheet(t("ExcelExport.Meetings"));
 
   meetings.forEach(meeting => {
     // 🔹 Nagłówek dla sesji spotkań (grubsza linia)
-    const sessionHeader = worksheet.addRow(["Meeting Session Name", "Description", "Points Weight"]);
+    const sessionHeader = worksheet.addRow([
+      t("ExcelExport.Meeting Session Name"),
+      t("ExcelExport.Description"),
+      t("ExcelExport.Points weight")
+    ]);
     sessionHeader.eachCell(cell => {
       cell.font = { bold: true, color: { argb: "FFFFFF" } };
       cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } }; // Ciemny niebiesko-szary
@@ -342,10 +356,17 @@ export const exportMeetings = (workbook, meetings) => {
     worksheet.addRow([]); // Pusta linia dla czytelności
 
     if (meeting.meetings && meeting.meetings.length > 0) {
+
       // 🔹 Nagłówek dla pojedynczych spotkań (grubsza linia)
       const meetingsHeader = worksheet.addRow([
-        "Meeting ID", "Applicant ID", "Date", "Time From", "Time To", "Points"
+        t("ExcelExport.Meeting ID"),
+        t("ExcelExport.Applicant ID"),
+        t("ExcelExport.Date"),
+        t("ExcelExport.Time From"),
+        t("ExcelExport.Time To"),
+        t("ExcelExport.Points")
       ]);
+
       meetingsHeader.eachCell(cell => {
         cell.font = { bold: true, color: { argb: "FFFFFF" } };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } }; // Ciemnoniebieskie tło
@@ -397,17 +418,23 @@ export const exportMeetings = (workbook, meetings) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const exportTasks = (workbook, tasks) => {
+export const exportTasks = (workbook, tasks, t) => {
   if (!tasks || !Array.isArray(tasks) || tasks.length === 0) {
     console.warn("⚠ Tasks data is missing or not an array:", tasks);
     return;
   }
 
-  const worksheet = workbook.addWorksheet("Tasks");
+  const worksheet = workbook.addWorksheet(t("ExcelExport.Tasks"));
 
   tasks.forEach(task => {
     // 🔹 Nagłówek dla sesji zadań (gruba linia)
-    const sessionHeader = worksheet.addRow(["Task Session Name", "Description", "Points Weight"]);
+    const sessionHeader = worksheet.addRow([
+      t("ExcelExport.Task Session Name"),
+      t("ExcelExport.Description"),
+      t("ExcelExport.Points weight")
+    ]);
+    
+
     sessionHeader.eachCell(cell => {
       cell.font = { bold: true, color: { argb: "FFFFFF" } };
       cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "333F50" } }; // Ciemnoniebiesko-szary
@@ -433,7 +460,13 @@ export const exportTasks = (workbook, tasks) => {
 
     if (task.tasks && task.tasks.length > 0) {
       // 🔹 Nagłówek dla listy zadań (gruba linia)
-      const tasksHeader = worksheet.addRow(["Task ID", "Applicant ID", "Points"]);
+      const tasksHeader = worksheet.addRow([
+        t("ExcelExport.Task ID"),
+        t("ExcelExport.Applicant ID"),
+        t("ExcelExport.Points")
+      ]);
+      
+
       tasksHeader.eachCell(cell => {
         cell.font = { bold: true, color: { argb: "FFFFFF" } };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "1F4E78" } }; // Ciemnoniebieskie tło

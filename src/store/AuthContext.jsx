@@ -49,7 +49,7 @@ const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
 // Google Sign-In function
-const googleSignIn = async () => {
+const googleSignIn = async (t) => {
   const provider = new GoogleAuthProvider();
   try {
     const result = await signInWithPopup(firebaseAuth, provider);
@@ -63,16 +63,18 @@ const googleSignIn = async () => {
 
     console.log('User saved to Firestore');
   } catch (error) {
-    let userFriendlyMessage = 'An error occurred during Google sign-in.';
-    if (error.code === 'auth/cancelled-popup-request') {
-      userFriendlyMessage = 'The sign-in popup was closed before completing the sign-in process.';
-    } else if (error.code === 'auth/popup-blocked') {
-      userFriendlyMessage = 'The sign-in popup was blocked by your browser.';
-    } else if (error.code === 'auth/popup-closed-by-user') {
-      userFriendlyMessage = 'The sign-in popup was closed before signing in.';
-    } else if (error.code === 'auth/network-request-failed') {
-      userFriendlyMessage = 'A network error occurred. Please check your internet connection and try again.';
+    let userFriendlyMessage = t("AuthContext.An error occurred during Google sign-in.");
+
+    if (error.code === "auth/cancelled-popup-request") {
+      userFriendlyMessage = t("AuthContext.The sign-in popup was closed before completing the sign-in process.");
+    } else if (error.code === "auth/popup-blocked") {
+      userFriendlyMessage = t("AuthContext.The sign-in popup was blocked by your browser.");
+    } else if (error.code === "auth/popup-closed-by-user") {
+      userFriendlyMessage = t("AuthContext.The sign-in popup was closed before signing in.");
+    } else if (error.code === "auth/network-request-failed") {
+      userFriendlyMessage = t("AuthContext.A network error occurred. Please check your internet connection and try again.");
     }
+    
 
     console.error('Error during Google sign-in:', error.message);
     throw new Error(userFriendlyMessage); // Propagate a user-friendly error
@@ -80,7 +82,7 @@ const googleSignIn = async () => {
 };
 
 // Email/Password Sign-In function
-const signIn = async (email, password) => {
+const signIn = async (email, password, t) => {
   try {
     const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
     setCurrentUser(userCredential.user);
@@ -88,17 +90,18 @@ const signIn = async (email, password) => {
     setIsAdmin(checkAdmin(userCredential.user.uid));
     console.log('User saved to Firestore');
   } catch (error) {
-    let userFriendlyMessage = 'An error occurred during sign-in.';
+    let userFriendlyMessage = t("AuthContext.An error occurred during sign-in.");
+
     if (
-      error.code === 'auth/user-not-found' || 
-      error.code === 'auth/wrong-password' || 
-      error.code === 'auth/invalid-credential'
+      error.code === "auth/user-not-found" || 
+      error.code === "auth/wrong-password" || 
+      error.code === "auth/invalid-credential"
     ) {
-      userFriendlyMessage = 'The email or password you entered is incorrect.';
-    } else if (error.code === 'auth/invalid-email') {
-      userFriendlyMessage = 'The email address format is invalid. Please check and try again.';
-    } else if (error.code === 'auth/network-request-failed') {
-      userFriendlyMessage = 'A network error occurred. Please check your internet connection and try again.';
+      userFriendlyMessage = t("AuthContext.The email or password you entered is incorrect.");
+    } else if (error.code === "auth/invalid-email") {
+      userFriendlyMessage = t("AuthContext.The email address format is invalid. Please check and try again.");
+    } else if (error.code === "auth/network-request-failed") {
+      userFriendlyMessage = t("AuthContext.A network error occurred. Please check your internet connection and try again.");
     }
 
     console.error('Error during sign-in:', error.message);
@@ -107,7 +110,7 @@ const signIn = async (email, password) => {
 };
 
 // Email/Password SignUp function
-const signUp = async (email, password, username) => {
+const signUp = async (email, password, username, t)=> {
   try {
     console.log('Attempting to create user with email:', email);
 
@@ -134,31 +137,32 @@ const signUp = async (email, password, username) => {
     setCurrentUser(user); // Set the user in the app context state
     setIsAdmin(checkAdmin(user.uid));
   } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
-      console.error('The email address is already in use by another account.');
-      throw new Error('The email address is already in use by another account.');
-    } else if (error.code === 'auth/weak-password') {
-      console.error('The password is too weak.');
-      throw new Error('The password is too weak.');
-    } else if (error.code === 'auth/invalid-email') {
-      console.error('The email address is not valid.');
-      throw new Error('The email address is not valid.');
-    } else if (error.message.includes('Password must contain at least 8 characters')) {
-      console.error('The password must be at least 8 characters long.');
-      throw new Error('The password must be at least 8 characters long.');
-    } else if (error.message.includes('Password must contain a lower case character')) {
-      console.error('The password must contain at least one lowercase letter.');
-      throw new Error('The password must contain at least one lowercase letter.');
-    } else if (error.message.includes('Password must contain an upper case character')) {
-      console.error('The password must contain at least one uppercase letter.');
-      throw new Error('The password must contain at least one uppercase letter.');
-    } else if (error.message.includes('Password must contain a non-alphanumeric character')) {
-      console.error('The password must contain at least one non-alphanumeric character.');
-      throw new Error('The password must contain at least one non-alphanumeric character.');
+    if (error.code === "auth/email-already-in-use") {
+      console.error(t("AuthContext.The email address is already in use by another account."));
+      throw new Error(t("AuthContext.The email address is already in use by another account."));
+    } else if (error.code === "auth/weak-password") {
+      console.error(t("AuthContext.The password is too weak."));
+      throw new Error(t("AuthContext.The password is too weak."));
+    } else if (error.code === "auth/invalid-email") {
+      console.error(t("AuthContext.The email address is not valid."));
+      throw new Error(t("AuthContext.The email address is not valid."));
+    } else if (error.message.includes("Password must contain at least 8 characters")) {
+      console.error(t("AuthContext.The password must be at least 8 characters long."));
+      throw new Error(t("AuthContext.The password must be at least 8 characters long."));
+    } else if (error.message.includes("Password must contain a lower case character")) {
+      console.error(t("AuthContext.The password must contain at least one lowercase letter."));
+      throw new Error(t("AuthContext.The password must contain at least one lowercase letter."));
+    } else if (error.message.includes("Password must contain an upper case character")) {
+      console.error(t("AuthContext.The password must contain at least one uppercase letter."));
+      throw new Error(t("AuthContext.The password must contain at least one uppercase letter."));
+    } else if (error.message.includes("Password must contain a non-alphanumeric character")) {
+      console.error(t("AuthContext.The password must contain at least one non-alphanumeric character."));
+      throw new Error(t("AuthContext.The password must contain at least one non-alphanumeric character."));
     } else {
-      console.error('Error during sign up:', error.message);
+      console.error(t("AuthContext.Error during sign up:"), error.message);
       throw error; // Propagate the error
     }
+    
   }
 };
 
@@ -178,14 +182,15 @@ const signUp = async (email, password, username) => {
   };
 
   
-  const forgotPassword = async (email) => {
+  const forgotPassword = async (email, t) => {
     setIsLoading(true);
   
     // Check if the email format is valid
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(email)) {
       setIsLoading(false);
-      throw new Error('Invalid email format. Please enter a valid email address.');
+      throw new Error(t("AuthContext.Invalid email format. Please enter a valid email address."));
+
     }
   
     try {
@@ -199,7 +204,8 @@ const signUp = async (email, password, username) => {
               // Check if the email is found in the Firestore data
               if (!emailData) {
                 console.error('No account associated with this email address.');
-                throw new Error('No account associated with this email address.');
+                throw new Error(t("AuthContext.No account associated with this email address."));
+
               }
 
               // Get the signInMethod associated with the email
@@ -208,7 +214,8 @@ const signUp = async (email, password, username) => {
 
           if (signInMethod  === 'google') {
             console.log('This account was created using Google. Please reset your password through Google.');
-            throw new Error('This account was created using Google. Please reset your password through Google.')
+            throw new Error(t("AuthContext.This account was created using Google. Please reset your password through Google."));
+
           } else  if (signInMethod  === 'email/password') {
             // If the email is associated with email/password sign-in, send reset email
             await sendPasswordResetEmail(firebaseAuth, email);
@@ -227,7 +234,7 @@ const signUp = async (email, password, username) => {
   };
   
   
-  const deleteAccount = async (password) => {
+  const deleteAccount = async (password, t) => {
     try {
       if (currentUser) {
         // Check if the user logged in with Google
@@ -326,16 +333,17 @@ const signUp = async (email, password, username) => {
     }  catch (error) {
       console.error("Error during account deletion:", error);
       if (
-        error.code === 'auth/user-not-found' || 
-        error.code === 'auth/missing-password' || 
-        error.code === 'auth/invalid-credential'
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/missing-password" ||
+        error.code === "auth/invalid-credential"
       ) {
         // Provide a specific error message
-        throw new Error("Incorrect credentials. Please try again.");
+        throw new Error(t("AuthContext.Incorrect credentials. Please try again."));
       } else {
         // Provide a general error message
-        throw new Error("There was an error during account deletion. Please try again.");
+        throw new Error(t("AuthContext.There was an error during account deletion. Please try again."));
       }
+      
     } finally {
       setIsLoading(false);
     }
@@ -372,7 +380,7 @@ const updateDisplayName = async (newName) => {
   };
 
 // Update Password function
-const updatePassword = async (oldPassword, newPassword) => {
+const updatePassword = async (oldPassword, newPassword, t) => {
   try {
     if (currentUser) {
       // Create credential for reauthentication
@@ -388,30 +396,30 @@ const updatePassword = async (oldPassword, newPassword) => {
       throw new Error('No user is logged in.');
     }
   } catch (error) {
-    if (error.code === 'auth/user-not-found') {
-      console.error('No user is logged in.');
-      throw new Error('No user is logged in.');
-    } else if (error.code === 'auth/wrong-password') {
-      console.error('The old password is incorrect.');
-      throw new Error('The old password is incorrect.');
-    } else if (error.code === 'auth/weak-password') {
-      console.error('The new password is too weak.');
-      throw new Error('The new password is too weak.');
-    } else if (error.message.includes('Password must contain at least 8 characters')) {
-      console.error('The new password must be at least 8 characters long.');
-      throw new Error('The new password must be at least 8 characters long.');
-    } else if (error.message.includes('Password must contain a lower case character')) {
-      console.error('The new password must contain at least one lowercase letter.');
-      throw new Error('The new password must contain at least one lowercase letter.');
-    } else if (error.message.includes('Password must contain an upper case character')) {
-      console.error('The new password must contain at least one uppercase letter.');
-      throw new Error('The new password must contain at least one uppercase letter.');
-    } else if (error.message.includes('Password must contain a non-alphanumeric character')) {
-      console.error('The new password must contain at least one non-alphanumeric character.');
-      throw new Error('The new password must contain at least one non-alphanumeric character.');
-    } else if( error.code === 'auth/invalid-credential'){
-      console.error('The password is incorrect.');
-      throw new Error('The password is incorrect.');
+    if (error.code === "auth/user-not-found") {
+      console.error(t("AuthContext.No user is logged in."));
+      throw new Error(t("AuthContext.No user is logged in."));
+    } else if (error.code === "auth/wrong-password") {
+      console.error(t("AuthContext.The old password is incorrect."));
+      throw new Error(t("AuthContext.The old password is incorrect."));
+    } else if (error.code === "auth/weak-password") {
+      console.error(t("AuthContext.The new password is too weak."));
+      throw new Error(t("AuthContext.The new password is too weak."));
+    } else if (error.message.includes("Password must contain at least 8 characters")) {
+      console.error(t("AuthContext.The new password must be at least 8 characters long."));
+      throw new Error(t("AuthContext.The new password must be at least 8 characters long."));
+    } else if (error.message.includes("Password must contain a lower case character")) {
+      console.error(t("AuthContext.The new password must contain at least one lowercase letter."));
+      throw new Error(t("AuthContext.The new password must contain at least one lowercase letter."));
+    } else if (error.message.includes("Password must contain an upper case character")) {
+      console.error(t("AuthContext.The new password must contain at least one uppercase letter."));
+      throw new Error(t("AuthContext.The new password must contain at least one uppercase letter."));
+    } else if (error.message.includes("Password must contain a non-alphanumeric character")) {
+      console.error(t("AuthContext.The new password must contain at least one non-alphanumeric character."));
+      throw new Error(t("AuthContext.The new password must contain at least one non-alphanumeric character."));
+    } else if (error.code === "auth/invalid-credential") {
+      console.error(t("AuthContext.The password is incorrect."));
+      throw new Error(t("AuthContext.The password is incorrect."));
     }
     else {
       console.error('Password update error:', error.message);

@@ -6,8 +6,10 @@ import { useEffect } from 'react';
 import { getApplicantsByStage, getMeetingSessionsByRecruitmentId, addMeetings } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
+import { useTranslation } from 'react-i18next';
 
 const AddMeetings = () => {
+   const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { id , MeetingToEdit, currentPageMeetings} = location.state || {};
@@ -124,10 +126,10 @@ const AddMeetings = () => {
         const newErrors = { [id]: {} };
 
         if(!meetingData.meetings[id].applicantId){
-            newErrors[id].applicantId = 'Applicant is required';
+            newErrors[id].applicantId =  t("Add Meetings.Applicant is required");
          }
          if(!meetingData.meetings[id].meetingSessionId){
-            newErrors[id].meetingSessionId = 'Meeting Session is required';
+            newErrors[id].meetingSessionId = t("Add Meetings.Meeting session is required");
          }
          
         const currentDate = new Date();
@@ -144,40 +146,36 @@ const AddMeetings = () => {
         
         // Check if meeting date is empty
         if (!meetingData.meetings[id].meetingDate) {
-            newErrors[id].meetingDate = 'Meeting date is required';
+            newErrors[id].meetingDate = t("Add Meetings.Date is required");
         } 
         // Check if meeting date is in the past
         else if (meetingDateWithoutTime < currentDateWithoutTime) {
-            newErrors[id].meetingDate = 'Meeting date must be in the future';
+            newErrors[id].meetingDate =  t("Add Meetings.Meeting date must be in the future");
         } 
         // If meeting date is today, ensure the time is at least one hour ahead
         else if (meetingDateWithoutTime.getTime() === currentDateWithoutTime.getTime()) {
         
             if (meetingTimeFrom <= currentDatePlusOneHour) {
-                newErrors[id].meetingTimeFrom = 'Meeting time must be at least one hour from now';
+                newErrors[id].meetingTimeFrom = t("Add Meetings.Meeting time must be at least one hour from now");
             } 
         } 
         
         if (!meetingData.meetings[id].meetingTimeFrom) {
-            newErrors[id].meetingTimeFrom = 'Meeting time is required';
+            newErrors[id].meetingTimeFrom = t("Add Meetings.Meeting time from is required");
         }
 
         if (!meetingData.meetings[id].meetingTimeTo) {
-            newErrors[id].meetingTimeTo = 'Meeting time is required';
+            newErrors[id].meetingTimeTo =  t("Add Meetings.Meeting time to is required");
         }
 
         if (meetingData.meetings[id].meetingTimeFrom >= meetingData.meetings[id].meetingTimeTo) {
-            newErrors[id].meetingTimeFrom = 'Meeting time from must be earlier than meeting time to';
-            newErrors[id].meetingTimeTo = 'Meeting time to must be later than meeting time from';
+            newErrors[id].meetingTimeFrom =  t("Add Meetings.Meeting time from must be earlier than meeting time to");
+            newErrors[id].meetingTimeTo =  t("Add Meetings.Meeting time to must be later than meeting time from");
         }
     
         if (!meetingData.meetings[id].meetingLink) {
-            newErrors[id].meetingLink = 'Meeting link is required';
-        } else if (
-            !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/.test(meetingData.meetings[id].meetingLink)
-        ) {
-            newErrors[id].meetingLink = 'Meeting link must be a valid URL';
-        }
+               newErrors[id].meetingLink =  t("Add Meetings.Meeting link or address is required");
+        } 
 
 
         // Pobierz dane bieżącego spotkania (id odnosi się do indexu w meetingData.meetings)
@@ -197,7 +195,7 @@ const AddMeetings = () => {
         );
 
         if (isDuplicate) {
-          newErrors[id].meetingSessionId = "This applicant is already in the same meeting session";
+          newErrors[id].meetingSessionId = t("Add Meetings.This applicant is already assigned to that meeting");
         }
 
         // Sprawdź, czy ten aplikant ma już inne spotkanie w tym samym czasie w tej samej dacie
@@ -212,8 +210,8 @@ const AddMeetings = () => {
         );
 
         if (isTimeConflict) {
-          newErrors[id].meetingTimeFrom = "There's already a meeting at this time";
-          newErrors[id].meetingTimeTo = "This applicant already has a meeting at this time";
+          newErrors[id].meetingTimeFrom = t("Add Meetings.You already have a meeting at this time");
+          newErrors[id].meetingTimeTo = t("Add Meetings.This applicant already has a meeting at this time");
         }
 
 
@@ -232,7 +230,7 @@ const AddMeetings = () => {
           });
 
           if (isSessionConflict) {
-            newErrors[id].meetingSessionId = "This applicant is already assigned to this session in another meeting";
+            newErrors[id].meetingSessionId =  t("Add Meetings.This applicant is already assigned to that meeting");
           }
 
           // Sprawdź, czy ten aplikant ma inne spotkanie w tym samym czasie w innych sesjach
@@ -253,8 +251,8 @@ const AddMeetings = () => {
           });
 
           if (isSessionTimeConflict) {
-            newErrors[id].meetingTimeFrom = "There's already a meeting at this time in another session";
-            newErrors[id].meetingTimeTo = "There's already a meeting at this time in another session";
+            newErrors[id].meetingTimeFrom = t("Add Meetings.There's already a meeting at this time in another session");
+            newErrors[id].meetingTimeTo = t("Add Meetings.There's already a meeting at this time in another session");
           }
         }
         else {
@@ -291,16 +289,16 @@ const AddMeetings = () => {
             await  addMeetings(id, meetingData);
            
             if(MeetingToEdit){
-              alert("Meeting edited successfully!");
+              alert(t("Add Meetings.Meeting edited successfully!"));
               navigate(`/RecruitmentDashboard#MeetingsPoints`, { state: { id: id, currentPageMeetings: currentPageMeetings } });
             }else{
-              alert("Meeting added successfully!");
+              alert( t("Add Meetings.Meeting assigned successfully!"));
               navigate(`/RecruitmentDashboard#Meetings`, { state: { id: id } });
             }
     
         } catch (error) {
             console.error("Error adding meeting:", error);
-            alert("Error adding meeting. Please try again later.");
+            alert(t("Add Meetings.Error adding/updating meeting. Please try again later."));
             setDisabledButtons(false); // Włączamy przyciski ponownie po wystąpieniu błędu
         }
     };
@@ -317,21 +315,27 @@ const AddMeetings = () => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-    <h1 className="text-2xl font-bold mb-4">Plan Meetings</h1>
+    <h1 className="text-2xl font-bold mb-4">
+        {t("Add Meetings.Title")}
+      </h1>
     <form className="p-4 w-full flex flex-col space-y-1 h-screen-70 items-center overflow-y-scroll">
   {meetingData.meetings.map((meeting, index) => (
     <div key={index} className="flex flex-row space-x-4 w-full items-start border-b-2 border-gray-300 pb-8 ">
 
       {/* Meeting Session */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Session</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Meetings.Meeting session")}
+          </label>
         <select
           name="meetingSessionId"
           value={meeting.meetingSessionId || ""}
           onChange={(e) => handleInputChange(e, index)}
           className="mt-1 block w-fit px-3 py-2 border border-gray-300 rounded-md shadow-sm "
         >
-          <option value="">Select Meeting Session</option>
+          <option value="">
+            {t("Add Meetings.Select Meeting session")}
+            </option>
           {meetingSessionsData?.length > 0 ? (
             meetingSessionsData.map((session) => (
               <option key={session._id} value={session.id}>
@@ -339,7 +343,9 @@ const AddMeetings = () => {
               </option>
             ))
           ) : (
-            <option value="" disabled>No meeting sessions available</option>
+            <option value="" disabled>
+              {t("Add Meetings.No meeting sessions available")}
+            </option>
           )}
         </select>
         {errors?.[index]?.meetingSessionId && (
@@ -351,14 +357,18 @@ const AddMeetings = () => {
 
       {/* Applicant */}
       <div className="flex flex-col space-y-2 ">
-        <label className="block text-sm font-medium text-gray-300">Applicant</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Meetings.Applicant")}
+          </label>
         <select
           name="applicantId"
           value={meeting.applicantId || ""}
           onChange={(e) => handleInputChange(e, index)}
           className="mt-1 block w-fit px-3 py-2 border border-gray-300 rounded-md shadow-sm"
         >
-          <option value="">Select Applicant</option>
+          <option value="">
+            {t("Add Meetings.Select Applicant")}
+          </option>
           {applicantsData?.length > 0 ? (
             applicantsData.map((applicant) => (
               <option key={applicant._id} value={applicant.id}>
@@ -366,7 +376,9 @@ const AddMeetings = () => {
               </option>
             ))
           ) : (
-            <option value="" disabled>No applicants available</option>
+            <option value="" disabled>
+              {t("Add Meetings.No applicants available")}
+            </option>
           )}
         </select>
         {errors?.[index]?.applicantId && (
@@ -378,7 +390,9 @@ const AddMeetings = () => {
 
       {/* Meeting Date */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Date</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Meetings.Date")}
+        </label>
         <input
           type="date"
           name="meetingDate"
@@ -396,7 +410,9 @@ const AddMeetings = () => {
 
       {/* Meeting Time From */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Time From</label>
+        <label className="block text-sm font-medium text-gray-300">
+           {t("Add Meetings.Time from")}
+          </label>
         <input
           type="time"
           name="meetingTimeFrom"
@@ -413,7 +429,9 @@ const AddMeetings = () => {
 
       {/* Meeting Time To */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Time To</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Meetings.Time to")}
+          </label>
         <input
           type="time"
           name="meetingTimeTo"
@@ -430,7 +448,9 @@ const AddMeetings = () => {
 
       {/* Meeting Link */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Link</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Meetings.Link to meeting")}
+          </label>
         <input
           type="text"
           name="meetingLink"
@@ -448,13 +468,13 @@ const AddMeetings = () => {
       {/* Remove Meeting */} 
       {index !== 0 && (
         <div className="flex flex-col space-y-2">
-            <label className="block text-sm font-medium text-gray-300">Remove Meeting</label>
+            <label className="block text-sm font-medium text-gray-300">⠀ </label>
             <button
             type="button"
             onClick={() => removeMeeting(index)} // Przekazujemy tylko indeks
             className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border border-white"
             >
-            Remove
+            {t("Add Meetings.Remove")}
             </button>
         </div>
         )}
@@ -462,7 +482,7 @@ const AddMeetings = () => {
   ))}
       {!MeetingToEdit && (
         <button type="button" disabled={disabledButtons} onClick={() => addMeeting(meetingData, setMeetingData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
-          Add More Meetings
+          {t("Add Meetings.Assign more meetings")}
       </button>
       )}
 </form>
@@ -474,17 +494,19 @@ const AddMeetings = () => {
                 disabled={disabledButtons}
             >
               {!MeetingToEdit && (
-                <>Add Meetings</>
+                <>{t("Add Meetings.Assign Meetings")}</>
                 )}
               {MeetingToEdit && (
-                <>Save changes</>
+                <>
+                {t("Add Meetings.Save Changes")}
+                </>
                 )}
             </button>
             <button
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
             >
-            Come Back
+             {t("Add Meetings.Come Back")}
             </button>
         </div>
 

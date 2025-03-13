@@ -6,8 +6,10 @@ import { useEffect } from 'react';
 import { getApplicantsByStage, getTasksSessionsByRecruitmentId, addTasks } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
+import { useTranslation } from 'react-i18next';
 
 const AddTasks = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { id , TaskToEdit, currentPageTasks} = location.state || {};
@@ -116,11 +118,11 @@ const AddTasks = () => {
         const newErrors = { [id]: {} };
 
         if(!taskData.tasks[id].applicantId){
-            newErrors[id].applicantId = 'Applicant is required';
+            newErrors[id].applicantId = t("Add Tasks.Applicant is required");
          }
 
          if(!taskData.tasks[id].taskSessionId){
-            newErrors[id].taskSessionId = 'Task Session is required';
+            newErrors[id].taskSessionId = t("Add Tasks.Task is required");
          }
          
         // Pobierz dane bieżącego spotkania (id odnosi się do indexu w taskData.tasks)
@@ -137,7 +139,7 @@ const AddTasks = () => {
         );
 
         if (isDuplicate) {
-          newErrors[id].taskSessionId = "This applicant is already in the same task session";
+          newErrors[id].taskSessionId =  t("Add Tasks.This applicant is already has this task assigned");
         }
 
        
@@ -156,7 +158,7 @@ const AddTasks = () => {
           });
 
           if (isSessionConflict) {
-            newErrors[id].taskSessionId = "This applicant is already assigned to this session in another task";
+            newErrors[id].taskSessionId = t("Add Tasks.This applicant is already has this task assigned");
           }
         }
         else {
@@ -193,16 +195,16 @@ const AddTasks = () => {
             await  addTasks(id, taskData);
            
             if(TaskToEdit){
-              alert("Task edited successfully!");
+              alert(t("Add Tasks.Task edited successfully!"));
               navigate(`/RecruitmentDashboard#TasksPoints`, { state: { id: id, currentPageTasks: currentPageTasks } });
             }else{
-              alert("Task assigned successfully!");
+              alert(t("Add Tasks.Task assigned successfully!"));
               navigate(`/RecruitmentDashboard#TasksPoints`, { state: { id: id } });
             }
     
         } catch (error) {
             console.error("Error assigning task:", error);
-            alert("Error assigning task. Please try again later.");
+            alert( t("Add Tasks.Error adding/updating task. Please try again later."));
             setDisabledButtons(false); // Włączamy przyciski ponownie po wystąpieniu błędu
         }
     };
@@ -219,21 +221,27 @@ const AddTasks = () => {
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
-    <h1 className="text-2xl font-bold mb-4">Plan Tasks</h1>
+    <h1 className="text-2xl font-bold mb-4">
+       {t("Add Tasks.Title")}
+    </h1>
     <form className="p-4 w-full flex flex-col space-y-1 h-screen-70 items-center overflow-y-scroll">
   {taskData.tasks.map((task, index) => (
     <div key={index} className="flex flex-row space-x-4 w-full items-start border-b-2 border-gray-300 pb-8 ">
 
       {/* Task Session */}
       <div className="flex flex-col space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Session</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Tasks.Task")}
+          </label>
         <select
           name="taskSessionId"
           value={task.taskSessionId || ""}
           onChange={(e) => handleInputChange(e, index)}
           className="mt-1 block w-fit px-3 py-2 border border-gray-300 rounded-md shadow-sm "
         >
-          <option value="">Select Task Session</option>
+          <option value="">
+            {t("Add Tasks.Select Task")}
+          </option>
           {taskSessionsData?.length > 0 ? (
             taskSessionsData.map((session) => (
               <option key={session._id} value={session.id}>
@@ -241,7 +249,9 @@ const AddTasks = () => {
               </option>
             ))
           ) : (
-            <option value="" disabled>No task sessions available</option>
+            <option value="" disabled>
+              {t("Add Tasks.No tasks available")}
+            </option>
           )}
         </select>
         {errors?.[index]?.taskSessionId && (
@@ -253,14 +263,18 @@ const AddTasks = () => {
 
       {/* Applicant */}
       <div className="flex flex-col space-y-2 ">
-        <label className="block text-sm font-medium text-gray-300">Applicant</label>
+        <label className="block text-sm font-medium text-gray-300">
+          {t("Add Tasks.Applicant")}
+          </label>
         <select
           name="applicantId"
           value={task.applicantId || ""}
           onChange={(e) => handleInputChange(e, index)}
           className="mt-1 block w-fit px-3 py-2 border border-gray-300 rounded-md shadow-sm"
         >
-          <option value="">Select Applicant</option>
+          <option value="">
+           {t("Add Tasks.Select Applicant")}
+          </option>
           {applicantsData?.length > 0 ? (
             applicantsData.map((applicant) => (
               <option key={applicant._id} value={applicant.id}>
@@ -268,7 +282,9 @@ const AddTasks = () => {
               </option>
             ))
           ) : (
-            <option value="" disabled>No applicants available</option>
+            <option value="" disabled>
+              {t("Add Tasks.No applicants available")}
+            </option>
           )}
         </select>
         {errors?.[index]?.applicantId && (
@@ -281,13 +297,13 @@ const AddTasks = () => {
       {/* Remove Task */} 
       {index !== 0 && (
         <div className="flex flex-col space-y-2">
-            <label className="block text-sm font-medium text-gray-300">Remove Task</label>
+            <label className="block text-sm font-medium text-gray-300">⠀ </label>
             <button
             type="button"
             onClick={() => removeTask(index)} // Przekazujemy tylko indeks
             className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border border-white"
             >
-            Remove
+               {t("Add Tasks.Remove")}
             </button>
         </div>
         )}
@@ -295,7 +311,7 @@ const AddTasks = () => {
   ))}
       {!TaskToEdit && (
         <button type="button" disabled={disabledButtons} onClick={() => addTask(taskData, setTaskData)} className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">
-          Assign More Tasks
+          {t("Add Tasks.Assign more tasks")}
       </button>
       )}
 </form>
@@ -307,17 +323,21 @@ const AddTasks = () => {
                 disabled={disabledButtons}
             >
               {!TaskToEdit && (
-                <>Assign Tasks</>
+                <>
+                  {t("Add Tasks.Assign Tasks")}
+                </>
                 )}
               {TaskToEdit && (
-                <>Save changes</>
+                <>
+                  {t("Add Tasks.Save Changes")}
+                </>
                 )}
             </button>
             <button
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
             >
-            Come Back
+             {t("Add Tasks.Come Back")}
             </button>
         </div>
 

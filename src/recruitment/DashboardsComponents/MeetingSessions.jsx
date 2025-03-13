@@ -8,8 +8,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const MeetingSessions = ({ id, refresh, onRefresh }) => {
+  const { t } = useTranslation();
   const location = useLocation();
   const { page } = location.state || {};
   const [loading, setLoading] = useState(true);
@@ -90,7 +92,6 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
       });
     } catch (error) {
       console.error("Error adding meeting session:", error);
-      alert("Error adding meeting session. Please try again later.");
     }
   };
 
@@ -105,7 +106,6 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
       });
     } catch (error) {
       console.error("Error adding meeting session:", error);
-      alert("Error adding meeting session. Please try again later.");
     }
   };
 
@@ -113,7 +113,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
     try {
       if (meetingSessionId !== undefined && id) {
         const confirmed = confirm(
-          "Are you sure you want to delete this meeting session?"
+          t("Add Meetings.Are you sure you want to delete this meeting session?")
         );
         if (confirmed) {
           await deleteMeetingSession(id, meetingSessionId);
@@ -151,7 +151,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Meeting Sessions
+            {t("DashboardNavbar.MeetingSessions")}
             <HelpGuideLink section="RecruitmentMeetingsSessions" />
           </h1>
 
@@ -160,11 +160,11 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
             onClick={handleAddMeetingSession}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white ml-4"
           >
-            Create Meeting Session
+            {t("Create Meeting Session.Create Meeting")}
           </button>
         </div>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          No meetings sessions found.
+        {t("Add Meetings.No meetings sessions found.")}
         </div>
       </section>
     );
@@ -172,7 +172,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
              <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Meeting Sessions
+             {t("DashboardNavbar.MeetingSessions")}
             <HelpGuideLink section="RecruitmentMeetingsSessions" />
           </h1>
       <div className="flex justify-end mb-4">
@@ -180,7 +180,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
           onClick={handleAddMeetingSession}
           className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white ml-4"
         >
-          Create Meeting Session
+          {t("Create Meeting Session.Create Meeting")}
         </button>
       </div>
       <div className="h-screen-60 overflow-auto">
@@ -192,25 +192,25 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
                 scope="col"
                 className="px-4 py-2 border border-gray-700 text-center"
               >
-                Name
+                {t("Create Meeting Session.Name")}
               </th>
               <th
                 scope="col"
                 className="px-4 py-2 border border-gray-700 text-center"
               >
-                Description
+                 {t("Create Meeting Session.Description")}
               </th>
               <th
                 scope="col"
                 className="px-4 py-2 border border-gray-700 text-center"
               >
-                Points Weight
+                {t("Create Task Session.Points weight")}
               </th>
               <th
                 scope="col"
                 className="px-4 py-2 border border-gray-700 text-center"
               >
-                Actions
+                {t("ExcelExport.Actions")}
               </th>
             </tr>
           </thead>
@@ -239,7 +239,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
                       }
                       className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                     >
-                      Edit
+                      {t("ManageApplicants.Edit")}
                     </button>
                     <button
                       onClick={() =>
@@ -247,7 +247,7 @@ const MeetingSessions = ({ id, refresh, onRefresh }) => {
                       }
                       className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition  border-white border"
                     >
-                      Delete
+                       {t("ManageApplicants.Delete")}
                     </button>
                   </div>
                 </td>

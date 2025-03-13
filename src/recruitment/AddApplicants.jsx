@@ -48,29 +48,32 @@ const AddApplicants = () => {
   const page = currentPage ?? 1;
 
   useEffect(() => {
-   setButtonText(t("AddApplicants.finish_adding_applicants"));
+    setButtonText(
+      userApply ? t("AddApplicants.Finish Application") :
+      applicant ? t("AddApplicants.Finish Editing Applicant") :
+      t("AddApplicants.finish_adding_applicants")
+    );
   }, [t]);
 
   // Jeśli aplikant do edycji został przekazany, ustawiamy dane w formularzu
   const [formData, setFormData] = useState({
-    id: applicant ? applicant.id : "",
-    name: applicant ? applicant.name : "",
-    surname: applicant ? applicant.surname : "",
-    email: applicant ? applicant.email : "",
-    phone: applicant ? applicant.phone : "",
-    educationLevel: applicant ? applicant.educationLevel : "",
-    educationField: applicant ? applicant.educationField : "",
-    institutionName: applicant ? applicant.institutionName : "",
-    languages: applicant ? applicant.languages : [{ language: "", level: "" }],
-    experience: applicant ? applicant.experience : "",
-    skills: applicant ? applicant.skills : [],
-    courses: applicant ? applicant.courses : [],
-    additionalInformation: applicant ? applicant.additionalInformation : "",
-    CoverLetterProposedPoints: applicant
-      ? applicant.CoverLetterProposedPoints
-      : 0,
-    CoverLetterAnalysis: applicant ? applicant.CoverLetterAnalysis : "",
+    id: applicant?.id || "",
+    name: applicant?.name || "",
+    surname: applicant?.surname || "",
+    email: applicant?.email || "",
+    phone: applicant?.phone || "",
+    educationLevel: applicant?.educationLevel || "",
+    educationField: applicant?.educationField || "",
+    institutionName: applicant?.institutionName || "",
+    languages: applicant?.languages || [{ language: "", level: "" }],
+    experience: applicant?.experience || "",
+    skills: applicant?.skills || [],
+    courses: applicant?.courses || [],
+    additionalInformation: applicant?.additionalInformation || "",
+    CoverLetterProposedPoints: applicant?.CoverLetterProposedPoints ?? 0, // Zapewnia 0 zamiast undefined
+    CoverLetterAnalysis: applicant?.CoverLetterAnalysis || "", // Zapewnia "" zamiast undefined
   });
+  
 
   useEffect(() => {
     if (applicant) {
@@ -233,7 +236,12 @@ const AddApplicants = () => {
       newErrors.experience = t("AddApplicants.ValidationErrors.experience_format");
     }
 
+    if (!Array.isArray(formData.languages)) {
+      formData.languages = [];
+    }
+
     if (formData.languages.length === 0) {
+      
     } else {
       formData.languages.forEach((language, index) => {
         // Zamiana nazwy języka na małe litery
@@ -265,10 +273,11 @@ const AddApplicants = () => {
         }
       });
     }
-
-    if (formData.additionalInformation.length > 200) {
-      newErrors.additionalInformation =
-        t("AddApplicants.ValidationErrors.additional_information_max");
+      if(formData.additionalInformation){
+        if (formData.additionalInformation.length > 200) {
+          newErrors.additionalInformation =
+            t("AddApplicants.ValidationErrors.additional_information_max");
+        }
     }
 
     return newErrors;
@@ -850,7 +859,7 @@ const AddApplicants = () => {
                  {t("AddApplicants.languages")}
                 </label>
                 <div className="flex flex-col space-y-2">
-                  {formData.languages.map((language, index) => (
+                  {formData.languages && formData.languages.map((language, index) => (
                     <div key={index} className="flex flex-col space-y-1">
                       <div className="flex space-x-2 items-center">
                         <input
@@ -929,15 +938,15 @@ const AddApplicants = () => {
                   type="text"
                   id="skills"
                   name="skills"
-                  value={formData.skills.join(", ")}
+                  value={Array.isArray(formData.skills) ? formData.skills.join(", ") : ""}
                   onChange={handleInputChange}
                   className="w-full border rounded-md p-2"
-                  placeholder="e.g., JavaScript, React, Node.js"
+                  placeholder={t("Recruitment Edit.e.g., JavaScript, React, Node.js")}
                   onBlur={handleInputBlur}
                 />
                                   <div className='h-[200px] overflow-y-auto rounded-lg inner-shadow'> 
                                   <div className="flex flex-wrap gap-2 m-2">
-                                    {formData.skills.map((skill, index) => (
+                                    {Array.isArray(formData.skills) && formData.skills.map((skill, index) => (
                                       skill.trim() !== '' && (
                                         <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
                                           <span className='max-w-full overflow-wrap break-words  p-1'>{skill}</span>
@@ -967,15 +976,15 @@ const AddApplicants = () => {
                   type="text"
                   id="courses"
                   name="courses"
-                  value={formData.courses.join(", ")}
+                  value={Array.isArray(formData.courses) ? formData.courses.join(", ") : ""}
                   onChange={handleInputChange}
                   className="w-full border rounded-md p-2"
-                  placeholder="e.g., Full Stack Development, React Basics"
+                  placeholder={t("Recruitment Edit.e.g., Full Stack Development, React Basics")}
                   onBlur={handleInputBlur}
                 />
                           <div className='h-[200px] overflow-y-auto rounded-lg mt-4 inner-shadow'> 
                           <div className="flex flex-wrap gap-2 m-2">
-                            {formData.courses.map((course, index) => (
+                            { Array.isArray(formData.courses) && formData.courses.map((course, index) => (
                              course.trim() !== '' && (
                                 <div key={index} className="flex justify-center px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 border border-black shadow-md shadow-black">  
                                   <span className='max-w-full overflow-wrap break-words  p-1'>{course}</span>
@@ -1181,7 +1190,7 @@ const AddApplicants = () => {
           <button
             onClick={handleFinishAdding}
             className="bg-green-500 text-white rounded-lg m-2 p-2 font-medium border border-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
-            disabled={isSaving}
+            disabled={isSaving || isLoadingCoveringLetter}
           >
             {buttonText}
           </button>

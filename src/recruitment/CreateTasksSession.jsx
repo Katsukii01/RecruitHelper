@@ -9,8 +9,10 @@ import {
 } from "../services/RecruitmentServices";
 import { useNavigate } from "react-router-dom";
 import { DsectionWrapper } from "../hoc";
+import { useTranslation } from "react-i18next";
 
 const CreateTaskSession = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { id, taskSessionId, page } = location.state || {};
@@ -23,7 +25,7 @@ const CreateTaskSession = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [ButtonText, setButtonText] = useState("Create Task Session");
+  const [ButtonText, setButtonText] = useState(t("Create Task Session.Create Task"));
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchTaskSession = async () => {
@@ -32,7 +34,7 @@ const CreateTaskSession = () => {
       try {
         const taskSession = await getTaskSessionById(id, taskSessionId);
         setTaskSession(taskSession.TaskSessions);
-        setButtonText("Update Task Session");
+        setButtonText(t("Create Task Session.Update Task"));
       } catch (error) {
         console.error("Error fetching task session:", error);
       } finally {
@@ -45,46 +47,48 @@ const CreateTaskSession = () => {
     fetchTaskSession();
   }, [id]);
 
+  useEffect(() => {
+    setButtonText(taskSessionId ? t("Create Task Session.Update Task") : t("Create Task Session.Create Task"));
+  }, [t, taskSessionId]);  
+  
+
   const validateForm = () => {
     const newErrors = {};
-
+  
     if (!taskSession.taskSessionName) {
-      newErrors.taskSessionName = "Task session name is required";
+      newErrors.taskSessionName = t("Create Task Session.Task name is required");
     } else if (taskSession.taskSessionName.length > 25) {
-      newErrors.taskSessionName =
-        "Task session name cannot exceed 25 characters";
+      newErrors.taskSessionName = t("Create Task Session.Task name cannot exceed 25 characters");
     }
-
- 
+  
     if (!taskSession.taskSessionDeadline) {
-        newErrors.taskSessionDeadline = "Task session deadline date is required";
-      } else if (new Date(taskSession.taskSessionDeadline).getTime() <= Date.now()) {
-        newErrors.taskSessionDeadline = "Task session deadline must be in the future";
-      }
-      
-    if (!taskSession.taskSessionDeadlineTime) {
-      newErrors.taskSessionDeadlineTime = "Task session deadline time is required";
-    } 
-
-    if (!taskSession.taskSessionDescription) {
-      newErrors.taskSessionDescription = "Task session description is required";
-    } else if (taskSession.taskSessionDescription.length > 200) {
-      newErrors.taskSessionDescription =
-        "Task session description cannot exceed 200 characters";
+      newErrors.taskSessionDeadline = t("Create Task Session.Task deadline date is required");
+    } else if (new Date(taskSession.taskSessionDeadline).getTime() <= Date.now()) {
+      newErrors.taskSessionDeadline = t("Create Task Session.Task deadline must be in the future");
     }
-
+  
+    if (!taskSession.taskSessionDeadlineTime) {
+      newErrors.taskSessionDeadlineTime = t("Create Task Session.Task deadline time is required");
+    }
+  
+    if (!taskSession.taskSessionDescription) {
+      newErrors.taskSessionDescription = t("Create Task Session.Task description is required");
+    } else if (taskSession.taskSessionDescription.length > 200) {
+      newErrors.taskSessionDescription = t("Create Task Session.Task description cannot exceed 200 characters");
+    }
+  
     if (!taskSession.taskSessionPointsWeight) {
-      newErrors.taskSessionPointsWeight = "Task points weight is required";
+      newErrors.taskSessionPointsWeight = t("Create Task Session.Task points weight is required");
     } else if (
       taskSession.taskSessionPointsWeight > 100 ||
       taskSession.taskSessionPointsWeight < 0
     ) {
-      newErrors.taskSessionPointsWeight =
-        "Task points weight must be a number between 0 and 100";
+      newErrors.taskSessionPointsWeight = t("Create Task Session.Task points weight must be a number between 0 and 100");
     }
-
+  
     return newErrors;
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -96,29 +100,34 @@ const CreateTaskSession = () => {
 
   const handleAddTaskSession = async () => {
     try {
-    setIsLoading(true);
+      setIsLoading(true);
       const taskErrors = validateForm();
+      
       if (Object.keys(taskErrors).length > 0) {
         setErrors(taskErrors); // Aktualizacja stanu błędów
         return; // Wyjdź z funkcji, jeśli są błędy
       }
+  
       console.log("Task Session:", taskSession);
       await createTaskSession(id, taskSession);
-      if (ButtonText === "Create Task Session") {
-        alert("Task Sessiom created successfully!");
+  
+      if (ButtonText === t("Create Task Session.Create Task")) {
+        alert(t("Create Task Session.Task created successfully!"));
       } else {
-        alert("Task Sessiom updated successfully!");
+        alert(t("Create Task Session.Task updated successfully!"));
       }
+  
       navigate(`/RecruitmentDashboard#Tasks`, {
         state: { id: id, page: page },
       });
     } catch (error) {
-      console.error("Error adding task session:", errors);
-      alert("Error adding task session. Please try again later.");
-    }finally{
+      console.error("Error adding task session:", error);
+      alert(t("Create Task Session.Error adding/updating task session. Please try again later."));
+    } finally {
       setIsLoading(false);
     }
   };
+  
 
   const handleComeBack = () => {
     navigate(`/RecruitmentDashboard#Tasks`, {
@@ -135,18 +144,20 @@ const CreateTaskSession = () => {
 
   return (
     <section className="relative w-full h-auto mx-auto p-4 bg-glass card ">
-      <h1 className="text-2xl font-bold mb-4">Task Session</h1>
+      <h1 className="text-2xl font-bold mb-4">
+         {t("Create Task Session.Title")}
+      </h1>
       <form className="space-y-4 overflow-auto p-4">
         <div className="flex flex-col space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Name
+             {t("Create Task Session.Name")}
           </label>
           <input
             name="taskSessionName"
             value={taskSession.taskSessionName}
             onChange={handleInputChange}
             type="text"
-            placeholder="Enter task name"
+            placeholder= {t("Create Task Session.Enter task name")}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
           {errors.taskSessionName && (
@@ -157,13 +168,13 @@ const CreateTaskSession = () => {
         </div>
         <div className="flex flex-col space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Description
+            {t("Create Task Session.Description")}
           </label>
           <textarea
             name="taskSessionDescription"
             value={taskSession.taskSessionDescription}
             onChange={handleInputChange}
-            placeholder="Enter task description"
+            placeholder= {t("Create Task Session.Enter task description")}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
           {errors.taskSessionDescription && (
@@ -174,14 +185,13 @@ const CreateTaskSession = () => {
         </div>
         <div className="flex flex-col space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Deadline date 
+             {t("Create Task Session.Deadline date")}
           </label>
           <input
             name="taskSessionDeadline"
             value={taskSession.taskSessionDeadline}
             onChange={handleInputChange}
             type="date"
-            placeholder="Enter task deadline"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
           {errors.taskSessionDeadline && (
@@ -192,7 +202,7 @@ const CreateTaskSession = () => {
         </div>
         <div className="flex flex-col space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Deadline Time
+            {t("Create Task Session.Deadline time")}
           </label>
           <input
             name="taskSessionDeadlineTime"
@@ -211,14 +221,13 @@ const CreateTaskSession = () => {
         <div className="flex flex-col space-y-2"></div>
         <div className="flex flex-col space-y-2">
           <label className="block text-sm font-medium text-gray-300">
-            Points Weight
+            {t("Create Task Session.Points weight")}
           </label>
           <input
             name="taskSessionPointsWeight"
             value={taskSession.taskSessionPointsWeight}
             onChange={handleInputChange}
             type="number"
-            placeholder="Enter task points weight"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
           />
           {errors.taskSessionPointsWeight && (
@@ -241,7 +250,7 @@ const CreateTaskSession = () => {
           onClick={handleComeBack}
           className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
         >
-          Come Back
+         {t("Create Task Session.Come Back")}
         </button>
       </div>
     </section>

@@ -12,8 +12,10 @@ import {
   deleteTask,
 } from "../../services/RecruitmentServices";
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const TasksPoints = ({ id, refresh }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [taskSessions, setTaskSessions] = useState([]);
@@ -190,11 +192,11 @@ const TasksPoints = ({ id, refresh }) => {
       // Ustaw zaktualizowane session
       setTaskSessions(newTaskSessions);
       handleCloseDeleteConfirmation();
-      alert("Task deleted successfully!");
+      alert(t("Add Tasks.Task deleted successfully!"));
     } catch (error) {
       console.error("Error deleting task:", error.message);
       alert(
-        "An error occurred while deleting your task. Please try again later."
+        t("Add Tasks.Error deleting task. Please try again later.")
       );
     }
   };
@@ -242,7 +244,7 @@ const TasksPoints = ({ id, refresh }) => {
         navigate('/AddTasks', { state: { id: id } });
       } catch (error) {
         console.error('Error adding task:', error);
-        alert('Error adding task. Please try again later.');
+        alert(t("Add Tasks.Error adding task. Please try again later."));
       }
   };
 
@@ -257,7 +259,7 @@ const TasksPoints = ({ id, refresh }) => {
     return (
       <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Tasks Points
+            {t("DashboardNavbar.TasksPoints")}
             <HelpGuideLink section="RecruitmentTasksPoints" />
           </h1>
 
@@ -266,11 +268,11 @@ const TasksPoints = ({ id, refresh }) => {
             onClick={handleAddTask}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
           >
-            Assign Task
+            {t("Add Tasks.Assign Tasks")}
           </button>
         </div>
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          No tasks found.
+        {t("Add Tasks.No Tasks found.")}
         </div>
       </section>
     );
@@ -278,7 +280,7 @@ const TasksPoints = ({ id, refresh }) => {
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card mb-10">
               <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-            Tasks Points
+              {t("DashboardNavbar.TasksPoints")}
             <HelpGuideLink section="RecruitmentTasksPoints" />
           </h1>
       <div className="flex justify-end mb-4">
@@ -286,7 +288,7 @@ const TasksPoints = ({ id, refresh }) => {
             onClick={handleAddTask}
             className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
           >
-            Assign Task
+            {t("Add Tasks.Assign Tasks")}
           </button>
         </div>
         <div className="h-screen-60 overflow-auto">
@@ -295,7 +297,7 @@ const TasksPoints = ({ id, refresh }) => {
           <thead className="bg-gray-900 text-white">
             <tr>
               <th className="px-4 py-2 border border-gray-700 text-center">
-                Applicant
+                {t("Add Tasks.Applicant")}
               </th>
               {taskSessions.map((session) => (
                 <th
@@ -304,7 +306,7 @@ const TasksPoints = ({ id, refresh }) => {
                 >
                   <div>{session.taskSessionName}</div>
                   <div className="text-sm">
-                    Weight: {session.taskSessionPointsWeight}
+                  {t("Create Task Session.Points weight")}:  {session.taskSessionPointsWeight}
                   </div>
                 </th>
               ))}
@@ -322,7 +324,7 @@ const TasksPoints = ({ id, refresh }) => {
 
                 {/* Kolumna z danymi aplikanta */}
                 <td className="px-4 py-2 border border-gray-700">
-                  <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1">
+                  <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1 text-left">
                     
                     <div className="text-sm flex items-center gap-2">
                       <FaUser className="text-blue-400 size-4" /> {applicant.name} {applicant.surname}
@@ -369,7 +371,7 @@ const TasksPoints = ({ id, refresh }) => {
                                 }
                                 className="p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                               >
-                                Edit
+                                 {t("ManageApplicants.Edit")}
                               </button>
                               <button
                                 onClick={() =>
@@ -380,12 +382,14 @@ const TasksPoints = ({ id, refresh }) => {
                                 }
                                 className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border-white border"
                               >
-                                Delete
+                                {t("ManageApplicants.Delete")}
                               </button>
                             </div>
                           </>
                         ) : (
-                          <div>No task</div>
+                          <div>
+                             {t("Add Tasks.Not assigned yet")}
+                          </div>
                         )}
                       </td>
                     );
@@ -414,17 +418,17 @@ const TasksPoints = ({ id, refresh }) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-md shadow-md w-96">
             <h2 className="text-lg font-bold text-white mb-4">
-              Confirm Delete
+            {t("Add Meetings.Confirm Delete")}
             </h2>
             <p className="text-white">
-              Are you sure you want to delete this task?
+            {t("Add Tasks.Are you sure you want to delete this task?")}
             </p>
             <div className="flex justify-end gap-4 mt-4">
               <button
                 onClick={handleCloseDeleteConfirmation}
                 className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
               >
-                Cancel
+               {t("Add Meetings.Cancel")}
               </button>
               <button
                 onClick={() =>
@@ -432,7 +436,7 @@ const TasksPoints = ({ id, refresh }) => {
                 }
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
               >
-                Delete
+                {t("Add Meetings.Delete")}
               </button>
             </div>
           </div>

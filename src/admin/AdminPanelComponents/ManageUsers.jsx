@@ -4,8 +4,10 @@ import { Pagination } from '../../recruitment/DashboardsComponents';
 import { Loader } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import { deleteFirebaseUser } from '../../services/recruitmentApi';
+import { useTranslation } from 'react-i18next';
 
 const ManageUsers = () => {
+   const { t } = useTranslation();
   const [usersStats, setUsersStats] = useState([]);
   const [paginatedStats, setPaginatedStats] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,7 +150,7 @@ const ManageUsers = () => {
               'Actions',
             ].map((header) => (
               <th key={header} className="px-4 py-2 border border-gray-700 text-center">
-                {header}
+                {t(`Manage users.${header}`)}
               </th>
             ))}
           </tr>
@@ -176,7 +178,7 @@ const ManageUsers = () => {
                       }
                       className="p-2  rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
                     >
-                      Edit
+                        {t("ManageApplicants.Edit")}
                     </button>
                     <button
                       onClick={() =>
@@ -184,7 +186,7 @@ const ManageUsers = () => {
                       }
                       className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition  border-white border"
                     >
-                      Delete
+                      {t("ManageApplicants.Delete")}
                     </button>
                   </div>
                 </td>

@@ -6,9 +6,12 @@ import { useEffect } from 'react';
 import { getMeetingSessionById, createMeetingSession } from '../services/RecruitmentServices';
 import { useNavigate } from 'react-router-dom';
 import { DsectionWrapper } from '../hoc';
+import { useTranslation } from 'react-i18next';
+import { use } from 'react';
 
 const CreateMeetingSession = () => {
-         const location = useLocation();
+    const { t } = useTranslation();
+    const location = useLocation();
         const navigate = useNavigate();
         const { id , meetingSessionId, page } = location.state || {};
          const [meetingSession, setMeetingSession] = useState({
@@ -18,7 +21,7 @@ const CreateMeetingSession = () => {
         });
         const [errors, setErrors] = useState({});
         const [loading, setLoading] = useState(false);
-        const [ButtonText, setButtonText] = useState('Create Meeting Session');
+        const [ButtonText, setButtonText] = useState(t("Create Meeting Session.Create Meeting"));
         const [isLoading, setIsLoading] = useState(false);
 
 
@@ -28,7 +31,7 @@ const CreateMeetingSession = () => {
             try {
                 const meetingSession = await getMeetingSessionById(id, meetingSessionId);
                 setMeetingSession(meetingSession.MeetingSessions);
-                setButtonText('Update Meeting Session');
+                setButtonText(t("Create Meeting Session.Edit Meeting"));
             } catch (error) {
                 console.error('Error fetching meeting session:', error);
             } finally {
@@ -41,30 +44,35 @@ const CreateMeetingSession = () => {
         fetchMeetingSession();
     } , [id]);
 
+    useEffect(() => {
+        setButtonText(meetingSessionId ? t("Create Meeting Session.Edit Meeting") : t("Create Meeting Session.Create Meeting"));
+    }, [t, meetingSessionId]);
+
 
     const validateForm = () => {
         const newErrors = {};
-
+    
         if (!meetingSession.meetingSessionName) {
-            newErrors.meetingSessionName = 'Meeting session name is required';
+            newErrors.meetingSessionName = t("Create Meeting Session.Meeting name is required");
         } else if (meetingSession.meetingSessionName.length > 25) {
-            newErrors.meetingSessionName = 'Meeting session name cannot exceed 25 characters';
+            newErrors.meetingSessionName = t("Create Meeting Session.Meeting name cannot exceed 25 characters");
         }
-
+    
         if (!meetingSession.meetingSessionDescription) {
-            newErrors.meetingSessionDescription = 'Meeting session description is required';
+            newErrors.meetingSessionDescription = t("Create Meeting Session.Meeting description is required");
         } else if (meetingSession.meetingSessionDescription.length > 200) {    
-            newErrors.meetingSessionDescription = 'Meeting session description cannot exceed 200 characters';   
-            }
-
+            newErrors.meetingSessionDescription = t("Create Meeting Session.Meeting description cannot exceed 200 characters");   
+        }
+    
         if (!meetingSession.meetingSessionPointsWeight) {
-            newErrors.meetingSessionPointsWeight = 'Meeting points weight is required';
+            newErrors.meetingSessionPointsWeight = t("Create Meeting Session.Meeting points weight is required");
         } else if (meetingSession.meetingSessionPointsWeight > 100 || meetingSession.meetingSessionPointsWeight < 0) {
-            newErrors.meetingSessionPointsWeight = 'Meeting points weight must be a number between 0 and 100';
-            }
-
+            newErrors.meetingSessionPointsWeight = t("Create Meeting Session.Meeting points weight must be a number between 0 and 100");
+        }
+    
         return newErrors;
     };
+    
 
 
         const handleInputChange = (e) => {
@@ -75,29 +83,29 @@ const CreateMeetingSession = () => {
             }));
         };
         
-    const handleAddMeetingSession = async () => {
-        try {
-            setIsLoading(true);
-            const meetingErrors = validateForm();
-            if (Object.keys(meetingErrors).length > 0) {
-                setErrors(meetingErrors); // Aktualizacja stanu błędów
-                return; // Wyjdź z funkcji, jeśli są błędy
+        const handleAddMeetingSession = async () => {
+            try {
+                setIsLoading(true);
+                const meetingErrors = validateForm();
+                if (Object.keys(meetingErrors).length > 0) {
+                    setErrors(meetingErrors); // Aktualizacja stanu błędów
+                    return; // Wyjdź z funkcji, jeśli są błędy
+                }
+                await createMeetingSession(id, meetingSession);
+                if (ButtonText === t("Create Meeting Session.Create Meeting")) {
+                    alert(t("Create Meeting Session.Meeting created successfully!"));
+                } else {
+                    alert(t("Create Meeting Session.Meeting updated successfully!"));
+                }
+                navigate(`/RecruitmentDashboard#MeetingSessions`, { state: { id: id, page: page } });
+            } catch (error) {
+                console.error('Error adding meeting session:', errors);
+                alert(t("Create Meeting Session.Error adding/updating meeting. Please try again later."));
+            } finally {
+                setIsLoading(false);
             }
-            console.log('Meeting Session:', meetingSession);
-            await createMeetingSession(id, meetingSession);
-            if(ButtonText === 'Create Meeting Session'){
-                alert('Meeting Sessiom created successfully!');
-            }else{
-                alert('Meeting Sessiom updated successfully!');
-            }
-            navigate(`/RecruitmentDashboard#MeetingSessions`, { state: { id: id, page: page } });
-        } catch (error) {
-            console.error('Error adding meeting session:', errors);
-            alert('Error adding meeting session. Please try again later.');
-        }finally{
-            setIsLoading(false);
-        }
-    };
+        };
+        
 
     const handleComeBack = () => {
         navigate(`/RecruitmentDashboard#MeetingSessions`, { state: { id: id, page: page } });
@@ -107,45 +115,46 @@ if (loading) return <div className="relative w-full h-auto mx-auto flex justify-
 
   return (
     <section className="relative w-full h-auto mx-auto p-4 bg-glass card ">
-    <h1 className="text-2xl font-bold mb-4">Meeting Session</h1>
+    <h1 className="text-2xl font-bold mb-4"> 
+        {t("Create Meeting Session.Title")}
+    </h1>
     <form className="space-y-4 overflow-auto p-4">
         <div className="flex flex-col space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-                Name
+                 {t("Create Meeting Session.Name")}
             </label>
             <input
                name="meetingSessionName"
                value={meetingSession.meetingSessionName}
                onChange={handleInputChange}
                 type="text"
-                placeholder="Enter meeting name"
+                placeholder= {t("Create Meeting Session.Enter meeting name")}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.meetingSessionName  &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.meetingSessionName}</p>}
         </div>
         <div className="flex flex-col space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-                Description
+                {t("Create Meeting Session.Description")}
             </label>
             <textarea
                name="meetingSessionDescription"
                value={meetingSession.meetingSessionDescription}
                onChange={handleInputChange} 
-                placeholder="Enter meeting description"
+                placeholder= {t("Create Meeting Session.Enter meeting description")}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.meetingSessionDescription &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.meetingSessionDescription}</p>}
         </div>
         <div className="flex flex-col space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-               Points Weight
+                {t("Create Meeting Session.Points weight")}
             </label>
             <input
                name="meetingSessionPointsWeight"
                value={meetingSession.meetingSessionPointsWeight}
                onChange={handleInputChange}
                 type="number"
-                placeholder="Enter meeting points weight"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
             />
             {errors.meetingSessionPointsWeight &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.meetingSessionPointsWeight}</p>}
@@ -165,7 +174,7 @@ if (loading) return <div className="relative w-full h-auto mx-auto flex justify-
             onClick={handleComeBack}
             className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
             >
-            Come Back
+               {t("Create Meeting Session.Come Back")}
             </button>
         </div>
 

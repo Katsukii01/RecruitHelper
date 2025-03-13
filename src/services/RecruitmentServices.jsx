@@ -1763,6 +1763,15 @@ export const getApplicantsWithOverallScore = async (recruitmentId) => {
           name: applicant.name,
           surname: applicant.surname,
           email: applicant.email,
+          phone: applicant.phone,
+          educationLevel: applicant.educationLevel,
+          institutionName: applicant.institutionName,
+          educationField: applicant.educationField,
+          experience: applicant.experience,
+          skills: applicant.skills,
+          courses: applicant.courses,
+          languages: applicant.languages,
+          additionalInformation: applicant.additionalInformation,
           CVscore: applicant.CVscore || 0,
           CLscore: applicant.CLscore || 0,
           Tasksscore:
@@ -3014,7 +3023,7 @@ export const finishRecruitment = async (recruitmentId) => {
       TasksCountStatus: recruitmentData.TasksCountStatus ?? true,
       MeetingsCountStatus: recruitmentData.MeetingsCountStatus ?? true,
       AdnationalPointsCountStatus:
-        recruitmentData.AdnationalPointsCountStatus ?? true,
+      recruitmentData.AdnationalPointsCountStatus ?? true,
     };
 
     const applicants = await getApplicantsWithOverallScore(recruitmentId);
@@ -3041,6 +3050,7 @@ export const finishRecruitment = async (recruitmentId) => {
       courses: recruitmentData.courses,
       skills: recruitmentData.skills,
       languages: recruitmentData.languages,
+      location: recruitmentData.location,
     };
 
     await updateDoc(recruitmentDoc, { stage: "Finished" });

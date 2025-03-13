@@ -2,8 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { useNavigate, useLocation} from "react-router-dom";
 import { editOpinion } from '../services/RecruitmentServices';
+import { useTranslation } from 'react-i18next';
 
 const EditOpinionAdmin = () => {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const { state } = useLocation();
     const { opinion  } = state || {};
@@ -24,23 +26,23 @@ const handleInputChange = (e) => {
 
 
     if (!opinionData.opinion) {
-      errors.opinion = "Opinion is required";
+      errors.opinion =  t("Finish Recruitment.Opinion is required");
     }else if(opinionData.opinion.length > 1000){
-      errors.opinion = "Opinion cannot be longer than 1000 characters";
+      errors.opinion = t("Finish Recruitment.Opinion cannot be longer than 1000 characters");
     }else if(opinionData.opinion.length < 10){
-      errors.opinion = "Opinion must be at least 10 characters";
+      errors.opinion = t("Finish Recruitment.Opinion must be at least 10 characters");
     }
 
     if (!opinionData.jobTitle) {
-        errors.jobTitle = "Job title is required";
+        errors.jobTitle = t("Edit Opinion Admin.Job title is required");
     }else if(opinionData.jobTitle.length > 45){
-        errors.jobTitle = "Job title cannot be longer than 45 characters";
+        errors.jobTitle = t("Edit Opinion Admin.Job title cannot exceed 45 characters");
     }
 
     if (!opinionData.recruitmentName) {
-        errors.recruitmentName = "Recruitment name is required";
+        errors.recruitmentName =  t("Edit Opinion Admin.Recruitment name is required");
     }else if(opinionData.recruitmentName.length > 45){
-        errors.recruitmentName = "Recruitment name cannot be longer than 45 characters";
+        errors.recruitmentName = t("Edit Opinion Admin.Recruitment name cannot exceed 45 characters");
     }
 
     setErrors(errors);
@@ -64,7 +66,7 @@ const handleSubmit = async (e) => {
           }
 
         await editOpinion(opinionData);
-        alert("Opinion updated successfully!");
+        alert(t("Edit Opinion Admin.Opinion updated successfully!"));
         navigate(`/Admin`)
     } catch (error) {
         console.error("❌ Error updating opinion:", error);
@@ -78,18 +80,21 @@ const handleSubmit = async (e) => {
     <section className="min-h-screen flex items-center justify-center p-4 pt-28">
             {/* 🔹 Formularz opinii */}
             <div className="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 w-full max-w-screen-lg">
-            <h2 className="text-3xl font-extrabold text-white text-center mb-6">Opinion Edit</h2>
+            <h2 className="text-3xl font-extrabold text-white text-center mb-6">
+                {t("Edit Opinion Admin.Opinion edit")}
+            </h2>
 
             {/* 🔹 Recruitment Name */}
             <div className="mb-5">  
-                <label className="block text-sm font-medium text-gray-400 mb-2">Recruitment Name</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                    {t("Edit Opinion Admin.Recruitment Name")}
+                </label>
                 <input
                 type="text"
                 name="recruitmentName"
                 value={opinionData.recruitmentName}
                 onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-800 text-white"
-                placeholder="Enter recruitment name..."
                 />
                 {errors.recruitmentName && (
                 <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 rounded-md mt-2 animate-pulse">
@@ -100,14 +105,15 @@ const handleSubmit = async (e) => {
 
             {/* 🔹 Job Title */}
             <div className="mb-5">  
-                <label className="block text-sm font-medium text-gray-400 mb-2">Job Title</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                    {t("Edit Opinion Admin.Job Title")}
+                </label>
                 <input
                 type="text"
                 name="jobTitle"
                 value={opinionData.jobTitle}
                 onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-800 text-white"
-                placeholder="Enter job title..."
                 />
                 {errors.jobTitle && (
                 <p className="text-red-500 bg-red-100 border-l-4 border-red-500 p-2 rounded-md mt-2 animate-pulse">
@@ -118,13 +124,17 @@ const handleSubmit = async (e) => {
 
             {/* 🔹 Opinia */}
             <div className="mb-5">
-                <label className="block text-sm font-medium text-gray-400 mb-2">Your Opinion</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                {
+          t("Finish Recruitment.Your Opinion")
+        }
+                </label>
                 <textarea
                 name="opinion"
                 value={opinionData.opinion}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-800 text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                placeholder="Write your opinion..."
+                placeholder={t("Finish Recruitment.write your opinion...")}
                 rows="5"
                 />
                 {errors.opinion && (
@@ -136,7 +146,7 @@ const handleSubmit = async (e) => {
 
             {/* 🔹 Ocena gwiazdkowa */}
             <div className="mb-6 ">
-                <label className="block text-sm font-medium text-gray-400 mb-2">Rating (0-5 stars)</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2"> {t("Finish Recruitment.Rating (0-5 stars)")}  </label>
                 <StarRating onChange={(value) => setOpinionData((prev) => ({ ...prev, stars: value }))} stars={opinionData.stars} />
             </div>
 
@@ -148,14 +158,14 @@ const handleSubmit = async (e) => {
                 className="flex items-center justify-center m-2 p-2  bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 
                 transition focus:outline-none focus:ring-2 focus:ring-green-400 border border-white"
                 >
-                Save Changes
+                {t("Manage users.Save Changes")}
                 </button>
                 <button
                 disabled={isLoading}
                 onClick={handleComeBack}
                 className=" rounded-lg bg-gray-500  font-medium border border-white shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 text-white p-2 m-2 "
             >
-                Come Back
+                {t("Manage users.Come Back")}
             </button>
             </div>
             </div>

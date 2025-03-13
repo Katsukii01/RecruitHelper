@@ -8,8 +8,10 @@ import {
   setCoverLetterPoints,
 } from "../../services/RecruitmentServices";
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const CoverLettersPoints =  ({ id })=> {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [applicants, setApplicants] = useState([]);
@@ -127,19 +129,19 @@ const CoverLettersPoints =  ({ id })=> {
 
     if (!applicants.length) return    <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Cover Letter Points
+      {t("DashboardNavbar.CoverLettersPoints")}
           <HelpGuideLink section="RecruitmentCoverLettersPoints" />
         </h1>
 
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          No Applicants found
+        {t("Applicants stages.No applicants found")}
         </div>
     </section>;
 
   return (
     <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card mb-10">
             <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Cover Letter Points
+            {t("DashboardNavbar.CoverLettersPoints")}
           <HelpGuideLink section="RecruitmentCoverLettersPoints" />
         </h1>
 
@@ -149,12 +151,12 @@ const CoverLettersPoints =  ({ id })=> {
           <thead className="bg-gray-900 text-white">
             <tr>
               <th className="px-4 py-2 border border-gray-700 text-center">
-                Applicant
+              {t("Cover Letter.Applicant")}
               </th>
               <th
                   className="px-4 py-2 border border-gray-700 text-center"
                 >
-                  Cover Letter Points
+                  {t("Cover Letter.Cover Letter Points")}
                 </th>
 
             </tr>
@@ -170,9 +172,9 @@ const CoverLettersPoints =  ({ id })=> {
                 >
                   {/* Kolumna z danymi aplikanta */}
                   <td className="px-4 py-2 border border-gray-700">
-                    <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1">
+                    <div className="max-h-[120px] overflow-y-auto flex flex-col gap-1 text-left">
                       
-                      <div className="text-sm flex items-center gap-2">
+                      <div className="text-sm flex gap-2">
                         <FaUser className="text-blue-400 size-4" /> {applicant.name} {applicant.surname}
                       </div>
 

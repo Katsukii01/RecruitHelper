@@ -31,7 +31,7 @@ const SignIn = () => {
     event.preventDefault(); // Prevents the form from reloading the page
     setIsLoading(true);
     try {
-      await signIn(email, password); // Attempt to sign in
+      await signIn(email, password, t); // Attempt to sign in
       navigate(from, { replace: true }); // Pełne przekierowanie
     } catch (err) {
       setError(err.message);
@@ -43,7 +43,7 @@ const SignIn = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn(); // Google sign-in;
+      await googleSignIn(t); // Google sign-in;
       navigate(from, { replace: true }); // Pełne przekierowanie
     } catch (err) {
       setError(err.message);
@@ -56,7 +56,7 @@ const SignIn = () => {
   const handleForgotPassword = async () => {
     setIsLoading(true);
     try {
-      await forgotPassword(resetEmail);
+      await forgotPassword(resetEmail, t);
       alert(t("SignIn.Email sent"));
       setShowForgotPassword(false); // Zamknij modal
                       setErrorForgot(); // Resetuj komunikat błędu

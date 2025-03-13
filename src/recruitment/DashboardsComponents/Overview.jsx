@@ -5,8 +5,10 @@ import { Loader, HelpGuideLink } from "../../utils";
 import {applicantStages, recruitmentStages} from "../../constants/stages";
 import { BiBarChart, BiLineChart, BiCalendar, BiTask, BiUser, BiEnvelope } from "react-icons/bi";
 import InviteLink from "./InviteLink";
+import { useTranslation } from "react-i18next";
 
 const Overview = ({ id }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({});
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
@@ -64,7 +66,7 @@ const Overview = ({ id }) => {
   return (
     <section className="relative min-h-screen-80 w-full p-2 bg-glass card ">
         <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-          Recruitment Overview
+          {t("Overview.Overview")}
           <HelpGuideLink section="RecruitmentOverview" />
         </h1>
 
@@ -75,7 +77,9 @@ const Overview = ({ id }) => {
 
         {/* Current Stage */}
 
-        <h2 className="text-lg md:text-xl font-bold mb-1">Current Stage</h2>
+        <h2 className="text-lg md:text-xl font-bold mb-1">
+          {t("Overview.Current Stage")}
+        </h2>
         <div className="py-4  rounded-2xl shadow-lg text-white w-full overflow-x-auto mb-6 inner-shadow px-2">
 
           {/* Pasek postępu */}
@@ -128,7 +132,7 @@ const Overview = ({ id }) => {
 
                 {/* Nazwa etapu */}
                 <p className="whitespace-normal text-center leading-tight tracking-wide uppercase">
-                  {stage.stage}
+                  {t(stage.displayName)}
                 </p>
               </button>
 
@@ -143,7 +147,9 @@ const Overview = ({ id }) => {
 
 
         {/* Stats Grid */}       
-        <h2 className="text-lg md:text-xl font-bold mb-1 mt-6">Statistics</h2>
+        <h2 className="text-lg md:text-xl font-bold mb-1 mt-6">
+            {t("Overview.Statistics")}
+        </h2>
         <div className="inner-shadow  p-4">
  
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full ">
@@ -151,7 +157,9 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full  shadow-slate-950 hover:scale-105">
             <BiUser className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Total Applicants</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Total Applicants")}
+              </h2>
               <p className="text-2xl">{stats.totalApplicants}</p>
             </div>
           </div>
@@ -160,7 +168,9 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
             <BiBarChart className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Highest Score</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Highest Total Score")}
+              </h2>
               <p className="text-2xl">{stats.highestTotalScore.toFixed(2)}%</p>
             </div>
           </div>
@@ -169,7 +179,9 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
             <BiLineChart className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Average Score</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Average Total Score")}
+              </h2>
               <p className="text-2xl">{stats.averageTotalScore.toFixed(2)}%</p>
             </div>
           </div>
@@ -178,7 +190,9 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
             <BiCalendar className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Total Meetings Sessions</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Total Meetings")}
+              </h2>
               <p className="text-2xl">{stats.totalMeetings}</p>
             </div>
           </div>
@@ -187,7 +201,9 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
             <BiTask className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Total Tasks</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Total Tasks")}
+              </h2>
               <p className="text-2xl">{stats.totalTasks}</p>
             </div>
           </div>
@@ -196,24 +212,28 @@ const Overview = ({ id }) => {
           <div className="p-4 md:p-6 bg-glass-dark rounded-2xl shadow-lg text-white flex items-center gap-4 w-full shadow-slate-950 hover:scale-105">
             <BiEnvelope className="text-4xl md:text-5xl" />
             <div>
-              <h2 className="text-lg md:text-xl font-bold">Cover Letters Percentage</h2>
+              <h2 className="text-lg md:text-xl font-bold">
+                {t("ExcelExport.Total Cover Letters Percentage")}
+              </h2>
               <p className="text-2xl">{stats.TotalCoverLettersPercentage.toFixed(2)}%</p>
             </div>
           </div>
         </div>
         </div>
 
-        <h2 className="text-lg md:text-xl font-bold mb-1 mt-6">Applicants in each stage</h2>
+        <h2 className="text-lg md:text-xl font-bold mb-1 mt-6">
+             {t("Overview.Applicants in Each Stage")}
+        </h2>
         <div className="p-4  rounded-2xl shadow-lg text-white flex flex-col w-full  inner-shadow">
 
             <div className="flex flex-wrap gap-4 w-full">
-              {applicantStages.map(({ status, color, icon}) => (
+              {applicantStages.map(({ status, displayName, color, icon}) => (
                 <div
                   key={status}
                   className={`p-4 text-md md:text-xl rounded-xl shadow-lg text-white flex items-center shadow-slate-950 gap-3 min-w-[120px] ${color}`}
                 >
                   {icon}
-                  <h2 className=" font-semibold truncate whitespace-nowrap">{status}</h2>
+                  <h2 className="font-semibold truncate whitespace-nowrap">{t(displayName)}</h2>
  
                   <div className="flex-1 min-w-0">        
                     <p className="font-bold">{stats.ApplicantsInEachStage?.[status] || 0}</p>

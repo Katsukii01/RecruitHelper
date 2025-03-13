@@ -45,9 +45,9 @@ export const RecruitmentValidateForm = (formData, t) => {
     }
 
     if(!formData.weightOfEducationLevel) {
-       newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_level_required');
+       newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_required');
     } else if (Number(formData.weightOfEducationLevel) < 0 || Number(formData.weightOfEducationLevel) > 100) {
-      newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_level_invalid');
+      newErrors.weightOfEducationLevel = t('AddApplicants.ValidationErrors.weight_of_education_invalid');
     }
 
     if(!formData.weightOfCourses) {

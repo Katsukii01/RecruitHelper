@@ -48,7 +48,7 @@ const Home = () => {
     try {
       if (password && newPassword) {
         try {
-        await updatePassword(password, newPassword); // Ensure this function does not call itself
+        await updatePassword(password, newPassword, t); // Ensure this function does not call itself
         setPassword('');
         setNewPassword('');
         setConfirmPassword('');
@@ -82,7 +82,7 @@ const Home = () => {
     const confirmation = window.confirm( t('HomePage.Are you sure you want to delete your account? This action cannot be undone.'));
     if (confirmation && user) {
       try {
-        await deleteAccount(passwordInput);
+        await deleteAccount(passwordInput, t);
         alert(t('HomePage.The account has been deleted'));
         navigate('/SignUp'); 
         window.location.reload();

@@ -4,8 +4,10 @@ import { Loader, HelpGuideLink } from '../../utils'
 import { getMeetingSessionsByRecruitmentId, getAllApplicants } from '../../services/RecruitmentServices'
 import { useNavigate } from 'react-router-dom';
 import { CalendarMeetings } from '../'
+import { useTranslation } from 'react-i18next';
 
 const  Meetings = ({ id, refresh }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [meetingSessions, setMeetingSessions] = useState([]);
@@ -40,7 +42,6 @@ useEffect(() => {
           navigate('/AddMeetings', { state: { id: id } });
         } catch (error) {
           console.error('Error adding meeting:', error);
-          alert('Error adding meeting. Please try again later.');
         }
     };
 
@@ -52,7 +53,7 @@ useEffect(() => {
   return (
     <section className="relative w-full min-h-screen-80 mx-auto p-4 bg-glass card">
     <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-       Meetings
+    {t("DashboardNavbar.Meetings")}
       <HelpGuideLink section="RecruitmentMeetings" />
     </h1>
 
@@ -61,7 +62,7 @@ useEffect(() => {
         onClick={handleAddMeeting}
         className="px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition border border-white"
       >
-        Plan Meeting
+         {t("Add Meetings.Assign Meetings")}
       </button>
     </div>
 

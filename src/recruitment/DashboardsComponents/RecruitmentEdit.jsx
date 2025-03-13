@@ -105,7 +105,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
   const handleSave = async () => {
     const validationErrors = RecruitmentValidateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
-      alert('Please correct the errors before saving recruitment.');
+      alert(t("Recruitment Edit.Please correct the errors before saving recruitment."));
       setErrors(validationErrors);
       return;
     }
@@ -119,18 +119,18 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
       if (id) {
         // Aktualizacja istniejącej rekrutacji
         await updateRecruitment(id, updatedData);
-        alert('Recruitment updated successfully!');
+        alert(t("Recruitment Edit.Recruitment updated successfully!"));
         onRefresh();
       } else {
         if(updatedData.status === "Public") {
           // Dodanie nowej rekrutacji
           const id = await addRecruitment(updatedData);
-          alert('Recruitment added successfully!');
+          alert(t("Recruitment Edit.Recruitment added successfully!"));
           navigate('/RecruitmentDashboard', { state: { id } });
         } else {
         // Dodanie nowej rekrutacji
         const recruitmentId = await addRecruitment(updatedData);
-        alert('Recruitment added successfully!');
+        alert(t("Recruitment Edit.Recruitment added successfully!"));
         navigate('/ChooseMethod', { state: { recruitmentId } });
         }
       }
@@ -149,12 +149,12 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
       <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
         {id ? (
           <>
-            Recruitment Edit 
+             {t("Recruitment Edit.Recruitment Edit")}
             <HelpGuideLink section="RecruitmentEdit" />
           </>
         ) : (
           <>
-            Create Recruitment 
+            {t("Recruitment Edit.Create Recruitment")}
             <HelpGuideLink section="CreatingRecruitment" />
           </>
         )}
@@ -163,9 +163,10 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
       
       <form className="space-y-4 overflow-auto p-4">
         {/* Status Toggle */}
-        <p className="text-sm font-medium text-gray-300">Status:            
+        <p className="text-sm font-medium text-gray-300">
+           {t("Recruitment Edit.Status")}:          
           <span className="text-sm font-medium text-white">
-            {formData.status === 'Public' ? ' Public' : ' Private'}
+            {formData.status === 'Public' ? t("Recruitment Edit.Public") : t("Recruitment Edit.Private")}
           </span>
           </p>
         <div className="flex flex-col items-start gap-4">
@@ -189,28 +190,30 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         </div>
 
         <div className=''>
-          <label className="block text-sm font-medium text-gray-300">Name</label>
+          <label className="block text-sm font-medium text-gray-300">
+              {t("Recruitment Edit.Name")}
+            </label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            placeholder="up to 25 signs"  
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" 
           />
           {errors.name &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.name}</p>}
         </div>
 
         {/* Job Title */}
         <div className=''>
-          <label className="block text-sm font-medium text-gray-300">Job Title</label>
+          <label className="block text-sm font-medium text-gray-300">
+              {t("Recruitment Edit.Job Title")}
+            </label>
           <input
             type="text"
             name="jobTitle"
             value={formData.jobTitle}
             onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            placeholder="up to 30 signs"
           />
           {errors.jobTitle &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.jobTitle}</p>}
         </div>
@@ -224,13 +227,15 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         <div className='border-2 border-gray-500 rounded-md p-2'>
             {/* weight of education level*/}
             <div className='mb-4'>
-              <label className="block text-sm font-medium text-blue-300">Weight of Education Level</label>
+              <label className="block text-sm font-medium text-blue-300">
+              {t("Recruitment Edit.Weight of Education Level")}
+              </label>
               <input
                 type="number"
                 name="weightOfEducationLevel"
                 value={formData.weightOfEducationLevel}
                 onChange={handleChange}
-                placeholder="from 0 to 100"  
+                placeholder={t("From 0 to 100")}
                 className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
               />
               {errors.weightOfEducationLevel &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfEducationLevel}</p>}
@@ -239,7 +244,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             {/* Education Level */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-300">
-                Education Level
+              {t("Recruitment Edit.Education Level")}
               </label>
               <input
                 id="educationLevel"
@@ -257,7 +262,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
            {/* Education Field */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-300">
-                Education Field
+              {t("Recruitment Edit.Education Field")}
               </label>
               <input 
                 type='text'
@@ -276,12 +281,14 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         <div className='border-2 border-gray-500 rounded-md p-2'>
         {/* Weight of Experience */}
         <div className='mb-4'> 
-          <label className="block text-sm font-medium text-blue-300">Weight of Experience</label>
+          <label className="block text-sm font-medium text-blue-300">
+              {t("Recruitment Edit.Weight of Experience")}
+            </label>
           <input
             type="number"
             name="weightOfExperience"
             value={formData.weightOfExperience}
-            placeholder="from 0 to 100"  
+            placeholder={t("From 0 to 100")} 
             onChange={handleChange}
             className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
           />
@@ -289,7 +296,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         </div>
         {/* Experience Needed */}
         <div className='mb-4'>
-          <label className="block text-sm font-medium text-gray-300">Experience Needed (in years)</label>
+          <label className="block text-sm font-medium text-gray-300">{t("Recruitment Edit.Experience Required")}</label>
           <input
             type="number"
             name="experienceNeeded"
@@ -304,13 +311,15 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         <div className='border-2 border-gray-500 rounded-md p-2'>
         {/* Weight of Skills */}
         <div className='mb-4'>
-          <label className="block text-sm font-medium text-blue-300">Weight of Skills</label>
+          <label className="block text-sm font-medium text-blue-300">
+            {t("Recruitment Edit.Weight of Skills")}
+          </label>
           <input
             type="number"
             name="weightOfSkills"
             value={formData.weightOfSkills}
             onChange={handleChange}
-            placeholder="from 0 to 100"  
+            placeholder={t("From 0 to 100")}
             className="mt-1 block w-1/2 px-3 py-2 border border-sky  rounded-md shadow-sm bg-blue-50 text-blue-400"
           />
           {errors.weightOfSkills &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfSkills}</p>}
@@ -318,11 +327,13 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
 
         {/* Skills */}
         <div > 
-                  <label className="block text-sm font-medium text-gray-300">Skills (comma separated)</label>
+                  <label className="block text-sm font-medium text-gray-300">
+                  {t("Recruitment Edit.Skills (comma separated)")}
+                  </label>
                   <input
                     type="text"
                     name="skills"
-                    placeholder="e.g., JavaScript, React, Node.js"
+                    placeholder={t("Recruitment Edit.e.g., JavaScript, React, Node.js")}
                     value={formData.skills.join(", ")}
                     onChange={handleChange}
                     onBlur={handleInputBlur}
@@ -354,14 +365,16 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
             <div className='border-2 border-gray-500 rounded-md p-2'>
             {/* weight of languages */}
             <div className='mb-4'>
-              <label className="block text-sm font-medium text-blue-300">Weight of Languages</label>
+              <label className="block text-sm font-medium text-blue-300">
+              {t("Recruitment Edit.Weight of Languages")}
+              </label>
               <input
                 type="number"
                 name="weightOfLanguages"
                 value={formData.weightOfLanguages}
                 onChange={handleChange}
                 className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
-                placeholder="from 0 to 100"  
+                placeholder={t("From 0 to 100")}
               />
               {errors.weightOfLanguages &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfLanguages}</p>}          
             </div>
@@ -369,7 +382,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         {/* Languages */}
             <div className="mb-4 ">
             <label className="block text-sm font-medium text-gray-300">
-              Languages
+            {t("Recruitment Edit.Languages")}
             </label>
             <div className="flex flex-col space-y-2  h-[200px] overflow-y-auto rounded-lg">
               {formData.languages.map((language, index) => (
@@ -381,7 +394,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                       value={language.language}
                       onChange={handleChange}
                       className="w-3/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                      placeholder="Language"
+                      placeholder={t("Recruitment Edit.Language")}
                     />
                     <select
                       name={`languages-${index}-level`}
@@ -389,20 +402,32 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                       onChange={handleChange}
                       className="w-3/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                     >
-                      <option value="">Select level</option>
-                      <option value="A1 (Beginner)">A1 (Beginner)</option>
-                      <option value="A2 (Elementary)">A2 (Elementary)</option>
-                      <option value="B1 (Intermediate)">B1 (Intermediate)</option>
-                      <option value="B2 (Upper Intermediate)">B2 (Upper Intermediate)</option>
-                      <option value="C1 (Advanced)">C1 (Advanced)</option>
-                      <option value="C2 (Proficient)">C2 (Proficient)</option>
+                          <option value="">{t("AddApplicants.Select level")}</option>
+                          <option value="A1 (Beginner)">
+                             {t("AddApplicants.A1 (Beginner)")}
+                          </option>
+                          <option value="A2 (Elementary)">
+                              {t("AddApplicants.A2 (Elementary)")}
+                          </option>
+                          <option value="B1 (Intermediate)">
+                            {t("AddApplicants.B1 (Intermediate)")}
+                          </option>
+                          <option value="B2 (Upper Intermediate)">
+                              {t("AddApplicants.B2 (Upper Intermediate)")}
+                          </option>
+                          <option value="C1 (Advanced)">
+                            {t("AddApplicants.C1 (Advanced)")}
+                          </option>
+                          <option value="C2 (Proficient)">
+                             {t("AddApplicants.C2 (Proficient)")}
+                          </option>
                     </select>
                     <button
                       type="button"
                       onClick={() => removeLanguage(formData, setFormData, index)}
                       className="m-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition border border-white"
                     >
-                      Remove
+                      {t("Recruitment Edit.Remove")}
                     </button>
                   </div>
                   {errors[`languages-${index}-language`] && (
@@ -419,7 +444,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 onClick={() => addLanguage(formData, setFormData)}
                 className="p-2  mt-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600 "
               >
-                Add Language
+                {t("Recruitment Edit.Add Language")}
               </button>
           </div>
 
@@ -428,14 +453,16 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         <div className='border-2 border-gray-500 rounded-md p-2'>  
         {/*weight of courses*/}
         <div className='mb-4'>
-          <label className="block text-sm font-medium text-blue-300">Weight of Courses</label>
+          <label className="block text-sm font-medium text-blue-300">
+          {t("Recruitment Edit.Weight of Courses")}
+            </label>
           <input
             type="number"
             name="weightOfCourses"
             value={formData.weightOfCourses}
             onChange={handleChange}
             className="mt-1 block w-1/2 px-3 py-2 border border-sky rounded-md shadow-sm bg-blue-50 text-blue-400"
-            placeholder="from 0 to 100"  
+            placeholder={t("From 0 to 100")} 
           />
           {errors.weightOfCourses &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.weightOfCourses}</p>}
         </div>
@@ -444,7 +471,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
         {/* Courses */}
         <div className="mb-4">
         <label className="block text-sm font-medium text-gray-300">
-                Courses (comma separated)
+                {t("Recruitment Edit.Courses (comma separated)")}
               </label>
               <input
                 type="text"
@@ -453,7 +480,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 value={formData.courses.join(", ")}
                 onChange={handleChange}
                 className="w-full border rounded-md p-2"
-                placeholder="e.g., Full Stack Development, React Basics"
+                placeholder={t("Recruitment Edit.e.g., Full Stack Development, React Basics")}
                 onBlur={handleInputBlur}
               />
                <br />
@@ -485,7 +512,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
           onClick={handleSave}
           className="flex items-center justify-center w-1/2 py-2 mt-4 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600"
         >
-          {id ? "Save Recruitment" : "Create Recruitment"}
+          {id ? t("Recruitment Edit.Save Recruitment") : t("Recruitment Edit.Create Recruitment")}
         </button>
       </div>
     </section>

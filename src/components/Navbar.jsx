@@ -469,14 +469,14 @@ const Navbar = () => {
                   </div>
                 </div>
                 )}
-              <div className=" flex space-x-4 z-50 bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white border-2">
+              <div className=" flex space-x-4 z-50 bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white ">
               <button
                 onClick={() => changeLanguage('pl')}
                 className={`p-1 rounded-md ${
                   i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'
                 } hover:bg-blue-400 transition duration-200`}
               >
-                <Flag code="PL" alt="Polska" width={32} height={32} />
+                <Flag code="PL" alt="Polska" width={28} height={28} />
               </button>
               <button
                 onClick={() => changeLanguage('en')}
@@ -484,7 +484,7 @@ const Navbar = () => {
                   i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'
                 } hover:bg-blue-400 transition duration-200`}
               >
-                <Flag code="GB" alt="Anglia" width={32} height={32} />
+                <Flag code="GB" alt="Anglia" width={28} height={28} />
               </button>
             </div>
 

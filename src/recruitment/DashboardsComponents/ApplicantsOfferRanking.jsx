@@ -6,8 +6,10 @@ import Pagination from './Pagination';
 import { FaUser, FaEnvelope, FaBook, FaTools, FaLanguage, FaBriefcase, FaGraduationCap } from "react-icons/fa";
 import { IoBarChart } from "react-icons/io5";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 const ApplicantsOfferRanking = ({ id }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [rankedApplicants, setRankedApplicants] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,12 +70,12 @@ const ApplicantsOfferRanking = ({ id }) => {
 
   if (!paginatedApplicants.length) return <section className="relative w-full h-screen-80 mx-auto p-4 bg-glass card ">
      <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-      CV Ranking
+     {t("DashboardNavbar.ApplicantsOfferRanking")}
         <HelpGuideLink section="RecruitmentCvRanking" />
       </h1>
 
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-           No applicants found.
+          {t("Applicants stages.No applicants found")}
         </div>
   </section>;
 
@@ -101,7 +103,7 @@ const ApplicantsOfferRanking = ({ id }) => {
   return (
     <section className=" relative w-full min-h-screen-80 mx-auto p-4 bg-glass card ">
            <h1 className="text-3xl font-bold text-white mb-4 flex items-center gap-2 md:whitespace-nowrap">
-      CV Ranking
+           {t("DashboardNavbar.ApplicantsOfferRanking")}
         <HelpGuideLink section="RecruitmentCvRanking" />
       </h1>
     
@@ -125,7 +127,7 @@ const ApplicantsOfferRanking = ({ id }) => {
                 {/* Ogólny wynik CV */}
                 <div className="mb-4">
                   <p className="text-md font-bold text-white flex items-center gap-2">
-                    <IoBarChart className="text-green-400 size-5" /> Overall CV Score: {applicant.CVscore}%
+                    <IoBarChart className="text-green-400 size-5" /> {t("CV Ranking.Overall CV Score")}: {applicant.CVscore}%
                   </p>
                   <div className="w-full h-3 bg-gray-300 rounded-full border border-white overflow-hidden">
                     <motion.div initial={{ width: 0 }} animate={{ width: `${applicant.CVscore}%` }} transition={{ duration: 1.5, ease: "easeOut" }}  className={`h-full ${getProgressBarColor(applicant.CVscore)}`}  />
@@ -136,11 +138,11 @@ const ApplicantsOfferRanking = ({ id }) => {
 
                 {/* Poszczególne wyniki */}
                 {[
-                { label: "Courses", value: applicant.CVscores.courses, icon: <FaBook className="text-yellow-400 size-5" /> },
-                { label: "Skills", value: applicant.CVscores.skills, icon: <FaTools className="text-blue-400 size-5" /> },
-                { label: "Languages", value: applicant.CVscores.languages, icon: <FaLanguage className="text-purple-400 size-5" /> },
-                { label: "Experience", value: applicant.CVscores.experience, icon: <FaBriefcase className="text-orange-400 size-5" /> },
-                { label: "Education", value: applicant.CVscores.education, icon: <FaGraduationCap className="text-green-400 size-5" /> }
+                { label: t("CV Ranking.Courses/Certifications"), value: applicant.CVscores.courses, icon: <FaBook className="text-yellow-400 size-5" /> },
+                { label: t("CV Ranking.Skills"), value: applicant.CVscores.skills, icon: <FaTools className="text-blue-400 size-5" /> },
+                { label: t("CV Ranking.Languages"), value: applicant.CVscores.languages, icon: <FaLanguage className="text-purple-400 size-5" /> },
+                { label: t("CV Ranking.Experience"), value: applicant.CVscores.experience, icon: <FaBriefcase className="text-orange-400 size-5" /> },
+                { label: t("CV Ranking.Education"), value: applicant.CVscores.education, icon: <FaGraduationCap className="text-green-400 size-5" /> }
               ].map(({ label, value, icon }) => (
                 <div key={label} className="mb-3">
                   <p className="text-sm text-white flex items-center gap-2">

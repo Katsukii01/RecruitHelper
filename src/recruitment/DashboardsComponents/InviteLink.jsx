@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiCopy, FiCheck } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 const InviteLink = ({ id }) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const inviteUrl = `${window.location.origin}/RecruitmentAddApplicants?recruitmentId=${id}`;
 
@@ -23,8 +25,12 @@ const InviteLink = ({ id }) => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="max-w-lg mx-auto p-6 bg-gray-900 text-white rounded-2xl shadow-lg text-center"
     >
-      <h2 className="text-xl font-semibold">Udostępnij zaproszenie</h2>
-      <p className="text-gray-400 mt-2">Wyślij ten link, aby ktoś mógł aplikować:</p>
+      <h2 className="text-xl font-semibold">
+        {t("Invite Link.Share invite")}
+      </h2>
+      <p className="text-gray-400 mt-2">
+        {t("Invite Link.Send this link")}:
+        </p>
 
       <div className="relative mt-4 flex items-center">
         <input

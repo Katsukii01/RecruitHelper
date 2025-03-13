@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const HelpGuideLink = ({ section }) => {
+  const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -20,7 +22,7 @@ const HelpGuideLink = ({ section }) => {
 
       {isHovered && (
         <div className="absolute right-0 top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md shadow-md whitespace-nowrap">
-          Open guide
+          {t("Open Guide")}
         </div>
       )}
     </div>
