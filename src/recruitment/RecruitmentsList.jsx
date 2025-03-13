@@ -84,15 +84,16 @@ const RecruitmentList = () => {
               </p>
             </div>
           ) : (
-            <div className="flex flex-wrap justify-center  gap-8 h-auto w-full px-16 py-4">
-              {paginatedRecruitments.map((recruitment) => (
-                <RecruitmentCard
-                  key={recruitment.id}
-                  recruitment={recruitment}
-                  type="Apply"
-                />
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 h-auto w-full px-16 py-4">
+            {paginatedRecruitments.map((recruitment) => (
+              <RecruitmentCard
+                key={recruitment.id}
+                recruitment={recruitment}
+                type="Apply"
+              />
+            ))}
+          </div>
+
           )}
         </>
       )}
