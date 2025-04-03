@@ -161,7 +161,7 @@ const Home = () => {
               className="input bg-glass rounded-lg w-1/2 p-2"
             />
             {error &&   <p className="text-red-500  bg-red-100 mt-2 border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{error}</p>}
-            <button onClick={handleUpdatePassword} className="btn  p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">Update Password</button>
+            <button onClick={handleUpdatePassword} className="btn  p-2 rounded-lg bg-sky text-white font-medium border border-white shadow-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-600">{t('HomePage.Update Password')}</button>
           </div>
         )}
         

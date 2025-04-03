@@ -256,7 +256,7 @@ const MeetingPoints = ({ id, refresh }) => {
           </h1>
 
         <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          No meetings found.
+          {t("No meetings found")}
         </div>
       </section>
     );

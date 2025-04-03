@@ -806,4 +806,84 @@ code, pre, .code-block {
   transition: background-color 0.3s ease-in-out !important;
 }
 
+/* ------------------------------------------- */
 
+/* High Contrast Mode */
+.high-contrast {
+  --bg: #000000 !important;
+  --text: #ffffff !important;
+  --link-color: #ffff00 !important;
+  --border-color: #ffffff !important;
+  --hover-color: #ffff00  !important;
+}
+
+.high-contrast .navbar {
+  background: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+.high-contrast .nav-link {
+  color: #ffffff !important;
+}
+
+.high-contrast .btn {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+.high-contrast .btn:hover {
+  background: #1f2937  !important;
+}
+
+/* Accessibility Controls */
+.accessibility-controls {
+  display: flex !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem !important;
+  background: var(--bg-primary, #1f2937) !important;
+  border-radius: 9999px !important;
+}
+
+.accessibility-btn {
+  background: var(--button-bg, #374151) !important;
+  color: var(--button-text, #ffffff) !important;
+  transition: all 0.2s !important;
+  min-width: 1.5rem !important;
+  border-radius: 180px !important;
+  padding: 0.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.accessibility-btn:hover {
+  background: var(--button-hover-bg, #4b5563) !important;
+}
+
+.accessibility-btn.active {
+  background: var(--button-active-bg, #2563eb) !important;
+}
+
+/* Override other potential conflicting button and link styles */
+.high-contrast .navbar .nav-link,
+.high-contrast .btn {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+}
+
+/* Force all links to have high contrast */
+.high-contrast a {
+  color: var(--link-color) !important;
+}
+
+.high-contrast .navbar .navbar-brand {
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .nav-link:hover,
+.high-contrast .btn:hover {
+  color: var(--bg-primary) !important;
+}
+
+/* ------------------------------------------- */

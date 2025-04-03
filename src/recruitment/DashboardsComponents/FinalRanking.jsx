@@ -125,7 +125,7 @@ const FinalRanking = ({ id }) => {
 
 
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4">
-          {t("Applicants stages.No applicants found")}
+          {t("No Applicants found")}
           </div>
         </section>); 
 

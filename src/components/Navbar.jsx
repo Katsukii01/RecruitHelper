@@ -6,10 +6,19 @@ import { logo } from '../assets';
 import { AuthContext } from '../store/AuthContext';
 import { useTranslation } from 'react-i18next';
 import Flag from 'react-world-flags'; 
+import { useAccessibility } from '../store/AccessibilityContext';
 
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const {
+    increaseFontSize,
+    decreaseFontSize,
+    resetFontSize,
+    toggleHighContrast,
+    highContrast
+  } = useAccessibility();
+  const [isVisible, setIsVisible] = useState(false); 
   const auth = useContext(AuthContext);
   const { user, isAdmin, signOut } = auth;
   const navigate = useNavigate();
@@ -19,6 +28,7 @@ const Navbar = () => {
   const location = useLocation();
   const mdToLgQuery = window.matchMedia('(min-width: 1024px)');
 
+    
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang); // Zmiana języka
   };
@@ -486,32 +496,103 @@ const Navbar = () => {
               >
                 <Flag code="GB" alt="Anglia" width={28} height={28} />
               </button>
+                  
             </div>
-
+            <div className="accessibility-controls">
+                  <button
+                    onClick={increaseFontSize}
+                    className="accessibility-btn"
+                    aria-label={t('accessibility.increaseFontSize')}
+                  >
+                    A+
+                  </button>
+                  <button
+                    onClick={decreaseFontSize}
+                    className="accessibility-btn"
+                    aria-label={t('accessibility.decreaseFontSize')}
+                  >
+                    A-
+                  </button>
+                  <button
+                    onClick={toggleHighContrast}
+                    className={`accessibility-btn ${highContrast ? 'active' : ''}`}
+                    aria-label={t('accessibility.toggleContrast')}
+                  >
+                    <img 
+                      src="https://firebasestorage.googleapis.com/v0/b/centrumgier-a08cf.appspot.com/o/Images%2Fcontrast.png?alt=media" 
+                      alt="Contrast" 
+                      style={{ width: '20px', height: '20px', borderRadius: '180px' }} 
+                    />
+                  </button>
+              </div>
               </ul>
           </div>
         </div>      
       </div> 
     </nav>
     <nav className="relative hidden 2xl:flex "> 
-    <div className="fixed top-2 right-2 flex space-x-4 z-50 bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white border-2">
-    <button
-      onClick={() => changeLanguage('pl')}
-      className={`p-1 rounded-md ${
-        i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-      } hover:bg-blue-400 transition duration-200`}
-    >
-      <Flag code="PL" alt="Polska" width={32} height={32} />
-    </button>
-    <button
-      onClick={() => changeLanguage('en')}
-      className={`p-1 rounded-md ${
-        i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-      } hover:bg-blue-400 transition duration-200`}
-    >
-      <Flag code="GB" alt="Anglia" width={32} height={32} />
-    </button>
-  </div>
+    <div className="fixed bottom-2 right-2 flex flex-col space-y-1 z-50 bg-gradient-to-br from-slate-500 to-indigo-950 p-2 rounded-xl border-white border-2">
+      <div
+        className="flex justify-center items-center"
+      >
+        {/* Strzałka */}
+        <span
+         onClick={() => setIsVisible(!isVisible)}
+        className={`hover:cursor-pointer hover:from-slate-800 hover:to-indigo-950 text-white text-2xl bg-gradient-to-br from-indigo-950 to-slate-500 h-8 w-8 rounded-full flex items-center justify-center transition-transform duration-300 transform ${isVisible ? 'rotate-180' : ''}`}
+      >
+        ^
+      </span>
+      </div>
+
+      {/* Wysuwana zawartość */}
+      {isVisible && (
+        <>
+          <div className="flex space-x-4 justify-center">
+            <button
+              onClick={() => changeLanguage('pl')}
+              className={`p-1 rounded-md ${i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'} hover:bg-blue-400 transition duration-200`}
+            >
+              <Flag code="PL" alt="Polska" width={32} height={32} />
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`p-1 rounded-md ${i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'} hover:bg-blue-400 transition duration-200`}
+            >
+              <Flag code="GB" alt="Anglia" width={32} height={32} />
+            </button>
+          </div>
+
+          <div className="accessibility-controls flex space-x-2 mt-2 items-center justify-center">
+            <button
+              onClick={increaseFontSize}
+              className="accessibility-btn"
+              aria-label="Increase Font Size"
+            >
+              A+
+            </button>
+            <button
+              onClick={decreaseFontSize}
+              className="accessibility-btn"
+              aria-label="Decrease Font Size"
+            >
+              A-
+            </button>
+            <button
+              onClick={toggleHighContrast}
+              className={`accessibility-btn ${highContrast ? 'active' : ''}`}
+              aria-label="Toggle Contrast"
+            >
+              <img 
+                src="https://firebasestorage.googleapis.com/v0/b/centrumgier-a08cf.appspot.com/o/Images%2Fcontrast.png?alt=media" 
+                alt="Contrast" 
+                style={{ width: '20px', height: '20px', borderRadius: '180px' }} 
+              />
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+
 </nav>
   </>
   );

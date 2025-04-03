@@ -60,7 +60,7 @@ export const analyzeCV = async (cvContent) => {
   if (!cvContent) {
     throw new Error("Missing CV content.");
   }
-
+  console.log("cvContent", cvContent);
   try {
     const response = await apiClient.post(apiEndpoints.analyzeCV, {
       cv_text: cvContent,

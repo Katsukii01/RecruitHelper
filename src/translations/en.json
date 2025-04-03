@@ -878,9 +878,560 @@
             "Job title cannot exceed 45 characters": "Job title cannot exceed 45 characters",
             "Recruitment name is required" : "Recruitment name is required",
             "Recruitment name cannot exceed 45 characters" : "Recruitment name cannot exceed 45 characters"
-          }
-
+          },
+          "help": {
+            "title": "Help",
+            "recruitment": {
+              "title": "Recruitment",
+              "creating": "Creating Recruitment",
+              "chooseMethod": "Choosing Recruitment Method",
+              "addApplicantsManually": "Adding Applicants Manually",
+              "addApplicantsFromFile": "Adding Applicants From File",
+              "overview": "Recruitment Overview",
+              "applicantsStages": "Applicants Stages",
+              "applicantsManage": "Managing Applicants",
+              "tasks": "Tasks", 
+              "tasksPoints": "Tasks Points",
+              "meetingsSessions": "Meeting Sessions",
+              "meetings": "Meetings",
+              "meetingsPoints": "Meetings Points",
+              "coverLettersAnalysis": "Cover Letters Analysis",
+              "coverLettersPoints": "Cover Letters Points",
+              "adnationalPoints": "Adnational Points",
+              "cvRanking": "CV Ranking",
+              "finalRanking": "Final Ranking",
+              "finish": "Finishing Recruitment",
+              "edit": "Editing Recruitment",
+              "delete": "Deleting Recruitment"
+            },
+            "applications": {
+              "title": "Applications",
+              "applyForJob": "Apply for Job",
+              "recruitmentsList": "Recruitments List",
+              "applicationStages": "Application Stages",
+              "stages": "Stages"
+            },
+            "account": {
+              "title": "Account",
+              "signIn": "Sign In",
+              "signUp": "Sign Up",
+              "homePage": "Home Page"
+            },
+            "dashboard": {
+              "title": "Dashboard",
+              "statistics": "Statistics",
+              "meetingsCalendar": "Meetings Calendar",
+              "recruitments": "Recruitments"
+            },
+            "applicationStages": {
+              "title": "Application Stages"
+            },
+            "applicantStages": {
+              "toBeChecked": "The applicant is awaiting review, their application has not yet been evaluated.",
+              "rejected": "The applicant has been rejected because their application did not meet the required qualifications or criteria.",
+              "checked": "The applicant has been checked, their application has been reviewed for qualifications and fit.",
+              "invitedForInterview": "The applicant has been invited for an interview to assess their skills and suitability for the team.",
+              "interviewed": "The applicant has been interviewed, the interview aimed at assessing their experience and skills.",
+              "tasks": "The applicant has completed tasks assigned during the recruitment process, which are evaluated based on performance.",
+              "offered": "The applicant has been offered a job, and the offer is ready to be accepted or declined.",
+              "hired": "The applicant has been hired, and the recruitment process is complete."
+            },
+              "creatingRecruitment": {
+                "title": "Creating a Recruitment",
+                "nameJobTitle": {
+                  "title": "Name & Job Title",
+                  "description": 
+                  {
+                    "Name": "Name",
+                    "NameDesc": "Required, max 45 characters.",
+                    "Job Title": "Job Title",
+                    "Job TitleDesc": "Required, max 45 characters."
+                  }
+                },
+                "experienceNeeded": {
+                  "title": "Experience Needed",
+                  "description": {
+                    "1": "Must be between 0 and 60 years.",
+                    "2": "Only numbers (e.g., 1, 1.5, 20) are allowed."
+                  }
+                },
+                "weightDistribution": {
+                  "title": "Weight Distribution",
+                  "description": {
+                    "1": "Each weight (Experience, Skills, Education, Courses, Languages) must be between 0 and 100.",
+                    "2": "The sum of all weights must be exactly 100."
+                  }
+                },
+                "languageSkills": {
+                  "title": "Language Skills",
+                  "description": {
+                    "1": "Language name must be valid and exist.",
+                    "2": "Accepted levels: A1, A2, B1, B2, C1, C2."
+                  }
+                },
+                "skillsAndCourses": {
+                  "title": "Skills & Courses",
+                  "description": {
+                    "1": "Skills: Optional, should be separated by commas (e.g., JavaScript, React, Node.js).",
+                    "2": "Courses: Optional, should also be separated by commas (e.g., Project Management, Agile Methodology)."
+                  }
+                },
+                "expertRecommendations": {
+                  "title": "Expert Recommendations",
+                  "intro": "Based on industry insights, a balanced weight distribution is:",
+                  "weights": {
+                    "experience": "Experience: 30-40%",
+                    "skills": "Skills: 25-35%",
+                    "education": "Education: 10-20%",
+                    "courses": "Courses: 5-10%",
+                    "languages": "Languages: 10-20%"
+                  },
+                  "note": "*These are guidelines—final distribution should align with the recruiter's priorities."
+                }
+              },
+              "recruitmentChooseMethod": {
+                "Headertitle": "Choosing a Method to Add Applicants",
+                "title": {
+                  "1": "Adding Applicants Manually",
+                  "2": "Adding Applicants Using CV",
+                  "3": "Additional Information"
+                },
+                "description": {
+                  "1": "This method allows you to manually input applicant details, such as name, experience, skills, and education.",
+                  "2": "Recommended for cases where structured CVs are not available or require manual adjustments.",
+                  "3": "This method leverages AI-powered CV parsing using **Regex, NLP, and LLM models** to extract key details automatically.",
+                  "4": "Recommended for handling large applicant volumes efficiently and reducing manual entry time.",
+                  "5": "Only PDF files are allowed.",
+                  "6": "Ensure all applicant details are accurate to maintain high recruitment quality.",
+                  "7": "The system will validate data and highlight missing or incorrect fields."
+                }
+              },
+              "recruitmentAddApplicantsManually": {
+                "Headertitle": "Adding Applicants Manually",
+                "title": {
+                  "1": "Personal Information",
+                  "2": "Contact Information",
+                  "3": "Required Documents",
+                  "4": "Education Details",
+                  "5": "Experience Details",
+                  "6": "Language Skills",
+                  "7": "Skills & Courses",
+                  "8": "Additional Information"
+                },
+                "description": {
+                    "Personal Information": {
+                      "name": "Name",
+                      "nameDesc": "Required, max 25 characters.",
+                      "surname": "Surname",
+                      "surnameDesc": "Required, max 25 characters."
+                    },
+                    "Contact Information": {
+                      "email": "Email",
+                      "emailDesc": "Required, must be a valid format.",
+                      "phone": "Phone",
+                      "phoneDesc": "Required, must contain 9-15 digits."
+                    },
+                    "Required Documents": {   
+                      "cv": "CV",
+                      "cvDesc": "Required, must be uploaded. Only PDF files are allowed.",
+                      "coverLetter": "Cover Letter",
+                      "coverLetterDesc": "Optional."
+                    },
+                    "Education Details": {  
+                      "fieldOfStudy": "Field of Study",
+                      "fieldOfStudyDesc": "Required, max 40 characters.",
+                      "educationLevel": "Education Level",
+                      "educationLevelDesc": "Required, max 25 characters.",
+                      "institutionName": "Institution Name",
+                      "institutionNameDesc": "Optional, max 100 characters."
+                    },
+                    "Work Experience": {
+                      "experienceDesc": "Must be between 0 and 99 years.",
+                      "experienceDesc2": "Accepts decimal values (e.g., 1, 1.5, 20)."
+                    },
+                    "Language Skills": {
+                      "languageDesc": "Language name must be valid.",
+                      "levelDesc": "Accepted levels: A1, A2, B1, B2, C1, C2."
+                    },
+                    "Skills & Courses": {
+                      "skills": "Skills",
+                      "courses": "Courses",
+                      "skillsDesc": "Optional, should be separated by commas (e.g., JavaScript, React, Node.js).",
+                      "coursesDesc": "Optional, should also be separated by commas (e.g., Project Management, Agile Methodology)."
+                    },
+                    "Additional Information": {
+                      "infoDesc": "Ensure all applicant details are accurate to maintain high recruitment quality.",
+                      "infoDesc2": "The system will validate data and highlight missing or incorrect fields."
+                    }
+                }
+              },
+              "recruitmentAddApplicantsFromFile": {
+                "Headertitle": "Adding Applicants From File",
+                "title": {
+                  "1": "File Upload Requirements",
+                  "2": "How the Process Works",
+                  "3": "Finalizing and Saving"
+                },
+                "description": {
+                  "1": {
+                    "1" : "Accepted format:",
+                    "2" : "Only PDF files are allowed.",
+                    "3" : "CV is required:",
+                    "4" : "Each applicant must have a CV file.",
+                    "5" : "Cover Letter (optional):",
+                    "6" : "Can be added for additional insights."
+                  },
+                  "2": {
+                    "1" : "1. Upload one or multiple CV files (PDF format only).",
+                    "2" : "2. Our system will automatically extract key information using AI-powered text analysis.",
+                    "3" : "3. You will review the extracted data and fill in any missing details.",
+                    "4" : "4. Once verified, save the applicants into the system."
+                  },
+                  "3": {
+                    "1" : "Double-check all extracted details before saving.",
+                    "2" : "Add missing information such as education, experience, and skills if needed.",
+                    "3" : "Click",
+                    "4" : "save",
+                    "5" : "to finalize and add applicants to the recruitment process."
+                  }
+                }
+            },
+            "recruitmentOverview": {
+              "title": "Recruitment Overview Guide",
+              "recommendations": "Recommendations for Recruitment Order",
+              "recommendations_desc": "We recommend the following steps to follow while recruiting:",
+              "steps": {
+                "1": "Checking CV scores.",
+                "1.1": "(Optional) Check and score Cover Letters if the applicant has one.",
+                "2": "Add the \"Checked\" stage to applicants with the highest scores. Mark the rest as \"Rejected\".",
+                "3": "Plan meetings or tasks based on your recruitment needs.",
+                "4": "Proceed with the scheduled meetings or tasks.",
+                "5": "Score tasks and meetings accordingly.",
+                "6": "Assign additional points if needed.",
+                "7": "Mark candidates to whom you have offered jobs.",
+                "8": "Mark candidates that have been hired.",
+                "9": "Finalize the recruitment process:"
+              },
+              "finalization": {
+                "review": "Leave a review of the recruitment process.",
+                "export": "Export data for further analysis.",
+                "close": "Click \"Close Recruitment\" to finish the process."     
+              },
+              "current_stage": "Current Stage",
+              "current_stage_desc": "Displays the current progress of the recruitment process and enables switching between stages.",
+              "statistics": "Recruitment Statistics",
+              "statistics_desc": "Displays key metrics like Total Applicants, Highest Score, Average Score, Total Tasks, and Total Meeting Sessions.",
+              "cover_letter": "Cover Letters Percentage",
+              "cover_letter_desc": "Indicates the percentage of applicants who submitted a Cover Letter along with their application.",
+              "applicants_stage": "Applicants in Each Stage",
+              "applicants_stage_desc": "Provides a breakdown of applicants at different stages of recruitment."
           
-         
-}
-
+            },
+            "recruitmentApplicantsStages": 
+            {
+              "title": "Guide for Managing Applicant Stages",
+              "tracking": "Tracking Applicant Progress",
+              "tracking_desc": "- Each applicant has an assigned recruitment stage (e.g., Applied, Interview, Hired).   \n - The stage helps in monitoring the applicant's journey through the recruitment process.",
+              "modifying": "Modifying Applicant Stages",
+              "modifying_desc": "- Click on an applicant's stage to update it.   \n - The system provides predefined stages to maintain consistency.   \n - Ensure changes are accurate to keep track of applicant progress."
+            },
+            "recruitmentApplicantsManage": {
+              "title": "Guide for Managing Applicants",
+              "viewing": "Viewing Applicant Details",
+              "viewing_desc": "Displays all information about an applicant, including personal details, experience, skills, and education.\nAllows reviewing and verifying extracted data before finalizing the application.",
+              "cv_preview": "CV and Cover Letter Preview",
+              "cv_preview_desc": "If available, users can preview an applicant's CV and Cover Letter directly within the system.\nOnly PDF files are supported for preview.",
+              "adding": "Adding New Applicants",
+              "adding_desc": "Clicking the \"Add Applicant\" button redirects users to the applicant addition method selection.\nUsers can choose between manual entry or automated CV parsing."
+            },
+            "recruitmentTasks": {
+              "title": "Guide for Managing Tasks",
+              "explanation": "Explanation for Points",
+              "explanation_desc": "- Total Points collected from all tasks are equal to 25% of final ranking score. \n - You can decide to count Task Points or not in Final Ranking section (on default counting is enabled). \n",
+              "overview": "Overview",
+              "overview_desc": "- This section allows you to manage recruitment tasks effectively. \n - You can view key details like task Name, Description, Deadline Date, Deadline Time, and Points Weight. \n - Points Weight is determinating ratio of points earned for completing the task in contrast to other tasks. \n - Deadline Date and Time is the date and time when the task is due to be completed. \n",
+              "actions": "Available Actions",
+              "editTask": "Edit Task",
+              "deleteTask": "Delete Task",
+              "createTask": "Create Task",
+              "actions_desc_1": "Modify task details like deadline, description, or points.",
+              "actions_desc_2": "Permanently remove a task from the system. With this action, all related data (like assinged tasks) will be lost.",
+              "actions_desc_3": "Add a new task to the recruitment process."
+            },
+            "recruitmentTasksPoints": {
+              "title": "Guide for Managing Task Points",
+              "viewing": "Viewing Assigned Tasks & Points",
+              "viewing_desc": "- Displays users with their assigned tasks and earned points. \n - Allows modification of assigned task details.",
+              "managing": "Managing Tasks",
+              "editing": "Editing Assigned Task",
+              "editing_desc": "Modify assinged task or applicant.",
+              "deleting": "Deleting Assigned Task",
+              "deleting_desc": "Remove assigned task from the system.",
+              "creating": "Assigning Task",
+              "creating_desc": "Assign a task to an applicant.",
+              "rules": "Rules for Assigning Tasks and Points",
+              "rules_desc": "- Applicant can be only assigned to a task only once. \n - Applicant can be assigned to multiple tasks. \n - Only Applicants in stages",
+              "rules_desc_2": "(Checked, Invited for interview, Interviewed, Tasks)",
+              "rules_desc_3": "can be assigned to tasks! \n - Task can be assigned to only one applicant at a time.",
+              "changing_points": "Changing Task Points",
+              "changing_points_desc": "- Users can update task points through an input field. \n - The changes are validated to ensure accuracy. \n - Task points must be between 0 and 100."
+            },
+            "recruitmentMeetingsSessions": {
+              "title": "Guide for Managing Meeting Sessions",
+              "explanation": "Explanation for Points",
+              "explanation_desc": "- Total Points collected from all meetings are equal to 25% of final ranking score. \n - You can decide to count Meeting Points or not in Final Ranking section (on default counting is enabled). \n",
+              "creating": "Creating a Meeting Session",
+              "creating_desc": "- Click on the create meeting session button to add a new session. \n - Provide details such as Name, Description, and Points Weight. \n - Points Weight is determinating ratio of points earned in one meeting in contrast to other meeting.",
+              "managing": "Managing Meeting Sessions",
+              "managing_desc": "- Each session displays relevant details such as Name, Description, and Points Weight.",
+              "editing": "Use the Edit button to modify session details.",
+              "deleting": "Click the Delete button to remove a session permanently"
+            },
+            "recruitmentMeetings": {
+              "title": "Guide for Managing Meetings",
+              "meetingsCalendar": "Meetings Calendar",
+              "meetingsCalendar_desc": "- Displays a calendar with red dots marking days that have scheduled meetings. \n - Click on a date to view the list of scheduled meetings for that day.",
+              "meetingsDetails": "Meetings Details",
+              "meetingsDetails_desc": "- Shows the list of meetings scheduled for the selected date.",
+              "meetingsDetails_desc_2": "- Each meeting entry contains:",
+              "meetingsDetails_desc_3": "Meeting Name and Description",
+              "meetingsDetails_desc_4": "Time Slot (e.g., 11:00 - 11:30)",
+              "meetingsDetails_desc_5": "Applicant Details: Name Surename | Email",
+              "meetingsDetails_desc_6": "Documents: CV Preview | Cover Letter Preview",
+              "meetingsActions": "Available Actions",
+              "meetingsActions_desc": "Join Meeting: Redirects to the meeting session.",
+              "meetingsActions_desc_2": "Open CV: Opens the applicant's CV in a new tab.",
+              "meetingsActions_desc_3": "Open Cover Letter: Opens the applicant's cover letter in a new tab (if uploaded)."
+            
+          },
+          "recruitmentMeetingsPoints": {
+            "title": "Guide for Managing Meetings Points",
+            "explanation": "Viewing Assigned Meetings & Points",
+            "explanation_desc": "- Displays users with their assigned meetings and earned points. \n - Allows modification of assigned meeting details.",
+            "Meeting Management Actions": "Meeting Management Actions",
+            "Edit": "Edit Assigned Meeting: Modify assinged meeting or applicant.",
+            "Delete": "Delete Assigned Meeting: Remove assigned meeting from the system.",
+            "Plan Meeting": "Plan Meeting: Assign a meeting to an applicant.",
+            "Rules for Assigning Meetings and Points": "Rules for Assigning Meetings and Points",
+            "Rules for Assigning Meetings and Points_desc": "- Applicant can be only assigned to a meeting only once. \n - Applicant can be assigned to multiple meetings. \n - Only Applicants in stages ",
+            "Rules for Assigning Meetings and Points_desc_2": "(Checked, Invited for interview, Interviewed, Tasks) ",
+            "Rules for Assigning Meetings and Points_desc_3": "can be assigned to meetings! \n - Meetings can't be in the same time slot or in past. They must be in the future at least one hour form now. \n - Assigned meetings points are weighted based on the weight distribution defined in the meeting session settings. \n - Applicants can earn points based on the assigned meetings. \n - The system calculates the total points based on the weight distribution and applicant's meetings.",
+            "Changing Meetings Points": "Changing Meetings Points",
+            "Changing Meetings Points_desc": "- Users can update meeting points through an input field. \n - The changes are validated to ensure accuracy. \n - Meeting points must be between 0 and 100."
+          },
+          "recruitmentCoverLettersAnalysis": {
+            "title": "Guide for Cover Letter Analysis",
+            "overview": "Overview",
+            "overview_desc": "- This section allows you to review cover letter analysis generated by an intelligent system. \n - The AI-based tool evaluates cover letters and suggests scores based on relevance, quality, and completeness. \n - If no analysis is available, you can manually review and rate the cover letter.",
+            "applicantInformation": "Applicant Information",
+            "applicantInformation_desc": "- Each row in the table represents an applicant along with their submitted cover letter. \n - You can view details such as name, email, and the proposed cover letter points. \n - If a cover letter has not been analyzed yet, the system will display \"No Analysis Yet\"."
+          },
+          "recruitmentCoverLettersPoints": {
+            "title": "Guide for Cover Letter Points",
+            "assigning": "Assigning Cover Letter Points Manually",
+            "assigning_desc": "- You can manually assign points to an applicant's cover letter based on your own evaluation. \n - Points can range from 0 to 100. \n - Or you can use the AI-generated score in previous tab to adjust the points if needed.",
+            "using": "Using AI-Suggested Cover Letter Points",
+            "using_desc": "- The system provides a suggested score for each cover letter based on its analysis. \n - This score might not be accurate, but it can help you get started."
+          },
+          "recruitmentAdnationalPoints": {
+            "title": "Guide for Additional Points",
+            "assigning": "Assigning Additional Points",
+            "assigning_desc": "- This section allows you to manually assign additional points to applicants. \n - Points can range from 0 to 100, contributing up to **20% of the final recruitment score**. \n - Use your own judgment to reward applicants for qualities not covered by predefined evaluation metrics.",
+            "example": "Example of Additional Points Assignment",
+            "applicant": "Applicant",
+            "additionalPoints": "Additional Points",
+            "editable": "(Editable Input)"
+          },
+          "recruitmentCvRanking": {
+            "title": "Guide for CV Ranking",
+            "understanding": "Understanding the CV Score Calculation",
+            "understanding_desc": "- The CV score determines the applicant's overall score based on their CV. \n - The CV score is calculated using a formula that takes into account the applicant's CV content. \n - The CV score is a percentage value between 0 and 100, with a higher score indicating a better CV.",
+            "example": "Example Applicant Scores",
+            "example_desc_1": "- Overall CV Score: ",
+            "example_desc_2": "- Courses: ",
+            "example_desc_3": "- Skills: ",
+            "example_desc_4": "- Languages: ",
+            "example_desc_5": "- Experience: ",
+            "example_desc_6": "- Education: "
+          },
+          "recruitmentFinalRanking": {
+            "title": "Guide for Final Ranking",
+            "understanding": "Understanding the Final Score Calculation",
+            "understanding_desc": "- The final ranking determines the best applicants based on various score components. \n - Each main factor (CV, Cover Letter, Tasks, Meetings) contributes 25% to the final score. \n - Additional Points are counted separately, with a maximum impact of 20%, but do not increase the total maximum score.",
+            "switches": "Switches explained",
+            "switches_desc": "- The switches allow you to enable or disable the calculation of specific components in the final score.",
+            "example": "Example Applicant Scores",
+            "example_desc_1": "- Overall Score: ",
+            "example_desc_2": "- CV Score: ",
+            "example_desc_3": "- Cover Letter Score: ",
+            "example_desc_4": "- Tasks Score: ",
+            "example_desc_5": "- Meetings Score: ",
+            "example_desc_6": "- Additional Points: "
+          },
+          "recruitmentFinish": {
+            "title": "Guide for Finalizing Recruitment",
+            "overview": "Overview",
+            "overview_desc": "The Recruitment Finish section allows you to finalize the recruitment process. Before closing, make sure to export all necessary data.",
+            "export": "Export Recruitment Data",
+            "export_desc": "Click the \"Export Recruitment Data\" button to download all recruitment-related data.",
+            "export_tab_1": "Applicants",
+            "export_tab_1_desc": "Contains all applicants, including their CVs, Cover Letters, and additional points.",
+            "export_tab_2": "Tasks",
+            "export_tab_2_desc": "Contains all tasks, including their points and status.",
+            "export_tab_3": "Meetings",
+            "export_tab_3_desc": "Contains all meetings, including their points and status.",
+            "export_tab_4": "Offer Data",
+            "export_tab_4_desc": "Contains all job offer data",
+            "export_tab_5": "Recruitment Stats",
+            "export_tab_5_desc": "Contains key recruitment statistics, such as total applicants, highest score, and average score.",
+            "close": "Click \"Close Recruitment\" to finish the process.",
+            "close_warning": "Warning: Once closed, all submitted data will be lost!",
+            "close_recruitment": "Close Recruitment",
+            "warning": "Warning",
+            "review": "Leave a review",
+            "review_desc": "Provide feedback on the recruitment process by submitting an opinion and rating (0-5 stars)"
+          },
+          "recruitmentEdit": {
+            "title": "Guide for Editing Recruitment",
+            "status": "Recruitment Status",
+            "status_desc": "The recruitment status can be set to Private (hidden from applicants) or Public (open for applications).",
+            "jobDetails": "Job Information",
+            "jobDetails_desc": "Define the job role (e.g., Frontend Dev SoftHouse) and title (e.g., Frontend Developer).",
+            "education": "Education Criteria",
+            "education_desc": "Set the weight and level for education criteria.",
+            "experience": "Experience Criteria",
+            "experience_desc": "Set the weight and level for experience criteria.",
+            "skills": "Skills & Courses",
+            "skills_desc": "Set the weight and level for skills and courses criteria.",
+            "language": "Language Skills",
+            "language_desc": "Set the weight and level for language skills criteria.",
+            "save": "Save Recruitment Changes",
+            "save_desc": "Click the \"Save Recruitment Changes\" button to save the changes."
+          },
+          "recruitmentDelete": {
+            "title": "Guide for Deleting Recruitment",
+            "warning": "Warning!",
+            "warning_desc": "Deleting a recruitment process is permanent and cannot be undone. All associated data will be lost!!!",
+            "process": "Deletion Process",
+            "process_desc": "1. Enter the recruitment name in the confirmation field. \n 2. Wait for 5 seconds to proceed. \n 3. Click \"Confirm\" button. \n 4. Click \"Confirm Again\" to finalize deletion.",
+            "confirmation": "Confirmation",
+            "confirmation_desc": "Once confirmed, the recruitment process will be removed from the system. Ensure you have exported necessary data before proceeding."
+          },
+          "ApplyForJob": {
+            "title": "Guide for Applying for a Job",
+            "personalInformation": "Personal Information",
+            "personalInformation_desc": "- Name: Required, max 25 characters. \n - Surname: Required, max 25 characters. \n - Email: Required, must be a valid format. \n - Phone: Required, must contain 9-15 digits.  ",
+            "requiredDocuments": "Required Documents",
+            "requiredDocuments_desc": "- CV: Required, must be uploaded. Only PDF files are allowed. \n - Cover Letter: Optional but recommended.",
+            "skillsExperience": "Skills & Experience",
+            "skillsExperience_desc": "- Relevant Skills: List key skills (e.g., JavaScript, React). \n - Work Experience: Provide job history and roles.",
+            "coursesCertifications": "Courses & Certifications",
+            "coursesCertifications_desc": "- Relevant Courses: List required courses (e.g., React Advanced, JavaScript Mastery). \n - Relevant Certifications: List required certifications (e.g., React Advanced, JavaScript Mastery).",
+            "language": "Language Skills",
+            "language_desc": "- Language name must be valid. \n - Accepted levels: A1, A2, B1, B2, C1, C2.",
+            "education": "Education Details",
+            "education_desc": "- Field of Study: Required, max 40 characters. \n - Education Level: Required, max 25 characters. \n - Institution Name: Optional, max 100 characters.",
+            "courses": "Courses & Certifications",
+            "courses_desc": "- Relevant Courses: List required courses (e.g., React Advanced, JavaScript Mastery). \n - Relevant Certifications: List required certifications (e.g., React Advanced, JavaScript Mastery).",
+            "submission": "Submission GuideLines",
+            "submission_desc": "- Ensure all required fields are filled. \n - Review your application before submission. \n - You can't edit your application after submission. \n - You can only withdraw your application after submission."
+          },
+          "recruitmentList": {
+            "title": "Guide for Recruitment List",
+            "overview": "Overview",
+            "overview_desc": "- The Recruitment List section displays all public and open recruitment processes available for application. \n - You can browse available job openings and apply directly.",
+            "search": "Searching for a Recruitment",
+            "search_desc": "- Use the search bar to find a specific recruitment by entering keywords (e.g., 'Frontend Developer'). \n - Search results update dynamically as you type.",
+            "apply": "Applying for a Job",
+            "apply_desc": "- Click on a recruitment listing to view details.",
+            "apply_desc_2": "- Submit your CV and cover letter to apply."
+          },
+          "SignIn": {
+            "title": "Guide for Signing In",
+            "email": "Email",
+            "email_desc": "- Enter your registered email address.",
+            "email_desc_2": "- Ensure there are no typos.",
+            "password": "Password",
+            "password_desc": "- Enter your password.",
+            "password_desc_2": "- If you forgot your password, click Forgot Password? to reset it.",
+            "google": "Sign in with Google",
+            "google_desc": "- Click on the Google Sign-In button.",
+            "google_desc_2": "- Authenticate using your Google account credentials."
+          } ,
+          "SignUp": {
+            "title": "Guide for Signing Up",
+            "username": "Username",
+            "username_desc": "- Choose a unique username.",
+            "username_desc_2": "- Max length: 25 characters.",
+            "email": "Email",
+            "email_desc": "- Enter your email address.",
+            "email_desc_2": "- You need to confirm your email by re-entering it.",
+            "password": "Password",
+            "password_desc": "- Must be at least 8 characters long.",
+            "password_desc_2": "- Use uppercase, lowercase, numbers, and symbols.",
+            "password_desc_3": "- Confirm your password to avoid mistakes.",
+            "terms": "Terms & Conditions",
+            "terms_desc": "- Accept the terms and conditions to create an account.",
+            "google": "Sign up with Google",
+            "google_desc": "- Click on the Google Sign-Up button.",
+            "google_desc_2": "- Authenticate using your Google account credentials."
+          },
+          "HomePage": {
+            "title": "Help: Managing Your Account",
+            "email_verification": "Email Verification",
+            "email_verification_desc": "- Your email must be verified to access all features. \n - If not verified, check your inbox for a verification link.",
+            "update_name": "Update Name",
+            "update_name_desc": "- You can update your name anytime. \n - Enter your new name and save changes.",
+            "delete_account": "Delete Account",
+            "delete_account_desc": "- Deleting your account is permanent. \n - All your recruitment data will be lost. \n - To confirm, enter your username and proceed.",
+            "update_password": "Update Password",
+            "update_password_desc": "- You can update your password anytime. \n - Enter your new password and save changes."
+          },
+          "Statistics": {
+            "title": "Help: Understanding Statistics",
+            "total_recruitments": "Total Recruitments",
+            "total_recruitments_desc": "- The number of recruitments you ever created. \n - This counts all job postings in the system, including those that have been deleted.",
+            "total_hired_applicants": "Total Hired Applicants",
+            "total_hired_applicants_desc": "- The number of applicants successfully hired through the system.",
+            "total_meetings": "Total Meetings",
+            "total_meetings_desc": "- The number of scheduled recruitment meetings or interviews.",
+            "total_applications": "Total Applications",
+            "total_applications_desc": "- The total number of submitted applications in the system.",
+            "total_applications_rejected": "Total Applications Rejected",
+            "total_applications_rejected_desc": "- The number of times when you were rejected from the recruitment process.",
+            "total_applications_hired": "Total Applications Hired",
+            "total_applications_hired_desc": "- The number of times when you were hired in the recruitment process."
+          },
+          "MeetingsCalendar": {
+            "title": "Help: Managing Meetings Calendar",
+            "meetingsCalendar": "Meetings Calendar",
+            "meetingsCalendar_desc": "- Displays a calendar with dots marking days that have scheduled meetings. \n - Red dots indicate meetings from recruitment. \n - Blue dots indicate meetings from applcations. \n - Purple dots indicate meetings from both in single day. \n - Click on a date to view the list of scheduled meetings for that day.",
+            "meetingsDetails": "Meetings Details",
+            "meetingsDetails_desc": "- Shows the list of meetings scheduled for the selected date.",
+            "meetingsDetails_desc_2": "- Each meeting entry contains:",
+            "meetingsDetails_desc_3": "Meeting Name and Description",
+            "meetingsDetails_desc_4": "Time Slot (e.g., 11:00 - 11:30)",
+            "meetingsDetails_desc_5": "Applicant Details: Name Surename | Email",
+            "meetingsDetails_desc_6": "Documents: CV Preview | Cover Letter Preview",
+            "meetingsActions": "Available Actions",
+            "meetingsActions_desc": "Join Meeting: Redirects to the meeting session.",
+            "meetingsActions_desc_2": "Open CV: Opens the applicant's CV in a new tab.",
+            "meetingsActions_desc_3": "Open Cover Letter: Opens the applicant's cover letter in a new tab (if uploaded)."
+          },
+          "Recruitments": {
+            "title": "Help: Managing Recruitments",
+            "list of recruitments": "List of Recruitments",
+            "list of recruitments_desc": "View and manage your recruitments \n - Filter by searching key words. \n - Click \"Manage\", to go to the recruitment dashboard.",
+            "recruitments stages": "Recruitments Stages"
+          },
+        "recruitmentStages": {
+          "paused": "Recruitment process has been paused, no further actions are being taken at this stage.",
+          "collectingApplicants": "Recruitment is actively gathering applications from potential candidates.",
+          "checkingApplications": "Recruitment is reviewing and evaluating the submitted applications for qualifications and fit.",
+          "interviewingApplicants": "Recruitment is conducting interviews with selected candidates to assess their suitability.",
+          "scoringTasks": "Recruitment is assessing and scoring candidates based on their performance in assigned tasks.",
+          "offeringJobs": "Recruitment is in the process of offering jobs to selected candidates.",
+          "finished": "The recruitment process has been completed, and no further actions will be taken."
+        }
+      }
+    }

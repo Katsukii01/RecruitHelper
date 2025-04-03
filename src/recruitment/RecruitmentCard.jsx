@@ -52,7 +52,7 @@ const RecruitmentCard = ({ recruitment, type }) => {
   return (
     <div
     key={recruitment.id}
-    className="min-h-[659.9px]  h-fit relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
+    className=" h-fit relative border-2 rounded-lg shadow-customDefault group transform transition-all duration-500 bg-gradient-to-bl from-blue-900 to-slate-800 
     hover:scale-105 hover:shadow-customover skew-x-3 hover:skew-x-0"
     
   >

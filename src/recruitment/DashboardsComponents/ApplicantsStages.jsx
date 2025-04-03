@@ -108,7 +108,7 @@ const ApplicantsStages = ( {id}) => {
         </h1>
 
           <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md p-4 ">
-            No Applicants found
+            {t("No Applicants found")}
           </div>
         </section>); 
 

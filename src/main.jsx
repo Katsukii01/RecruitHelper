@@ -7,6 +7,7 @@ import App from './App.jsx';
 
 import * as Sentry from '@sentry/react';
 import './i18n'; 
+import { AccessibilityProvider } from './store/AccessibilityContext';
 
 Sentry.init({
   dsn: 'https://36fe5b7cac04aaa988c3975d118a23bc@o4508839674707969.ingest.de.sentry.io/4508839675101264',
@@ -26,9 +27,11 @@ const SentryApp = Sentry.withProfiler(App);
 const root = createRoot(document.getElementById('root'));
 
 root.render(
-  <AuthProvider>
-    <StrictMode>
-      <SentryApp />
-    </StrictMode>
-  </AuthProvider>
+  <AccessibilityProvider>
+    <AuthProvider>
+      <StrictMode>
+        <SentryApp />
+      </StrictMode>
+    </AuthProvider>
+  </AccessibilityProvider>
 );

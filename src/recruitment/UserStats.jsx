@@ -34,7 +34,7 @@ const UserStats = () => {
 
     return (
             <div className="p-4 xl:p-6 h-screen overflow-auto inner-shadow">
-            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 2xl:grid-cols-1 gap-6">
                 {[
                     { label: t("UserStats.Total Recruitments"), icon: <BiBriefcase className=" text-gray-500" />, value: userStats.AllTimeRecruitmentsCount }, // Rekrutacje -> Walizka
                     { label: t("UserStats.Total Hired Applicants"), icon: <BiUserCheck className=" text-green-500" />, value: userStats.AllTimeHiredApplicants }, // Zatrudnieni -> Użytkownik z checkiem

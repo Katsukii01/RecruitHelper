@@ -3,8 +3,10 @@ import { HelpLinks } from "../../constants";
 import { motion } from "framer-motion";
 import { FaUsers,  FaUser, FaQuestionCircle } from "react-icons/fa";
 import { MdWork, MdDashboard } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const [active, setActive] = useState("");
   const [openCategories, setOpenCategories] = useState({});
 
@@ -63,7 +65,7 @@ const Navbar = () => {
 
   const groupedLinks = [
     {
-      title: "Recruitments",
+      title: t("help.recruitment.title"),
       icon: <FaUsers />, 
       links: [
         "CreatingRecruitment",
@@ -89,7 +91,7 @@ const Navbar = () => {
       ],
     },
     {
-      title: "Applications",
+      title: t("help.applications.title"),
       icon: <MdWork />,
       links: [
         "ApplyForJob",
@@ -98,7 +100,7 @@ const Navbar = () => {
       ],
     },
     {
-      title: "Account",
+      title: t("help.account.title"),
       icon: <FaUser />,
       links: [
         "SignIn",
@@ -107,7 +109,7 @@ const Navbar = () => {
       ],
     },
     {
-      title: "Dashboard",
+      title: t("help.dashboard.title"),
       icon: <MdDashboard />,
       links: [
         "Statistics",
@@ -125,7 +127,7 @@ const Navbar = () => {
               className="w-full flex items-center gap-2 text-[13px] md:text-[30px] font-medium py-2 px-2  " 
             >
               <FaQuestionCircle className="text-2xl md:text-5xl" />
-               Help Center
+              {t("help.title")}
             </a>
           </li>
 
@@ -170,7 +172,7 @@ const Navbar = () => {
                             }`}
                             onClick={() => setActive(link.title)}
                           >
-                            {link.title}
+                            {t(link.titleKey)}
                           </a>
                         </li>
                       )

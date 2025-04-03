@@ -94,7 +94,7 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-start top-32 left-0 z-20 p-2 sticky">
-      <div className="navbar flex flex-col bg-glass rounded-xl w-[90px] md:w-[250px] shadow-xl shadow-black">
+      <div className="navbar flex flex-col bg-glass rounded-xl w-[60px] md:w-[220px] shadow-xl shadow-black">
         <ul className="list-none flex flex-col nav-menu overflow-auto h-[70vh] max-h-fit w-full px-2">
         <li className="pt-4">
             <a

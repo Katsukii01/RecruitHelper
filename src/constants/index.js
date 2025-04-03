@@ -112,137 +112,168 @@ export const RecruitmentDashboardLinks = [
 ];
 
 
-  export const HelpLinks = [
-    {
-      id: "CreatingRecruitment",
-      title: "Creating Recruitment",
-    },
-    {
-      id: "RecruitmentChooseMethod",
-      title: "Recruitment Choose Method",
-    },
-    {
-      id: "RecruitmentAddApplicantsManually",
-      title: "Recruitment Add Applicants Manually",
-    },
-    {
-      id: "RecruitmentAddApplicantsFromFile",
-      title: "Recruitment Add Applicants From File",
-    },
-    {
-      id: "RecruitmentOverview",
-      title: "Recruitment Overview",
-    },
-    {
-      id: "RecruitmentApplicantsStages",
-      title: "Recruitment Applicants Stages",
-    },
-    {
-      id: "RecruitmentApplicantsManage",
-      title: "Recruitment Applicants Manage",
-    },
-    {
-      id: "RecruitmentTasks",
-      title: "Recruitment Tasks",
-    },
-    {
-      id: "RecruitmentTasksPoints",
-      title: "Recruitment Tasks Points",
-    },
-    {
-      id: "RecruitmentMeetingsSessions",
-      title: "Recruitment Meetings Sessions",
-    },
-    {
-      id: "RecruitmentMeetings",
-      title: "Recruitment Meetings",
-    },
-    {
-      id: "RecruitmentMeetingsPoints",
-      title: "Recruitment Meetings Points",
-    },
-    {
-      id: "RecruitmentCoverLettersAnalysis",
-      title: "Recruitment Cover Letters Analysis",
-    },
-    {
-      id: "RecruitmentCoverLettersPoints",
-      title: "Recruitment Cover Letters Points",
-    },
-    {
-      id: "RecruitmentAdnationalPoints",
-      title: "Recruitment Adnational Points",
-    },
-    {
-      id: "RecruitmentFinalRanking",
-      title: "Recruitment Final Ranking",
-    },
-    {
-      id: "RecruitmentFinish",
-      title: "Recruitment Finish",
-    },
-    {
-      id: "RecruitmentEdit",
-      title: "Recruitment Edit",
-    },
-    {
-      id: "RecruitmentDelete",
-      title: "Recruitment Delete",
-    },
-    {
-      id: "RecruitmentsList",
-      title: "Recruitments List",
-    },
-    {
-      id: "ApplicationStages",
-      title: "Application Stages",
-    },
-    {
-      id: "SignIn",
-      title: "Sign In",
-    },
-    {
-      id: "SignUp",
-      title: "Sign Up",
-    },
-    {
-      id: "HomePage",
-      title: "Home Page",
-    },
-    {
-      id: "Statistics",
-      title: "Statistics",
-    },
-    {
-      id: "MeetingsCalendar",
-      title: "Meetings Calendar",
-    },
-    {
-      id: "RecruitmentsBox",
-      title: "Recruitments",
-    },
-    {
-      id: "StatisticsExplained",
-      title: "Statistics Explained",
-    },
-    {
-      id: "StatisticsKnowHow",
-      title: "Statistics Know-How",
-    },
-    {
-      id: "Applications",
-      title: "Applications",
-    },
-    {
-      id: "ApplyForJob",
-      title: "Apply For Job",
-    },
-    {
-      id: "RecruitmentCvRanking",
-      title: "Recruitment Cv Ranking",
-    },
-
-  ];
+export const HelpLinks = [
+  {
+    id: "CreatingRecruitment",
+    title: "Creating Recruitment",
+    titleKey: "help.recruitment.creating",
+  },
+  {
+    id: "RecruitmentChooseMethod",
+    title: "Recruitment Choose Method",
+    titleKey: "help.recruitment.chooseMethod",
+  },
+  {
+    id: "RecruitmentAddApplicantsManually",
+    title: "Recruitment Add Applicants Manually",
+    titleKey: "help.recruitment.addApplicantsManually",
+  },
+  {
+    id: "RecruitmentAddApplicantsFromFile",
+    title: "Recruitment Add Applicants From File",
+    titleKey: "help.recruitment.addApplicantsFromFile",
+  },
+  {
+    id: "RecruitmentOverview",
+    title: "Recruitment Overview",
+    titleKey: "help.recruitment.overview",
+  },
+  {
+    id: "RecruitmentApplicantsStages",
+    title: "Recruitment Applicants Stages",
+    titleKey: "help.recruitment.applicantsStages",
+  },
+  {
+    id: "RecruitmentApplicantsManage",
+    title: "Recruitment Applicants Manage",
+    titleKey: "help.recruitment.applicantsManage",
+  },
+  {
+    id: "RecruitmentTasks",
+    title: "Recruitment Tasks",
+    titleKey: "help.recruitment.tasks",
+  },
+  {
+    id: "RecruitmentTasksPoints",
+    title: "Recruitment Tasks Points",
+    titleKey: "help.recruitment.tasksPoints",
+  },
+  {
+    id: "RecruitmentMeetingsSessions",
+    title: "Recruitment Meetings Sessions",
+    titleKey: "help.recruitment.meetingsSessions",
+  },
+  {
+    id: "RecruitmentMeetings",
+    title: "Recruitment Meetings",
+    titleKey: "help.recruitment.meetings",
+  },
+  {
+    id: "RecruitmentMeetingsPoints",
+    title: "Recruitment Meetings Points",
+    titleKey: "help.recruitment.meetingsPoints",
+  },
+  {
+    id: "RecruitmentCoverLettersAnalysis",
+    title: "Recruitment Cover Letters Analysis",
+    titleKey: "help.recruitment.coverLettersAnalysis",
+  },
+  {
+    id: "RecruitmentCoverLettersPoints",
+    title: "Recruitment Cover Letters Points",
+    titleKey: "help.recruitment.coverLettersPoints",
+  },
+  {
+    id: "RecruitmentAdnationalPoints",
+    title: "Recruitment Adnational Points",
+    titleKey: "help.recruitment.adnationalPoints",
+  },
+  {
+    id: "RecruitmentFinalRanking",
+    title: "Recruitment Final Ranking",
+    titleKey: "help.recruitment.finalRanking",
+  },
+  {
+    id: "RecruitmentFinish",
+    title: "Recruitment Finish",
+    titleKey: "help.recruitment.finish",
+  },
+  {
+    id: "RecruitmentEdit",
+    title: "Recruitment Edit",
+    titleKey: "help.recruitment.edit",
+  },
+  {
+    id: "RecruitmentDelete",
+    title: "Recruitment Delete",
+    titleKey: "help.recruitment.delete",
+  },
+  {
+    id: "RecruitmentsList",
+    title: "Recruitments List",
+    titleKey: "help.applications.recruitmentsList",
+  },
+  {
+    id: "ApplicationStages",
+    title: "Application Stages",
+    titleKey: "help.applications.stages",
+  },
+  {
+    id: "SignIn",
+    title: "Sign In",
+    titleKey: "help.account.signIn",
+  },
+  {
+    id: "SignUp",
+    title: "Sign Up",
+    titleKey: "help.account.signUp",
+  },
+  {
+    id: "HomePage",
+    title: "Home Page",
+    titleKey: "help.account.homePage",
+  },
+  {
+    id: "Statistics",
+    title: "Statistics",
+    titleKey: "help.dashboard.statistics",
+  },
+  {
+    id: "MeetingsCalendar",
+    title: "Meetings Calendar",
+    titleKey: "help.dashboard.meetingsCalendar",
+  },
+  {
+    id: "RecruitmentsBox",
+    title: "Recruitments",
+    titleKey: "help.dashboard.recruitments",
+  },
+  {
+    id: "StatisticsExplained",
+    title: "Statistics Explained",
+    titleKey: "help.dashboard.statisticsExplained",
+  },
+  {
+    id: "StatisticsKnowHow",
+    title: "Statistics Know-How",
+    titleKey: "help.dashboard.statisticsKnowHow",
+  },
+  {
+    id: "Applications",
+    title: "Applications",
+    titleKey: "help.applications.title",
+  },
+  {
+    id: "ApplyForJob",
+    title: "Apply For Job",
+    titleKey: "help.applications.applyForJob",
+  },
+  {
+    id: "RecruitmentCvRanking",
+    title: "Recruitment Cv Ranking",
+    titleKey: "help.recruitment.cvRanking",
+  },
+];
   
   export const existingLanguages = [
     "afrikaans", "afrykanerski",

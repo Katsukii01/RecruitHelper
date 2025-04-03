@@ -865,31 +865,568 @@
                     "Job title cannot exceed 45 characters": "Stanowisko nie może przekraczać 45 znaków",
                     "Recruitment name is required": "Nazwa rekrutacji jest wymagana",
                     "Recruitment name cannot exceed 45 characters": "Nazwa rekrutacji nie może przekraczać 45 znaków"
+                  },
+                  "help": {
+                    "title": "Pomoc",
+                    "recruitment": {
+                      "title": "Rekrutacja",
+                      "creating": "Tworzenie rekrutacji",
+                      "chooseMethod": "Wybieranie metody rekrutacji",
+                      "addApplicantsManually": "Dodawanie aplikantów ręcznie",
+                      "addApplicantsFromFile": "Dodawanie aplikantów z pliku",
+                      "overview": "Przegląd rekrutacji",
+                      "applicantsStages": "Etapy aplikantów",
+                      "applicantsManage": "Zarządzanie aplikantami",
+                      "tasks": "Zadania",
+                      "tasksPoints": "Punkty za zadania",
+                      "meetingsSessions": "Sesje spotkań",
+                      "meetings": "Spotkania",
+                      "meetingsPoints": "Punkty za spotkania",
+                      "coverLettersAnalysis": "Analiza listów motywacyjnych",
+                      "coverLettersPoints": "Punkty za listy motywacyjne",
+                      "adnationalPoints": "Dodatkowe punkty",
+                      "cvRanking": "Ranking CV",
+                      "finalRanking": "Ranking końcowy",
+                      "finish": "Zakończenie rekrutacji",
+                      "edit": "Edycja rekrutacji",
+                      "delete": "Usuwanie rekrutacji"
+                    },
+                    "applications": {
+                      "title": "Aplikacje",
+                      "applyForJob": "Aplikuj do pracy",
+                      "recruitmentsList": "Lista rekrutacji",
+                      "applicationStages": "Etapy aplikacji",
+                      "stages" : "Etapy"
+                    },
+                    "account": {
+                      "title": "Konto",
+                      "signIn": "Logowanie",
+                      "signUp": "Rejestracja",
+                      "homePage": "Strona główna"
+                    },
+                    "dashboard": {
+                      "title": "Dashboard",
+                      "statistics": "Statystyki",
+                      "meetingsCalendar": "Kalendarz spotkań",
+                      "recruitments": "Rekrutacje"
+                    },
+                    "applicationStages": {
+                      "title": "Etapy aplikacji"
+                    },
+                    "applicantStages": {
+                      "toBeChecked": "Aplikant oczekuje na sprawdzenie, jego aplikacja nie została jeszcze oceniona.",
+                      "rejected": "Aplikant został odrzucony, ponieważ jego aplikacja nie spełniła wymagań lub kryteriów.",
+                      "checked": "Aplikant został sprawdzony, jego aplikacja została oceniona pod kątem kwalifikacji i dopasowania.",
+                      "invitedForInterview": "Aplikant został zaproszony na rozmowę kwalifikacyjną, aby ocenić jego kompetencje oraz dopasowanie do zespołu.",
+                      "interviewed": "Aplikant rozmawiał z nami, rozmowa kwalifikacyjna miała na celu ocenę jego doświadczenia i umiejętności.",
+                      "tasks": "Aplikant wykonał zadania, które zostały przydzielone w ramach procesu rekrutacji i oceniane na podstawie wyników.",
+                      "offered": "Aplikantowi została zaoferowana praca, a oferta jest gotowa do przyjęcia lub odrzucenia.",
+                      "hired": "Aplikant został zatrudniony, zakończono proces rekrutacji."
+                    },
+                      "creatingRecruitment": {
+                        "title": "Tworzenie Rekrutacji",
+                        "nameJobTitle": {
+                          "title": "Nazwa i Stanowisko",
+                          "description":                   {
+                            "Name": "Nazwa",
+                            "NameDesc": "Wymagana, maksymalnie 45 znaków.",
+                            "Job Title": "Stanowisko",
+                            "Job TitleDesc": "Wymagane, maksymalnie 45 znaków."
+                          }   
+                        },
+                        "experienceNeeded": {
+                          "title": "Wymagane Doświadczenie",
+                          "description": {
+                            "1": "Musi być między 0 a 60 lat.",
+                            "2": "Dozwolone tylko liczby (np. 1, 1.5, 20)."
+                          }
+                        },
+                        "weightDistribution": {
+                          "title": "Rozkład Wag",
+                          "description": {
+                            "1": "Każda waga (Doświadczenie, Umiejętności, Edukacja, Kursy, Języki) musi być między 0 a 100.",
+                            "2": "Suma wszystkich wag musi wynosić dokładnie 100."
+                          }
+                        },
+                        "languageSkills": {
+                          "title": "Umiejętności Językowe",
+                          "description": {
+                            "1": "Nazwa języka musi być prawidłowa i istnieć.",
+                            "2": "Akceptowane poziomy: A1, A2, B1, B2, C1, C2."
+                          }
+                        },
+                        "skillsAndCourses": {
+                          "title": "Umiejętności i Kursy",
+                          "description": {
+                            "1": "Umiejętności: Opcjonalne, powinny być oddzielone przecinkami (np. JavaScript, React, Node.js).",
+                            "2": "Kursy: Opcjonalne, również powinny być oddzielone przecinkami (np. Zarządzanie Projektami, Metodologia Agile)."
+                          }
+                        },
+                        "expertRecommendations": {
+                          "title": "Rekomendacje Ekspertów",
+                          "intro": "Na podstawie doświadczeń branżowych, zrównoważony rozkład wag to:",
+                          "weights": {
+                            "experience": "Doświadczenie: 30-40%",
+                            "skills": "Umiejętności: 25-35%",
+                            "education": "Edukacja: 10-20%",
+                            "courses": "Kursy: 5-10%",
+                            "languages": "Języki: 10-20%"
+                          },
+                          "note": "*To są wskazówki—ostateczny rozkład powinien być dostosowany do priorytetów rekrutera."
+                        }
+                      },
+                      "recruitmentChooseMethod": {
+                        "Headertitle": "Wybieranie metody dodawania aplikantów",
+                        "title": {
+                          "1": "Dodawanie aplikantów ręcznie",
+                          "2": "Dodawanie aplikantów z pliku CV",
+                          "3": "Dodatkowe informacje"
+                        },
+                        "description": {
+                          "1": "Ta metoda umożliwia ręczne wprowadzanie szczegółów aplikanta, takich jak imię, doświadczenie, umiejętności i edukacja.",
+                          "2": "Rekomendowana dla przypadków, gdzie strukturalne CVs nie są dostępne lub wymagają ręcznej korekty.",
+                          "3": "Ta metoda wykorzystuje AI-powered analizę CV za pomocą modeli **Regex, NLP i LLM** do automatycznego wyodrębniania kluczowych szczegółów.",
+                          "4": "Rekomendowana dla dużych zbiorów aplikantów i redukcji czasu ręcznego wprowadzania danych.",
+                          "5": "Dozwolone tylko pliki PDF.",
+                          "6": "Upewnij się, że wszystkie szczegóły aplikanta są dokładne, aby utrzymać wysoką jakość rekrutacji.",
+                          "7": "System sprawdzi poprawność danych i zwróci uwagi na brakujące lub nieprawidłowe pola."
+                        }
+                      },
+                      "recruitmentAddApplicantsManually": {
+                        "Headertitle": "Dodawanie aplikantów ręcznie",
+                        "title": {
+                          "1": "Informacje osobiste",
+                          "2": "Informacje kontaktowe",
+                          "3": "Wymagane dokumenty",    
+                          "4": "Szczegóły edukacyjne",
+                          "5": "Doświadczenie",
+                          "6": "Umiejętności językowe",
+                          "7": "Umiejętności i kursy",
+                          "8": "Dodatkowe informacje"
+                        },
+                        "description": {
+                          "Personal Information": {
+                            "name": "Nazwa",
+                            "nameDesc": "Wymagana, maksymalnie 25 znaków.",
+                            "surname": "Nazwisko",
+                            "surnameDesc": "Wymagane, maksymalnie 25 znaków."
+                          },
+                          "Contact Information": {
+                            "email": "Email",
+                            "emailDesc": "Wymagane, musi być poprawny format.",
+                            "phone": "Telefon",
+                            "phoneDesc": "Wymagane, musi zawierać od 9 do 15 cyfr."
+                          },
+                          "Required Documents": {
+                            "cv": "CV",
+                            "cvDesc": "Wymagane, musi być przesłane.",
+                            "coverLetter": "List motywacyjny",
+                            "coverLetterDesc": "Opcjonalne."
+                          },
+                          "Education Details": {
+                            "fieldOfStudy": "Kierunek studiów",
+                            "fieldOfStudyDesc": "Wymagane, maksymalnie 40 znaków.",
+                            "educationLevel": "Poziom wykształcenia",
+                            "educationLevelDesc": "Wymagane, maksymalnie 25 znaków.",
+                            "institutionName": "Nazwa uczelni",
+                            "institutionNameDesc": "Opcjonalne, maksymalnie 100 znaków."
+                          },
+                          "Work Experience": {
+                            "experienceDesc": "Musi być między 0 a 99 lat.",
+                            "experienceDesc2": "Dozwolone wartości dziesiętne (np. 1, 1.5, 20)."
+                          },
+                          "Language Skills": {
+                            "languageDesc": "Nazwa języka musi być prawidłowa.",  
+                            "levelDesc": "Akceptowane poziomy: A1, A2, B1, B2, C1, C2."
+                          },
+                          "Skills & Courses": {
+                            "skills": "Umiejętności",
+                            "courses": "Kursy",
+                            "skillsDesc": "Opcjonalne, powinny być oddzielone przecinkami (np. JavaScript, React, Node.js).",
+                            "coursesDesc": "Opcjonalne, również powinny być oddzielone przecinkami (np. Zarządzanie Projektami, Metodologia Agile)."
+                          },
+                          "Additional Information": {
+                            "infoDesc": "Upewnij się, że wszystkie szczegóły aplikanta są dokładne, aby utrzymać wysoką jakość rekrutacji.",
+                            "infoDesc2": "System sprawdzi poprawność danych i zwróci uwagi na brakujące lub nieprawidłowe pola."
+                          }
+
+                        } 
+                      
+                  },  
+                  "recruitmentAddApplicantsFromFile": {
+                    "Headertitle": "Dodawanie aplikantów z pliku",
+                    "title": {
+                      "1": "Wymagania dotyczące pliku",
+                      "2": "Jak działa proces",
+                      "3": "Finalizowanie i zapisywanie"
+                    },
+                    "description": {
+                      "1": {
+                        "1" : "Akceptowany format:",
+                        "2" : "Dozwolone tylko pliki PDF.",
+                        "3" : "CV jest wymagane:",
+                        "4" : "Każdy aplikant musi mieć plik CV.",
+                        "5" : "List motywacyjny (opcjonalnie):",
+                        "6" : "Może być dodany dla dodatkowych informacji."
+                      },
+                      "2": {
+                        "1" : "1. Prześlij jeden lub wiele plików CV (tylko format PDF).",
+                        "2" : "2. Nasz system automatycznie wyodrębni kluczowe informacje za pomocą AI-powered analizy tekstu.",
+                        "3" : "3. Przejrzyj wyodrębnione dane i uzupełnij brakujące szczegóły.",
+                        "4" : "4. Po zweryfikowaniu, zapisz aplikantów do procesu rekrutacji."
+                      },
+                      "3": {
+                        "1" : "Sprawdź wszystkie wyodrębnione szczegóły przed zapisaniem.",
+                        "2" : "Dodaj brakujące informacje, takie jak edukacja, doświadczenie i umiejętności, jeśli są potrzebne.",
+                        "3" : "Kliknij",
+                        "4" : "zapisz",
+                        "5" : "aby zakończyć i dodać aplikantów do procesu rekrutacji."
+                      }
                   }
-
-                  
-                  
-
-
-
-
-                
-
-
-
-
-
-
-
-
-
-
-            
-            
-
-
-          
-          
-      
-  
+                },
+                "recruitmentOverview": 
+                {
+                  "title": "Przewodnik po procesie rekrutacji",
+                  "recommendations": "Zalecenia dotyczące kolejności rekrutacji",
+                  "recommendations_desc": "Zalecamy następujące kroki podczas rekrutacji:",
+                  "steps": {
+                    "1": "Sprawdzenie ocen CV.",
+                    "1.1": "(Opcjonalnie) Sprawdzenie i ocenienie listów motywacyjnych, jeśli kandydat je dostarczył.",
+                    "2": "Dodanie etapu \"Sprawdzone\" dla kandydatów z najwyższymi ocenami. Pozostałych oznacz jako \"Odrzucony\".",
+                    "3": "Planowanie spotkań lub zadań zgodnie z potrzebami rekrutacyjnymi.",
+                    "4": "Przeprowadzenie zaplanowanych spotkań lub zadań.",
+                    "5": "Ocenienie zadań i spotkań.",
+                    "6": "Przyznanie dodatkowych punktów, jeśli to konieczne.",
+                    "7": "Oznaczenie kandydatów, którym złożono ofertę pracy.",
+                    "8": "Oznaczenie kandydatów, którzy zostali zatrudnieni.",
+                    "9": "Finalizacja procesu rekrutacyjnego:"
+                  },
+                  "finalization": {
+                    "review": "Zostawienie opinii o procesie rekrutacyjnym.",
+                    "export": "Eksport danych do dalszej analizy.",
+                    "close": "Kliknij \"Zamknij rekrutację\", aby zakończyć proces."
+                  },
+                  "current_stage": "Aktualny etap",
+                  "current_stage_desc": "Wyświetla aktualny postęp procesu rekrutacyjnego i umożliwia przełączanie między etapami.",
+                  "statistics": "Statystyki rekrutacyjne",
+                  "statistics_desc": "Wyświetla kluczowe wskaźniki, takie jak liczba aplikujących, najwyższa ocena, średnia ocena, liczba zadań i liczba spotkań.",
+                  "cover_letter": "Procent listów motywacyjnych",
+                  "cover_letter_desc": "Wskazuje procent kandydatów, którzy dołączyli list motywacyjny do swojej aplikacji.",
+                  "applicants_stage": "Kandydaci na poszczególnych etapach",
+                  "applicants_stage_desc": "Podział kandydatów na różne etapy procesu rekrutacyjnego."
+                },
+                "recruitmentApplicantsStages": {
+                  "title": "Przewodnik po zarządzaniu etapami kandydatów",
+                  "tracking": "Śledzenie postępu kandydatów",
+                  "tracking_desc": "- Każdy kandydat ma przypisany etap rekrutacji (np. Złożona aplikacja, Rozmowa, Zatrudniony).  \n - Etap pomaga monitorować podróż kandydata przez proces rekrutacji.",
+                  "modifying": "Modyfikowanie etapów kandydatów",
+                  "modifying_desc": "- Kliknij na etap kandydata, aby go zaktualizować.\n - System zapewnia predefiniowane etapy w celu zachowania spójności.\n - Upewnij się, że zmiany są dokładne, aby skutecznie śledzić postępy kandydatów."
+                },
+                "recruitmentApplicantsManage": 
+                {
+                  "title": "Przewodnik zarządzania kandydatami",
+                  "viewing": "Przeglądanie szczegółów kandydata",
+                  "viewing_desc": "Wyświetla wszystkie informacje o kandydacie, w tym dane osobowe, doświadczenie, umiejętności i wykształcenie.\nPozwala na przegląd i weryfikację wyodrębnionych danych przed finalizacją aplikacji.",
+                  "cv_preview": "Podgląd CV i Listu Motywacyjnego",
+                  "cv_preview_desc": "Jeśli dostępne, użytkownicy mogą bezpośrednio w systemie przejrzeć CV i List Motywacyjny kandydata.\nPodgląd obsługuje tylko pliki PDF.",
+                  "adding": "Dodawanie nowych kandydatów",
+                  "adding_desc": "Kliknięcie przycisku „Dodaj kandydata” przekierowuje użytkownika do wyboru metody dodawania kandydata.\nUżytkownicy mogą wybrać pomiędzy ręcznym wprowadzaniem danych lub automatycznym parsowaniem CV."
+                },
+                "recruitmentTasks": {
+                  "title": "Przewodnik zarządzania zadaniami",
+                  "explanation": "Wyjaśnienie punktów",
+                  "explanation_desc": "- Łączna liczba punktów ze wszystkich zadań jest równa 25% punktów w rankingu końcowym.\n - Możesz zdecydować, czy liczyć punkty za zadania w sekcji Rankingu końcowym (na domyślnie liczone są punkty za zadania).",
+                  "overview": "Przegląd",
+                  "overview_desc": "- Ta sekcja umożliwia efektywne zarządzanie zadaniami rekrutacyjnymi.\n - Możesz wyświetlać kluczowe szczegóły, takie jak nazwa, opis, termin oddania i waga punktów.\n - Waga punktów określa stosunek punktów uzyskanych za wykonanie zadania w porównaniu do innych zadań.\n - Termin oddania to data i czas, w którym zadanie jest wymagane do wykonania.",
+                  "actions": "Dostępne akcje",
+                  "editTask": "Edytuj zadanie",
+                  "deleteTask": "Usuń zadanie",
+                  "createTask": "Utwórz zadanie",
+                  "actions_desc_1": "Modyfikuj szczegóły zadania, takie jak termin oddania, opis lub punkty.",
+                  "actions_desc_2": "Trwale usuń zadanie z systemu. Ta akcja spowoduje utratę wszystkich powiązanych danych (np. przypisanych zadań).",
+                  "actions_desc_3": "Dodaj nowe zadanie do procesu rekrutacji."
+                },
+                "recruitmentTasksPoints": {
+                  "title": "Przewodnik zarządzania punktami za zadania",
+                  "viewing": "Wyświetlanie przypisanych zadań i punktów",
+                  "viewing_desc": "- Wyświetla użytkowników z ich przypisanymi zadaniami i uzyskanymi punktami.\n - Umożliwia modyfikację szczegółów przypisanych zadań.",
+                  "managing": "Zarządzanie zadaniami",
+                  "editing": "Edycja przypisanego zadania",
+                  "editing_desc": "Modyfikuj przypisane zadanie lub kandydata.",
+                  "deleting": "Usuwanie przypisanego zadania",
+                  "deleting_desc": "Usuń przypisane zadanie z systemu.",
+                  "creating": "Przypisywanie zadania",
+                  "creating_desc": "Przypisz zadanie do kandydata.",
+                  "rules": "Reguły przypisywania zadań i punktów",
+                  "rules_desc": "- Kandydat może być przypisany tylko do jednego zadania raz.\n - Kandydat może być przypisany do wielu zadań.\n - Tylko kandydaci w etapach ",
+                  "rules_desc_2": "(Sprawdzone, Zaproszeni na rozmowę, Rozmowa, Zadania) ",
+                  "rules_desc_3": "mogą być przypisani do zadań! \n - Zadanie może być przypisane tylko do jednego kandydata jednorazowo.",
+                  "changing_points": "Zmiana punktów za zadania",
+                  "changing_points_desc": "- Użytkownicy mogą aktualizować punkty za zadania poprzez pole wejściowe. \n - Zmiany są weryfikowane, aby zapewnić dokładność. \n - Punkty za zadania muszą być między 0 a 100. "
+                },
+                "recruitmentMeetingsSessions": {
+                  "title": "Przewodnik zarządzania sesjami spotkań",
+                  "explanation": "Wyjaśnienie punktów",
+                  "explanation_desc": "- Łączna liczba punktów ze wszystkich spotkań jest równa 25% punktów w rankingu końcowym.\n - Możesz zdecydować, czy liczyć punkty za spotkania w sekcji Rankingu końcowym (na domyślnie liczone są punkty za spotkania).",
+                  "creating": "Tworzenie sesji spotkania",
+                  "creating_desc": "- Kliknij na przycisk Utwórz sesję spotkania, aby dodać nową sesję.\n - Podaj szczegóły takie jak Nazwa, Opis i Waga Punktów.\n - Waga Punktów określa stosunek punktów uzyskanych w jednym spotkaniu w porównaniu do innych spotkań.",
+                  "managing": "Zarządzanie sesjami spotkania",
+                  "managing_desc": "- Każda sesja wyświetla szczegóły takie jak Nazwa, Opis i Waga Punktów.",
+                  "editing": "Użyj przycisku Edytuj, aby zmodyfikować szczegóły sesji.",
+                  "deleting": "Kliknij przycisk Usuń, aby trwale usunąć sesję."
+                },
+                "recruitmentMeetings": {
+                  "title": "Przewodnik zarządzania spotkaniami",
+                  "meetingsCalendar": "Kalendarz spotkań",
+                  "meetingsCalendar_desc": "- Wyświetla kalendarz z czerwonymi kropkami oznaczającymi dni z zaplanowanymi spotkaniami. \n - Kliknij na dzień, aby wyświetlić listę zaplanowanych spotkań dla tego dnia.",
+                  "meetingsDetails": "Szczegóły spotkania",
+                  "meetingsDetails_desc": "- Wyświetla listę zaplanowanych spotkań dla wybranego dnia.",
+                  "meetingsDetails_desc_2": "- Każda wpisana spotkanie zawiera:",
+                  "meetingsDetails_desc_3": "Nazwa i opis spotkania",
+                  "meetingsDetails_desc_4": "Czas trwania (np. 11:00 - 11:30)",
+                  "meetingsDetails_desc_5": "Szczegóły kandydata: Imię i Nazwisko | Email",
+                  "meetingsDetails_desc_6": "Dokumenty: Podgląd CV | Podgląd Listu Motywacyjnego",
+                  "meetingsActions": "Dostępne akcje",
+                  "meetingsActions_desc": "Dołącz do spotkania: Przekierowuje do sesji spotkania.",
+                  "meetingsActions_desc_2": "Otwórz CV: Otwiera CV kandydata w nowej karcie.",
+                  "meetingsActions_desc_3": "Otwórz List Motywacyjny: Otwiera List Motywacyjny kandydata w nowej karcie (jeśli dostępny)."
+                },
+                "recruitmentMeetingsPoints": {
+                  "title": "Przewodnik zarządzania punktami za spotkania",
+                  "explanation": "Wyświetlanie przypisanych spotkań i punktów",
+                  "explanation_desc": "- Wyświetla użytkowników z ich przypisanymi spotkaniami i uzyskanymi punktami.\n - Umożliwia modyfikację szczegółów przypisanych spotkań.",
+                  "managing": "Zarządzanie spotkaniami",
+                  "Edit": "Edytuj przypisane spotkanie: Modyfikuj przypisane spotkanie lub kandydata.",
+                  "Delete": "Usuń przypisane spotkanie: Usuń przypisane spotkanie z systemu.",
+                  "Plan Meeting": "Planuj spotkanie: Przypisz spotkanie do kandydata.",
+                  "Rules for Assigning Meetings and Points": "Reguły przypisywania spotkań i punktów",
+                  "Rules for Assigning Meetings and Points_desc": "- Kandydat może być przypisany tylko do jednego spotkania raz.\n - Kandydat może być przypisany do wielu spotkań.\n - Tylko kandydaci w etapach ",
+                  "Rules for Assigning Meetings and Points_desc_2": "(Sprawdzone, Zaproszeni na rozmowę, Rozmowa, Zadania) ",
+                  "Rules for Assigning Meetings and Points_desc_3": "mogą być przypisani do spotkań! \n - Spotkania nie mogą być w tym samym czasie lub w przeszłości. Muszą być w przyszłości co najmniej jedną godzinę od teraz. \n - Przypisane spotkanie punkty są ważone na podstawie rozkładu wag zdefiniowanego w ustawieniach sesji spotkania. \n - Kandydaci mogą zdobywać punkty na podstawie przypisanych spotkań. \n - System oblicza łączną liczbę punktów na podstawie rozkładu wag i spotkań kandydata.",
+                  "Changing Meetings Points": "Zmiana punktów za spotkania",
+                  "Changing Meetings Points_desc": "- Użytkownicy mogą aktualizować punkty za spotkania poprzez pole wejściowe. \n - Zmiany są weryfikowane, aby zapewnić dokładność. \n - Punkty za spotkania muszą być między 0 a 100."
+                },
+                "recruitmentCoverLettersAnalysis": {
+                  "title": "Przewodnik analizy listów motywacyjnych",
+                  "overview": "Przegląd",
+                  "overview_desc": " - Ta sekcja umożliwia przeglądanie analizy list motywacyjnych wygenerowanej przez inteligentny system. \n - System ocenia listy motywacyjne i sugeruje punkty na podstawie ich ważności, jakości i pełności. \n - Jeśli nie ma analizy, możesz ręcznie przeglądać i oceniać list motywacyjny.",
+                  "applicantInformation": "Informacje o kandydacie",
+                  "applicantInformation_desc": "- Każda wiersz w tabeli reprezentuje kandydata wraz z ich przesłanym listem motywacyjnym. \n - Możesz wyświetlać szczegóły takie jak imię, nazwisko i ocenę listu motywacyjnego. \n - Jeśli list motywacyjna nie została jeszcze oceniona, system wyświetli \"Nie oceniono jeszcze\"."
+                },
+                "recruitmentCoverLettersPoints": {
+                  "title": "Przewodnik zarządzania punktami za listy motywacyjne",
+                  "assigning": "Przypisywanie punktów za listy motywacyjne ręcznie",
+                  "assigning_desc": "- Możesz ręcznie przypisać punkty do listy motywacyjnej kandydata na podstawie własnej oceny. \n - Punkty mogą się zmieniać od 0 do 100. \n - Możesz użyć wyniku AI-generowanego punktu w poprzedniej karcie, aby dostosować punkty, jeśli jest to konieczne.",
+                  "using": "Używanie AI-generowanych punktów za listy motywacyjne",
+                  "using_desc": "- System zapewnia sugerowane punkty dla każdej listy motywacyjnej na podstawie jej analizy. \n - Ten wynik może nie być dokładny, ale może pomóc w rozpoczęciu."
+                },
+                "recruitmentAdnationalPoints": {
+                  "title": "Przewodnik zarządzania dodatkowymi punktami",
+                  "assigning": "Przypisywanie dodatkowych punktów",
+                  "assigning_desc": "- Ta sekcja umożliwia ręczne przypisanie dodatkowych punktów do kandydatów. \n - Punkty mogą się zmieniać od 0 do 100, wnosząc do **20% punktów w rankingu końcowym**. \n - Użyj własnej oceny, aby nagrodzić kandydatów za cechy nie objęte predefiniowanymi metrykami oceny.",
+                  "example": "Przykład przypisania dodatkowych punktów",
+                  "applicant": "Kandydat",
+                  "additionalPoints": "Dodatkowe Punkty",
+                  "editable": "(Edytowalne Pole)"
+                },
+                "recruitmentCvRanking": {
+                  "title": "Przewodnik oceny CV",
+                  "understanding": "Zrozumienie obliczania oceny CV",
+                  "understanding_desc": "- Ocena CV określa ogólną ocenę kandydata na podstawie ich CV. \n - Ocena CV jest obliczana za pomocą formuły, która uwzględnia zawartość CV kandydata. \n - Ocena CV jest wartością procentową między 0 a 100, z wyższą wartością wskazującą lepsze CV.",
+                  "example": "Przykładowe wyniki kandydata",
+                  "example_desc_1": "- Ogólna ocena CV: ",
+                  "example_desc_2": "- Kursy: ",
+                  "example_desc_3": "- Umiejętności: ",
+                  "example_desc_4": "- Języki: ",
+                  "example_desc_5": "- Doświadczenie: ",
+                  "example_desc_6": "- Wykształcenie: "
+                },
+                "recruitmentFinalRanking": {
+                  "title": "Przewodnik oceny końcowej",
+                  "understanding": "Zrozumienie obliczania oceny końcowej",
+                  "understanding_desc": "- Ocena końcowa określa najlepszych kandydatów na podstawie różnych składników oceny. \n - Każdy główny czynnik (CV, List Motywacyjny, Zadania, Spotkania) wnosi 25% do końcowej oceny. \n - Dodatkowe Punkty są liczone osobno, z maksymalnym wpływem 20%, ale nie zwiększają maksymalnej maksymalnej wartości.",
+                  "switches": "Wyjaśnienie przełączników",
+                  "switches_desc": "- Przełączniki pozwalają włączyć lub wyłączyć obliczanie określonych składników w końcowej ocenie.",
+                  "example": "Przykładowe wyniki kandydata",
+                  "example_desc_1": "- Ogólna ocena: ",
+                  "example_desc_2": "- Ocena CV: ",
+                  "example_desc_3": "- Ocena Listu Motywacyjnego: ",
+                  "example_desc_4": "- Ocena Zadań: ",
+                  "example_desc_5": "- Ocena Spotkań: ",
+                  "example_desc_6": "- Dodatkowe Punkty: "
+                },
+                "recruitmentFinish": {
+                  "title": "Przewodnik kończenia rekrutacji",
+                  "overview": "Przegląd",
+                  "overview_desc": "Sekcja Kończenia Rekrutacji umożliwia zakończenie procesu rekrutacji. Przed zamknięciem upewnij się, że eksportujesz wszystkie niezbędne dane.",
+                  "export": "Eksportuj dane rekrutacji",
+                  "export_desc": "Kliknij przycisk \"Eksportuj dane rekrutacji\", aby pobrać wszystkie powiązane dane.",
+                  "export_tab_1": "Aplikanci",
+                  "export_tab_1_desc": "Zawiera wszystkich aplikantów, w tym ich CV, Listy Motywacyjne i dodatkowe punkty.",
+                  "export_tab_2": "Zadania",
+                  "export_tab_2_desc": "Zawiera wszystkie zadania, w tym ich punkty i status.",
+                  "export_tab_3": "Spotkania",
+                  "export_tab_3_desc": "Zawiera wszystkie spotkania, w tym ich punkty i status.",
+                  "export_tab_4": "Dane o ofercie",
+                  "export_tab_4_desc": "Zawiera wszystkie dane o ofercie pracy",
+                  "export_tab_5": "Statystyki rekrutacji",
+                  "export_tab_5_desc": "Zawiera kluczowe statystyki rekrutacji, takie jak łączna liczba aplikantów, najwyższa ocena i średnia ocena.",
+                  "close": "Kliknij \"Zamknij rekrutację\", aby zakończyć proces.",
+                  "close_warning": "Ostrzeżenie: Po zamknięciu wszystkie przesłane dane zostaną utracone!",
+                  "close_recruitment": "Zamknij rekrutację",
+                  "warning": "Ostrzeżenie",
+                  "review": "Zostaw opinię o procesie rekrutacji",
+                  "review_desc": "Podaj opinię i ocenę (0-5 gwiazdek) na temat procesu rekrutacji."
+                },
+                "recruitmentEdit": {
+                  "title": "Przewodnik edycji rekrutacji",
+                  "status": "Status rekrutacji",
+                  "status_desc": "Status rekrutacji można ustawić na Private (ukryte dla kandydatów) lub Public (otwarte dla kandydatów).",
+                  "jobDetails": "Informacje o ofercie",
+                  "jobDetails_desc": "Definiuje rolę pracy (np. Frontend Developer) i tytuł (np. Frontend Developer).",
+                  "education": "Kryteria edukacji",
+                  "education_desc": "Ustawia wagę i poziom dla kryteriów edukacji.",
+                  "experience": "Kryteria doświadczenia",
+                  "experience_desc": "Ustawia wagę i poziom dla kryteriów doświadczenia.",
+                  "skills": "Umiejętności i kursy",
+                  "skills_desc": "Ustawia wagę i poziom dla umiejętności i kursów.",
+                  "language": "Umiejętności językowe",
+                  "language_desc": "Ustawia wagę i poziom dla umiejętności językowych.",
+                  "save": "Zapisz zmiany w rekrutacji",
+                  "save_desc": "Kliknij przycisk \"Zapisz zmiany w rekrutacji\", aby zapisać zmiany."
+                },
+                "recruitmentDelete": {
+                  "title": "Przewodnik usuwania rekrutacji",
+                  "warning": "Ostrzeżenie!",
+                  "warning_desc": "Usuwanie procesu rekrutacji jest nieodwracalne i nie można go cofnąć. Wszystkie powiązane dane zostaną utracone!",
+                  "process": "Proces usuwania",
+                  "process_desc": "1. Wprowadź nazwę rekrutacji w polu potwierdzenia. \n 2. Poczekaj 5 sekund, aby kontynuować. \n 3. Kliknij przycisk \"Potwierdź\", aby zakończyć usuwanie. \n 4. Kliknij \"Potwierdź ponownie\", aby zakończyć usuwanie.",
+                  "confirmation": "Potwierdzenie",
+                  "confirmation_desc": "Po potwierdzeniu, proces rekrutacji zostanie usunięty z systemu. Upewnij się, że eksportujesz wszystkie niezbędne dane przed kontynuowaniem."
+                },
+                "ApplyForJob": {
+                  "title": "Przewodnik aplikacji do pracy",
+                  "personalInformation": "Informacje osobowe",
+                  "personalInformation_desc": "- Imię: Wymagane, maksymalnie 25 znaków. \n - Nazwisko: Wymagane, maksymalnie 25 znaków. \n - Email: Wymagane, musi być poprajnym formatem. \n - Telefon: Wymagane, musi zawierać 9-15 cyfr.",
+                  "requiredDocuments": "Wymagane dokumenty",
+                  "requiredDocuments_desc": "- CV: Wymagane, musi być przesłane. Tylko pliki PDF są dozwolone. \n - List Motywacyjny: Opcjonalny, ale zalecany.",
+                  "skillsExperience": "Umiejętności i doświadczenie",
+                  "skillsExperience_desc": "- Umiejętności: Lista kluczowych umiejętności (np. JavaScript, React). \n - Doświadczenie: Podaj historię pracy i role.",
+                  "coursesCertifications": "Kursy i certyfikaty",
+                  "coursesCertifications_desc": "- Kursy: Lista wymaganych kursów (np. React Advanced, JavaScript Mastery). \n - Certyfikaty: Lista wymaganych certyfikatów (np. React Advanced, JavaScript Mastery).",
+                  "language": "Umiejętności językowe",
+                  "language_desc": "- Nazwa języka musi być poprawna. \n - Akceptowane poziomy: A1, A2, B1, B2, C1, C2.",
+                  "education": "Szczegóły edukacji",
+                  "education_desc": "- Pole studiów: Wymagane, maksymalnie 40 znaków. \n - Poziom edukacji: Wymagane, maksymalnie 25 znaków. \n - Nazwa instytutu: Opcjonalna, maksymalnie 100 znaków.",
+                  "courses": "Kursy i certyfikaty",
+                  "courses_desc": "- Kursy: Lista wymaganych kursów (np. React Advanced, JavaScript Mastery). \n - Certyfikaty: Lista wymaganych certyfikatów (np. React Advanced, JavaScript Mastery).",
+                  "submission": "Wskazówki dotyczące przesyłania aplikacji",
+                  "submission_desc": "- Upewnij się, że wszystkie wymagane pola są wypełnione. \n - Przed przesłaniem przeglądaj swoją aplikację. \n - Nie możesz edytować swojej aplikacji po przesłaniu. \n - Możesz tylko odwołać swoją aplikację po przesłaniu."
+                },
+                "recruitmentList": {
+                  "title": "Przewodnik listy rekrutacji",
+                  "overview": "Przegląd",
+                  "overview_desc": "- Sekcja Listy Rekrutacji wyświetla wszystkie publiczne i otwarte procesy rekrutacji dostępne do aplikacji. \n - Możesz przeglądać dostępne oferty pracy i aplikować bezpośrednio.",
+                  "search": "Wyszukiwanie rekrutacji",
+                  "search_desc": "- Użyj paska wyszukiwania, aby znaleźć konkretną rekrutację poprzez wpisanie słów kluczowych (np. 'Frontend Developer'). \n - Wyniki wyszukiwania aktualizują się dynamicznie podczas wpisywania.",
+                  "apply": "Aplikowanie do rekrutacji",
+                  "apply_desc": "- Kliknij na listę rekrutacji, aby wyświetlić szczegóły.",
+                  "apply_desc_2": "- Przesyłaj swoje CV i list motywacyjny, aby aplikować."
+                },
+                "SignIn": {
+                  "title": "Przewodnik logowania",
+                  "email": "Email",
+                  "email_desc": "- Wprowadź swój zarejestrowany adres email.",
+                  "email_desc_2": "- Upewnij się, że nie ma błędów.",
+                  "password": "Hasło",
+                  "password_desc": "- Wprowadź swoje hasło.",
+                  "password_desc_2": "- Jeśli zapomniałeś hasła, kliknij Zresetuj hasło? aby zresetować je.",
+                  "google": "Zaloguj się z Google",
+                  "google_desc": "- Kliknij na przycisk Zaloguj się z Google .",
+                  "google_desc_2": "- Uwierzytelnij się za pomocą swojego konta Google."
+                },
+                "SignUp": {
+                  "title": "Przewodnik rejestracji",
+                  "username": "Nazwa użytkownika",
+                  "username_desc": "- Wybierz unikalną nazwę użytkownika.",
+                  "username_desc_2": "- Maksymalnie 25 znaków.",
+                  "email": "Email",
+                  "email_desc": "- Wprowadź swój adres email.",
+                  "email_desc_2": "- Upewnij się, że nie ma błędów.",
+                  "password": "Hasło",
+                  "password_desc": "- Musi być co najmniej 8 znaków długości.",
+                  "password_desc_2": "- Użyj wielkich i małych liter, cyfr i symboli.",
+                  "password_desc_3": "- Upewnij się, że nie ma błędów.",
+                  "terms": "Warunki i postanowienia",
+                  "terms_desc": "- Zaakceptuj warunki i postanowienia, aby utworzyć konto.",
+                  "google": "Zarejestruj się z Google",
+                  "google_desc": "- Kliknij na przycisk Zarejestruj się z Google.",
+                  "google_desc_2": "- Uwierzytelnij się za pomocą swojego konta Google."
+                },
+                "HomePage": {
+                  "title": "Przewodnik zarządzania kontem",
+                  "email_verification": "Weryfikacja email",
+                  "email_verification_desc": "- Twoje konto musi być weryfikowane, aby uzyskać dostęp do wszystkich funkcji. \n - Jeśli nie jest weryfikowane, sprawdź swoją skrzynkę pocztową weryfikacyjną.",
+                  "update_name": "Aktualizacja nazwy",
+                  "update_name_desc": "- Możesz zmienić swoją nazwę w dowolnym momencie. \n - Wprowadź nową nazwę i zapisz zmiany.",
+                  "delete_account": "Usuwanie konta",
+                  "delete_account_desc": "- Usuwanie konta jest nieodwracalne. \n - Wszystkie twoje dane rekrutacji zostaną utracone. \n - Aby potwierdzić, wprowadź swoją nazwę użytkownika i kontynuuj.",
+                  "update_password": "Aktualizacja hasła",
+                  "update_password_desc": "- Możesz zmienić swoje hasło w dowolnym momencie. \n - Wprowadź nowe hasło i zapisz zmiany."
+                },
+                "Statistics": {
+                  "title": "Przewodnik statystyk",
+                  "total_recruitments": "Łączna liczba rekrutacji",
+                  "total_recruitments_desc": "- Liczba rekrutacji, które kiedykolwiek utworzyłeś. \n - Ta liczba obejmuje wszystkie rekrutacje w systemie, w tym te, które zostały usunięte.",
+                  "total_hired_applicants": "Łączna liczba zatrudnionych kandydatów",
+                  "total_hired_applicants_desc": "- Liczba kandydatów, którzy zostali zatrudnieni w ramach twoich procesów rekrutacji.",
+                  "total_meetings": "Łączna liczba spotkań",
+                  "total_meetings_desc": "- Liczba zaplanowanych spotkań rekrutacji lub rozmów.",
+                  "total_applications": "Łączna liczba aplikacji",
+                  "total_applications_desc": "- Liczba wszystkich przesłanych aplikacji w systemie.",
+                  "total_applications_rejected": "Łączna liczba odrzuconych aplikacji",
+                  "total_applications_rejected_desc": "- Liczba razy kiedy zostałeś odrzucony z procesu rekrutacji.",
+                  "total_applications_hired": "Łączna liczba zatrudnionych aplikacji",
+                  "total_applications_hired_desc": "- Liczba razy kiedy zostałeś zatrudniony w ramach procesu rekrutacji."
+                },
+                "MeetingsCalendar": {
+                  "title": "Przewodnik zarządzania kalendarzem spotkań",
+                  "meetingsCalendar": "Kalendarz spotkań",
+                  "meetingsCalendar_desc": "- Wyświetla kalendarz z kropkami oznaczającymi dni, w których zaplanowane są spotkania. \n - Czerwone kropki oznaczają spotkania z rekrutacji. \n - Niebieskie kropki oznaczają spotkania z aplikacji. \n - Fioletowe kropki oznaczają spotkania z obu w tym samym dniu. \n - Kliknij na dzień, aby wyświetlić listę zaplanowanych spotkań dla tego dnia.",
+                  "meetingsDetails": "Szczegóły spotkań",
+                  "meetingsDetails_desc": "- Wyświetla listę zaplanowanych spotkań dla wybranego dnia.",
+                  "meetingsDetails_desc_2": "- Każda wpisana spotkanie zawiera:",
+                  "meetingsDetails_desc_3": "Nazwa i opis spotkania",
+                  "meetingsDetails_desc_4": "Czas (np. 11:00 - 11:30)",
+                  "meetingsDetails_desc_5": "Informacje o kandydacie: Imię Nazwisko | Email",
+                  "meetingsDetails_desc_6": "Dokumenty: Podgląd CV | Podgląd listy motywacyjnej",
+                  "meetingsActions": "Dostępne akcje",
+                  "meetingsActions_desc": "Dołącz do spotkania: Przekierowuje do sesji spotkania.",
+                  "meetingsActions_desc_2": "Otwórz CV: Otwiera CV kandydata w nowej karcie.",
+                  "meetingsActions_desc_3": "Otwórz listę motywacyjną: Otwiera listę motywacyjną kandydata w nowej karcie (jeśli przesłane)."
+                },
+                "Recruitments": {
+                  "title": "Przewodnik zarządzania rekrutacjami",
+                  "list of recruitments": "Lista rekrutacji",
+                  "list of recruitments_desc": "Wyświetl i zarządzaj swoimi rekrutacjami \n - Filtruj po słowach kluczowych \n - Kliknij \"Zarządzaj\", aby przejść do pulpitu rekrutacji.",
+                  "recruitments stages": "Etapy rekrutacji"
+                },
+              "recruitmentStages": {
+                  "paused": "Proces rekrutacji został wstrzymany, na tym etapie nie podejmowane są dalsze działania.",
+                  "collectingApplicants": "Rekrutacja aktywnie zbiera aplikacje od potencjalnych kandydatów.",
+                  "checkingApplications": "Rekrutacja przegląda i ocenia złożone aplikacje pod kątem kwalifikacji i dopasowania.",
+                  "interviewingApplicants": "Rekrutacja przeprowadza rozmowy kwalifikacyjne z wybranymi kandydatami, aby ocenić ich przydatność.",
+                  "scoringTasks": "Rekrutacja ocenia i przyznaje punkty kandydatom na podstawie ich wyników w przydzielonych zadaniach.",
+                  "offeringJobs": "Rekrutacja oferuje pracę wybranym kandydatom.",
+                  "finished": "Proces rekrutacji został zakończony i nie będą podejmowane żadne dalsze działania."
+                }
+      },
+      "No Applicants found" : "Nie znaleziono aplikantów",
+      "No meetings found" : "Nie znaleziono spotkań",
+      "accessibility": {
+        "controls": "Kontrolki dostępności",
+        "increaseFontSize": "Zwiększ rozmiar czcionki",
+        "decreaseFontSize": "Zmniejsz rozmiar czcionki",
+        "toggleContrast": "Włącz tryb kontrastu"
+      }
 }
