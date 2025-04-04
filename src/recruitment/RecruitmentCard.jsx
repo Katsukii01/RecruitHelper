@@ -127,7 +127,7 @@ const RecruitmentCard = ({ recruitment, type }) => {
               key={index}
               className="px-2 py-1 text-sm rounded-lg text-white min-h-[30px] h-auto max-w-full overflow-wrap break-words bg-teal-400"
             >
-              {language.language} - {language.level}
+              {language.language} - {t(`AddApplicants.${language.level}`)}
             </span>
           ) : null
         ))

@@ -279,7 +279,7 @@ const ManageApplicants = ({ id }) => {
                             key={index}
                             className={`px-1 py-1 text-sm rounded-lg text-white min-h-[30px] w-full overflow-wrap break-words bg-gradient-to-br from-blue-500 to-indigo-600 hover:bg-gradient-to-bl hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 hover:scale-110 hover:shadow-customover`}
                           >
-                            {language} - {level}
+                            {language} - {t(`AddApplicants.${level}`)}
                           </span>
                         ))}
                       </div>
