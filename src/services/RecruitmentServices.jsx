@@ -872,9 +872,25 @@ export const getApplicantsRanking = async (recruitmentId) => {
     Doctor: 4,
     Specialist: 5,
     Undergraduate: 1,
-    Postgraduate: 2,
     Diploma: 1,
     Certificate: 1,
+
+    // Polskie wersje z pełnymi nazwami
+      "A1 (Początkujący)": 1,
+      "A2 (Podstawowy)": 2,
+      "B1 (Średni)": 3,
+      "B2 (Wyższy średni)": 4,
+      "C1 (Zaawansowany)": 5,
+      "C2 (Biegły)": 6,
+      Technik: 1,
+      Inżynier: 2,
+      Magister: 3,
+      Doktor: 4,
+      Student: 1,
+      Specjalista: 5,
+      licencjat: 1,
+      Dyplom: 1,
+      Certyfikat: 1,
   };
 
   const calculateScore = async (applicant) => {
