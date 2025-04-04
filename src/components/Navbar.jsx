@@ -498,7 +498,7 @@ const Navbar = () => {
               </button>
                   
             </div>
-            <div className="accessibility-controls">
+            <div className="accessibility-controls flex space-x-2 items-center justify-center w-full bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white">
                   <button
                     onClick={increaseFontSize}
                     className="accessibility-btn"
@@ -545,52 +545,70 @@ const Navbar = () => {
       </div>
 
       {/* Wysuwana zawartość */}
-      {isVisible && (
-        <>
-          <div className="flex space-x-4 justify-center">
-            <button
-              onClick={() => changeLanguage('pl')}
-              className={`p-1 rounded-md ${i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'} hover:bg-blue-400 transition duration-200`}
-            >
-              <Flag code="PL" alt="Polska" width={32} height={32} />
-            </button>
-            <button
-              onClick={() => changeLanguage('en')}
-              className={`p-1 rounded-md ${i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'} hover:bg-blue-400 transition duration-200`}
-            >
-              <Flag code="GB" alt="Anglia" width={32} height={32} />
-            </button>
-          </div>
+      <div
+  className={`transition-all duration-700 ease-in-out overflow-hidden ${
+    isVisible ? 'max-h-[500px] max-w-[500px]' : 'max-h-0 max-w-0'
+  }`}
+>
+  {/* Flagi językowe */}
+  <div
+    className={`bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white flex space-x-4 justify-center transform transition-all duration-1000 ${
+      isVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+    }`}
+  >
+    <button
+      onClick={() => changeLanguage('pl')}
+      className={`p-1 rounded-md ${
+        i18n.language === 'pl' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+      } hover:bg-blue-400 transition duration-200`}
+    >
+      <Flag code="PL" alt="Polska" width={32} height={32} />
+    </button>
+    <button
+      onClick={() => changeLanguage('en')}
+      className={`p-1 rounded-md ${
+        i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+      } hover:bg-blue-400 transition duration-200`}
+    >
+      <Flag code="GB" alt="Anglia" width={32} height={32} />
+    </button>
+  </div>
 
-          <div className="accessibility-controls flex space-x-2 mt-2 items-center justify-center">
-            <button
-              onClick={increaseFontSize}
-              className="accessibility-btn"
-              aria-label="Increase Font Size"
-            >
-              A+
-            </button>
-            <button
-              onClick={decreaseFontSize}
-              className="accessibility-btn"
-              aria-label="Decrease Font Size"
-            >
-              A-
-            </button>
-            <button
-              onClick={toggleHighContrast}
-              className={`accessibility-btn ${highContrast ? 'active' : ''}`}
-              aria-label="Toggle Contrast"
-            >
-              <img 
-                src="https://firebasestorage.googleapis.com/v0/b/centrumgier-a08cf.appspot.com/o/Images%2Fcontrast.png?alt=media" 
-                alt="Contrast" 
-                style={{ width: '20px', height: '20px', borderRadius: '180px' }} 
-              />
-            </button>
-          </div>
-        </>
-      )}
+  {/* Przyciski dostępności */}
+  <div
+    className={`bg-gradient-to-br from-slate-800 to-slate-900 p-2 rounded-full border-white accessibility-controls flex space-x-2 mt-2 items-center justify-center transform transition-all duration-1000 ${
+      isVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+    }`}
+  >
+    <button
+      onClick={increaseFontSize}
+      className="accessibility-btn"
+      aria-label="Increase Font Size"
+    >
+      A+
+    </button>
+    <button
+      onClick={decreaseFontSize}
+      className="accessibility-btn"
+      aria-label="Decrease Font Size"
+    >
+      A-
+    </button>
+    <button
+      onClick={toggleHighContrast}
+      className={`accessibility-btn ${highContrast ? 'active' : ''}`}
+      aria-label="Toggle Contrast"
+    >
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/centrumgier-a08cf.appspot.com/o/Images%2Fcontrast.png?alt=media"
+        alt="Contrast"
+        style={{ width: '20px', height: '20px', borderRadius: '180px' }}
+      />
+    </button>
+  </div>
+</div>
+
+
     </div>
 
 </nav>

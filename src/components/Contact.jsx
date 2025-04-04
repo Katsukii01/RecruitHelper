@@ -73,7 +73,7 @@ const Contact = () => {
       
 
       
-        <div className="p-8 rounded-xl shadow-2xl border-sky border-2 bg-glass-dark backdrop-blur-md mt-8 max-w-lg mx-auto">
+        <div className="p-8 rounded-xl shadow-2xl border-2 bg-glass-dark backdrop-blur-md mt-8 max-w-lg mx-auto">
 
           <div className="absolute inset-0 flex justify-center items-center z-0 opacity-50 t-2">
             <Waves />

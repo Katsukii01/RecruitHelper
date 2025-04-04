@@ -251,7 +251,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 name="educationLevel"
                 value={formData.educationLevel}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               />
 
               {errors.educationLevel && (
@@ -270,7 +270,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 name="educationField"
                 value={formData.educationField}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2 bg-gray-800 text-gray-300"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               />
               {errors.educationField && (
                   <p className="text-red-500  bg-red-100 mt-2 mt border-l-4 border-red-500 p-2 mb-4 rounded animate-pulse">{errors.educationField}</p>
@@ -479,7 +479,7 @@ const RecruitmentEdit = ({ id, onRefresh }) => {
                 name="courses"
                 value={formData.courses.join(", ")}
                 onChange={handleChange}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 border-gray-300" 
                 placeholder={t("Recruitment Edit.e.g., Full Stack Development, React Basics")}
                 onBlur={handleInputBlur}
               />

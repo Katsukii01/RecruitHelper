@@ -3,7 +3,7 @@ import React from 'react'
 const Waves = () => {
   return (
     <div className='waves-container'>
-      <div className="silver-moon">
+      <div className="silver-moon border-sky">
         <div className="crater crater-1"></div>
         <div className="crater crater-2"></div>
         <div className="crater crater-3"></div>

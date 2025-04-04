@@ -808,82 +808,90 @@ code, pre, .code-block {
 
 /* ------------------------------------------- */
 
-/* High Contrast Mode */
+/* === HIGH CONTRAST MODE === */
 .high-contrast {
-  --bg: #000000 !important;
-  --text: #ffffff !important;
-  --link-color: #ffff00 !important;
-  --border-color: #ffffff !important;
-  --hover-color: #ffff00  !important;
+  --hc-bg: #000000;
+  --hc-text: #ffff00;
+  --hc-hover-text: #ffffff;
+  --hc-border: #ffffff;
 }
 
-.high-contrast .navbar {
-  background: #000000 !important;
-  border: 2px solid #ffffff !important;
+/* Ogólny styl: wszystko ma czarne tło i żółty tekst */
+.high-contrast *:not(.score-bar) {
+  color: var(--hc-text) !important;
+  background-image: none !important;
+  border-color: var(--hc-border) !important;
+}
+ .high-contrast .card, .high-contrast .bg-glass-dark, .high-contrast .to-gray-900, .high-contrast .bg-gray-800, .high-contrast .bg-gray-900, .high-contrast .from-slate-500 {
+  background-color: var(--hc-bg) !important;
+  border: 1px solid var(--hc-border) !important;
 }
 
-.high-contrast .nav-link {
-  color: #ffffff !important;
+.high-contrast .input, .high-contrast .textarea, .high-contrast .select, .high-contrast .input::placeholder, .high-contrast .textarea::placeholder, .high-contrast .select::placeholder, .high-contrast .border-gray-300, 
+.high-contrast .border-sky::placeholder, .high-contrast .border-sky, .high-contrast .border-gray-300::placeholder, .high-contrast .geoapify-autocomplete-input, .high-contrast option {
+  background-color: var(--hc-border) !important;
+  color: var(--hc-bg) !important;
+  border: 1px solid var(--hc-text) !important;
 }
 
-.high-contrast .btn {
-  background: #000000 !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
+.high-contrast table {
+  border: 1px solid var(--hc-border) !important;
+  border-collapse: collapse !important;
+}
+.high-contrast table th, .high-contrast table td {
+  border: 1px solid var(--hc-border) !important;
+}
+.high-contrast th {
+  background-color: #1a1a1a !important;
+
+}
+.high-contrast table td {
+  background-color: var(--hc-bg) !important;
+}
+.high-contrast th {
+  color: var(--hc-bg) !important;
 }
 
-.high-contrast .btn:hover {
-  background: #1f2937  !important;
+/* Aktywny stan / focus - lepsza widoczność */
+.high-contrast *:focus {
+  outline: 2px solid var(--hc-hover-text) !important;
+  box-shadow: 0 0 0 2px var(--hc-hover-text) !important;
 }
 
-/* Accessibility Controls */
-.accessibility-controls {
-  display: flex !important;
-  gap: 0.5rem !important;
-  padding: 0.5rem !important;
-  background: var(--bg-primary, #1f2937) !important;
-  border-radius: 9999px !important;
+.high-contrast svg {
+  stroke: var(--hc-bg) !important;
+  fill:  var(--hc-border) !important;
+}
+.high-contrast .to-teal-500  {
+  background-color: var(--hc-border) !important;
 }
 
-.accessibility-btn {
-  background: var(--button-bg, #374151) !important;
-  color: var(--button-text, #ffffff) !important;
-  transition: all 0.2s !important;
-  min-width: 1.5rem !important;
-  border-radius: 180px !important;
-  padding: 0.1rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+.high-contrast .border-red-500{
+  border: 1px solid white !important;
+  border-left: 4px solid #ffaaaa !important;
+  background-color: red !important;
+  color: var(--hc-border) !important;
+}
+.high-contrast .bg-white {
+  background-color: var(--hc-bg) !important;
 }
 
-.accessibility-btn:hover {
-  background: var(--button-hover-bg, #4b5563) !important;
+/* Formularze */
+.high-contrast input::placeholder,
+.high-contrast textarea::placeholder {
+  color: var(--hc-text) !important;
+  opacity: 0.7 !important;
 }
 
-.accessibility-btn.active {
-  background: var(--button-active-bg, #2563eb) !important;
+.high-contrast .wrapperlink .icon {
+  background-color: var(--hc-bg) !important;
+  border: 1px solid var(--hc-border) !important;
 }
-
-/* Override other potential conflicting button and link styles */
-.high-contrast .navbar .nav-link,
-.high-contrast .btn {
-  color: var(--text-primary) !important;
-  text-decoration: none !important;
+.high-contrast .bg-mint {
+  background-color: var(--hc-bg) !important;
 }
-
-/* Force all links to have high contrast */
-.high-contrast a {
-  color: var(--link-color) !important;
-}
-
-.high-contrast .navbar .navbar-brand {
-  color: var(--text-primary) !important;
-}
-
-.high-contrast .nav-link:hover,
-.high-contrast .btn:hover {
-  color: var(--bg-primary) !important;
+.high-contrast .click-me {
+  background-color: var(--hc-text) !important;
 }
 
 /* ------------------------------------------- */

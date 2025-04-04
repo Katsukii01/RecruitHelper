@@ -118,7 +118,7 @@ const RecruitmentCard = ({ recruitment, type }) => {
   <h4 className="text-sm font-semibold text-white">
     {t("RecruitmentCard.Languages Required")}:
   </h4>
-  <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-300 rounded-lg'>
+  <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-400 rounded-lg'>
     <div className="flex flex-wrap gap-2 mx-2">
       {recruitment.languages && recruitment.languages.length > 0 ? (
         recruitment.languages.map((language, index) => (
@@ -142,7 +142,7 @@ const RecruitmentCard = ({ recruitment, type }) => {
     <h4 className="text-sm font-semibold text-white">
        {t("RecruitmentCard.Skills Required")}:
     </h4>
-    <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-300 rounded-lg'>
+    <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-400 rounded-lg'>
       <div className="flex flex-wrap gap-2 mx-2">
         {recruitment.skills && recruitment.skills.length > 0 ? (
           recruitment.skills.map((skill, index) => (
@@ -164,7 +164,7 @@ const RecruitmentCard = ({ recruitment, type }) => {
     <h4 className="text-sm font-semibold text-white">
       {t("RecruitmentCard.Courses Required")}:
     </h4>
-    <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-300 rounded-lg'>
+    <div className='h-[100px] overflow-y-auto p-2 border-2 border-gray-400 rounded-lg'>
       <div className="flex flex-wrap gap-2 mx-2">
         {recruitment.courses && recruitment.courses.length > 0 ? (
           recruitment.courses.map((course, index) => (

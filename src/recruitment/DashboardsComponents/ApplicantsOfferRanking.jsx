@@ -129,8 +129,8 @@ const ApplicantsOfferRanking = ({ id }) => {
                   <p className="text-md font-bold text-white flex items-center gap-2">
                     <IoBarChart className="text-green-400 size-5" /> {t("CV Ranking.Overall CV Score")}: {applicant.CVscore}%
                   </p>
-                  <div className="w-full h-3 bg-gray-300 rounded-full border border-white overflow-hidden">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${applicant.CVscore}%` }} transition={{ duration: 1.5, ease: "easeOut" }}  className={`h-full ${getProgressBarColor(applicant.CVscore)}`}  />
+                  <div className="w-full h-3 bg-gray-400 rounded-full border border-white overflow-hidden">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${applicant.CVscore}%` }} transition={{ duration: 1.5, ease: "easeOut" }}  className={`score-bar h-full ${getProgressBarColor(applicant.CVscore)}`}  />
                   </div>
                 </div>
 
@@ -148,9 +148,9 @@ const ApplicantsOfferRanking = ({ id }) => {
                   <p className="text-sm text-white flex items-center gap-2">
                     {icon} {label}: {value}%
                   </p>
-                  <div className="w-1/2 h-2 bg-gray-300 rounded-full border border-white overflow-hidden">
+                  <div className="w-1/2 h-2 bg-gray-400 rounded-full border border-white overflow-hidden">
                     <motion.div 
-                      className={`h-full ${getProgressBarColor(value)}`} 
+                      className={`score-bar h-full ${getProgressBarColor(value)}`} 
                       initial={{ width: 0 }} 
                       animate={{ width: `${value}%` }} 
                       transition={{ duration: 2, ease: "easeOut" }}
