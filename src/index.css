@@ -827,11 +827,21 @@ code, pre, .code-block {
   border: 1px solid var(--hc-border) !important;
 }
 
-.high-contrast .input, .high-contrast .textarea, .high-contrast .select, .high-contrast .input::placeholder, .high-contrast .textarea::placeholder, .high-contrast .select::placeholder, .high-contrast .border-gray-300, 
-.high-contrast .border-sky::placeholder, .high-contrast .border-sky, .high-contrast .border-gray-300::placeholder, .high-contrast .geoapify-autocomplete-input, .high-contrast option {
+.high-contrast .input, .high-contrast .textarea, .high-contrast .select,  .high-contrast .border-gray-300, 
+ .high-contrast .border-sky,  .high-contrast .geoapify-autocomplete-input{
   background-color: var(--hc-border) !important;
   color: var(--hc-bg) !important;
   border: 1px solid var(--hc-text) !important;
+}
+
+.high-contrast .input::placeholder, .high-contrast .textarea::placeholder,  .high-contrast .select::placeholder, .high-contrast .border-sky::placeholder, .high-contrast .border-gray-300::placeholder, 
+.high-contrast select, .high-contrast option
+{
+  color: var(--hc-bg) !important;
+}
+
+.high-contrast option {
+  background-color: var(--hc-bg);
 }
 
 .high-contrast table {
@@ -858,10 +868,11 @@ code, pre, .code-block {
   box-shadow: 0 0 0 2px var(--hc-hover-text) !important;
 }
 
-.high-contrast svg {
+.high-contrast svg:not(.hide) {
   stroke: var(--hc-bg) !important;
-  fill:  var(--hc-border) !important;
+  fill: var(--hc-border) !important;
 }
+
 .high-contrast .to-teal-500  {
   background-color: var(--hc-border) !important;
 }

@@ -7,7 +7,7 @@ import { AuthContext } from '../store/AuthContext';
 import { useTranslation } from 'react-i18next';
 import Flag from 'react-world-flags'; 
 import { useAccessibility } from '../store/AccessibilityContext';
-
+import { FiChevronUp} from 'react-icons/fi';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -537,11 +537,11 @@ const Navbar = () => {
       >
         {/* Strzałka */}
         <span
-         onClick={() => setIsVisible(!isVisible)}
-        className={`hover:cursor-pointer hover:from-slate-800 hover:to-indigo-950 text-white text-2xl bg-gradient-to-br from-indigo-950 to-slate-500 h-8 w-8 rounded-full flex items-center justify-center transition-transform duration-300 transform ${isVisible ? 'rotate-180' : ''}`}
-      >
-        ^
-      </span>
+          onClick={() => setIsVisible(!isVisible)}
+          className={` hover:cursor-pointer hover:from-slate-800 hover:to-indigo-950 text-2xl bg-gradient-to-br from-indigo-950 to-slate-500 h-8 w-8 rounded-full flex items-center justify-center transition-transform duration-300 transform ${isVisible ? 'rotate-180' : ''}`}
+        >
+          <FiChevronUp className='hide'/>
+        </span>
       </div>
 
       {/* Wysuwana zawartość */}
