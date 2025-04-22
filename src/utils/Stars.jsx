@@ -6,7 +6,7 @@ const Stars = (props) => {
   const ref = useRef();
 
   const [sphere] = useState(() => {
-    const positions = new Float32Array(200); // Każdy punkt ma X, Y, Z
+    const positions = new Float32Array(3000); // Każdy punkt ma X, Y, Z
     for (let i = 0; i < positions.length; i += 3) {
       const r = 1.2 * Math.cbrt(Math.random()); // Losowy promień w zakresie [0, 1.2]
       const theta = Math.random() * Math.PI * 2; // Losowy kąt w XY
@@ -38,7 +38,7 @@ const Stars = (props) => {
         <PointMaterial
           transparent
           color="#fff"
-          size={0.005}
+          size={0.001}
           sizeAttenuation={true}
           depthWrite={false}
         />
